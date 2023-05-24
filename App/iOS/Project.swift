@@ -6,6 +6,9 @@ let project = Project.makeModule(
   platform: .iOS,
   product: .app,
   deploymentTarget: .iOS(targetVersion: "16.0", devices: [.iphone, .ipad]),
+  dependencies: [
+    .SPM.ComposableArchitecture
+  ],
   resources: ["Resources/**"],
   infoPlist: .extendingDefault(with: [
     "UIMainStoryboardFile": "",

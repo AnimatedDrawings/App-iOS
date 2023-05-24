@@ -7,7 +7,6 @@ public extension Project {
     product: Product,
     organizationName: String = "chminipark",
     packages: [Package] = [],
-//    deploymentTarget: DeploymentTarget? = .iOS(targetVersion: "16.0", devices: [.iphone, .ipad]),
     deploymentTarget: DeploymentTarget?,
     dependencies: [TargetDependency] = [],
     sources: SourceFilesList = ["Sources/**"],

@@ -1,7 +1,7 @@
 import ProjectDescription
 
 let config = Config(
-    plugins: [
-        .local(path: .relativeToManifest("../../Plugins/ProjectEnvironment"))
-    ]
+  plugins: [
+    .local(path: .relativeToManifest("../../Plugins/ProjectEnvironment"))
+  ]
 )

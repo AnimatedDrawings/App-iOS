@@ -5,7 +5,7 @@ struct AnimatedDrawingsApp: App {
   var body: some Scene {
     WindowGroup {
       VStack {
-        Text("ewfwef")
+        Text("Test AnimatedDrawingsApp")
       }
     }
   }
