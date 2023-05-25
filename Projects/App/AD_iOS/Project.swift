@@ -2,12 +2,12 @@ import ProjectDescription
 import ProjectEnvironment
 
 let project = Project.makeModule(
-  name: "iOS",
+  name: "AD_iOS",
   platform: .iOS,
   product: .app,
-  deploymentTarget: .iOS(targetVersion: "16.0", devices: [.iphone, .ipad]),
   dependencies: [
-    .SPM.ComposableArchitecture
+    .AD_OnBoarding
+//    .ComposableArchitecture
   ],
   resources: ["Resources/**"],
   infoPlist: .extendingDefault(with: [

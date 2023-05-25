@@ -1,5 +1,11 @@
 import ProjectDescription
 
+extension String {
+  var replaceBar: String {
+    self.replacingOccurrences(of: "_", with: "-")
+  }
+}
+
 public extension Project {
   static func makeModule(
     name: String,
@@ -7,7 +13,7 @@ public extension Project {
     product: Product,
     organizationName: String = "chminipark",
     packages: [Package] = [],
-    deploymentTarget: DeploymentTarget?,
+    deploymentTarget: DeploymentTarget? = .iOS(targetVersion: "16.0", devices: [.iphone, .ipad]),
     dependencies: [TargetDependency] = [],
     sources: SourceFilesList = ["Sources/**"],
     resources: ResourceFileElements? = nil,
@@ -26,7 +32,7 @@ public extension Project {
       name: name,
       platform: platform,
       product: product,
-      bundleId: "\(organizationName).\(name)",
+      bundleId: "\(organizationName).\(name)".replaceBar,
       deploymentTarget: deploymentTarget,
       infoPlist: infoPlist,
       sources: sources,
@@ -38,7 +44,7 @@ public extension Project {
       name: "\(name)Tests",
       platform: platform,
       product: .unitTests,
-      bundleId: "\(organizationName).\(name)Tests",
+      bundleId: "\(organizationName).\(name)Tests".replaceBar,
       deploymentTarget: deploymentTarget,
       infoPlist: .default,
       sources: ["Tests/**"],

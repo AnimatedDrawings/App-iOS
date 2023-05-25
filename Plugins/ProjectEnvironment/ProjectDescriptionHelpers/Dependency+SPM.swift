@@ -16,7 +16,5 @@ extension Package {
 }
 
 extension TargetDependency {
-  public struct SPM {
-    public static let ComposableArchitecture = TargetDependency.external(name: "ComposableArchitecture")
-  }
+  public static let ComposableArchitecture = TargetDependency.external(name: "ComposableArchitecture")
 }
