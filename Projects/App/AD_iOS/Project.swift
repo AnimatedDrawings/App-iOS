@@ -7,12 +7,12 @@ let project = Project.makeModule(
   product: .app,
   dependencies: [
     .AD_OnBoarding
-//    .ComposableArchitecture
   ],
   resources: ["Resources/**"],
   infoPlist: .extendingDefault(with: [
     "UIMainStoryboardFile": "",
     "UILaunchStoryboardName": "LaunchScreen",
     "ENABLE_TESTS": .boolean(true),
-  ])
+  ]),
+  withTest: true
 )

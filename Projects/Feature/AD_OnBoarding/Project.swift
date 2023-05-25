@@ -7,11 +7,6 @@ let project = Project.makeModule(
   product: .staticFramework,
   dependencies: [
     .ComposableArchitecture
-  ]
-//  resources: ["Resources/**"],
-//  infoPlist: .extendingDefault(with: [
-//    "UIMainStoryboardFile": "",
-//    "UILaunchStoryboardName": "LaunchScreen",
-//    "ENABLE_TESTS": .boolean(true),
-//  ])
+  ],
+  withTest: false
 )
