@@ -1,14 +1,8 @@
 import ProjectDescription
 
-extension String {
-  var replaceBar: String {
-    self.replacingOccurrences(of: "_", with: "-")
-  }
-}
-
 public extension Project {
   static func makeModule(
-    name: String,
+    module: MyModule,
     platform: Platform,
     product: Product,
     organizationName: String = "chminipark",
@@ -28,6 +22,8 @@ public extension Project {
       ],
       defaultSettings: .recommended
     )
+    
+    let name = module.rawValue
     
     let appTarget = Target(
       name: name,
@@ -92,5 +88,11 @@ extension Scheme {
       profileAction: .profileAction(configuration: target),
       analyzeAction: .analyzeAction(configuration: target)
     )
+  }
+}
+
+extension String {
+  var replaceBar: String {
+    self.replacingOccurrences(of: "_", with: "-")
   }
 }
