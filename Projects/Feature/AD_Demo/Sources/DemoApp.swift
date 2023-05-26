@@ -12,7 +12,8 @@ import AD_OnBoarding
 struct DemoApp: App {
   var body: some Scene {
     WindowGroup {
-      OnBoardingView()
+//      OnBoardingView()
+      UploadADrawingView()
     }
   }
 }
