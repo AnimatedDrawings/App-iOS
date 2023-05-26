@@ -9,7 +9,7 @@ import SwiftUI
 import AD_OnBoarding
 
 @main
-struct DemoApp: App {
+struct FeatureDemoApp: App {
   var body: some Scene {
     WindowGroup {
 //      OnBoardingView()

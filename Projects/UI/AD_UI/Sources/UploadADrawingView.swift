@@ -18,6 +18,8 @@ public struct UploadADrawingView: View {
       Title()
       Description()
       CheckList()
+      UploadButton(action: uploadAction)
+      SampleDrawings()
     }
     .padding()
   }
@@ -65,9 +67,49 @@ extension UploadADrawingView {
 
   @ViewBuilder
   func CheckListDescription(with description: String) -> some View {
+    let checkmarkCircle = "checkmark.circle"
+    
     HStack(alignment: .top) {
-      Image(systemName: "checkmark.circle")
+      Image(systemName: checkmarkCircle)
         .foregroundColor(ADUtilsAsset.blue2.swiftUIColor)
+      Text(description)
+    }
+  }
+}
+
+extension UploadADrawingView {
+  @ViewBuilder
+  func UploadButton(action: @escaping () -> ()) -> some View {
+    let photoFill = "photo.fill"
+    let text = "Upload Photo"
+    
+    ADButton(action: action) {
+      HStack {
+        Image(systemName: photoFill)
+        Text(text)
+      }
+    }
+  }
+  
+  func uploadAction() {
+    
+  }
+}
+
+extension UploadADrawingView {
+  @ViewBuilder
+  func SampleDrawings() -> some View {
+    let leftTitle = "S A M P L E"
+    let rightTitle = "D R A W I N G S"
+    let description = "Feel free to try the demo by clicking on one of the following example images."
+    
+    VStack(alignment: .leading, spacing: 15) {
+      HStack(spacing: 15) {
+        Text(leftTitle)
+          .font(.system(.title3, weight: .medium))
+        Text(rightTitle)
+          .font(.system(.title3, weight: .medium))
+      }
       Text(description)
     }
   }
