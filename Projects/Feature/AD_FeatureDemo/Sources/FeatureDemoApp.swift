@@ -1,5 +1,5 @@
 //
-//  DemoApp.swift
+//  FeatureDemoApp.swift
 //  Config
 //
 //  Created by minii on 2023/05/25.
@@ -13,7 +13,8 @@ struct DemoApp: App {
   var body: some Scene {
     WindowGroup {
 //      OnBoardingView()
-      UploadADrawingView()
+//      UploadADrawingView()
+      Text("efe")
     }
   }
 }

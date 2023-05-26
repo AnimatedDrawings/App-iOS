@@ -4,7 +4,9 @@ public enum MyModule: String {
   case AD_iOS
   case AD_OnBoarding
   case AD_Utils
-  case AD_Demo
+  case AD_FeatureDemo
+  case AD_UI
+  case AD_UIDemo
 }
 
 public enum MyLayer: String {
@@ -35,6 +37,13 @@ extension TargetDependency {
     return .project(
       target: MyModule.AD_Utils.rawValue,
       path: .relativeToProjects(layer: .Share, project: [.AD_Utils])
+    )
+  }
+  
+  public static var AD_UI: Self {
+    return .project(
+      target: MyModule.AD_UI.rawValue,
+      path: .relativeToProjects(layer: .UI, project: [.AD_UI])
     )
   }
 }

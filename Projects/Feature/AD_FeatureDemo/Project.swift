@@ -2,7 +2,7 @@ import ProjectDescription
 import ProjectEnvironment
 
 let project = Project.makeModule(
-  myModule: .AD_Demo,
+  myModule: .AD_FeatureDemo,
   platform: .iOS,
   product: .app,
   dependencies: [
