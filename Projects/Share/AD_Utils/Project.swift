@@ -2,8 +2,9 @@ import ProjectDescription
 import ProjectEnvironment
 
 let project = Project.makeModule(
-  module: .AD_Utils,
+  myModule: .AD_Utils,
   platform: .iOS,
   product: .staticFramework,
+  resources: ["Resources/**"],
   withTest: false
 )

@@ -4,6 +4,7 @@ public enum MyModule: String {
   case AD_iOS
   case AD_OnBoarding
   case AD_Utils
+  case AD_Demo
 }
 
 public enum MyLayer: String {

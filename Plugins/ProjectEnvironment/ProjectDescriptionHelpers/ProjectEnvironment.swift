@@ -2,7 +2,7 @@ import ProjectDescription
 
 public extension Project {
   static func makeModule(
-    module: MyModule,
+    myModule: MyModule,
     platform: Platform,
     product: Product,
     organizationName: String = "chminipark",
@@ -23,7 +23,7 @@ public extension Project {
       defaultSettings: .recommended
     )
     
-    let name = module.rawValue
+    let name = myModule.rawValue
     
     let appTarget = Target(
       name: name,
