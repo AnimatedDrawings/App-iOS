@@ -9,12 +9,28 @@
 import SwiftUI
 import AD_UI
 import AD_Utils
+import ComposableArchitecture
 
 struct UploadADrawing: ADFeature {
-  let ui = UploadADrawingView()
+  typealias MyUI = UploadADrawingView
+  typealias MyReducer = UploadADrawingStore
+  
+  let ui = MyUI()
+  let store: StoreOf<MyReducer>
+  
+  init(
+    store: StoreOf<MyReducer> = Store(
+      initialState: MyReducer.State(),
+      reducer: MyReducer()
+    )
+  ) {
+    self.store = store
+  }
   
   var body: some View {
-    ui.main(uploadAction: {})
+    WithViewStore(store, observe: { $0 }) { viewStore in
+      ui.main(uploadAction: { viewStore.send(.uploadAction) })
+    }
   }
 }
 

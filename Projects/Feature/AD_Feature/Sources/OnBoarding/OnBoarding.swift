@@ -12,13 +12,16 @@ import AD_UI
 import AD_Utils
 
 public struct OnBoarding: ADFeature {
-  public let ui = OnBoardingView()
-  public let store: StoreOf<OnBoardingStore>
+  public typealias MyUI = OnBoardingView
+  public typealias MyReducer = OnBoardingStore
+  
+  public let ui = MyUI()
+  public let store: StoreOf<MyReducer>
   
   public init(
-    store: StoreOf<OnBoardingStore> = Store(
-      initialState: OnBoardingStore.State(),
-      reducer: OnBoardingStore()
+    store: StoreOf<MyReducer> = Store(
+      initialState: MyReducer.State(),
+      reducer: MyReducer()
     )
   ) {
     self.store = store
@@ -30,29 +33,6 @@ public struct OnBoarding: ADFeature {
     }
   }
 }
-
-public struct OnBoardingStore: ReducerProtocol {
-  public struct State: Equatable {
-    public init() {}
-  }
-  
-  public enum Action: Equatable {
-    case pushUploadADrawing
-  }
-  
-  public init() {}
-  
-  public var body: some ReducerProtocol<State, Action> {
-    Reduce { state, action in
-      switch action {
-      case .pushUploadADrawing:
-        print("pushUploadADrawing")
-        return .none
-      }
-    }
-  }
-}
-
 
 struct OnBoarding_Previews: PreviewProvider {
   static var previews: some View {

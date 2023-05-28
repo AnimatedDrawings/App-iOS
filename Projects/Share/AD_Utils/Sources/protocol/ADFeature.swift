@@ -7,8 +7,12 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
 
 public protocol ADFeature: View {
-  associatedtype _ADUI: ADUI
-  var ui: _ADUI { get }
+  associatedtype MyUI: ADUI
+  associatedtype MyReducer: ReducerProtocol
+  
+  var ui: MyUI { get }
+  var store: StoreOf<MyReducer> { get }
 }
