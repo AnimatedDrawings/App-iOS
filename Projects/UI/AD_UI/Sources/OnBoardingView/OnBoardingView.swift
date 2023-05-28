@@ -7,17 +7,17 @@
 
 import SwiftUI
 import AD_Utils
+import ComposableArchitecture
 
 public struct OnBoardingView: ADUI {
-  let startButtonAction: () -> ()
-  
-  public init(startButtonAction: @escaping () -> Void) {
-    self.startButtonAction = startButtonAction
-  }
+  public init() {}
 }
 
 extension OnBoardingView {
-  public func main() -> some View {
+  @ViewBuilder
+  public func main(
+    startButtonAction: @escaping ADAction
+  ) -> some View {
     VStack {
       Title()
       SubTitle()
@@ -86,5 +86,13 @@ extension OnBoardingView {
     let startText = "Get Started"
     
     ADButton(startText, action: action)
+  }
+}
+
+struct OnBoardingView_Previews: PreviewProvider {
+  static var previews: some View {
+    OnBoardingView().main(
+      startButtonAction: { print("efe") }
+    )
   }
 }

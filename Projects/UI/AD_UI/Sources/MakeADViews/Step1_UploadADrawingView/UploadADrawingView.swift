@@ -9,11 +9,14 @@
 import SwiftUI
 import AD_Utils
 
-public struct UploadADrawingView: View {
-  
+public struct UploadADrawingView: ADUI {
   public init() {}
-  
-  public var body: some View {
+}
+
+extension UploadADrawingView {
+  public func main(
+    uploadAction: @escaping ADAction
+  ) -> some View {
     VStack(alignment: .leading, spacing: 20) {
       Title()
       Description()
@@ -90,10 +93,6 @@ extension UploadADrawingView {
       }
     }
   }
-  
-  func uploadAction() {
-    
-  }
 }
 
 extension UploadADrawingView {
@@ -117,6 +116,8 @@ extension UploadADrawingView {
 
 struct UploadADrawingView_Previews: PreviewProvider {
   static var previews: some View {
-    UploadADrawingView()
+    UploadADrawingView().main(
+      uploadAction: { print("ef") }
+    )
   }
 }
