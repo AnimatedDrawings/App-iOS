@@ -8,11 +8,16 @@
 import SwiftUI
 import AD_Utils
 
-public struct OnBoardingView: View {
+public struct OnBoardingView: ADUI {
+  let startButtonAction: () -> ()
   
-  public init() {}
-  
-  public var body: some View {
+  public init(startButtonAction: @escaping () -> Void) {
+    self.startButtonAction = startButtonAction
+  }
+}
+
+extension OnBoardingView {
+  public func main() -> some View {
     VStack {
       Title()
       SubTitle()
@@ -28,9 +33,7 @@ public struct OnBoardingView: View {
       
       Spacer().frame(height: 40)
       
-      StartButton {
-        
-      }
+      StartButton(action: startButtonAction)
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .ignoresSafeArea(.all)
@@ -82,22 +85,6 @@ extension OnBoardingView {
   func StartButton(action: @escaping () -> ()) -> some View {
     let startText = "Get Started"
     
-    Button(action: action) {
-      RoundedRectangle(cornerRadius: 10)
-        .padding(.horizontal, 20)
-        .frame(height: 60)
-        .foregroundColor(ADUtilsAsset.blue1.swiftUIColor)
-        .shadow(radius: 10)
-        .overlay {
-          Text(startText)
-            .foregroundColor(.white)
-        }
-    }
-  }
-}
-
-struct OnBoardingView_Previews: PreviewProvider {
-  static var previews: some View {
-    OnBoardingView()
+    ADButton(startText, action: action)
   }
 }

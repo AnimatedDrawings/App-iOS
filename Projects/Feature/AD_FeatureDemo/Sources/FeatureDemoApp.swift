@@ -6,15 +6,13 @@
 //
 
 import SwiftUI
-import AD_OnBoarding
+import AD_Feature
 
 @main
 struct FeatureDemoApp: App {
   var body: some Scene {
     WindowGroup {
-//      OnBoardingView()
-//      UploadADrawingView()
-      Text("efe")
+      OnBoarding()
     }
   }
 }
