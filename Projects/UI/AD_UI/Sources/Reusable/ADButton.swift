@@ -34,7 +34,6 @@ public struct ADButton<ButtonLabel: View>: View {
   public var body: some View {
     Button(action: action) {
       RoundedRectangle(cornerRadius: 10)
-        .padding(.horizontal, 20)
         .frame(height: 60)
         .foregroundColor(ADUtilsAsset.Color.blue1.swiftUIColor)
         .shadow(radius: 10)
