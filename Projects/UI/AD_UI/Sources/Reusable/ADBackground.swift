@@ -63,10 +63,10 @@ extension ADBackground.DoodleLines {
       let horizontalMinInset: CGFloat = 5
       let horizontalMaxInset: CGFloat = 10
       var isLeft: Bool = .random()
+      var start: CGPoint = .init(x: fixX, y: 0)
       
       for y in stride(from: separated, through: maxY, by: separated) {
         let curY = maxY < y + separated ? maxY : y
-        let start = CGPoint(x: fixX, y: curY - separated)
         let end = CGPoint(x: fixX, y: curY)
         let randomControlPoint: CGPoint = randomControlPoint(
           start: start,
@@ -80,12 +80,8 @@ extension ADBackground.DoodleLines {
         path.move(to: start)
         path.addQuadCurve(to: end, control: randomControlPoint)
         
-//        path.addEllipse(in: .init(
-//          origin: end,
-//          size: .init(width: 10, height: 10)
-//        ))
-        
         isLeft.toggle()
+        start.y = end.y
       }
     }
     
