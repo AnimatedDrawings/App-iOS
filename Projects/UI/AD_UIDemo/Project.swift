@@ -2,11 +2,11 @@ import ProjectDescription
 import ProjectEnvironment
 
 let project = Project.makeModule(
-  myModule: .AD_iOS,
+  myModule: .AD_UIDemo,
   platform: .iOS,
   product: .app,
   dependencies: [
-    .AD_Feature
+    .AD_UI
   ],
   resources: ["Resources/**"],
   infoPlist: .extendingDefault(with: [

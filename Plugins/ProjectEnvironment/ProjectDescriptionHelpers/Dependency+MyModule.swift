@@ -2,9 +2,11 @@ import ProjectDescription
 
 public enum MyModule: String {
   case AD_iOS
-  case AD_OnBoarding
+  case AD_Feature
+  case AD_FeatureDemo
+  case AD_UI
+  case AD_UIDemo
   case AD_Utils
-  case AD_Demo
 }
 
 public enum MyLayer: String {
@@ -24,10 +26,10 @@ extension Path {
 }
 
 extension TargetDependency {
-  public static var AD_OnBoarding: Self {
+  public static var AD_Feature: Self {
     return .project(
-      target: MyModule.AD_OnBoarding.rawValue,
-      path: .relativeToProjects(layer: .Feature, project: [.AD_OnBoarding])
+      target: MyModule.AD_Feature.rawValue,
+      path: .relativeToProjects(layer: .Feature, project: [.AD_Feature])
     )
   }
   
@@ -35,6 +37,13 @@ extension TargetDependency {
     return .project(
       target: MyModule.AD_Utils.rawValue,
       path: .relativeToProjects(layer: .Share, project: [.AD_Utils])
+    )
+  }
+  
+  public static var AD_UI: Self {
+    return .project(
+      target: MyModule.AD_UI.rawValue,
+      path: .relativeToProjects(layer: .UI, project: [.AD_UI])
     )
   }
 }

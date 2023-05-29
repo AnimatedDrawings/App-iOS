@@ -2,7 +2,7 @@ import ProjectDescription
 import ProjectEnvironment
 
 let project = Project.makeModule(
-  myModule: .AD_OnBoarding,
+  myModule: .AD_UI,
   platform: .iOS,
 //  product: .staticFramework,
   product: .framework,
@@ -10,5 +10,5 @@ let project = Project.makeModule(
     .AD_Utils,
     .ComposableArchitecture
   ],
-  withTest: true
+  withTest: false
 )
