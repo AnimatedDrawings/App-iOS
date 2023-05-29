@@ -15,7 +15,8 @@ struct UIDemoApp: App {
   
   var body: some Scene {
     WindowGroup {
-      ui.Main(startButtonAction: {})
+//      ui.Main(startButtonAction: {})
+      ADBackground()
     }
   }
 }
