@@ -13,7 +13,9 @@ public struct RootFeature: View {
   public init() {}
   
   public var body: some View {
-    OnBoarding()
+    NavigationStack {
+      OnBoarding()
+    }
   }
 }
 

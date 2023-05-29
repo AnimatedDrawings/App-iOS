@@ -12,7 +12,7 @@ import AD_Feature
 struct FeatureDemoApp: App {
   var body: some Scene {
     WindowGroup {
-      OnBoarding()
+      RootFeature()
     }
   }
 }

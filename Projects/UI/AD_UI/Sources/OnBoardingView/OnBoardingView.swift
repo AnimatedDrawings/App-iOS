@@ -15,7 +15,7 @@ public struct OnBoardingView: ADUI {
 
 extension OnBoardingView {
   @ViewBuilder
-  public func main(
+  public func Main(
     startButtonAction: @escaping ADAction
   ) -> some View {
     VStack {
@@ -29,7 +29,7 @@ extension OnBoardingView {
       RoundedRectangle(cornerRadius: 10)
         .padding(.horizontal, 20)
         .frame(height: 300)
-        .foregroundColor(ADUtilsAsset.blue2.swiftUIColor)
+        .foregroundColor(ADUtilsAsset.Color.blue2.swiftUIColor)
       
       Spacer().frame(height: 40)
       
@@ -37,7 +37,7 @@ extension OnBoardingView {
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .ignoresSafeArea(.all)
-    .background(ADUtilsAsset.blue4.swiftUIColor)
+    .background(ADUtilsAsset.Color.blue4.swiftUIColor)
   }
 }
 
@@ -50,10 +50,10 @@ extension OnBoardingView {
     HStack {
       Text(left)
         .font(.system(.largeTitle, weight: .semibold))
-        .foregroundColor(ADUtilsAsset.blue1.swiftUIColor)
+        .foregroundColor(ADUtilsAsset.Color.blue1.swiftUIColor)
       Text(right)
         .font(.system(.largeTitle, weight: .semibold))
-        .foregroundColor(ADUtilsAsset.blue3.swiftUIColor)
+        .foregroundColor(ADUtilsAsset.Color.blue3.swiftUIColor)
     }
   }
 }
@@ -65,7 +65,7 @@ extension OnBoardingView {
     
     Text(subTitle)
       .font(.system(.caption, weight: .semibold))
-      .foregroundColor(ADUtilsAsset.blue2.swiftUIColor)
+      .foregroundColor(ADUtilsAsset.Color.blue2.swiftUIColor)
   }
 }
 
@@ -91,7 +91,7 @@ extension OnBoardingView {
 
 struct OnBoardingView_Previews: PreviewProvider {
   static var previews: some View {
-    OnBoardingView().main(
+    OnBoardingView().Main(
       startButtonAction: { print("efe") }
     )
   }

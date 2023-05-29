@@ -11,14 +11,14 @@ import ComposableArchitecture
 import AD_UI
 import AD_Utils
 
-public struct OnBoarding: ADFeature {
-  public typealias MyUI = OnBoardingView
-  public typealias MyReducer = OnBoardingStore
+struct OnBoarding: ADFeature {
+  typealias MyUI = OnBoardingView
+  typealias MyReducer = OnBoardingStore
   
-  public let ui = MyUI()
-  public let store: StoreOf<MyReducer>
+  let ui = MyUI()
+  let store: StoreOf<MyReducer>
   
-  public init(
+  init(
     store: StoreOf<MyReducer> = Store(
       initialState: MyReducer.State(),
       reducer: MyReducer()
@@ -27,9 +27,15 @@ public struct OnBoarding: ADFeature {
     self.store = store
   }
   
-  public var body: some View {
+  var body: some View {
     WithViewStore(store, observe: { $0 }) { viewStore in
-      ui.main(startButtonAction: { viewStore.send(.pushUploadADrawing) })
+      ui.Main(
+        startButtonAction: { viewStore.send(.pushUploadADrawing) }
+      )
+      .navigationDestination(
+        isPresented: viewStore.binding(\.$isPushUploadADrawing),
+        destination: { UploadADrawing() }
+      )
     }
   }
 }

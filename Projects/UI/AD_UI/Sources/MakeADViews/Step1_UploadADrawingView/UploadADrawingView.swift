@@ -14,15 +14,25 @@ public struct UploadADrawingView: ADUI {
 }
 
 extension UploadADrawingView {
-  public func main(
+  public func UploadPhoto(
     uploadAction: @escaping ADAction
   ) -> some View {
     VStack(alignment: .leading, spacing: 20) {
       Title()
-      Description()
       CheckList()
       UploadButton(action: uploadAction)
-      SampleDrawings()
+    }
+    .padding()
+  }
+}
+
+extension UploadADrawingView {
+  public func SampleDrawings(
+    uploadAction: @escaping ADAction
+  ) -> some View {
+    VStack(alignment: .leading, spacing: 20) {
+      SampleDrawingsDescription()
+      SampleImages(cardAction1: uploadAction)
     }
     .padding()
   }
@@ -32,21 +42,17 @@ extension UploadADrawingView {
   @ViewBuilder
   func Title() -> some View {
     let title = "UPLOAD A DRAWING"
-    
-    Text(title)
-      .font(.system(.largeTitle, weight: .semibold))
-      .foregroundColor(ADUtilsAsset.blue2.swiftUIColor)
-  }
-}
-
-extension UploadADrawingView {
-  @ViewBuilder
-  func Description() -> some View {
     let left = "Upload a drawing of"
     let one = " ONE "
     let right = "character, where the arms and legs don’t overlap the body (see examples below)."
-
-    Text(left) + Text(one).fontWeight(.bold) + Text(right)
+    
+    VStack(alignment: .leading, spacing: 20) {
+      Text(title)
+        .font(.system(.largeTitle, weight: .semibold))
+        .foregroundColor(ADUtilsAsset.Color.blue2.swiftUIColor)
+      
+      Text(left) + Text(one).fontWeight(.bold) + Text(right)
+    }
   }
 }
 
@@ -74,7 +80,7 @@ extension UploadADrawingView {
     
     HStack(alignment: .top) {
       Image(systemName: checkmarkCircle)
-        .foregroundColor(ADUtilsAsset.blue2.swiftUIColor)
+        .foregroundColor(ADUtilsAsset.Color.blue2.swiftUIColor)
       Text(description)
     }
   }
@@ -97,7 +103,7 @@ extension UploadADrawingView {
 
 extension UploadADrawingView {
   @ViewBuilder
-  func SampleDrawings() -> some View {
+  func SampleDrawingsDescription() -> some View {
     let leftTitle = "S A M P L E"
     let rightTitle = "D R A W I N G S"
     let description = "Feel free to try the demo by clicking on one of the following example images."
@@ -114,10 +120,42 @@ extension UploadADrawingView {
   }
 }
 
+extension UploadADrawingView {
+  @ViewBuilder
+  func SampleImages(cardAction1: @escaping ADAction) -> some View {
+    VStack(spacing: 20) {
+      HStack(spacing: 20) {
+        ImageCardButton(action: cardAction1)
+        ImageCardButton(action: cardAction1)
+      }
+      HStack(spacing: 20) {
+        ImageCardButton(action: cardAction1)
+        ImageCardButton(action: cardAction1)
+      }
+    }
+    .frame(height: 450)
+  }
+  
+  @ViewBuilder
+  func ImageCardButton(action: @escaping ADAction) -> some View {
+    Button(action: action) {
+      ADUtilsAsset.SampleDrawing.garlic.swiftUIImage
+        .resizable()
+        .mask {
+          RoundedRectangle(cornerRadius: 15)
+        }
+    }
+  }
+}
+
 struct UploadADrawingView_Previews: PreviewProvider {
   static var previews: some View {
-    UploadADrawingView().main(
-      uploadAction: { print("ef") }
-    )
+    let ui = UploadADrawingView()
+    
+    VStack {
+//      ui.UploadPhoto(uploadAction: {})
+//      ui.ChooseSampleDrawings(uploadAction: {})
+      ui.SampleDrawings(uploadAction: {})
+    }
   }
 }

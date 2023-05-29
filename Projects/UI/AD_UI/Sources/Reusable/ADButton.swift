@@ -36,7 +36,7 @@ public struct ADButton<ButtonLabel: View>: View {
       RoundedRectangle(cornerRadius: 10)
         .padding(.horizontal, 20)
         .frame(height: 60)
-        .foregroundColor(ADUtilsAsset.blue1.swiftUIColor)
+        .foregroundColor(ADUtilsAsset.Color.blue1.swiftUIColor)
         .shadow(radius: 10)
         .overlay {
           label
