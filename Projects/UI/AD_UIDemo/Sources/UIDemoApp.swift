@@ -11,9 +11,12 @@ import AD_UI
 
 @main
 struct UIDemoApp: App {
+  let ui = OnBoardingView()
+  
   var body: some Scene {
     WindowGroup {
-      Text("efwef")
+//      ui.Main(startButtonAction: {})
+      ADBackground()
     }
   }
 }

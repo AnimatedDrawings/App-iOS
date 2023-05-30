@@ -34,7 +34,7 @@ struct OnBoarding: ADFeature {
       )
       .navigationDestination(
         isPresented: viewStore.binding(\.$isPushUploadADrawing),
-        destination: { UploadADrawing() }
+        destination: { UploadADrawing().navigationBarBackButtonHidden(true) }
       )
     }
   }
@@ -42,6 +42,6 @@ struct OnBoarding: ADFeature {
 
 struct OnBoarding_Previews: PreviewProvider {
   static var previews: some View {
-    OnBoarding()
+    RootFeature()
   }
 }

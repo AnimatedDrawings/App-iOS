@@ -20,24 +20,19 @@ extension OnBoardingView {
   ) -> some View {
     VStack {
       Title()
-      SubTitle()
-      Spacer().frame(height: 20)
-      Description()
       
-      Spacer().frame(height: 40)
+      Spacer().frame(height: 80)
       
-      RoundedRectangle(cornerRadius: 10)
-        .padding(.horizontal, 20)
-        .frame(height: 300)
-        .foregroundColor(ADUtilsAsset.Color.blue2.swiftUIColor)
+      Preview()
       
-      Spacer().frame(height: 40)
+      Spacer().frame(height: 80)
       
       StartButton(action: startButtonAction)
     }
+    .padding()
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .ignoresSafeArea(.all)
-    .background(ADUtilsAsset.Color.blue4.swiftUIColor)
+    .background(ADBackground())
   }
 }
 
@@ -46,37 +41,53 @@ extension OnBoardingView {
   func Title() -> some View {
     let left = "ANIMATED"
     let right = "DRAWINGS"
-
-    HStack {
-      Text(left)
-        .font(.system(.largeTitle, weight: .semibold))
-        .foregroundColor(ADUtilsAsset.Color.blue1.swiftUIColor)
-      Text(right)
-        .font(.system(.largeTitle, weight: .semibold))
-        .foregroundColor(ADUtilsAsset.Color.blue3.swiftUIColor)
+    let subTitle = "PRESENTED BY META AI RESEARCH"
+    let description = "Bring children's drawings to life, by animating characters to move around!"
+    
+    VStack {
+      HStack {
+        Text(left)
+          .font(.system(.largeTitle, weight: .semibold))
+          .foregroundColor(ADUtilsAsset.Color.blue1.swiftUIColor)
+        Text(right)
+          .font(.system(.largeTitle, weight: .semibold))
+          .foregroundColor(ADUtilsAsset.Color.blue3.swiftUIColor)
+      }
+      
+      Text(subTitle)
+        .font(.system(.caption, weight: .semibold))
+        .foregroundColor(ADUtilsAsset.Color.blue2.swiftUIColor)
+      
+      Spacer().frame(height: 20)
+      
+      Text(description)
+        .font(.system(.title3, weight: .medium))
+        .multilineTextAlignment(.center)
     }
   }
 }
 
 extension OnBoardingView {
   @ViewBuilder
-  func SubTitle() -> some View {
-    let subTitle = "PRESENTED BY META AI RESEARCH"
-    
-    Text(subTitle)
-      .font(.system(.caption, weight: .semibold))
-      .foregroundColor(ADUtilsAsset.Color.blue2.swiftUIColor)
-  }
-}
-
-extension OnBoardingView {
-  @ViewBuilder
-  func Description() -> some View {
-    let description = "Bring children's drawings to life, by animating characters to move around!"
-    
-    Text(description)
-      .font(.system(.headline, weight: .medium))
-      .multilineTextAlignment(.center)
+  func Preview() -> some View {
+    ZStack {
+      RoundedRectangle(cornerRadius: 10)
+        .padding([.leading, .bottom], 20)
+        .frame(height: 300)
+        .foregroundColor(ADUtilsAsset.Color.blue1.swiftUIColor)
+      
+      RoundedRectangle(cornerRadius: 10)
+        .overlay {
+          LoopingPlayer()
+            .mask {
+              RoundedRectangle(cornerRadius: 8)
+            }
+            .padding(.all, 7)
+        }
+        .padding([.top, .trailing], 20)
+        .frame(height: 300)
+        .foregroundColor(.white)
+    }
   }
 }
 

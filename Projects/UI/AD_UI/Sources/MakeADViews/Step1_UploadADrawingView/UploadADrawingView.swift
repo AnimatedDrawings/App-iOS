@@ -14,27 +14,25 @@ public struct UploadADrawingView: ADUI {
 }
 
 extension UploadADrawingView {
-  public func UploadPhoto(
-    uploadAction: @escaping ADAction
+  @ViewBuilder
+  public func Main(
+    uploadAction: @escaping ADAction,
+    sampleTapAction: @escaping ADAction
   ) -> some View {
-    VStack(alignment: .leading, spacing: 20) {
-      Title()
-      CheckList()
-      UploadButton(action: uploadAction)
+    ScrollView {
+      VStack(alignment: .leading, spacing: 20) {
+        Title()
+        CheckList()
+        UploadButton(action: uploadAction)
+        
+        SampleDrawingsDescription()
+        SampleImages(cardAction1: sampleTapAction)
+        
+        Spacer()
+      }
+      .padding()
     }
-    .padding()
-  }
-}
-
-extension UploadADrawingView {
-  public func SampleDrawings(
-    uploadAction: @escaping ADAction
-  ) -> some View {
-    VStack(alignment: .leading, spacing: 20) {
-      SampleDrawingsDescription()
-      SampleImages(cardAction1: uploadAction)
-    }
-    .padding()
+    .background(ADBackground())
   }
 }
 
@@ -73,7 +71,7 @@ extension UploadADrawingView {
       CheckListDescription(with: description3)
     }
   }
-
+  
   @ViewBuilder
   func CheckListDescription(with description: String) -> some View {
     let checkmarkCircle = "checkmark.circle"
@@ -152,10 +150,9 @@ struct UploadADrawingView_Previews: PreviewProvider {
   static var previews: some View {
     let ui = UploadADrawingView()
     
-    VStack {
-//      ui.UploadPhoto(uploadAction: {})
-//      ui.ChooseSampleDrawings(uploadAction: {})
-      ui.SampleDrawings(uploadAction: {})
-    }
+    ui.Main(
+      uploadAction: {},
+      sampleTapAction: {}
+    )
   }
 }
