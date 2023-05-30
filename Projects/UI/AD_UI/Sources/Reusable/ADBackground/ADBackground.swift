@@ -10,6 +10,7 @@ import SwiftUI
 import AD_Utils
 
 public struct ADBackground: View {
+  
   public init() {}
   
   public var body: some View {
@@ -20,6 +21,11 @@ public struct ADBackground: View {
         .background(ADUtilsAsset.Color.blue4.swiftUIColor)
         .mask {
           RandomCurveShape().path(in: rect)
+            .if(.random()) {
+              $0
+            } else: {
+              $0.rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
+            }
         }
     }
     .ignoresSafeArea()
@@ -40,11 +46,14 @@ extension ADBackground {
       let leftControl: CGPoint = leftControlRandom(rect: rect, leftStart: leftStart)
       let rightControl: CGPoint = rightControlRandom(rect: rect, rightEnd: rightEnd)
       
+      let leftDown = CGPoint(x: 0, y: rect.maxY)
+      let rightDown = CGPoint(x: rect.maxX, y: rect.maxY)
+      
       path.move(to: leftStart)
       path.addCurve(to: rightEnd, control1: leftControl, control2: rightControl)
-
-      path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
-      path.addLine(to: CGPoint(x: 0, y: rect.maxY))
+      
+      path.addLine(to: rightDown)
+      path.addLine(to: leftDown)
       path.addLine(to: leftStart)
       
       return path
