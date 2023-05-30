@@ -14,6 +14,7 @@ struct UploadADrawingStore: ReducerProtocol {
   
   enum Action: Equatable {
     case uploadAction
+    case sampleTapAction
   }
   
   var body: some ReducerProtocol<State, Action> {
@@ -21,6 +22,9 @@ struct UploadADrawingStore: ReducerProtocol {
       switch action {
       case .uploadAction:
         print("uploadAction")
+        return .none
+      case .sampleTapAction:
+        print("sampleTapAction")
         return .none
       }
     }

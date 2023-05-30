@@ -29,16 +29,10 @@ struct UploadADrawing: ADFeature {
   
   var body: some View {
     WithViewStore(store, observe: { $0 }) { viewStore in
-      ScrollView {
-        VStack {
-          ui.UploadPhoto(
-            uploadAction: { viewStore.send(.uploadAction) }
-          )
-          ui.SampleDrawings(
-            uploadAction: { viewStore.send(.uploadAction) }
-          )
-        }
-      }
+      ui.Main(
+        uploadAction: { viewStore.send(.uploadAction) },
+        sampleTapAction: { viewStore.send(.sampleTapAction) }
+      )
     }
   }
 }
