@@ -31,9 +31,13 @@ extension ADBackground {
     func path(in rect: CGRect) -> Path {
       var path = Path()
       
-      let leftStart: CGPoint = leftStartRandom(rect: rect)
+      var leftStart: CGPoint = leftStartRandom(rect: rect)
+      var rightEnd: CGPoint = rightEndRandom(rect: rect)
+      let up: CGFloat = rect.maxY / 8
+      leftStart.y -= up
+      rightEnd.y -= up
+      
       let leftControl: CGPoint = leftControlRandom(rect: rect, leftStart: leftStart)
-      let rightEnd: CGPoint = rightEndRandom(rect: rect)
       let rightControl: CGPoint = rightControlRandom(rect: rect, rightEnd: rightEnd)
       
       path.move(to: leftStart)

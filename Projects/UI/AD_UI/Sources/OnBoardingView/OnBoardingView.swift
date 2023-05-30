@@ -32,7 +32,7 @@ extension OnBoardingView {
     .padding()
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .ignoresSafeArea(.all)
-    .background(ADUtilsAsset.Color.blue4.swiftUIColor)
+    .background(ADBackground())
   }
 }
 
