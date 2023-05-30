@@ -10,21 +10,26 @@ import SwiftUI
 import AD_Utils
 
 public struct ADButton<ButtonLabel: View>: View {
+  var state: ADButton.State
   private let action: () -> ()
   private let label: ButtonLabel
   
   public init(
+    _ state: ADButton.State = .active,
     action: @escaping () -> (),
     @ViewBuilder label: () -> ButtonLabel
   ) {
+    self.state = state
     self.action = action
     self.label = label()
   }
   
   public init(
     _ name: String,
+    _ state: ADButton.State = .active,
     action: @escaping () -> ()
   ) where ButtonLabel == AnyView {
+    self.state = state
     self.action = action
     self.label = AnyView(
       Text(name)
@@ -35,12 +40,24 @@ public struct ADButton<ButtonLabel: View>: View {
     Button(action: action) {
       RoundedRectangle(cornerRadius: 10)
         .frame(height: 60)
-        .foregroundColor(ADUtilsAsset.Color.blue1.swiftUIColor)
+        .foregroundColor(
+          state == .active ?
+          ADUtilsAsset.Color.blue1.swiftUIColor :
+              .gray
+        )
         .shadow(radius: 10)
         .overlay {
           label
             .foregroundColor(.white)
         }
     }
+    .disabled(state == .inActive)
+  }
+}
+
+extension ADButton {
+  public enum State {
+    case active
+    case inActive
   }
 }
