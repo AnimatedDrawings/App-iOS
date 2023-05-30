@@ -11,7 +11,7 @@ import SwiftUI
 extension ADBackground {
   struct DoodleLines: View {
     let rect: CGRect
-    let verticalCount: Int = 4
+    let verticalCount: Int = 3
     let horizontalCount: Int = 6
     
     var body: some View {
@@ -26,6 +26,7 @@ extension ADBackground {
         )
         .stroke(lineWidth: 2)
       }
+      .foregroundColor(.gray.opacity(0.3))
     }
     
     func calLenSeparated(
@@ -53,7 +54,7 @@ extension ADBackground.DoodleLines {
     }
 
     func drawVerticalLine(path: inout Path, fixX: CGFloat, maxY: CGFloat) {
-      let verticalInset: CGFloat = separated / 8
+      let verticalInset: CGFloat = separated / 5
       let horizontalMinInset: CGFloat = 5
       let horizontalMaxInset: CGFloat = 10
       var isLeft: Bool = .random()
@@ -144,9 +145,9 @@ extension ADBackground.DoodleLines {
     }
     
     func drawHorizontalLine(path: inout Path, fixY: CGFloat, maxX: CGFloat) {
-      let horizontalInset: CGFloat = separated / 8
-      let verticalMinInset: CGFloat = 2
-      let verticalMaxInset: CGFloat = 6
+      let horizontalInset: CGFloat = separated / 3
+      let verticalMinInset: CGFloat = 1
+      let verticalMaxInset: CGFloat = 3
       var isTop: Bool = .random()
       var start: CGPoint = .init(x: 0, y: fixY)
       

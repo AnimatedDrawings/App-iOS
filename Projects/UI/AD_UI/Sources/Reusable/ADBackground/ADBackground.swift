@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import AD_Utils
 
 public struct ADBackground: View {
   public init() {}
@@ -16,8 +17,33 @@ public struct ADBackground: View {
       let rect: CGRect = proxy.frame(in: .global)
       
       DoodleLines(rect: rect)
+        .background(ADUtilsAsset.Color.blue4.swiftUIColor)
+        .mask {
+          RandomCurveShape().path(in: rect)
+        }
     }
     .ignoresSafeArea()
+  }
+}
+
+extension ADBackground {
+  struct RandomCurveShape: Shape {
+    func path(in rect: CGRect) -> Path {
+      var path = Path()
+      let start = CGPoint(x: 0, y: rect.midY)
+      let end = CGPoint(x: rect.maxX, y: rect.midY / 2)
+      let control1 = CGPoint(x: rect.maxX / 8, y: rect.midY / 6)
+      let control2 = CGPoint(x: rect.maxX - (rect.maxX / 8), y: rect.midY - (rect.midY / 5))
+      
+      path.move(to: start)
+      path.addCurve(to: end, control1: control1, control2: control2)
+      
+      path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
+      path.addLine(to: CGPoint(x: 0, y: rect.maxY))
+      path.addLine(to: start)
+      
+      return path
+    }
   }
 }
 
