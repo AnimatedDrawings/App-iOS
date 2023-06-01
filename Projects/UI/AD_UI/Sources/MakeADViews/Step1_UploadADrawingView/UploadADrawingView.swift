@@ -93,30 +93,6 @@ extension UploadADrawingView {
       CheckListButton(description3, state: checkState3, action: checkAction3)
     }
   }
-  
-  @ViewBuilder
-  func CheckListButton(
-    _ description: String,
-    state: Binding<Bool>,
-    action: @escaping ADAction
-  ) -> some View {
-    let checkmarkCircle = "checkmark.circle"
-    
-    Button(action: action) {
-      HStack(alignment: .top) {
-        Image(systemName: checkmarkCircle)
-          .foregroundColor(
-            state.wrappedValue ?
-            ADUtilsAsset.Color.blue2.swiftUIColor :
-                .black.opacity(0.4)
-          )
-        Text(description)
-          .foregroundColor(.black)
-          .multilineTextAlignment(.leading)
-          .strikethrough(state.wrappedValue)
-      }
-    }
-  }
 }
 
 extension UploadADrawingView {
