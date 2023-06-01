@@ -11,8 +11,11 @@ import AVFoundation
 import AD_Utils
 
 struct LoopingPlayer: UIViewRepresentable {
+  let name: String
+  let withExtension: String
+  
   func makeUIView(context: Context) -> UIView {
-    return QueuePlayerUIView(frame: .zero)
+    return QueuePlayerUIView(name: name, withExtension: withExtension, frame: .zero)
   }
   
   func updateUIView(_ uiView: UIView, context: Context) {
@@ -21,14 +24,22 @@ struct LoopingPlayer: UIViewRepresentable {
 }
 
 class QueuePlayerUIView: UIView {
+  let name: String
+  let withExtension: String
   private var playerLayer = AVPlayerLayer()
   private var playerLooper: AVPlayerLooper?
   
-  override init(frame: CGRect) {
+  init(
+    name: String,
+    withExtension: String,
+    frame: CGRect
+  ) {
+    self.name = name
+    self.withExtension = withExtension
     super.init(frame: frame)
     
     // Load Video
-    let fileUrl = ADUtilsResources.bundle.url(forResource: "ADPreview", withExtension: "mp4")!
+    let fileUrl = ADUtilsResources.bundle.url(forResource: name, withExtension: withExtension)!
     let playerItem = AVPlayerItem(url: fileUrl)
     
     // Setup Player
@@ -96,7 +107,7 @@ class PlayerUIView: UIView {
 struct LoopingPlayer_Previews: PreviewProvider {
   static var previews: some View {
     VStack {
-      LoopingPlayer()
+      LoopingPlayer(name: "ADApp_Preview", withExtension: "mp4")
     }
     .frame(width: 300, height: 300)
   }

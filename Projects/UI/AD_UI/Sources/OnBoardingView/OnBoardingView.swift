@@ -70,6 +70,9 @@ extension OnBoardingView {
 extension OnBoardingView {
   @ViewBuilder
   func Preview() -> some View {
+    let previewName = "ADApp_Preview"
+    let withExtension = "mp4"
+    
     ZStack {
       RoundedRectangle(cornerRadius: 10)
         .padding([.leading, .bottom], 20)
@@ -78,7 +81,7 @@ extension OnBoardingView {
       
       RoundedRectangle(cornerRadius: 10)
         .overlay {
-          LoopingPlayer()
+          LoopingPlayer(name: previewName, withExtension: withExtension)
             .mask {
               RoundedRectangle(cornerRadius: 8)
             }
