@@ -22,11 +22,17 @@ extension FindingTheCharacterView {
     VStack(alignment: .leading, spacing: 20) {
       Title()
       CheckList(checkState: checkState, checkAction: checkAction)
-      Preview()
+      
+      if !checkState.wrappedValue {
+        Preview()
+      } else {
+        
+      }
       
       Spacer()
     }
     .padding()
+    .background(ADBackground())
   }
 }
 
