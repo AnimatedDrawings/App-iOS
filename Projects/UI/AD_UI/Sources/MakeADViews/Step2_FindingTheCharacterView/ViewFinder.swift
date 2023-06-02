@@ -37,10 +37,14 @@ struct ViewFinder: View {
       .frame(width: maxWidth, height: maxHeight)
       .foregroundColor(.cyan)
       .overlay {
-        ZStack(alignment: .topLeading) {
-          VerticalLines(curSpace(curWidth))
-          HorizontalLines(curSpace(curHeight))
+        VStack {
+          ZStack(alignment: .topLeading) {
+            VerticalLines(curSpace(curWidth))
+            HorizontalLines(curSpace(curHeight))
+          }
+          .frame(maxWidth: curWidth, maxHeight: curHeight, alignment: .topLeading)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
       }
   }
 }
