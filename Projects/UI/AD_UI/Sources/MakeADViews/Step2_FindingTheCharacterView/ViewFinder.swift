@@ -65,23 +65,42 @@ extension ViewFinder {
 }
 
 extension ViewFinder {
-  var gestureWithVerticalLines: some Gesture {
+  func GridGesture(
+    isVertical: Bool,
+    isTopOrLeft: Bool
+  ) -> some Gesture {
     return DragGesture()
       .onChanged { value in
-        let tmpCurrentWidth = currentSize(
-          translation: value.translation.width,
-          lastSize: lastWidth,
-          maxSize: maxWidth
+        let tmpTranslation: CGFloat = isVertical ? value.translation.width : value.translation.height
+        let translation: CGFloat = isTopOrLeft ? -tmpTranslation : tmpTranslation
+        let lastSize: CGFloat = isVertical ? lastWidth : lastHeight
+        let maxSize: CGFloat = isVertical ? maxWidth : maxHeight
+        let curSize: CGFloat = isVertical ? curWidth : curHeight
+        
+        let tmpSize = currentSize(
+          translation: translation,
+          lastSize: lastSize,
+          maxSize: maxSize
         )
-        if tmpCurrentWidth != curWidth {
-          curWidth = tmpCurrentWidth
+        if tmpSize != curSize {
+          if isVertical {
+            curWidth = tmpSize
+          } else {
+            curHeight = tmpSize
+          }
         }
       }
       .onEnded { _ in
-        lastWidth = curWidth
+        if isVertical {
+          lastWidth = curWidth
+        } else {
+          lastHeight = curHeight
+        }
       }
   }
-  
+}
+
+extension ViewFinder {
   var verticalLine: some View {
     Rectangle()
       .frame(maxHeight: .infinity)
@@ -92,6 +111,7 @@ extension ViewFinder {
   func VerticalLines(_ curSpace: CGFloat) -> some View {
     ZStack {
       verticalLine
+        .gesture(GridGesture(isVertical: true, isTopOrLeft: true))
       verticalLine
         .offset(x: lineWidth)
         .offset(x: curSpace)
@@ -101,29 +121,12 @@ extension ViewFinder {
       verticalLine
         .offset(x: lineWidth * 3)
         .offset(x: curSpace * 3)
-        .gesture(gestureWithVerticalLines)
+        .gesture(GridGesture(isVertical: true, isTopOrLeft: false))
     }
   }
 }
 
 extension ViewFinder {
-  var gestureWithHorizontalLines: some Gesture {
-    return DragGesture()
-      .onChanged { value in
-        let tmpCurrentHeight = currentSize(
-          translation: value.translation.height,
-          lastSize: lastHeight,
-          maxSize: maxHeight
-        )
-        if tmpCurrentHeight != curHeight {
-          curHeight = tmpCurrentHeight
-        }
-      }
-      .onEnded { _ in
-        lastHeight = curHeight
-      }
-  }
-  
   var horizontalLine: some View {
     Rectangle()
       .frame(maxWidth: .infinity)
@@ -134,6 +137,7 @@ extension ViewFinder {
   func HorizontalLines(_ curSpace: CGFloat) -> some View {
     ZStack {
       horizontalLine
+        .gesture(GridGesture(isVertical: false, isTopOrLeft: true))
       horizontalLine
         .offset(y: lineWidth)
         .offset(y: curSpace)
@@ -143,7 +147,7 @@ extension ViewFinder {
       horizontalLine
         .offset(y: lineWidth * 3)
         .offset(y: curSpace * 3)
-        .gesture(gestureWithHorizontalLines)
+        .gesture(GridGesture(isVertical: false, isTopOrLeft: false))
     }
   }
 }
