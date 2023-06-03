@@ -13,6 +13,7 @@ struct ViewFinder: View {
   let lineWidth: CGFloat = 3
   /// (lineWidth * lineCount) + (minimumSpace * spaceCount)
   let minSize: CGFloat = (3 * 4) + (2 * 3)
+  @State var isTopOrLeft: Bool = false
   
   let maxWidth: CGFloat
   @State var lastWidth: CGFloat
@@ -37,15 +38,34 @@ struct ViewFinder: View {
       .frame(width: maxWidth, height: maxHeight)
       .foregroundColor(.cyan)
       .overlay {
-        VStack {
-          ZStack(alignment: .topLeading) {
-            VerticalLines(curSpace(curWidth))
-            HorizontalLines(curSpace(curHeight))
-          }
-          .frame(maxWidth: curWidth, maxHeight: curHeight, alignment: .topLeading)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        TestGridView()
       }
+  }
+}
+
+extension ViewFinder {
+  @ViewBuilder
+  func GridView() -> some View {
+    VStack {
+      ZStack(alignment: .topLeading) {
+        VerticalLines(curSpace(curWidth))
+        HorizontalLines(curSpace(curHeight))
+      }
+      .frame(maxWidth: curWidth, maxHeight: curHeight, alignment: .topLeading)
+    }
+    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+  }
+  
+  @ViewBuilder
+  func TestGridView() -> some View {
+    VStack {
+      ZStack(alignment: .topLeading) {
+        VerticalLines(curSpace(curWidth))
+        HorizontalLines(curSpace(curHeight))
+      }
+      .frame(maxWidth: curWidth, maxHeight: curHeight, alignment: .topLeading)
+    }
+    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
   }
 }
 
@@ -76,6 +96,10 @@ extension ViewFinder {
         let lastSize: CGFloat = isVertical ? lastWidth : lastHeight
         let maxSize: CGFloat = isVertical ? maxWidth : maxHeight
         let curSize: CGFloat = isVertical ? curWidth : curHeight
+        
+        if self.isTopOrLeft != isTopOrLeft {
+          self.isTopOrLeft = isTopOrLeft
+        }
         
         let tmpSize = currentSize(
           translation: translation,
