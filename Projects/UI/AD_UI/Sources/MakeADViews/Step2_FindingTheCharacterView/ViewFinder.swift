@@ -14,58 +14,163 @@ struct ViewFinder: View {
   /// (lineWidth * lineCount) + (minimumSpace * spaceCount)
   let minSize: CGFloat = (3 * 4) + (2 * 3)
   @State var isTopOrLeft: Bool = false
+  @State var isVertical: Bool = false
+  @State var cropRect: CGRect
   
   let maxWidth: CGFloat
-  @State var lastWidth: CGFloat
-  @State var curWidth: CGFloat
-  
   let maxHeight: CGFloat
-  @State var lastHeight: CGFloat
+  @State var curX: CGFloat
+  @State var curY: CGFloat
+  @State var curWidth: CGFloat
   @State var curHeight: CGFloat
   
   init(width: CGFloat = 300, height: CGFloat = 400) {
-    self.maxWidth = width
-    self.lastWidth = width
-    self.curWidth = width
+    self.cropRect = .init(origin: .zero, size: .init(width: width, height: height))
     
+    self.maxWidth = width
     self.maxHeight = height
-    self.lastHeight = height
+    self.curX = 0
+    self.curY = 0
+    self.curWidth = width
     self.curHeight = height
   }
   
   var body: some View {
     Rectangle()
       .frame(width: maxWidth, height: maxHeight)
-      .foregroundColor(.cyan)
+      .foregroundColor(.gray.opacity(0.3))
       .overlay {
-        TestGridView()
+        CropStroke()
+      }
+      .overlay {
+        CropCircles()
+      }
+      .onChange(of: curX) { newValue in
+        print("curX : \(curX)")
+      }
+      .onChange(of: curY) { newValue in
+        print("curY : \(curY)")
+      }
+      .onChange(of: curWidth) { newValue in
+        print("curWidth : \(curWidth)")
+      }
+      .onChange(of: curHeight) { newValue in
+        print("curHeight : \(curHeight)")
+        print("")
       }
   }
 }
 
 extension ViewFinder {
   @ViewBuilder
-  func GridView() -> some View {
-    VStack {
-      ZStack(alignment: .topLeading) {
-        VerticalLines(curSpace(curWidth))
-        HorizontalLines(curSpace(curHeight))
+  func CropStroke() -> some View {
+    Rectangle()
+      .stroke(ADUtilsAsset.Color.blue3.swiftUIColor, lineWidth: lineWidth)
+//      .position(x: (maxWidth / 2) - curX, y: (maxHeight / 2) - curY)
+//      .position(x: 0, y: 0)
+      .frame(width: curWidth, height: curHeight)
+//      .offset(x: curX, y: curY)
+//      .position(x: curX + (curWidth / 2), y: curY + (curHeight / 2))
+//      .position(x : (curWidth / 2), y: (curHeight / 2))
+  }
+}
+
+extension ViewFinder {
+  @ViewBuilder
+  func cropCircle(row: Int, col: Int) -> some View {
+    Circle()
+      .frame(width: 20, height: 20)
+      .foregroundColor(.white)
+      .overlay {
+        Circle()
+          .strokeBorder(ADUtilsAsset.Color.blue3.swiftUIColor, lineWidth: lineWidth)
       }
-      .frame(maxWidth: curWidth, maxHeight: curHeight, alignment: .topLeading)
-    }
-    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+      .position(
+        x: curX + ((curWidth / 2) * CGFloat(col)),
+        y: curY + ((curHeight / 2) * CGFloat(row))
+      )
   }
   
   @ViewBuilder
-  func TestGridView() -> some View {
-    VStack {
-      ZStack(alignment: .topLeading) {
-        VerticalLines(curSpace(curWidth))
-        HorizontalLines(curSpace(curHeight))
+  func CropCircles() -> some View {
+    ZStack {
+      ForEach(0...2, id: \.self) { row in
+        ForEach(0...2, id: \.self) { col in
+          if !(row == 1 && col == 1) {
+            if (row + col) % 2 == 0 {
+              
+            } else {
+              let isVertical: Bool = col != 1 ? true : false
+              let isTopOrLeft: Bool = row == 0 || col == 0 ? true : false
+              
+              cropCircle(row: row, col: col)
+                .gesture(LineGesture(isVertical: isVertical, isTopOrLeft: isTopOrLeft))
+            }
+          }
+        }
       }
-      .frame(maxWidth: curWidth, maxHeight: curHeight, alignment: .topLeading)
     }
-    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+  }
+}
+
+extension ViewFinder {
+  func LineGesture(isVertical: Bool, isTopOrLeft: Bool) -> some Gesture {
+    return DragGesture()
+      .onChanged { value in
+        gestureOnChangedAction(value: value, isVertical: isVertical, isTopOrLeft: isTopOrLeft)
+      }
+      .onEnded(gestureOnEndedAction)
+  }
+  
+  func gestureOnChangedAction(
+    value: DragGesture.Value,
+    isVertical: Bool,
+    isTopOrLeft: Bool
+  ) {
+    if self.isTopOrLeft != isTopOrLeft {
+      self.isTopOrLeft = isTopOrLeft
+    }
+    
+    if self.isVertical != isVertical {
+      self.isVertical = isVertical
+    }
+    
+    let tmpTranslation: CGFloat = isVertical ? value.translation.width : value.translation.height
+    let translation: CGFloat = isTopOrLeft ? -tmpTranslation : tmpTranslation
+    let lastSize: CGFloat = isVertical ? cropRect.width : cropRect.height
+    let lastOrigin: CGFloat = isVertical ? cropRect.origin.x : cropRect.origin.y
+    let maxSize: CGFloat = isVertical ? maxWidth : maxHeight
+    let curSize: CGFloat = isVertical ? curWidth : curHeight
+    let tmpSize: CGFloat = currentSize(
+      translation: translation,
+      lastSize: lastSize,
+      lastOrigin: lastOrigin,
+      maxSize: maxSize
+    )
+    
+    if tmpSize != curSize {
+      if isVertical {
+        curWidth = tmpSize
+        if isTopOrLeft {
+          curX = lastOrigin - translation
+        }
+      } else {
+        curHeight = tmpSize
+        if isTopOrLeft {
+          curY = lastOrigin - translation
+        }
+      }
+    }
+  }
+  
+  func gestureOnEndedAction(_ value: DragGesture.Value) {
+    if self.isVertical {
+      cropRect.size.width = curWidth
+      cropRect.origin.x = curX
+    } else {
+      cropRect.size.height = curHeight
+      cropRect.origin.y = curY
+    }
   }
 }
 
@@ -78,101 +183,13 @@ extension ViewFinder {
   func currentSize(
     translation: CGFloat,
     lastSize: CGFloat,
+    lastOrigin: CGFloat,
     maxSize: CGFloat
   ) -> CGFloat {
-    return max(minSize, min(maxSize, lastSize + translation))
-  }
-}
-
-extension ViewFinder {
-  func GridGesture(
-    isVertical: Bool,
-    isTopOrLeft: Bool
-  ) -> some Gesture {
-    return DragGesture()
-      .onChanged { value in
-        let tmpTranslation: CGFloat = isVertical ? value.translation.width : value.translation.height
-        let translation: CGFloat = isTopOrLeft ? -tmpTranslation : tmpTranslation
-        let lastSize: CGFloat = isVertical ? lastWidth : lastHeight
-        let maxSize: CGFloat = isVertical ? maxWidth : maxHeight
-        let curSize: CGFloat = isVertical ? curWidth : curHeight
-        
-        if self.isTopOrLeft != isTopOrLeft {
-          self.isTopOrLeft = isTopOrLeft
-        }
-        
-        let tmpSize = currentSize(
-          translation: translation,
-          lastSize: lastSize,
-          maxSize: maxSize
-        )
-        if tmpSize != curSize {
-          if isVertical {
-            curWidth = tmpSize
-          } else {
-            curHeight = tmpSize
-          }
-        }
-      }
-      .onEnded { _ in
-        if isVertical {
-          lastWidth = curWidth
-        } else {
-          lastHeight = curHeight
-        }
-      }
-  }
-}
-
-extension ViewFinder {
-  var verticalLine: some View {
-    Rectangle()
-      .frame(maxHeight: .infinity)
-      .frame(width: lineWidth)
-  }
-  
-  @ViewBuilder
-  func VerticalLines(_ curSpace: CGFloat) -> some View {
-    ZStack {
-      verticalLine
-        .gesture(GridGesture(isVertical: true, isTopOrLeft: true))
-      verticalLine
-        .offset(x: lineWidth)
-        .offset(x: curSpace)
-      verticalLine
-        .offset(x: lineWidth * 2)
-        .offset(x: curSpace * 2)
-      verticalLine
-        .offset(x: lineWidth * 3)
-        .offset(x: curSpace * 3)
-        .gesture(GridGesture(isVertical: true, isTopOrLeft: false))
-    }
-  }
-}
-
-extension ViewFinder {
-  var horizontalLine: some View {
-    Rectangle()
-      .frame(maxWidth: .infinity)
-      .frame(height: lineWidth)
-  }
-  
-  @ViewBuilder
-  func HorizontalLines(_ curSpace: CGFloat) -> some View {
-    ZStack {
-      horizontalLine
-        .gesture(GridGesture(isVertical: false, isTopOrLeft: true))
-      horizontalLine
-        .offset(y: lineWidth)
-        .offset(y: curSpace)
-      horizontalLine
-        .offset(y: lineWidth * 2)
-        .offset(y: curSpace * 2)
-      horizontalLine
-        .offset(y: lineWidth * 3)
-        .offset(y: curSpace * 3)
-        .gesture(GridGesture(isVertical: false, isTopOrLeft: false))
-    }
+    let curSize: CGFloat = lastSize + translation
+    let tmpMaxSize: CGFloat = self.isTopOrLeft ? lastSize + lastOrigin : maxSize - lastOrigin
+    
+    return max(minSize, min(tmpMaxSize, curSize))
   }
 }
 
