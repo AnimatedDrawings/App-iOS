@@ -1,5 +1,5 @@
 //
-//  ViewFinder.swift
+//  CropImageView.swift
 //  AD_UI
 //
 //  Created by minii on 2023/06/02.
@@ -9,13 +9,13 @@
 import SwiftUI
 import AD_Utils
 
-struct ViewFinder: View {
+struct CropImageView: View {
   let lineWidth: CGFloat = 3
   /// (lineWidth * lineCount) + (minimumSpace * spaceCount)
   let minSize: CGFloat = (3 * 4) + (2 * 3)
   @State var isTopOrLeft: Bool = false
   @State var isVertical: Bool = false
-  @State var cropRect: CGRect
+  @Binding var cropRect: CGRect
   
   let maxWidth: CGFloat
   let maxHeight: CGFloat
@@ -24,15 +24,15 @@ struct ViewFinder: View {
   @State var curWidth: CGFloat
   @State var curHeight: CGFloat
   
-  init(width: CGFloat = 300, height: CGFloat = 400) {
-    self.cropRect = .init(origin: .zero, size: .init(width: width, height: height))
+  init(initRect: CGRect, cropRect: Binding<CGRect>) {
+    self._cropRect = cropRect
     
-    self.maxWidth = width
-    self.maxHeight = height
-    self.curX = 0
-    self.curY = 0
-    self.curWidth = width
-    self.curHeight = height
+    self.maxWidth = initRect.size.width
+    self.maxHeight = initRect.size.height
+    self.curX = initRect.origin.x
+    self.curY = initRect.origin.y
+    self.curWidth = initRect.size.width
+    self.curHeight = initRect.size.height
   }
   
   var body: some View {
@@ -45,7 +45,7 @@ struct ViewFinder: View {
   }
 }
 
-extension ViewFinder {
+extension CropImageView {
   @ViewBuilder
   func CropView() -> some View {
     ZStack {
@@ -55,7 +55,7 @@ extension ViewFinder {
   }
 }
 
-extension ViewFinder {
+extension CropImageView {
   @ViewBuilder
   func CropStroke() -> some View {
     VStack {
@@ -73,7 +73,7 @@ extension ViewFinder {
   }
 }
 
-extension ViewFinder {
+extension CropImageView {
   @ViewBuilder
   func cropCircle(row: Int, col: Int) -> some View {
     Circle()
@@ -111,7 +111,7 @@ extension ViewFinder {
   }
 }
 
-extension ViewFinder {
+extension CropImageView {
   func LineGesture(isVertical: Bool, isTopOrLeft: Bool) -> some Gesture {
     return DragGesture()
       .onChanged { value in
@@ -172,7 +172,7 @@ extension ViewFinder {
   }
 }
 
-extension ViewFinder {
+extension CropImageView {
   func curSpace(_ curSize: CGFloat) -> CGFloat {
     /// (curSize(width or height) - totalLineWidth) / spaceCount
     return CGFloat((curSize - 12) / 3)
