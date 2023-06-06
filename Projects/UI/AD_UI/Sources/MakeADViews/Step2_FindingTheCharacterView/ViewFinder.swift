@@ -40,38 +40,36 @@ struct ViewFinder: View {
       .frame(width: maxWidth, height: maxHeight)
       .foregroundColor(.gray.opacity(0.3))
       .overlay {
-        CropStroke()
-      }
-      .overlay {
-        CropCircles()
-      }
-      .onChange(of: curX) { newValue in
-        print("curX : \(curX)")
-      }
-      .onChange(of: curY) { newValue in
-        print("curY : \(curY)")
-      }
-      .onChange(of: curWidth) { newValue in
-        print("curWidth : \(curWidth)")
-      }
-      .onChange(of: curHeight) { newValue in
-        print("curHeight : \(curHeight)")
-        print("")
+        CropView()
       }
   }
 }
 
 extension ViewFinder {
   @ViewBuilder
+  func CropView() -> some View {
+    ZStack {
+      CropStroke()
+      CropCircles()
+    }
+  }
+}
+
+extension ViewFinder {
+  @ViewBuilder
   func CropStroke() -> some View {
-    Rectangle()
-      .stroke(ADUtilsAsset.Color.blue3.swiftUIColor, lineWidth: lineWidth)
-//      .position(x: (maxWidth / 2) - curX, y: (maxHeight / 2) - curY)
-//      .position(x: 0, y: 0)
-      .frame(width: curWidth, height: curHeight)
-//      .offset(x: curX, y: curY)
-//      .position(x: curX + (curWidth / 2), y: curY + (curHeight / 2))
-//      .position(x : (curWidth / 2), y: (curHeight / 2))
+    VStack {
+      ZStack(alignment: .topLeading) {
+        Rectangle()
+          .stroke(ADUtilsAsset.Color.blue3.swiftUIColor, lineWidth: lineWidth)
+      }
+      .offset(
+        x: curX,
+        y: curY
+      )
+      .frame(maxWidth: curWidth, maxHeight: curHeight, alignment: .topLeading)
+    }
+    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
   }
 }
 
