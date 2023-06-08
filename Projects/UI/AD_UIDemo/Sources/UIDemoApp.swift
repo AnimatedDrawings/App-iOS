@@ -11,9 +11,12 @@ import AD_UI
 
 @main
 struct UIDemoApp: App {
+  let ui = FindingTheCharacterView()
+  @State var checkState: Bool = false
+  
   var body: some Scene {
     WindowGroup {
-      TestViewFinder()
+      ui.Main(checkState: $checkState, checkAction: {})
     }
   }
 }

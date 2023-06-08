@@ -19,19 +19,21 @@ extension FindingTheCharacterView {
     checkState: Binding<Bool>,
     checkAction: @escaping ADAction
   ) -> some View {
-    VStack(alignment: .leading, spacing: 20) {
-      Title()
-      CheckList(checkState: checkState, checkAction: checkAction)
-      
-      if !checkState.wrappedValue {
-        Preview()
-      } else {
+    ScrollView {
+      VStack(alignment: .leading, spacing: 20) {
+        Title()
+        CheckList(checkState: checkState, checkAction: checkAction)
         
+        if !checkState.wrappedValue {
+          Preview()
+        } else {
+          
+        }
+        
+        Spacer()
       }
-      
-      Spacer()
+      .padding()
     }
-    .padding()
     .background(ADBackground())
   }
 }
@@ -77,7 +79,7 @@ extension FindingTheCharacterView {
       GIFView(gifName: "FindingTheCharacter_Preview1")
       GIFView(gifName: "FindingTheCharacter_Preview2")
     }
-    .frame(maxHeight: 250)
+    .frame(height: 250)
   }
 }
 
