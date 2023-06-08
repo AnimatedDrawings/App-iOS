@@ -11,28 +11,52 @@ import AD_Utils
 
 struct ViewFinder: View {
   let originalImage: UIImage
-  @State var cropRect: CGRect = .init()
+  @Binding var cropRect: CGRect
+  @Binding var imageScale: CGFloat
   
-  init(originalImage: UIImage = ADUtilsAsset.SampleDrawing.garlic.image) {
+  init(
+    originalImage: UIImage,
+    cropRect: Binding<CGRect>,
+    imageScale: Binding<CGFloat>
+  ) {
     self.originalImage = originalImage
+    self._cropRect = cropRect
+    self._imageScale = imageScale
   }
   
   var body: some View {
     VStack {
-      GeometryReader { proxy in
-        let cgRect: CGRect = proxy.frame(in: .local)
-        
-        Image(uiImage: originalImage)
-          .resizable()
-          .onAppear {
-            self.cropRect = cgRect
+      Image(uiImage: originalImage)
+        .resizable()
+        .aspectRatio(contentMode: .fit)
+        .overlay {
+          GeometryReader { proxy in
+            let cgRect: CGRect = proxy.frame(in: .local)
+            
+            GridView(initRect: cgRect, cropRect: $cropRect)
+              .onAppear {
+                self.cropRect = cgRect
+                self.imageScale = self.originalImage.size.width / cgRect.size.width
+              }
           }
-          .overlay {
-            CropImageView(initRect: cgRect, cropRect: $cropRect)
-          }
-      }
+        }
     }
-    .padding(.horizontal, 20)
-    .frame(height: 400)
+    .padding(.horizontal)
+  }
+}
+
+struct TestViewFinder: View {
+  let image: UIImage = ADUtilsAsset.SampleDrawing.garlic.image
+  @State var cropRect: CGRect = .init()
+  @State var imageScale: CGFloat = 0
+  
+  var body: some View {
+    ViewFinder(originalImage: image, cropRect: $cropRect, imageScale: $imageScale)
+  }
+}
+
+struct ViewFinder_Previews: PreviewProvider {
+  static var previews: some View {
+    TestViewFinder()
   }
 }

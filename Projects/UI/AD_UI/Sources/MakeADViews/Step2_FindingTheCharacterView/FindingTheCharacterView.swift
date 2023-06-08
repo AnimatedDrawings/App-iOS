@@ -16,6 +16,7 @@ public struct FindingTheCharacterView: ADUI {
 extension FindingTheCharacterView {
   @ViewBuilder
   public func Main(
+    originalImage: UIImage,
     checkState: Binding<Bool>,
     checkAction: @escaping ADAction
   ) -> some View {
@@ -24,11 +25,10 @@ extension FindingTheCharacterView {
         Title()
         CheckList(checkState: checkState, checkAction: checkAction)
         
-        if !checkState.wrappedValue {
-          Preview()
-        } else {
-          
-        }
+        Preview()
+        
+        CropImageView(originalImage: originalImage)
+          .scrollDisabled(true)
         
         Spacer()
       }
@@ -83,20 +83,24 @@ extension FindingTheCharacterView {
   }
 }
 
-struct FindingTheCharacterView_Previews: PreviewProvider {
-  struct TestFindingTheCharacterView: View {
-    let ui = FindingTheCharacterView()
-    @State var checkState = false
-    
-    var body: some View {
-      ui.Main(
-        checkState: $checkState,
-        checkAction: {}
-      )
-    }
-  }
+public struct PreviewsFindingTheCharacterView: View {
+  let ui = FindingTheCharacterView()
+  let originalImage: UIImage = ADUtilsAsset.SampleDrawing.garlic.image
+  @State var checkState = false
   
+  public init() {}
+  
+  public var body: some View {
+    ui.Main(
+      originalImage: originalImage,
+      checkState: $checkState,
+      checkAction: {}
+    )
+  }
+}
+
+struct FindingTheCharacterView_Previews: PreviewProvider {
   static var previews: some View {
-    TestFindingTheCharacterView()
+    PreviewsFindingTheCharacterView()
   }
 }

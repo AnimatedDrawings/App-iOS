@@ -16,6 +16,7 @@ public struct RootFeature: View {
     NavigationStack {
       OnBoarding()
     }
+    .preferredColorScheme(.light)
   }
 }
 

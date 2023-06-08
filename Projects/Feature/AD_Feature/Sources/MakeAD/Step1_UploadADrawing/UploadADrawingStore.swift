@@ -6,6 +6,8 @@
 //  Copyright © 2023 chminipark. All rights reserved.
 //
 
+import SwiftUI
+import AD_Utils
 import ComposableArchitecture
 
 struct UploadADrawingStore: ReducerProtocol {
@@ -14,6 +16,10 @@ struct UploadADrawingStore: ReducerProtocol {
     @BindingState var checkState2 = false
     @BindingState var checkState3 = false
     @BindingState var uploadState = false
+    
+    @BindingState var isPushFindingCharacter = false
+    @BindingState var originalImage = UIImage()
+    let sampleImage: UIImage = ADUtilsAsset.SampleDrawing.garlic.image
   }
   
   enum Action: BindableAction, Equatable {
@@ -54,7 +60,8 @@ struct UploadADrawingStore: ReducerProtocol {
         return .none
         
       case .sampleTapAction:
-        print("sampleTapAction")
+        state.originalImage = state.sampleImage
+        state.isPushFindingCharacter = true
         return .none
       }
     }

@@ -42,6 +42,9 @@ struct UploadADrawing: ADFeature {
         
         sampleTapAction: { viewStore.send(.sampleTapAction) }
       )
+      .navigationDestination(isPresented: viewStore.binding(\.$isPushFindingCharacter)) {
+        FindingTheCharacter(originalImage: viewStore.originalImage)
+      }
     }
   }
 }
