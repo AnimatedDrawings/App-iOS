@@ -16,14 +16,28 @@ public struct UploadADrawingView: ADUI {
 extension UploadADrawingView {
   @ViewBuilder
   public func Main(
+    checkState1: Binding<Bool>,
+    checkAction1: @escaping ADAction,
+    checkState2: Binding<Bool>,
+    checkAction2: @escaping ADAction,
+    checkState3: Binding<Bool>,
+    checkAction3: @escaping ADAction,
+    uploadState: Binding<Bool>,
     uploadAction: @escaping ADAction,
     sampleTapAction: @escaping ADAction
   ) -> some View {
     ScrollView {
       VStack(alignment: .leading, spacing: 20) {
         Title()
-        CheckList()
-        UploadButton(action: uploadAction)
+        CheckList(
+          checkState1: checkState1,
+          checkAction1: checkAction1,
+          checkState2: checkState2,
+          checkAction2: checkAction2,
+          checkState3: checkState3,
+          checkAction3: checkAction3
+        )
+        UploadButton(state: uploadState, action: uploadAction)
         
         SampleDrawingsDescription()
         SampleImages(cardAction1: sampleTapAction)
@@ -56,7 +70,14 @@ extension UploadADrawingView {
 
 extension UploadADrawingView {
   @ViewBuilder
-  func CheckList() -> some View {
+  func CheckList(
+    checkState1: Binding<Bool>,
+    checkAction1: @escaping ADAction,
+    checkState2: Binding<Bool>,
+    checkAction2: @escaping ADAction,
+    checkState3: Binding<Bool>,
+    checkAction3: @escaping ADAction
+  ) -> some View {
     let title = "C H E C K L I S T"
     let description1 = "Make sure the character is drawn on a white piece of paper without lines, wrinkles, or tears"
     let description2 = "Make sure the drawing is well lit. To minimize shadows, hold the camera further away and zoom in on the drawing."
@@ -65,32 +86,28 @@ extension UploadADrawingView {
     VStack(alignment: .leading, spacing: 15) {
       Text(title)
         .font(.system(.title3, weight: .medium))
-      CheckListDescription(with: description1)
-      CheckListDescription(with: description2)
-      //      // MARK: "(see our community standards)" 링크추가
-      CheckListDescription(with: description3)
-    }
-  }
-  
-  @ViewBuilder
-  func CheckListDescription(with description: String) -> some View {
-    let checkmarkCircle = "checkmark.circle"
-    
-    HStack(alignment: .top) {
-      Image(systemName: checkmarkCircle)
-        .foregroundColor(ADUtilsAsset.Color.blue2.swiftUIColor)
-      Text(description)
+      
+      CheckListButton(description1, state: checkState1, action: checkAction1)
+      CheckListButton(description2, state: checkState2, action: checkAction2)
+      //      //      // MARK: "(see our community standards)" 링크추가
+      CheckListButton(description3, state: checkState3, action: checkAction3)
     }
   }
 }
 
 extension UploadADrawingView {
   @ViewBuilder
-  func UploadButton(action: @escaping () -> ()) -> some View {
+  func UploadButton(
+    state: Binding<Bool>,
+    action: @escaping () -> ()
+  ) -> some View {
     let photoFill = "photo.fill"
     let text = "Upload Photo"
     
-    ADButton(action: action) {
+    ADButton(
+      state.wrappedValue ? .active : .inActive,
+      action: action
+    ) {
       HStack {
         Image(systemName: photoFill)
         Text(text)
@@ -147,12 +164,29 @@ extension UploadADrawingView {
 }
 
 struct UploadADrawingView_Previews: PreviewProvider {
-  static var previews: some View {
+  struct TestUploadADrawingView: View {
     let ui = UploadADrawingView()
+    @State var checkState1 = false
+    @State var checkState2 = false
+    @State var checkState3 = false
+    @State var uploadState = false
     
-    ui.Main(
-      uploadAction: {},
-      sampleTapAction: {}
-    )
+    var body: some View {
+      ui.Main(
+        checkState1: $checkState1,
+        checkAction1: { checkState1.toggle() },
+        checkState2: $checkState2,
+        checkAction2: { checkState2.toggle() },
+        checkState3: $checkState3,
+        checkAction3: { checkState3.toggle() },
+        uploadState: $uploadState,
+        uploadAction: { uploadState.toggle() },
+        sampleTapAction: {}
+      )
+    }
+  }
+  
+  static var previews: some View {
+    TestUploadADrawingView()
   }
 }

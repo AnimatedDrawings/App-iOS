@@ -30,9 +30,21 @@ struct UploadADrawing: ADFeature {
   var body: some View {
     WithViewStore(store, observe: { $0 }) { viewStore in
       ui.Main(
+        checkState1: viewStore.binding(\.$checkState1),
+        checkAction1: { viewStore.send(.checkAction1) },
+        checkState2: viewStore.binding(\.$checkState2),
+        checkAction2: { viewStore.send(.checkAction2) },
+        checkState3: viewStore.binding(\.$checkState3),
+        checkAction3: { viewStore.send(.checkAction3) },
+        
+        uploadState: viewStore.binding(\.$uploadState),
         uploadAction: { viewStore.send(.uploadAction) },
+        
         sampleTapAction: { viewStore.send(.sampleTapAction) }
       )
+      .navigationDestination(isPresented: viewStore.binding(\.$isPushFindingCharacter)) {
+        FindingTheCharacter(originalImage: viewStore.originalImage)
+      }
     }
   }
 }

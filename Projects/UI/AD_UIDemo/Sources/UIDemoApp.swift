@@ -11,12 +11,9 @@ import AD_UI
 
 @main
 struct UIDemoApp: App {
-  let ui = OnBoardingView()
-  
   var body: some Scene {
     WindowGroup {
-//      ui.Main(startButtonAction: {})
-      ADBackground()
+      PreviewsFindingTheCharacterView()
     }
   }
 }
