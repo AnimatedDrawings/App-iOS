@@ -10,19 +10,18 @@ import SwiftUI
 import ComposableArchitecture
 
 public struct OnBoardingStore: ReducerProtocol {
-  public struct State: Equatable {
-    public init() {}
+  struct State: Equatable {
     @BindingState var isPushUploadADrawing = false
   }
   
-  public enum Action: BindableAction, Equatable {
+  enum Action: BindableAction, Equatable {
     case binding(BindingAction<State>)
     case pushUploadADrawing
   }
   
   public init() {}
   
-  public var body: some ReducerProtocol<State, Action> {
+  var body: some ReducerProtocol<State, Action> {
     BindingReducer()
     Reduce { state, action in
       switch action {

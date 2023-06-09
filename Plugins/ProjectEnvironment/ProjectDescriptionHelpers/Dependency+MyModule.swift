@@ -3,7 +3,6 @@ import ProjectDescription
 public enum MyModule: String {
   case AD_iOS
   case AD_Feature
-  case AD_FeatureDemo
   case AD_UI
   case AD_UIDemo
   case AD_Utils

@@ -6,22 +6,22 @@
 //  Copyright © 2023 chminipark. All rights reserved.
 //
 
-import SwiftUI
-import ComposableArchitecture
-
-public struct RootFeature: View {
-  public init() {}
-  
-  public var body: some View {
-    NavigationStack {
-      OnBoarding()
-    }
-    .preferredColorScheme(.light)
-  }
-}
-
-struct RootFeature_Previews: PreviewProvider {
-  static var previews: some View {
-    RootFeature()
-  }
-}
+//import SwiftUI
+//import ComposableArchitecture
+//
+//public struct RootFeature: View {
+//  public init() {}
+//  
+//  public var body: some View {
+//    NavigationStack {
+//      OnBoarding()
+//    }
+//    .preferredColorScheme(.light)
+//  }
+//}
+//
+//struct RootFeature_Previews: PreviewProvider {
+//  static var previews: some View {
+//    RootFeature()
+//  }
+//}

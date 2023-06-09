@@ -6,11 +6,36 @@
 //
 
 import SwiftUI
+import AD_Feature
 import AD_Utils
 import ComposableArchitecture
 
 public struct OnBoardingView: ADUI {
-  public init() {}
+  typealias MyReducer = OnBoardingStore
+  
+  public let store: StoreOf<MyReducer>
+  
+  public var body: some View {
+    WithViewStore(store, observe: { $0 }) { viewStore in
+      VStack {
+        Title()
+        
+        Spacer().frame(height: 80)
+        
+        Preview()
+        
+        Spacer().frame(height: 80)
+        
+        StartButton() {
+          viewStore.send
+        }
+      }
+      .padding()
+      .frame(maxWidth: .infinity, maxHeight: .infinity)
+      .ignoresSafeArea(.all)
+      .background(ADBackground())
+    }
+  }
 }
 
 extension OnBoardingView {
@@ -18,21 +43,7 @@ extension OnBoardingView {
   public func Main(
     startButtonAction: @escaping ADAction
   ) -> some View {
-    VStack {
-      Title()
-      
-      Spacer().frame(height: 80)
-      
-      Preview()
-      
-      Spacer().frame(height: 80)
-      
-      StartButton(action: startButtonAction)
-    }
-    .padding()
-    .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .ignoresSafeArea(.all)
-    .background(ADBackground())
+    
   }
 }
 
