@@ -10,37 +10,29 @@ import AD_Feature
 import AD_Utils
 import ComposableArchitecture
 
-struct OnBoardingView: ADUI {
-  typealias MyReducer = OnBoardingStore
-  let store: StoreOf<MyReducer>
-  
-  init(
-    store: StoreOf<MyReducer> = Store(
-      initialState: MyReducer.State(),
-      reducer: MyReducer()
-    )
-  ) {
-    self.store = store
-  }
+struct OnBoardingView: View {
+  @Binding var isTapStartButton: Bool
   
   var body: some View {
-    WithViewStore(store, observe: { $0 }) { viewStore in
-      VStack {
-        Title()
-        
-        Spacer().frame(height: 80)
-        
-        Preview()
-        
-        Spacer().frame(height: 80)
-        
-        StartButton() { viewStore.send(.pushUploadADrawing) }
+    VStack {
+      Title()
+      
+      Spacer().frame(height: 80)
+      
+      Preview()
+      
+      Spacer().frame(height: 80)
+      
+      StartButton {
+        if isTapStartButton == false {
+          isTapStartButton = true
+        }
       }
-      .padding()
-      .frame(maxWidth: .infinity, maxHeight: .infinity)
-      .ignoresSafeArea(.all)
-      .background(ADBackground())
     }
+    .padding()
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .ignoresSafeArea(.all)
+    .background(ADBackground())
   }
 }
 
@@ -113,6 +105,8 @@ extension OnBoardingView {
 
 struct OnBoardingView_Previews: PreviewProvider {
   static var previews: some View {
-    OnBoardingView()
+    @State var isTapStartButton: Bool = false
+    
+    OnBoardingView(isTapStartButton: $isTapStartButton)
   }
 }

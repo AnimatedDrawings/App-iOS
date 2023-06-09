@@ -9,9 +9,15 @@
 import SwiftUI
 
 public struct RootView: View {
+  @State var isTapStartButton: Bool = false
+  
   public init() {}
   
   public var body: some View {
-    OnBoardingView()
+    if isTapStartButton {
+      UploadADrawingView()
+    } else {
+      OnBoardingView(isTapStartButton: $isTapStartButton)
+    }
   }
 }

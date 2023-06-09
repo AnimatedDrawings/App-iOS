@@ -84,12 +84,12 @@ extension UploadADrawingView {
         viewStore.send(.checkAction1)
       }
       
-      CheckListButton(description1, state: viewStore.binding(\.$checkState1)) {
+      CheckListButton(description2, state: viewStore.binding(\.$checkState2)) {
         viewStore.send(.checkAction1)
       }
       
       // MARK: "(see our community standards)" 링크추가
-      CheckListButton(description1, state: viewStore.binding(\.$checkState1)) {
+      CheckListButton(description3, state: viewStore.binding(\.$checkState3)) {
         viewStore.send(.checkAction1)
       }
     }
