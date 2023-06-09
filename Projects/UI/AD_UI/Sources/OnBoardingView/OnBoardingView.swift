@@ -10,12 +10,20 @@ import AD_Feature
 import AD_Utils
 import ComposableArchitecture
 
-public struct OnBoardingView: ADUI {
+struct OnBoardingView: ADUI {
   typealias MyReducer = OnBoardingStore
+  let store: StoreOf<MyReducer>
   
-  public let store: StoreOf<MyReducer>
+  init(
+    store: StoreOf<MyReducer> = Store(
+      initialState: MyReducer.State(),
+      reducer: MyReducer()
+    )
+  ) {
+    self.store = store
+  }
   
-  public var body: some View {
+  var body: some View {
     WithViewStore(store, observe: { $0 }) { viewStore in
       VStack {
         Title()
@@ -26,24 +34,13 @@ public struct OnBoardingView: ADUI {
         
         Spacer().frame(height: 80)
         
-        StartButton() {
-          viewStore.send
-        }
+        StartButton() { viewStore.send(.pushUploadADrawing) }
       }
       .padding()
       .frame(maxWidth: .infinity, maxHeight: .infinity)
       .ignoresSafeArea(.all)
       .background(ADBackground())
     }
-  }
-}
-
-extension OnBoardingView {
-  @ViewBuilder
-  public func Main(
-    startButtonAction: @escaping ADAction
-  ) -> some View {
-    
   }
 }
 
@@ -116,8 +113,6 @@ extension OnBoardingView {
 
 struct OnBoardingView_Previews: PreviewProvider {
   static var previews: some View {
-    OnBoardingView().Main(
-      startButtonAction: { print("efe") }
-    )
+    OnBoardingView()
   }
 }

@@ -10,19 +10,23 @@ import SwiftUI
 import AD_Utils
 import ComposableArchitecture
 
-struct UploadADrawingStore: ReducerProtocol {
-  struct State: Equatable {
-    @BindingState var checkState1 = false
-    @BindingState var checkState2 = false
-    @BindingState var checkState3 = false
-    @BindingState var uploadState = false
+public struct UploadADrawingStore: ReducerProtocol {
+  public init() {}
+  
+  public struct State: Equatable {
+    public init() {}
     
-    @BindingState var isPushFindingCharacter = false
-    @BindingState var originalImage = UIImage()
-    let sampleImage: UIImage = ADUtilsAsset.SampleDrawing.garlic.image
+    @BindingState public var checkState1 = false
+    @BindingState public var checkState2 = false
+    @BindingState public var checkState3 = false
+    @BindingState public var uploadState = false
+    
+    @BindingState public var isPushFindingCharacter = false
+    @BindingState public var originalImage = UIImage()
+    public let sampleImage: UIImage = ADUtilsAsset.SampleDrawing.garlic.image
   }
   
-  enum Action: BindableAction, Equatable {
+  public enum Action: BindableAction, Equatable {
     case binding(BindingAction<State>)
     
     case checkAction1
@@ -32,7 +36,7 @@ struct UploadADrawingStore: ReducerProtocol {
     case sampleTapAction
   }
   
-  var body: some ReducerProtocol<State, Action> {
+  public var body: some ReducerProtocol<State, Action> {
     BindingReducer()
     
     Reduce { state, action in

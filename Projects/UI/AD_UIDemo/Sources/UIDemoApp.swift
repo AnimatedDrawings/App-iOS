@@ -13,7 +13,7 @@ import AD_UI
 struct UIDemoApp: App {
   var body: some Scene {
     WindowGroup {
-      PreviewsFindingTheCharacterView()
+      RootView()
     }
   }
 }

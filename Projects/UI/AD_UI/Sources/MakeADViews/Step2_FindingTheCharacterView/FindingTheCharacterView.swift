@@ -7,34 +7,43 @@
 //
 
 import SwiftUI
+import AD_Feature
 import AD_Utils
+import ComposableArchitecture
 
-public struct FindingTheCharacterView: ADUI {
-  public init () {}
-}
-
-extension FindingTheCharacterView {
-  @ViewBuilder
-  public func Main(
-    originalImage: UIImage,
-    checkState: Binding<Bool>,
-    checkAction: @escaping ADAction
-  ) -> some View {
-    ScrollView {
-      VStack(alignment: .leading, spacing: 20) {
-        Title()
-        CheckList(checkState: checkState, checkAction: checkAction)
-        
-        Preview()
-        
-        CropImageView(originalImage: originalImage)
-          .scrollDisabled(true)
-        
-        Spacer()
+struct FindingTheCharacterView: ADUI {
+  typealias MyReducer = FindingTheCharacterStore
+  let store: StoreOf<MyReducer>
+  
+  let originalImage: UIImage = ADUtilsAsset.SampleDrawing.garlic.image
+  
+  init(
+    store: StoreOf<MyReducer> = Store(
+      initialState: MyReducer.State(),
+      reducer: MyReducer()
+    )
+  ) {
+    self.store = store
+  }
+  
+  var body: some View {
+    WithViewStore(store, observe: { $0 }) { viewStore in
+      ScrollView {
+        VStack(alignment: .leading, spacing: 20) {
+          Title()
+          CheckList(with: viewStore)
+          
+          Preview()
+          
+          CropImageView(originalImage: originalImage)
+            .scrollDisabled(true)
+          
+          Spacer()
+        }
+        .padding()
       }
-      .padding()
+      .background(ADBackground())
     }
-    .background(ADBackground())
   }
 }
 
@@ -56,10 +65,7 @@ extension FindingTheCharacterView {
 
 extension FindingTheCharacterView {
   @ViewBuilder
-  func CheckList(
-    checkState: Binding<Bool>,
-    checkAction: @escaping ADAction
-  ) -> some View {
+  func CheckList(with viewStore: MyViewStore) -> some View {
     let title = "C H E C K L I S T"
     let description = "Resize the box to ensure it tightly fits one character."
     
@@ -67,7 +73,9 @@ extension FindingTheCharacterView {
       Text(title)
         .font(.system(.title3, weight: .medium))
       
-      CheckListButton(description, state: checkState, action: checkAction)
+      CheckListButton(description, state: viewStore.binding(\.$checkState)) {
+        viewStore.send(.checkAction)
+      }
     }
   }
 }
@@ -83,24 +91,8 @@ extension FindingTheCharacterView {
   }
 }
 
-public struct PreviewsFindingTheCharacterView: View {
-  let ui = FindingTheCharacterView()
-  let originalImage: UIImage = ADUtilsAsset.SampleDrawing.garlic.image
-  @State var checkState = false
-  
-  public init() {}
-  
-  public var body: some View {
-    ui.Main(
-      originalImage: originalImage,
-      checkState: $checkState,
-      checkAction: {}
-    )
-  }
-}
-
 struct FindingTheCharacterView_Previews: PreviewProvider {
   static var previews: some View {
-    PreviewsFindingTheCharacterView()
+    FindingTheCharacterView()
   }
 }

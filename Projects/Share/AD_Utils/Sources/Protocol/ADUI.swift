@@ -11,6 +11,7 @@ import ComposableArchitecture
 
 public protocol ADUI: View {
   associatedtype MyReducer: ReducerProtocol
+  associatedtype MyViewStore = ViewStore<MyReducer.State, MyReducer.Action>
 
   var store: StoreOf<MyReducer> { get }
 }
