@@ -8,18 +8,20 @@
 
 import ComposableArchitecture
 
-struct FindingTheCharacterStore: ReducerProtocol {
-  struct State: Equatable {
-    @BindingState var checkState = false
+public struct FindingTheCharacterStore: ReducerProtocol {
+  public init() {}
+  
+  public struct State: Equatable {
+    @BindingState public var checkState = false
+    public init() {}
   }
   
-  enum Action: BindableAction, Equatable {
+  public enum Action: Equatable, BindableAction {
     case binding(BindingAction<State>)
-    
     case checkAction
   }
   
-  var body: some ReducerProtocol<State, Action> {
+  public var body: some ReducerProtocol<State, Action> {
     BindingReducer()
     
     Reduce { state, action in

@@ -6,18 +6,14 @@
 //
 
 import SwiftUI
+import AD_Feature
 import AD_Utils
 import ComposableArchitecture
 
-public struct OnBoardingView: ADUI {
-  public init() {}
-}
-
-extension OnBoardingView {
-  @ViewBuilder
-  public func Main(
-    startButtonAction: @escaping ADAction
-  ) -> some View {
+struct OnBoardingView: View {
+  @Binding var isTapStartButton: Bool
+  
+  var body: some View {
     VStack {
       Title()
       
@@ -27,7 +23,11 @@ extension OnBoardingView {
       
       Spacer().frame(height: 80)
       
-      StartButton(action: startButtonAction)
+      StartButton {
+        if isTapStartButton == false {
+          isTapStartButton = true
+        }
+      }
     }
     .padding()
     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -105,8 +105,8 @@ extension OnBoardingView {
 
 struct OnBoardingView_Previews: PreviewProvider {
   static var previews: some View {
-    OnBoardingView().Main(
-      startButtonAction: { print("efe") }
-    )
+    @State var isTapStartButton: Bool = false
+    
+    OnBoardingView(isTapStartButton: $isTapStartButton)
   }
 }

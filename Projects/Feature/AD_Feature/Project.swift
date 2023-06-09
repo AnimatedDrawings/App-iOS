@@ -7,7 +7,6 @@ let project = Project.makeModule(
 //  product: .staticFramework,
   product: .framework,
   dependencies: [
-    .AD_UI,
     .AD_Utils,
     .ComposableArchitecture
   ],

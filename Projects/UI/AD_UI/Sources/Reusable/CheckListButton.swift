@@ -13,12 +13,12 @@ struct CheckListButton: View {
   let checkmarkCircle = "checkmark.circle"
   let description: String
   @Binding var state: Bool
-  let action: ADAction
+  let action: () -> ()
   
   init(
     _ description: String,
     state: Binding<Bool>,
-    action: @escaping ADAction
+    action: @escaping () -> ()
   ) {
     self.description = description
     self._state = state
