@@ -12,15 +12,15 @@ import AD_Utils
 import ComposableArchitecture
 
 struct FindingTheCharacterView: ADUI {
-  typealias MyReducer = FindingTheCharacterStore
-  let store: StoreOf<MyReducer>
+  typealias MyStore = FindingTheCharacterStore
+  let store: StoreOf<MyStore>
   
   let originalImage: UIImage = ADUtilsAsset.SampleDrawing.garlic.image
   
   init(
-    store: StoreOf<MyReducer> = Store(
-      initialState: MyReducer.State(),
-      reducer: MyReducer()
+    store: StoreOf<MyStore> = Store(
+      initialState: MyStore.State(),
+      reducer: MyStore()
     )
   ) {
     self.store = store

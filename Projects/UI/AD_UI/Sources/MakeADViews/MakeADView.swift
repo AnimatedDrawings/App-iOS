@@ -12,14 +12,14 @@ import AD_Utils
 import ComposableArchitecture
 
 struct MakeADView: ADUI {
-  typealias MyReducer = MakeADStore
-  typealias MyViewStore = ViewStore<MyReducer.State, MyReducer.Action>
-  let store: StoreOf<MyReducer>
+  typealias MyStore = MakeADStore
+  typealias MyViewStore = ViewStore<MyStore.State, MyStore.Action>
+  let store: StoreOf<MyStore>
   
   init(
-    store: StoreOf<MyReducer> = Store(
-      initialState: MyReducer.State(),
-      reducer: MyReducer()
+    store: StoreOf<MyStore> = Store(
+      initialState: MyStore.State(),
+      reducer: MyStore()
     )
   ) {
     self.store = store
@@ -36,6 +36,17 @@ struct MakeADView: ADUI {
     }
   }
 }
+
+extension MakeADView {
+  @ViewBuilder
+  func PageTabView() -> some View {
+    TabView {
+      
+    }
+  }
+}
+
+
 
 struct MakeADView_Previews: PreviewProvider {
   static var previews: some View {
