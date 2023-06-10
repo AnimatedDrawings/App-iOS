@@ -10,7 +10,7 @@ import SwiftUI
 import AD_Utils
 
 struct StepStatusBar: View {
-  @Binding var curIdx: Int
+  var curIdx: Int
   @State var statusBarWidth: CGFloat = 0
   let statusBarSpacing: CGFloat = 4
   let activeColor: Color = ADUtilsAsset.Color.blue1.swiftUIColor
@@ -70,7 +70,7 @@ struct PreviewsStepStatusBar: View {
   
   var body: some View {
     VStack(spacing: 100) {
-      StepStatusBar(curIdx: $curIdx)
+      StepStatusBar(curIdx: curIdx)
       Button("MoveUp", action: moveUpAction)
       Button("MoveDown", action: moveDownAction)
     }
