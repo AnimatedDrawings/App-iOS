@@ -44,7 +44,6 @@ struct UploadADrawingView: ADUI {
           Spacer()
         }
         .padding()
-        .background(ADBackground())
       }
     }
   }

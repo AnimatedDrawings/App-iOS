@@ -33,6 +33,7 @@ struct MakeADView: ADUI {
         
         PageTabView(with: viewStore)
       }
+      .adBackground()
     }
   }
 }

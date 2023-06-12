@@ -31,8 +31,8 @@ struct OnBoardingView: View {
     }
     .padding()
     .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .ignoresSafeArea(.all)
-    .background(ADBackground())
+    .ignoresSafeArea()
+    .adBackground()
   }
 }
 
