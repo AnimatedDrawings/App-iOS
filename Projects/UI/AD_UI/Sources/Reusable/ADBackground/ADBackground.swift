@@ -10,25 +10,24 @@ import SwiftUI
 import AD_Utils
 
 public struct ADBackground: View {
+  @Environment(\.mainWindowRect) var mainWindowRect
   
   public init() {}
   
   public var body: some View {
-    GeometryReader { proxy in
-      let rect: CGRect = proxy.frame(in: .global)
-      
-      DoodleLines(rect: rect)
-        .background(ADUtilsAsset.Color.blue4.swiftUIColor)
-        .mask {
-          RandomCurveShape().path(in: rect)
-            .if(.random()) {
-              $0
-            } else: {
-              $0.rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
-            }
-        }
-    }
-    .ignoresSafeArea()
+    DoodleLines(rect: self.mainWindowRect)
+      .background(
+        ADUtilsAsset.Color.blue4.swiftUIColor
+      )
+      .mask {
+        RandomCurveShape().path(in: self.mainWindowRect)
+          .if(.random()) {
+            $0
+          } else: {
+            $0.rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
+          }
+      }
+      .ignoresSafeArea()
   }
 }
 

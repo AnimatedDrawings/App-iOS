@@ -53,6 +53,7 @@ public struct MakeADStore: ReducerProtocol {
       case .binding:
         return .none
         
+      // 안쓰면 지우기
       case .upStep:
         let nexIndex = state.curStep.index + 1
         guard nexIndex != 5,
