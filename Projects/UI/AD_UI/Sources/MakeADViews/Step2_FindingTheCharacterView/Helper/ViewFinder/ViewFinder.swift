@@ -30,8 +30,8 @@ struct ViewFinder: View {
         .resizable()
         .aspectRatio(contentMode: .fit)
         .overlay {
-          GeometryReader { proxy in
-            let cgRect: CGRect = proxy.frame(in: .local)
+          GeometryReader { geo in
+            let cgRect: CGRect = geo.frame(in: .local)
             
             GridView(initRect: cgRect, cropRect: $cropRect)
               .onAppear {
