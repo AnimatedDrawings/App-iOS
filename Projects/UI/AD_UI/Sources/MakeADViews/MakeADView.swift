@@ -31,7 +31,7 @@ struct MakeADView: ADUI {
         StepStatusBar(curIdx: viewStore.curStep.rawValue)
           .padding()
         
-        UploadADrawingView()
+        PageTabView(with: viewStore)
       }
     }
   }
@@ -39,14 +39,28 @@ struct MakeADView: ADUI {
 
 extension MakeADView {
   @ViewBuilder
-  func PageTabView() -> some View {
-    TabView {
-      
+  func PageTabView(with viewStore: MyViewStore) -> some View {
+    TabView(selection: viewStore.binding(\.$curStep)) {
+      UploadADrawingView(
+        store: self.store.scope(
+          state: \.uploadADrawing,
+          action: MakeADStore.Action.uploadADrawing
+        )
+      )
+      .tag(MyStore.Step.UploadADrawing)
+
+      FindingTheCharacterView(
+        store: self.store.scope(
+          state: \.findingTheCharacter,
+          action: MakeADStore.Action.findingTheCharacter
+        )
+      )
+      .tag(MyStore.Step.FindingTheCharacter)
     }
+    .tabViewStyle(.page(indexDisplayMode: .never))
+    .ignoresSafeArea()
   }
 }
-
-
 
 struct MakeADView_Previews: PreviewProvider {
   static var previews: some View {

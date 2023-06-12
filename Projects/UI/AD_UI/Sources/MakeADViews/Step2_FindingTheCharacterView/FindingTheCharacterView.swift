@@ -41,8 +41,8 @@ struct FindingTheCharacterView: ADUI {
           Spacer()
         }
         .padding()
+        .background(ADBackground())
       }
-      .background(ADBackground())
     }
   }
 }
