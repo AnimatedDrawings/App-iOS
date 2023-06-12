@@ -23,12 +23,14 @@ public struct MakeADStore: ReducerProtocol {
   public struct State: Equatable {
     public init() {}
     
-    public var curStep: Step = .UploadADrawing
+    @BindingState public var curStep: Step = .UploadADrawing
     public var uploadADrawing = UploadADrawingStore.State()
     public var findingTheCharacter = FindingTheCharacterStore.State()
   }
   
-  public enum Action: Equatable {
+  public enum Action: Equatable, BindableAction {
+    case binding(BindingAction<State>)
+    
     case upStep
     case downStep
     case uploadADrawing(UploadADrawingStore.Action)
@@ -36,6 +38,8 @@ public struct MakeADStore: ReducerProtocol {
   }
   
   public var body: some ReducerProtocol<State, Action> {
+    BindingReducer()
+    
     Scope(state: \.uploadADrawing, action: /Action.uploadADrawing) {
       UploadADrawingStore()
     }
@@ -46,6 +50,10 @@ public struct MakeADStore: ReducerProtocol {
     
     Reduce { state, action in
       switch action {
+      case .binding:
+        return .none
+        
+      // 안쓰면 지우기
       case .upStep:
         let nexIndex = state.curStep.index + 1
         guard nexIndex != 5,

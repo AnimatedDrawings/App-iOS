@@ -12,13 +12,13 @@ import AD_Utils
 import ComposableArchitecture
 
 struct UploadADrawingView: ADUI {
-  typealias MyReducer = UploadADrawingStore
-  let store: StoreOf<MyReducer>
+  typealias MyStore = UploadADrawingStore
+  let store: StoreOf<MyStore>
   
   init(
-    store: StoreOf<MyReducer> = Store(
-      initialState: MyReducer.State(),
-      reducer: MyReducer()
+    store: StoreOf<MyStore> = Store(
+      initialState: MyStore.State(),
+      reducer: MyStore()
     )
   ) {
     self.store = store
@@ -45,7 +45,6 @@ struct UploadADrawingView: ADUI {
         }
         .padding()
       }
-      .background(ADBackground())
     }
   }
 }

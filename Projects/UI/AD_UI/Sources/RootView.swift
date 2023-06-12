@@ -14,10 +14,10 @@ public struct RootView: View {
   public init() {}
   
   public var body: some View {
-    if isTapStartButton {
-      UploadADrawingView()
-    } else {
+    if !isTapStartButton {
       OnBoardingView(isTapStartButton: $isTapStartButton)
+    } else {
+      MakeADView()
     }
   }
 }

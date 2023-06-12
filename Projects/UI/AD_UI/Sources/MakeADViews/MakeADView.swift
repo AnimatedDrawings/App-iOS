@@ -12,14 +12,14 @@ import AD_Utils
 import ComposableArchitecture
 
 struct MakeADView: ADUI {
-  typealias MyReducer = MakeADStore
-  typealias MyViewStore = ViewStore<MyReducer.State, MyReducer.Action>
-  let store: StoreOf<MyReducer>
+  typealias MyStore = MakeADStore
+  typealias MyViewStore = ViewStore<MyStore.State, MyStore.Action>
+  let store: StoreOf<MyStore>
   
   init(
-    store: StoreOf<MyReducer> = Store(
-      initialState: MyReducer.State(),
-      reducer: MyReducer()
+    store: StoreOf<MyStore> = Store(
+      initialState: MyStore.State(),
+      reducer: MyStore()
     )
   ) {
     self.store = store
@@ -31,9 +31,35 @@ struct MakeADView: ADUI {
         StepStatusBar(curIdx: viewStore.curStep.rawValue)
           .padding()
         
-        UploadADrawingView()
+        PageTabView(with: viewStore)
       }
+      .adBackground()
     }
+  }
+}
+
+extension MakeADView {
+  @ViewBuilder
+  func PageTabView(with viewStore: MyViewStore) -> some View {
+    TabView(selection: viewStore.binding(\.$curStep)) {
+      UploadADrawingView(
+        store: self.store.scope(
+          state: \.uploadADrawing,
+          action: MakeADStore.Action.uploadADrawing
+        )
+      )
+      .tag(MyStore.Step.UploadADrawing)
+
+      FindingTheCharacterView(
+        store: self.store.scope(
+          state: \.findingTheCharacter,
+          action: MakeADStore.Action.findingTheCharacter
+        )
+      )
+      .tag(MyStore.Step.FindingTheCharacter)
+    }
+    .tabViewStyle(.page(indexDisplayMode: .never))
+    .ignoresSafeArea()
   }
 }
 
