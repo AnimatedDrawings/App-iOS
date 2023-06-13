@@ -38,7 +38,7 @@ extension StepStatusBar {
 extension StepStatusBar {
   @ViewBuilder
   func StatusBar() -> some View {
-    GeometryReader { proxy in
+    GeometryReader { geo in
       HStack(spacing: statusBarSpacing) {
         ForEach(1...4, id: \.self) { idx in
           Capsule()
@@ -47,7 +47,7 @@ extension StepStatusBar {
             .animation(.easeOut, value: self.curIdx)
         }
       }
-      .onAppear { calStatusBarWidth(proxy: proxy) }
+      .onAppear { calStatusBarWidth(proxy: geo) }
     }
     .frame(height: 8)
   }
@@ -67,14 +67,20 @@ extension StepStatusBar {
 
 struct PreviewsStepStatusBar: View {
   @State var curIdx: Int = 1
+  @State var isHide: Bool = false
   
   var body: some View {
     VStack(spacing: 100) {
-      StepStatusBar(curIdx: curIdx)
+      if isHide {
+        StepStatusBar(curIdx: curIdx)
+          .padding()
+      }
       Button("MoveUp", action: moveUpAction)
       Button("MoveDown", action: moveDownAction)
+      Button("HideShow", action: hideShowAction)
     }
-    .padding()
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .animation(.default, value: isHide)
   }
   
   func moveUpAction() {
@@ -93,6 +99,10 @@ struct PreviewsStepStatusBar: View {
     }
     
     self.curIdx = nexIdx
+  }
+  
+  func hideShowAction() {
+    self.isHide.toggle()
   }
 }
 

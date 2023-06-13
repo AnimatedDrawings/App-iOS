@@ -28,7 +28,7 @@ struct FindingTheCharacterView: ADUI {
   
   var body: some View {
     WithViewStore(store, observe: { $0 }) { viewStore in
-      ScrollView {
+      ADScrollView {
         VStack(alignment: .leading, spacing: 20) {
           Title()
           CheckList(with: viewStore)

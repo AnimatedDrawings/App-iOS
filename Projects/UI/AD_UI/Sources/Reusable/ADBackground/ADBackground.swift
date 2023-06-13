@@ -20,8 +20,8 @@ public struct ADBackground: View {
   public init() {}
   
   public var body: some View {
-    GeometryReader { proxy in
-      let rect: CGRect = proxy.frame(in: .global)
+    GeometryReader { geo in
+      let rect: CGRect = geo.frame(in: .global)
 
       ADUtilsAsset.Color.blue4.swiftUIColor
         .overlay {
@@ -43,7 +43,7 @@ public struct ADBackground: View {
 
 struct PreviewsADBackground: View {
   var body: some View {
-    GeometryReader { proxy in
+    GeometryReader { geo in
       ScrollView {
         VStack(spacing: 50) {
           ForEach(1...30, id: \.self) { index in
