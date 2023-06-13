@@ -10,21 +10,13 @@ import SwiftUI
 
 struct ADScrollView<C: View>: View {
   let scrollID = "scrollID"
-  var onPreferenceChangeAction: (_ currentOffset: CGPoint) -> ()
   var content: C
   @State var lastOffset: CGPoint = .init()
   
-  init(
-    adScrollAction: @escaping (_ currentOffset: CGPoint) -> (),
-    @ViewBuilder content: () -> C
-  ) {
-    self.onPreferenceChangeAction = adScrollAction
-    self.content = content()
-  }
+  @EnvironmentObject var stepStatusBarEnvironment: StepStatusBarEnvironment
   
   init(@ViewBuilder content: () -> C) {
-    self.init(adScrollAction: { _ in }, content: { content() })
-    self.onPreferenceChangeAction = self.hideStepStatusBar(_:)
+    self.content = content()
   }
   
   var body: some View {
@@ -50,7 +42,7 @@ extension ADScrollView {
         .frame(width: 0, height: 0)
         .onPreferenceChange(
           OffsetPreferenceKey.self,
-          perform: onPreferenceChangeAction
+          perform: hideStepStatusBar
         )
         
         Spacer()
@@ -69,9 +61,19 @@ extension ADScrollView {
     if translationY < 0 {
       print("Scroll Down")
       self.lastOffset.y = currentOffset.y
+      if self.stepStatusBarEnvironment.isHide != true {
+        withAnimation {
+          self.stepStatusBarEnvironment.isHide = true
+        }
+      }
     } else {
       print("Scroll Up")
       self.lastOffset.y = currentOffset.y
+      if self.stepStatusBarEnvironment.isHide != false {
+        withAnimation {
+          self.stepStatusBarEnvironment.isHide = false
+        }
+      }
     }
   }
 }

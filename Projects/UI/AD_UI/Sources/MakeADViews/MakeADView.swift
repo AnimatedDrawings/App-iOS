@@ -16,6 +16,8 @@ struct MakeADView: ADUI {
   typealias MyViewStore = ViewStore<MyStore.State, MyStore.Action>
   let store: StoreOf<MyStore>
   
+  @EnvironmentObject var stepStatusBarEnvironment: StepStatusBarEnvironment
+  
   init(
     store: StoreOf<MyStore> = Store(
       initialState: MyStore.State(),
@@ -28,8 +30,10 @@ struct MakeADView: ADUI {
   var body: some View {
     WithViewStore(store, observe: { $0 }) { viewStore in
       VStack {
-        StepStatusBar(curIdx: viewStore.curStep.rawValue)
-          .padding()
+        if !self.stepStatusBarEnvironment.isHide {
+          StepStatusBar(curIdx: viewStore.curStep.rawValue)
+            .padding()
+        }
         
         PageTabView(with: viewStore)
       }
@@ -66,5 +70,6 @@ extension MakeADView {
 struct MakeADView_Previews: PreviewProvider {
   static var previews: some View {
     MakeADView()
+      .environmentObject(StepStatusBarEnvironment())
   }
 }

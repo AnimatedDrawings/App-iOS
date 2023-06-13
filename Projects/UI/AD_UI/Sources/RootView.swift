@@ -10,6 +10,7 @@ import SwiftUI
 
 public struct RootView: View {
   @State var isTapStartButton: Bool = false
+  @StateObject var stepStatusBarEnvironment = StepStatusBarEnvironment()
   
   public init() {}
   
@@ -18,6 +19,13 @@ public struct RootView: View {
       OnBoardingView(isTapStartButton: $isTapStartButton)
     } else {
       MakeADView()
+        .environmentObject(stepStatusBarEnvironment)
     }
+  }
+}
+
+struct RootView_Previews: PreviewProvider {
+  static var previews: some View {
+    RootView()
   }
 }

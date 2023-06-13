@@ -15,6 +15,8 @@ struct UploadADrawingView: ADUI {
   typealias MyStore = UploadADrawingStore
   let store: StoreOf<MyStore>
   
+  @EnvironmentObject var test: StepStatusBarEnvironment
+  
   init(
     store: StoreOf<MyStore> = Store(
       initialState: MyStore.State(),
@@ -27,35 +29,27 @@ struct UploadADrawingView: ADUI {
   var body: some View {
     WithViewStore(store, observe: { $0 }) { viewStore in
       ADScrollView {
-        ScrollContent(with: viewStore)
+        VStack(alignment: .leading, spacing: 20) {
+          Title()
+          
+          CheckList(with: viewStore)
+          
+          UploadButton(state: viewStore.binding(\.$uploadState)) {
+            viewStore.send(.uploadAction)
+          }
+          
+          SampleDrawingsDescription()
+          SampleImages {
+            viewStore.send(.sampleTapAction)
+          }
+          
+          Spacer()
+        }
+        .padding()
       }
     }
   }
 }
-
-extension UploadADrawingView {
-  @ViewBuilder
-  func ScrollContent(with viewStore: MyViewStore) -> some View {
-    VStack(alignment: .leading, spacing: 20) {
-      Title()
-      
-      CheckList(with: viewStore)
-      
-      UploadButton(state: viewStore.binding(\.$uploadState)) {
-        viewStore.send(.uploadAction)
-      }
-      
-      SampleDrawingsDescription()
-      SampleImages {
-        viewStore.send(.sampleTapAction)
-      }
-      
-      Spacer()
-    }
-    .padding()
-  }
-}
-
 
 extension UploadADrawingView {
   @ViewBuilder
@@ -174,5 +168,6 @@ extension UploadADrawingView {
 struct UploadADrawingView_Previews: PreviewProvider {
   static var previews: some View {
     UploadADrawingView()
+      .environmentObject(StepStatusBarEnvironment())
   }
 }
