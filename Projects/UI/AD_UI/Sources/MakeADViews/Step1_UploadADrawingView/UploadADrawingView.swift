@@ -24,19 +24,9 @@ struct UploadADrawingView: ADUI {
     self.store = store
   }
   
-  @State var lastOffset: CGPoint = .init()
-  
   var body: some View {
     WithViewStore(store, observe: { $0 }) { viewStore in
-//      ADScrollView { currentOffset in
-//        print(currentOffset)
-//      } content: {
-//        ScrollContent(with: viewStore)
-//      }
-//      ADScrollView(adScrollAction: hideStepStatusBar(_, lastOffset: <#T##Binding<CGPoint>#>)) {
-      ADScrollView { currentOffset in
-        hideStepStatusBar(currentOffset, lastOffset: $lastOffset)
-      } content: {
+      ADScrollView {
         ScrollContent(with: viewStore)
       }
     }

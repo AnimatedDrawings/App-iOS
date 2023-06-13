@@ -67,14 +67,20 @@ extension StepStatusBar {
 
 struct PreviewsStepStatusBar: View {
   @State var curIdx: Int = 1
+  @State var isHide: Bool = false
   
   var body: some View {
     VStack(spacing: 100) {
-      StepStatusBar(curIdx: curIdx)
+      if isHide {
+        StepStatusBar(curIdx: curIdx)
+          .padding()
+      }
       Button("MoveUp", action: moveUpAction)
       Button("MoveDown", action: moveDownAction)
+      Button("HideShow", action: hideShowAction)
     }
-    .padding()
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .animation(.default, value: isHide)
   }
   
   func moveUpAction() {
@@ -93,6 +99,10 @@ struct PreviewsStepStatusBar: View {
     }
     
     self.curIdx = nexIdx
+  }
+  
+  func hideShowAction() {
+    self.isHide.toggle()
   }
 }
 

@@ -12,6 +12,7 @@ struct ADScrollView<C: View>: View {
   let scrollID = "scrollID"
   var onPreferenceChangeAction: (_ currentOffset: CGPoint) -> ()
   var content: C
+  @State var lastOffset: CGPoint = .init()
   
   init(
     adScrollAction: @escaping (_ currentOffset: CGPoint) -> (),
@@ -21,48 +22,57 @@ struct ADScrollView<C: View>: View {
     self.content = content()
   }
   
+  init(@ViewBuilder content: () -> C) {
+    self.init(adScrollAction: { _ in }, content: { content() })
+    self.onPreferenceChangeAction = self.hideStepStatusBar(_:)
+  }
+  
   var body: some View {
     ScrollView {
       content
-        .background(
-          HStack {
-            VStack {
-              GeometryReader { geo in
-                Color.clear.preference(
-                  key: OffsetPreferenceKey.self,
-                  value: geo.frame(in: .named(scrollID)).origin
-                )
-              }
-              .frame(width: 0, height: 0)
-              .onPreferenceChange(
-                OffsetPreferenceKey.self,
-                perform: onPreferenceChangeAction
-              )
-              
-              Spacer()
-            }
-            Spacer()
-          }
-        )
+        .background(TrackingView())
     }
     .coordinateSpace(name: scrollID)
   }
 }
 
-public func hideStepStatusBar(
-  _ currentOffset: CGPoint,
-  lastOffset: Binding<CGPoint>
-) -> () {
-  let translationY: CGFloat = currentOffset.y - lastOffset.wrappedValue.y
-  if -50 <= translationY && translationY <= 50 {
-    return
+extension ADScrollView {
+  @ViewBuilder
+  func TrackingView() -> some View {
+    HStack {
+      VStack {
+        GeometryReader { geo in
+          Color.clear.preference(
+            key: OffsetPreferenceKey.self,
+            value: geo.frame(in: .named(scrollID)).origin
+          )
+        }
+        .frame(width: 0, height: 0)
+        .onPreferenceChange(
+          OffsetPreferenceKey.self,
+          perform: onPreferenceChangeAction
+        )
+        
+        Spacer()
+      }
+      Spacer()
+    }
   }
-  if translationY < 0 {
-    print("Scroll Down")
-    lastOffset.wrappedValue.y = currentOffset.y
-  } else {
-    print("Scroll Up")
-    lastOffset.wrappedValue.y = currentOffset.y
+}
+
+extension ADScrollView {
+  func hideStepStatusBar(_ currentOffset: CGPoint) {
+    let translationY: CGFloat = currentOffset.y - self.lastOffset.y
+    if -50 <= translationY && translationY <= 50 {
+      return
+    }
+    if translationY < 0 {
+      print("Scroll Down")
+      self.lastOffset.y = currentOffset.y
+    } else {
+      print("Scroll Up")
+      self.lastOffset.y = currentOffset.y
+    }
   }
 }
 
