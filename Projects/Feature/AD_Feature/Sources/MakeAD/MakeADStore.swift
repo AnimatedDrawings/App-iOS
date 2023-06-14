@@ -41,8 +41,6 @@ public struct MakeADStore: ReducerProtocol {
   public enum Action: Equatable, BindableAction {
     case binding(BindingAction<State>)
     
-    case upStep
-    case downStep
     case uploadADrawing(UploadADrawingStore.Action)
     case findingTheCharacter(FindingTheCharacterStore.Action)
   }
@@ -61,27 +59,6 @@ public struct MakeADStore: ReducerProtocol {
     Reduce { state, action in
       switch action {
       case .binding:
-        return .none
-        
-      // 안쓰면 지우기
-      case .upStep:
-        let nexIndex = state.curStep.index + 1
-        guard nexIndex != 5,
-              let nexStep = Step.init(rawValue: nexIndex)
-        else {
-          return .none
-        }
-        state.curStep = nexStep
-        return .none
-        
-      case .downStep:
-        let nexIndex = state.curStep.index - 1
-        guard nexIndex != 0,
-              let nexStep = Step.init(rawValue: nexIndex)
-        else {
-          return .none
-        }
-        state.curStep = nexStep
         return .none
         
       case .uploadADrawing, .findingTheCharacter:
