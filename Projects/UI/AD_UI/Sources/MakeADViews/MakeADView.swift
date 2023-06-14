@@ -43,7 +43,7 @@ struct MakeADView: ADUI {
             .listRowSeparator(.hidden)
             .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
             .listRowBackground(Color.clear)
-            .frame(height: geo.size.height)
+            .frame(height: geo.size.height + geo.safeAreaInsets.bottom)
         }
         .listStyle(.plain)
         .adBackground()
