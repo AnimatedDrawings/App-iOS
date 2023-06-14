@@ -139,21 +139,31 @@ extension UploadADrawingView {
   
   @ViewBuilder
   func SampleImages(with viewStore: MyViewStore) -> some View {
+    let sample = ADUtilsAsset.SampleDrawing.self
+    let example1: ADUtilsImages = sample.example1
+    let example2: ADUtilsImages = sample.example2
+    let example3: ADUtilsImages = sample.example3
+    let example4: ADUtilsImages = sample.example4
+    var imageCardAction: (ADUtilsImages) -> () = { image in
+      viewStore.send(.sampleTapAction(image.image))
+    }
+    
     VStack(spacing: 20) {
       HStack(spacing: 20) {
-        ImageCardButton(image: ADUtilsAsset.SampleDrawing.example1) {
-          
+        ImageCardButton(image: example1) {
+          imageCardAction(example1)
         }
-        ImageCardButton(image: ADUtilsAsset.SampleDrawing.example2) {
-          
+        
+        ImageCardButton(image: example2) {
+          imageCardAction(example2)
         }
       }
       HStack(spacing: 20) {
-        ImageCardButton(image: ADUtilsAsset.SampleDrawing.example3) {
-          
+        ImageCardButton(image: example3) {
+          imageCardAction(example3)
         }
-        ImageCardButton(image: ADUtilsAsset.SampleDrawing.example4) {
-          
+        ImageCardButton(image: example4) {
+          imageCardAction(example4)
         }
       }
     }

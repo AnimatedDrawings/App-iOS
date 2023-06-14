@@ -33,7 +33,7 @@ public struct UploadADrawingStore: ReducerProtocol {
     case checkAction2
     case checkAction3
     case uploadAction
-    case sampleTapAction
+    case sampleTapAction(UIImage)
   }
   
   public var body: some ReducerProtocol<State, Action> {
@@ -63,9 +63,9 @@ public struct UploadADrawingStore: ReducerProtocol {
         print("uploadAction")
         return .none
         
-      case .sampleTapAction:
-        state.originalImage = state.sampleImage
-        state.isPushFindingCharacter = true
+      case .sampleTapAction(let image):
+//        state.originalImage = state.sampleImage
+        print("sampleTapAction")
         return .none
       }
     }
