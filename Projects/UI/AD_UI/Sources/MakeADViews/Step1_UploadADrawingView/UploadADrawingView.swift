@@ -19,7 +19,7 @@ struct UploadADrawingView: ADUI {
   
   init(
     store: StoreOf<MyStore> = Store(
-      initialState: MyStore.State(),
+      initialState: MyStore.State(curStep: .UploadADrawing, originalImage: nil),
       reducer: MyStore()
     )
   ) {
@@ -144,7 +144,7 @@ extension UploadADrawingView {
     let example2: ADUtilsImages = sample.example2
     let example3: ADUtilsImages = sample.example3
     let example4: ADUtilsImages = sample.example4
-    var imageCardAction: (ADUtilsImages) -> () = { image in
+    let imageCardAction: (ADUtilsImages) -> () = { image in
       viewStore.send(.sampleTapAction(image.image))
     }
     

@@ -14,16 +14,21 @@ public struct UploadADrawingStore: ReducerProtocol {
   public init() {}
   
   public struct State: Equatable {
-    public init() {}
+    public init(
+      curStep: Step,
+      originalImage: UIImage?
+    ) {
+      self.curStep = curStep
+      self.originalImage = originalImage
+    }
+    
+    public var curStep: Step
+    public var originalImage: UIImage?
     
     @BindingState public var checkState1 = false
     @BindingState public var checkState2 = false
     @BindingState public var checkState3 = false
     @BindingState public var uploadState = false
-    
-    @BindingState public var isPushFindingCharacter = false
-    @BindingState public var originalImage = UIImage()
-    public let sampleImage: UIImage = ADUtilsAsset.SampleDrawing.garlic.image
   }
   
   public enum Action: BindableAction, Equatable {
@@ -64,8 +69,9 @@ public struct UploadADrawingStore: ReducerProtocol {
         return .none
         
       case .sampleTapAction(let image):
-//        state.originalImage = state.sampleImage
         print("sampleTapAction")
+        state.originalImage = image
+        state.curStep = .FindingTheCharacter
         return .none
       }
     }
