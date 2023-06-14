@@ -6,14 +6,21 @@
 //  Copyright © 2023 chminipark. All rights reserved.
 //
 
+import SwiftUI
 import ComposableArchitecture
 
 public struct FindingTheCharacterStore: ReducerProtocol {
   public init() {}
   
   public struct State: Equatable {
+    public init(
+      originalImage: UIImage?
+    ) {
+      self.originalImage = originalImage
+    }
+    
+    public var originalImage: UIImage?
     @BindingState public var checkState = false
-    public init() {}
   }
   
   public enum Action: Equatable, BindableAction {

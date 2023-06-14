@@ -6,26 +6,36 @@
 //  Copyright © 2023 chminipark. All rights reserved.
 //
 
+import SwiftUI
 import ComposableArchitecture
 
 public struct MakeADStore: ReducerProtocol {
   public init() {}
   
-  public enum Step: Int {
-    case UploadADrawing = 1
-    case FindingTheCharacter = 2
-    
-    var index: Int {
-      return self.rawValue
-    }
-  }
-  
   public struct State: Equatable {
     public init() {}
     
     @BindingState public var curStep: Step = .UploadADrawing
-    public var uploadADrawing = UploadADrawingStore.State()
-    public var findingTheCharacter = FindingTheCharacterStore.State()
+    public var originalImage: UIImage? = nil
+    
+    public var uploadADrawing: UploadADrawingStore.State {
+      get {
+        UploadADrawingStore.State(
+          curStep: self.curStep,
+          originalImage: self.originalImage
+        )
+      }
+      set {
+        self.curStep = newValue.curStep
+        self.originalImage = newValue.originalImage
+      }
+    }
+    public var findingTheCharacter: FindingTheCharacterStore.State {
+      get {
+        FindingTheCharacterStore.State(originalImage: self.originalImage)
+      }
+      set {}
+    }
   }
   
   public enum Action: Equatable, BindableAction {

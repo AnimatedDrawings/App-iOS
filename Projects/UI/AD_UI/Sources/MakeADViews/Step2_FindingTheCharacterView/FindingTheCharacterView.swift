@@ -15,11 +15,11 @@ struct FindingTheCharacterView: ADUI {
   typealias MyStore = FindingTheCharacterStore
   let store: StoreOf<MyStore>
   
-  let originalImage: UIImage = ADUtilsAsset.SampleDrawing.garlic.image
-  
   init(
     store: StoreOf<MyStore> = Store(
-      initialState: MyStore.State(),
+      initialState: MyStore.State(
+        originalImage: ADUtilsAsset.SampleDrawing.garlic.image
+      ),
       reducer: MyStore()
     )
   ) {
@@ -35,8 +35,10 @@ struct FindingTheCharacterView: ADUI {
             CheckListContent(with: viewStore)
           }
           
-          CropImageView(originalImage: originalImage)
-            .scrollDisabled(true)
+          if let originalImage = viewStore.originalImage {
+            CropImageView(originalImage: originalImage)
+              .scrollDisabled(true)
+          }
           
           Spacer()
         }

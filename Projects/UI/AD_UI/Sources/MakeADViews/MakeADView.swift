@@ -52,7 +52,7 @@ extension MakeADView {
           action: MakeADStore.Action.uploadADrawing
         )
       )
-      .tag(MyStore.Step.UploadADrawing)
+      .tag(Step.UploadADrawing)
 
       FindingTheCharacterView(
         store: self.store.scope(
@@ -60,7 +60,7 @@ extension MakeADView {
           action: MakeADStore.Action.findingTheCharacter
         )
       )
-      .tag(MyStore.Step.FindingTheCharacter)
+      .tag(Step.FindingTheCharacter)
     }
     .tabViewStyle(.page(indexDisplayMode: .never))
     .ignoresSafeArea()
