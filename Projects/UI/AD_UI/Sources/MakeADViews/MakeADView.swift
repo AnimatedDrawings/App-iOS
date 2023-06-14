@@ -33,16 +33,21 @@ struct MakeADView: ADUI {
         List {
           if !self.stepStatusBarEnvironment.isHide {
             StepStatusBar(curIdx: viewStore.curStep.rawValue)
+              .listRowSeparator(.hidden)
               .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+              .listRowBackground(Color.clear)
               .padding()
           }
           
           PageTabView(with: viewStore)
             .listRowSeparator(.hidden)
             .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+            .listRowBackground(Color.clear)
             .frame(height: geo.size.height)
         }
         .listStyle(.plain)
+        .adBackground()
+        .scrollContentBackground(.hidden)
       }
     }
   }
