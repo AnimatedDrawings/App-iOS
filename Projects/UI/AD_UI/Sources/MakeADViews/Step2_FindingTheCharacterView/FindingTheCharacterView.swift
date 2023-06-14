@@ -31,9 +31,9 @@ struct FindingTheCharacterView: ADUI {
       ADScrollView {
         VStack(alignment: .leading, spacing: 20) {
           Title()
-          CheckList(with: viewStore)
-          
-          Preview()
+          CheckList {
+            CheckListContent(with: viewStore)
+          }
           
           CropImageView(originalImage: originalImage)
             .scrollDisabled(true)
@@ -64,34 +64,26 @@ extension FindingTheCharacterView {
 
 extension FindingTheCharacterView {
   @ViewBuilder
-  func CheckList(with viewStore: MyViewStore) -> some View {
-    let title = "C H E C K L I S T"
+  func CheckListContent(with viewStore: MyViewStore) -> some View {
     let description = "Resize the box to ensure it tightly fits one character."
     
     VStack(alignment: .leading, spacing: 15) {
-      Text(title)
-        .font(.system(.title3, weight: .medium))
-      
       CheckListButton(description, state: viewStore.binding(\.$checkState)) {
         viewStore.send(.checkAction)
       }
+      
+      HStack {
+        GIFView(gifName: "FindingTheCharacter_Preview1")
+        GIFView(gifName: "FindingTheCharacter_Preview2")
+      }
+      .frame(height: 250)
     }
-  }
-}
-
-extension FindingTheCharacterView {
-  @ViewBuilder
-  func Preview() -> some View {
-    HStack {
-      GIFView(gifName: "FindingTheCharacter_Preview1")
-      GIFView(gifName: "FindingTheCharacter_Preview2")
-    }
-    .frame(height: 250)
   }
 }
 
 struct FindingTheCharacterView_Previews: PreviewProvider {
   static var previews: some View {
     FindingTheCharacterView()
+      .environmentObject(StepStatusBarEnvironment())
   }
 }

@@ -32,7 +32,9 @@ struct UploadADrawingView: ADUI {
         VStack(alignment: .leading, spacing: 20) {
           Title()
           
-          CheckList(with: viewStore)
+          CheckList {
+            CheckListContent(with: viewStore)
+          }
           
           UploadButton(state: viewStore.binding(\.$uploadState)) {
             viewStore.send(.uploadAction)
@@ -71,16 +73,12 @@ extension UploadADrawingView {
 
 extension UploadADrawingView {
   @ViewBuilder
-  func CheckList(with viewStore: MyViewStore) -> some View {
-    let title = "C H E C K L I S T"
+  func CheckListContent(with viewStore: MyViewStore) -> some View {
     let description1 = "Make sure the character is drawn on a white piece of paper without lines, wrinkles, or tears"
     let description2 = "Make sure the drawing is well lit. To minimize shadows, hold the camera further away and zoom in on the drawing."
     let description3 = "Don’t include any identifiable information, offensive content (see our community standards), or drawings that infringe on the copyrights of others."
     
     VStack(alignment: .leading, spacing: 15) {
-      Text(title)
-        .font(.system(.title3, weight: .medium))
-      
       CheckListButton(description1, state: viewStore.binding(\.$checkState1)) {
         viewStore.send(.checkAction1)
       }
