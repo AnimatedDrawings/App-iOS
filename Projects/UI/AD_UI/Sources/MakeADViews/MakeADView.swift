@@ -29,15 +29,21 @@ struct MakeADView: ADUI {
   
   var body: some View {
     WithViewStore(store, observe: { $0 }) { viewStore in
-      VStack {
-        if !self.stepStatusBarEnvironment.isHide {
-          StepStatusBar(curIdx: viewStore.curStep.rawValue)
-            .padding()
+      GeometryReader { geo in
+        List {
+          if !self.stepStatusBarEnvironment.isHide {
+            StepStatusBar(curIdx: viewStore.curStep.rawValue)
+              .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+              .padding()
+          }
+          
+          PageTabView(with: viewStore)
+            .listRowSeparator(.hidden)
+            .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+            .frame(height: geo.size.height)
         }
-        
-        PageTabView(with: viewStore)
+        .listStyle(.plain)
       }
-      .adBackground()
     }
   }
 }
@@ -53,7 +59,7 @@ extension MakeADView {
         )
       )
       .tag(Step.UploadADrawing)
-
+      
       FindingTheCharacterView(
         store: self.store.scope(
           state: \.findingTheCharacter,
