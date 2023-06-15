@@ -11,9 +11,6 @@ import SwiftUI
 struct ADScrollView<C: View>: View {
   let scrollID = "scrollID"
   var content: C
-  @State var lastOffset: CGPoint = .init()
-  
-  @EnvironmentObject var stepStatusBarEnvironment: StepStatusBarEnvironment
   
   init(@ViewBuilder content: () -> C) {
     self.content = content()
@@ -22,57 +19,81 @@ struct ADScrollView<C: View>: View {
   var body: some View {
     ScrollView {
       content
-        .background(TrackingView())
+        .background(TrackingView(scrollID: scrollID))
     }
     .coordinateSpace(name: scrollID)
   }
 }
 
 extension ADScrollView {
-  @ViewBuilder
-  func TrackingView() -> some View {
-    HStack {
-      VStack {
-        GeometryReader { geo in
-          Color.clear.preference(
-            key: OffsetPreferenceKey.self,
-            value: geo.frame(in: .named(scrollID)).origin
+  struct TrackingView: View {
+    let scrollID: String
+    let dist: CGFloat = 30
+    @State var lastY: CGFloat = 0
+    @EnvironmentObject var stepStatusBarEnvironment: StepStatusBarEnvironment
+    
+    var body: some View {
+      HStack {
+        VStack {
+          GeometryReader { geo in
+            Color.clear.preference(
+              key: OffsetPreferenceKey.self,
+              value: geo.frame(in: .named(scrollID)).origin
+            )
+          }
+          .frame(width: 0, height: 0)
+          .onPreferenceChange(
+            OffsetPreferenceKey.self,
+            perform: hideStepStatusBar
           )
+          
+          Spacer()
         }
-        .frame(width: 0, height: 0)
-        .onPreferenceChange(
-          OffsetPreferenceKey.self,
-          perform: hideStepStatusBar
-        )
-        
         Spacer()
       }
-      Spacer()
     }
   }
 }
 
-extension ADScrollView {
+extension ADScrollView.TrackingView {
   func hideStepStatusBar(_ currentOffset: CGPoint) {
-    let translationY: CGFloat = currentOffset.y - self.lastOffset.y
-    if -50 <= translationY && translationY <= 50 {
+    let curY: CGFloat = currentOffset.y
+    print(curY)
+    if 0 <= curY {
+      stepStatusBarAppear()
       return
     }
+    
+    let translationY: CGFloat = curY - lastY
+    if -dist <= translationY && translationY <= dist {
+      return
+    }
+    
     if translationY < 0 {
       print("Scroll Down")
-      self.lastOffset.y = currentOffset.y
-      if self.stepStatusBarEnvironment.isHide != true {
-        withAnimation {
-          self.stepStatusBarEnvironment.isHide = true
-        }
-      }
-    } else {
+      stepStatusBarDisappear()
+      return
+    }
+    
+    if 0 < translationY {
       print("Scroll Up")
-      self.lastOffset.y = currentOffset.y
-      if self.stepStatusBarEnvironment.isHide != false {
-        withAnimation {
-          self.stepStatusBarEnvironment.isHide = false
-        }
+      stepStatusBarAppear()
+      return
+    }
+  }
+  
+  func stepStatusBarAppear() {
+    if self.stepStatusBarEnvironment.isHide != false {
+      withAnimation {
+        self.stepStatusBarEnvironment.isHide = false
+      }
+    }
+  }
+  
+  func stepStatusBarDisappear() {
+    if self.stepStatusBarEnvironment.isHide != true {
+      withAnimation {
+        self.stepStatusBarEnvironment.isHide = true
       }
     }
   }
