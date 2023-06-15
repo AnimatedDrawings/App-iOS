@@ -15,26 +15,28 @@ public struct MakeADStore: ReducerProtocol {
   public struct State: Equatable {
     public init() {}
     
-    @BindingState public var curStep: Step = .UploadADrawing
-    public var originalImage: UIImage? = nil
+    public var sharedState = SharedState()
     
-    public var uploadADrawing: UploadADrawingStore.State {
+    public var _uploadADrawing = UploadADrawingStore.MyState()
+    public var uploadADrawing: TCABaseState<UploadADrawingStore.MyState> {
       get {
-        UploadADrawingStore.State(
-          curStep: self.curStep,
-          originalImage: self.originalImage
-        )
+        TCABaseState(sharedState: sharedState, state: _uploadADrawing)
       }
       set {
-        self.curStep = newValue.curStep
-        self.originalImage = newValue.originalImage
+        self.sharedState = newValue.sharedState
+        self._uploadADrawing = newValue.state
       }
     }
-    public var findingTheCharacter: FindingTheCharacterStore.State {
+    
+    public var _findingTheCharacter = FindingTheCharacterStore.MyState()
+    public var findingTheCharacter: TCABaseState<FindingTheCharacterStore.MyState> {
       get {
-        FindingTheCharacterStore.State(originalImage: self.originalImage)
+        TCABaseState(sharedState: sharedState, state: _findingTheCharacter)
       }
-      set {}
+      set {
+        self.sharedState = newValue.sharedState
+        self._findingTheCharacter = newValue.state
+      }
     }
   }
   
