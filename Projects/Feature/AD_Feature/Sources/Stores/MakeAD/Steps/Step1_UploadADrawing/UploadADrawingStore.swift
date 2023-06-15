@@ -12,18 +12,10 @@ import ComposableArchitecture
 
 public struct UploadADrawingStore: ReducerProtocol {
   public init() {}
+  public typealias State = TCABaseState<UploadADrawingStore.MyState>
   
-  public struct State: Equatable {
-    public init(
-      curStep: Step,
-      originalImage: UIImage?
-    ) {
-      self.curStep = curStep
-      self.originalImage = originalImage
-    }
-    
-    public var curStep: Step
-    public var originalImage: UIImage?
+  public struct MyState: Equatable {
+    public init() {}
     
     @BindingState public var checkState1 = false
     @BindingState public var checkState2 = false
@@ -70,8 +62,8 @@ public struct UploadADrawingStore: ReducerProtocol {
         
       case .sampleTapAction(let image):
         print("sampleTapAction")
-        state.originalImage = image
-        state.curStep = .FindingTheCharacter
+        state.sharedState.originalImage = image
+        state.sharedState.curStep = .FindingTheCharacter
         return .none
       }
     }

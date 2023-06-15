@@ -19,7 +19,7 @@ struct UploadADrawingView: ADUI {
   
   init(
     store: StoreOf<MyStore> = Store(
-      initialState: MyStore.State(curStep: .UploadADrawing, originalImage: nil),
+      initialState: MyStore.State(sharedState: SharedState(), state: UploadADrawingStore.MyState()),
       reducer: MyStore()
     )
   ) {

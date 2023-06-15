@@ -17,9 +17,7 @@ struct FindingTheCharacterView: ADUI {
   
   init(
     store: StoreOf<MyStore> = Store(
-      initialState: MyStore.State(
-        originalImage: ADUtilsAsset.SampleDrawing.garlic.image
-      ),
+      initialState: MyStore.State(sharedState: SharedState(), state: FindingTheCharacterStore.MyState()),
       reducer: MyStore()
     )
   ) {
@@ -31,11 +29,12 @@ struct FindingTheCharacterView: ADUI {
       ADScrollView {
         VStack(alignment: .leading, spacing: 20) {
           Title()
+          
           CheckList {
             CheckListContent(with: viewStore)
           }
           
-          if let originalImage = viewStore.originalImage {
+          if let originalImage = viewStore.sharedState.originalImage {
             CropImageView(originalImage: originalImage)
               .scrollDisabled(true)
           }

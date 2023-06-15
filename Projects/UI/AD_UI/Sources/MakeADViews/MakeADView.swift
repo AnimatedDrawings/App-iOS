@@ -29,15 +29,26 @@ struct MakeADView: ADUI {
   
   var body: some View {
     WithViewStore(store, observe: { $0 }) { viewStore in
-      VStack {
-        if !self.stepStatusBarEnvironment.isHide {
-          StepStatusBar(curIdx: viewStore.curStep.rawValue)
-            .padding()
+      GeometryReader { geo in
+        List {
+          if !self.stepStatusBarEnvironment.isHide {
+            StepStatusBar(curIdx: viewStore.sharedState.curStep.index)
+              .listRowSeparator(.hidden)
+              .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+              .listRowBackground(Color.clear)
+              .padding()
+          }
+          
+          PageTabView(with: viewStore)
+            .listRowSeparator(.hidden)
+            .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+            .listRowBackground(Color.clear)
+            .frame(height: geo.size.height + geo.safeAreaInsets.bottom)
         }
-        
-        PageTabView(with: viewStore)
+        .listStyle(.plain)
+        .adBackground()
+        .scrollContentBackground(.hidden)
       }
-      .adBackground()
     }
   }
 }
@@ -45,7 +56,7 @@ struct MakeADView: ADUI {
 extension MakeADView {
   @ViewBuilder
   func PageTabView(with viewStore: MyViewStore) -> some View {
-    TabView(selection: viewStore.binding(\.$curStep)) {
+    TabView(selection: viewStore.binding(\.sharedState.$curStep)) {
       UploadADrawingView(
         store: self.store.scope(
           state: \.uploadADrawing,
@@ -53,7 +64,7 @@ extension MakeADView {
         )
       )
       .tag(Step.UploadADrawing)
-
+      
       FindingTheCharacterView(
         store: self.store.scope(
           state: \.findingTheCharacter,

@@ -11,15 +11,11 @@ import ComposableArchitecture
 
 public struct FindingTheCharacterStore: ReducerProtocol {
   public init() {}
+  public typealias State = TCABaseState<FindingTheCharacterStore.MyState>
   
-  public struct State: Equatable {
-    public init(
-      originalImage: UIImage?
-    ) {
-      self.originalImage = originalImage
-    }
+  public struct MyState: Equatable {
+    public init() {}
     
-    public var originalImage: UIImage?
     @BindingState public var checkState = false
   }
   
@@ -37,7 +33,7 @@ public struct FindingTheCharacterStore: ReducerProtocol {
         return .none
         
       case .checkAction:
-        state.checkState.toggle()
+        state.state.checkState.toggle()
         return .none
       }
     }
