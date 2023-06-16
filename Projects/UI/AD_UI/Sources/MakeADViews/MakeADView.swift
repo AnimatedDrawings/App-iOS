@@ -16,7 +16,7 @@ struct MakeADView: ADUI {
   typealias MyViewStore = ViewStore<MyStore.State, MyStore.Action>
   let store: StoreOf<MyStore>
   
-  @EnvironmentObject var stepStatusBarEnvironment: StepStatusBarEnvironment
+  @StateObject var stepStatusBarEnvironment = StepStatusBarEnvironment()
   
   init(
     store: StoreOf<MyStore> = Store(
@@ -44,6 +44,7 @@ struct MakeADView: ADUI {
             .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
             .listRowBackground(Color.clear)
             .frame(height: geo.size.height + geo.safeAreaInsets.bottom)
+            .environmentObject(stepStatusBarEnvironment)
         }
         .listStyle(.plain)
         .adBackground()
