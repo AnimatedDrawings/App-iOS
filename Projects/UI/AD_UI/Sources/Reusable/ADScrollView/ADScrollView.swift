@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import AD_Feature
 
 struct ADScrollView<C: View>: View {
   let topScrollID = "topScrollID"
@@ -83,6 +84,11 @@ extension ADScrollView {
     }
     
     func trackingAction() {
+      if -3 < curTop && curTop < 3 {
+        appearStepBar()
+        return
+      }
+      
       let translationY: CGFloat = self.curTop - self.lastTop
       
       if -dist <= translationY && translationY <= dist {
@@ -117,7 +123,6 @@ extension ADScrollView {
     }
     
     func appearStepBar() {
-      print("isHide False")
       if self.stepStatusBarEnvironment.isHide == true {
         withAnimation {
           self.stepStatusBarEnvironment.isHide = false
@@ -126,7 +131,6 @@ extension ADScrollView {
     }
     
     func disappearStepBar() {
-      print("isHide True")
       if self.stepStatusBarEnvironment.isHide == false {
         withAnimation {
           self.stepStatusBarEnvironment.isHide = true

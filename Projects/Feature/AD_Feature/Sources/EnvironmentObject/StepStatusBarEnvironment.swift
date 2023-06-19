@@ -8,6 +8,7 @@
 
 import SwiftUI
 
-class StepStatusBarEnvironment: ObservableObject {
-  @Published var isHide: Bool = false
+public class StepStatusBarEnvironment: ObservableObject {
+  public init() {}
+  @Published public var isHide: Bool = false
 }
