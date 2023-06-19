@@ -15,8 +15,6 @@ struct UploadADrawingView: ADUI {
   typealias MyStore = UploadADrawingStore
   let store: StoreOf<MyStore>
   
-  @EnvironmentObject var test: StepStatusBarEnvironment
-  
   init(
     store: StoreOf<MyStore> = Store(
       initialState: MyStore.State(sharedState: SharedState(), state: UploadADrawingStore.MyState()),
