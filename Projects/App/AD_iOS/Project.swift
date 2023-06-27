@@ -6,7 +6,7 @@ let project = Project.makeModule(
   platform: .iOS,
   product: .app,
   dependencies: [
-    .AD_Feature
+    .AD_UI
   ],
   resources: ["Resources/**"],
   infoPlist: .extendingDefault(with: [

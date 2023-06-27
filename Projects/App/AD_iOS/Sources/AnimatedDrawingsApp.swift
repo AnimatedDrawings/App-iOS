@@ -1,12 +1,11 @@
 import SwiftUI
+import AD_UI
 
 @main
 struct AnimatedDrawingsApp: App {
   var body: some Scene {
     WindowGroup {
-      VStack {
-        Text("Test AnimatedDrawingsApp")
-      }
+      RootView()
     }
   }
 }
