@@ -8,7 +8,8 @@ let project = Project.makeModule(
   product: .framework,
   dependencies: [
     .AD_Utils,
-    .ComposableArchitecture
+    .ComposableArchitecture,
+    .Moya
   ],
   withTest: true
 )
