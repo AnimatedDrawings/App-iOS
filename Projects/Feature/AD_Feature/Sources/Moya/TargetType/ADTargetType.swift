@@ -12,7 +12,12 @@ import Moya
 let providerAD = MoyaProvider<ADTargetType>()
 
 enum ADTargetType {
-  case uploadImage(croppedImage: UIImage)
+  case uploadImage(
+    data: Data,
+    name: String,
+    fileName: String,
+    mimeType: String
+  )
 }
 
 fileprivate let makeADPath: String = "/api/makeAD/"
@@ -34,21 +39,27 @@ extension ADTargetType: TargetType {
     }
   }
   
-  var task: Moya.Task {
+  var headers: [String : String]? {
     switch self {
-    case .uploadImage(let croppedImage):
-      let imageData = MultipartFormData(
-        provider: .data(croppedImage.pngData() ?? Data()),
-        name: "croppedImage",
-        fileName: "croppedImage.png",
-        mimeType: "iamge/png"
-      )
-      
-      return .uploadMultipart([imageData])
+    case .uploadImage:
+      return ["Content-type" : "multipart/form-data"]
+    default:
+//      return ["Content-type" : "application/json"]
+      return nil
     }
   }
   
-  var headers: [String : String]? {
-    return nil
+  var task: Moya.Task {
+    switch self {
+    case let .uploadImage(data, name, fileName, mimeType):
+      let imageData = MultipartFormData(
+        provider: .data(data),
+        name: name,
+        fileName: fileName,
+        mimeType: mimeType
+      )
+
+      return .uploadMultipart([imageData])
+    }
   }
 }

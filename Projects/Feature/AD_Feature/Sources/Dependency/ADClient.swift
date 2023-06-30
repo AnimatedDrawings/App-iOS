@@ -9,23 +9,38 @@
 import SwiftUI
 import ComposableArchitecture
 import Moya
+import AD_Utils
 
 struct ADClient {
-  var uploadImage: @Sendable (UIImage) async -> Bool?
+  var uploadImage: @Sendable (UIImage) async throws -> String
 }
 
 extension ADClient: DependencyKey {
   static let liveValue = Self(
     uploadImage: { croppedImage in
-      let result = await providerAD.request(.uploadImage(croppedImage: croppedImage))
+      guard let data = croppedImage.pngData() else {
+        throw UploadImageError.convertData
+      }
+      let name = "file"
+      let fileName = "tmp"
+      let mimeType = data.mimeType
       
-      switch result {
+      let response = await providerAD.request(
+        .uploadImage(
+          data: data,
+          name: name,
+          fileName: fileName,
+          mimeType: mimeType)
+      )
+
+      switch response {
       case .success(let success):
-        return true
+        let responseString: String = String(data: success.data, encoding: .utf8) ?? "cannot convert success response data"
+        return responseString
       case .failure(let failure):
         print(failure.localizedDescription)
-        return false
-      }
+        throw failure
+      }    
     }
   )
   

@@ -11,12 +11,19 @@ import AD_Utils
 
 struct CropImageView: View {
   let originalImage: UIImage
+  @Binding var croppedImage: UIImage?
+  let cropNextAction: () -> ()
   @State var cropRect: CGRect = .init()
   @State var imageScale: CGFloat = 0
-  @State var croppedImage: UIImage? = nil
   
-  init(originalImage: UIImage) {
+  init(
+    originalImage: UIImage,
+    croppedImage: Binding<UIImage?>,
+    cropNextAction: @escaping () -> ()
+  ) {
     self.originalImage = originalImage
+    self._croppedImage = croppedImage
+    self.cropNextAction = cropNextAction
   }
   
   var body: some View {
@@ -62,14 +69,21 @@ extension CropImageView {
     let croppedImage = UIGraphicsGetImageFromCurrentImageContext()
     UIGraphicsEndImageContext()
     self.croppedImage = croppedImage
+    
+    cropNextAction()
   }
 }
 
 struct PreviewsCropImageView: View {
   let image: UIImage = ADUtilsAsset.SampleDrawing.garlic.image
+  @State var croppedImage: UIImage? = nil
   
   var body: some View {
-    CropImageView(originalImage: image)
+    CropImageView(
+      originalImage: image,
+      croppedImage: $croppedImage,
+      cropNextAction: { print("cropped and upload!") }
+    )
   }
 }
 

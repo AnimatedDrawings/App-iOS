@@ -35,8 +35,12 @@ struct FindingTheCharacterView: ADUI {
           }
           
           if let originalImage = viewStore.sharedState.originalImage {
-            CropImageView(originalImage: originalImage)
-              .scrollDisabled(true)
+            CropImageView(
+              originalImage: originalImage,
+              croppedImage: viewStore.binding(\.$croppedImage)
+            ) {
+              viewStore.send(.uploadImage)
+            }
           }
           
           Spacer()
