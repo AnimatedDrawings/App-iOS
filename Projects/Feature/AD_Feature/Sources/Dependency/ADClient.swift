@@ -25,12 +25,28 @@ extension ADClient: DependencyKey {
       let fileName = "tmp"
       let mimeType = data.mimeType
       
+      let endpoint = providerAD.endpoint(
+        .uploadImage(
+          data: data,
+          name: name,
+          fileName: fileName,
+          mimeType: mimeType
+        )
+      )
+      guard let urlRequest = try? endpoint.urlRequest() else {
+        throw UploadImageError.urlRequest
+      }
+      guard urlRequest.httpBody != nil else {
+        throw UploadImageError.multipartFormData
+      }
+      
       let response = await providerAD.request(
         .uploadImage(
           data: data,
           name: name,
           fileName: fileName,
-          mimeType: mimeType)
+          mimeType: mimeType
+        )
       )
 
       switch response {

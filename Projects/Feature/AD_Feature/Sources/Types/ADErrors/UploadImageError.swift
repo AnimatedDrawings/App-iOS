@@ -10,5 +10,6 @@ import Foundation
 
 enum UploadImageError: Error {
   case convertData
-  case multipartFormDataError
+  case urlRequest
+  case multipartFormData
 }
