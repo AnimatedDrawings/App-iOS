@@ -47,14 +47,17 @@ public struct FindingTheCharacterStore: ReducerProtocol {
           return .none
         }
         
-        return .task {
-          await .uploadImageResponse(
-            TaskResult {
-              let response = try await adClient.uploadImage(croppedImage)
-              return response
-            }
-          )
-        }
+        state.sharedState.curStep = .SeparatingCharacter
+        
+        return .none
+//        return .task {
+//          await .uploadImageResponse(
+//            TaskResult {
+//              let response = try await adClient.uploadImage(croppedImage)
+//              return response
+//            }
+//          )
+//        }
         
       case .uploadImageResponse(.success(let response)):
         print("Upload Image Success : \(response)")

@@ -7,14 +7,18 @@
 //
 
 import SwiftUI
+import AD_Feature
 import AD_Utils
 
 struct StepStatusBar: View {
-  var curIdx: Int
+  @Binding var curStep: Step
   @State var statusBarWidth: CGFloat = 0
   let statusBarSpacing: CGFloat = 4
   let activeColor: Color = ADUtilsAsset.Color.blue1.swiftUIColor
   let inActiveColor: Color = .gray
+  var curIdx: Int {
+    curStep.rawValue
+  }
   
   var body: some View {
     VStack(alignment: .leading) {
@@ -66,13 +70,16 @@ extension StepStatusBar {
 }
 
 struct PreviewsStepStatusBar: View {
-  @State var curIdx: Int = 1
+  @State var curStep: Step = .UploadADrawing
   @State var isHide: Bool = false
+  var curIdx: Int {
+    return curStep.rawValue
+  }
   
   var body: some View {
     VStack(spacing: 100) {
       if isHide {
-        StepStatusBar(curIdx: curIdx)
+        StepStatusBar(curStep: $curStep)
           .padding()
       }
       Button("MoveUp", action: moveUpAction)
@@ -89,7 +96,7 @@ struct PreviewsStepStatusBar: View {
       nexIdx = 1
     }
     
-    self.curIdx = nexIdx
+    self.curStep = Step(rawValue: nexIdx) ?? .UploadADrawing
   }
   
   func moveDownAction() {
@@ -98,7 +105,7 @@ struct PreviewsStepStatusBar: View {
       nexIdx = 4
     }
     
-    self.curIdx = nexIdx
+    self.curStep = Step(rawValue: nexIdx) ?? .SeparatingCharacter
   }
   
   func hideShowAction() {

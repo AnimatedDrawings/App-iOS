@@ -17,7 +17,7 @@ struct SeparatingCharacterView: ADUI {
   
   init(
     store: StoreOf<MyStore> = Store(
-      initialState: MyStore.State(),
+      initialState: MyStore.State(sharedState: SharedState(), state: SeparatingCharacterStore.MyState()),
       reducer: MyStore()
     )
   ) {

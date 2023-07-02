@@ -11,7 +11,9 @@ import ComposableArchitecture
 public struct SeparatingCharacterStore: ReducerProtocol {
   public init() {}
   
-  public struct State: Equatable {
+  public typealias State = TCABaseState<SeparatingCharacterStore.MyState>
+  
+  public struct MyState: Equatable {
     public init() {}
     
     @BindingState public var checkState1 = false

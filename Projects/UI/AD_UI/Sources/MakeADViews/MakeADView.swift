@@ -32,7 +32,7 @@ struct MakeADView: ADUI {
       GeometryReader { geo in
         List {
           if !self.stepStatusBarEnvironment.isHide {
-            StepStatusBar(curIdx: viewStore.sharedState.curStep.index)
+            StepStatusBar(curStep: viewStore.binding(\.sharedState.$curStep))
               .listRowSeparator(.hidden)
               .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
               .listRowBackground(Color.clear)
@@ -73,6 +73,14 @@ extension MakeADView {
         )
       )
       .tag(Step.FindingTheCharacter)
+      
+      SeparatingCharacterView(
+        store: self.store.scope(
+          state: \.separatingCharacter,
+          action: MakeADStore.Action.separatingCharacter
+        )
+      )
+      .tag(Step.SeparatingCharacter)
     }
     .tabViewStyle(.page(indexDisplayMode: .never))
     .ignoresSafeArea()
