@@ -63,19 +63,33 @@ extension SeparatingCharacterView {
     let description1 = "If the body parts of your character are not highlighted, use the pen and eraser tools to fix it."
     let description2 = "If the arms or legs are stuck together, use the eraser tool to separate them"
     
-    VStack(alignment: .leading, spacing: 20) {
+    VStack(alignment: .leading, spacing: 15) {
       CheckListButton(description1, state: viewStore.binding(\.$checkState1)) {
         viewStore.send(.checkAction1)
       }
+      
+      GIFView(gifName: "SeparatingCharacter_Preview1")
+        .frame(height: 250)
+      
       CheckListButton(description2, state: viewStore.binding(\.$checkState2)) {
         viewStore.send(.checkAction2)
       }
+      
+      GIFView(gifName: "SeparatingCharacter_Preview2")
+        .frame(height: 250)
     }
+  }
+}
+
+struct PreviewsSeparatingCharacterView: View {
+  var body: some View {
+    SeparatingCharacterView()
+      .environmentObject(StepStatusBarEnvironment())
   }
 }
 
 struct SeparatingCharacterView_Previews: PreviewProvider {
   static var previews: some View {
-    SeparatingCharacterView()
+    PreviewsSeparatingCharacterView()
   }
 }
