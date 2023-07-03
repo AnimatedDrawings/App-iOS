@@ -171,7 +171,7 @@ extension MaskToolView {
 }
 
 struct PreviewsMaskToolView: View {
-  let croppedImage: UIImage = ADUtilsAsset.SampleDrawing.example1.image
+  let croppedImage: UIImage = ADUtilsAsset.SampleDrawing.garlicCropped.image
   
   var body: some View {
     MaskImageView(croppedImage: croppedImage)
