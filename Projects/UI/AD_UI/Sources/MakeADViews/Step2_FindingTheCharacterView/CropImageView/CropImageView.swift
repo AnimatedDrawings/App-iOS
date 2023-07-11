@@ -23,7 +23,7 @@ struct CropImageView: View {
   
   let toolBarHeight: CGFloat = 40
   
-  @State var reload = false
+  @State var reset = false
   
   init(
     originalImage: UIImage,
@@ -58,7 +58,7 @@ struct CropImageView: View {
           .foregroundColor(.white)
           .shadow(radius: 10)
       )
-      .id(reload)
+      .id(reset)
       
       Spacer()
       
@@ -73,7 +73,7 @@ struct CropImageView: View {
 
 extension CropImageView {
   func cancelAction() {
-    self.isShowCropImageView = false
+    self.isShowCropImageView.toggle()
   }
 }
 
@@ -126,7 +126,7 @@ extension CropImageView {
   }
   
   func resetAction() {
-    self.reload.toggle()
+    self.reset.toggle()
   }
 }
 

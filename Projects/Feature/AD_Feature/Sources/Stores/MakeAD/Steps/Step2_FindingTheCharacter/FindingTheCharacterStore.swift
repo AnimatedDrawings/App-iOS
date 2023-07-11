@@ -45,7 +45,7 @@ public struct FindingTheCharacterStore: ReducerProtocol {
         return .none
         
       case .showCropImageView:
-        state.isShowCropImageView = true
+        state.isShowCropImageView.toggle()
         return .none
         
       case .uploadImage:

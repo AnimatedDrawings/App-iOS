@@ -125,7 +125,6 @@ extension FindingTheCharacterView {
   }
 }
 
-
 struct FindingTheCharacterView_Previews: PreviewProvider {
   static var previews: some View {
     FindingTheCharacterView()
