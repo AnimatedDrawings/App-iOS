@@ -7,27 +7,44 @@
 //
 
 import SwiftUI
+import AD_Feature
 import AD_Utils
+// use store??
+import ComposableArchitecture
 
 struct CropImageView: View {
   let originalImage: UIImage
   @Binding var croppedImage: UIImage?
-  let cropNextAction: () -> ()
+  @Binding var isShowCropImageView: Bool
+  let saveNextAction: () -> ()
+  
   @State var cropRect: CGRect = .init()
   @State var imageScale: CGFloat = 0
+  
+  let toolBarHeight: CGFloat = 40
   
   init(
     originalImage: UIImage,
     croppedImage: Binding<UIImage?>,
-    cropNextAction: @escaping () -> ()
+    isShowCropImageView: Binding<Bool>,
+    saveNextAction: @escaping () -> ()
   ) {
     self.originalImage = originalImage
     self._croppedImage = croppedImage
-    self.cropNextAction = cropNextAction
+    self._isShowCropImageView = isShowCropImageView
+    self.saveNextAction = saveNextAction
   }
   
   var body: some View {
     VStack(spacing: 40) {
+      ToolNaviBar(
+        height: toolBarHeight,
+        cancelAction: cancelAction,
+        saveAction: saveAction
+      )
+      
+      Spacer()
+      
       ViewFinder(
         originalImage: originalImage,
         cropRect: $cropRect,
@@ -40,19 +57,30 @@ struct CropImageView: View {
           .shadow(radius: 10)
       )
       
-      CropButton()
+      Spacer()
+      
+      HStack {
+        Spacer()
+        ResetButton()
+      }
     }
     .padding()
   }
 }
 
 extension CropImageView {
-  @ViewBuilder
-  func CropButton() -> some View {
-    ADButton("Next", action: cropButtonAction)
+  func cancelAction() {
+    self.isShowCropImageView = false
+  }
+}
+
+extension CropImageView {
+  func saveAction() {
+    cropAction()
+    saveNextAction()
   }
   
-  func cropButtonAction() {
+  func cropAction() {
     let cropCGSize = CGSize(
       width: cropRect.size.width * imageScale,
       height: cropRect.size.height * imageScale
@@ -69,21 +97,53 @@ extension CropImageView {
     let croppedImage = UIGraphicsGetImageFromCurrentImageContext()
     UIGraphicsEndImageContext()
     self.croppedImage = croppedImage
+  }
+}
+
+extension CropImageView {
+  @ViewBuilder
+  func ResetButton() -> some View {
+    let size: CGFloat = 60
+    let imageName = "arrow.uturn.backward"
+    let strokeColor = ADUtilsAsset.Color.blue1.swiftUIColor
     
-    cropNextAction()
+    Button(action: resetAction) {
+      Circle()
+        .frame(width: size, height: size)
+        .foregroundColor(.white)
+        .shadow(radius: 10)
+        .overlay {
+          Image(systemName: imageName)
+            .resizable()
+            .foregroundColor(strokeColor)
+            .fontWeight(.semibold)
+            .padding()
+        }
+    }
+  }
+  
+  func resetAction() {
+    
   }
 }
 
 struct PreviewsCropImageView: View {
   let image: UIImage = ADUtilsAsset.SampleDrawing.garlic.image
   @State var croppedImage: UIImage? = nil
+  @State var isShowCropImageView: Bool = false
   
   var body: some View {
-    CropImageView(
-      originalImage: image,
-      croppedImage: $croppedImage,
-      cropNextAction: { print("cropped and upload!") }
-    )
+    ZStack {
+      ADBackground()
+        .blur(radius: 4)
+      
+      CropImageView(
+        originalImage: image,
+        croppedImage: $croppedImage,
+        isShowCropImageView: $isShowCropImageView,
+        saveNextAction: { print("cropped and upload!") }
+      )
+    }
   }
 }
 

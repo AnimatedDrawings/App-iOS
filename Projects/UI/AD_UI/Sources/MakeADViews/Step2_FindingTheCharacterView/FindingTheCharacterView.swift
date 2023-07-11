@@ -34,18 +34,19 @@ struct FindingTheCharacterView: ADUI {
             CheckListContent(with: viewStore)
           }
           
-          if let originalImage = viewStore.sharedState.originalImage {
-            CropImageView(
-              originalImage: originalImage,
-              croppedImage: viewStore.binding(\.$croppedImage)
-            ) {
-              viewStore.send(.uploadImage)
-            }
-          }
-          
           Spacer()
+          
+          ShowCropImageViewButton(state: viewStore.binding(\.$checkState)) {
+            viewStore.send(.showCropImageView)
+          }
         }
         .padding()
+      }
+      .fullScreenCover(
+        isPresented: viewStore.binding(\.$isShowCropImageView)
+      ) {
+        CropImage(with: viewStore)
+          .transparentBlurBackground()
       }
     }
   }
@@ -85,6 +86,45 @@ extension FindingTheCharacterView {
     }
   }
 }
+
+extension FindingTheCharacterView {
+  @ViewBuilder
+  func ShowCropImageViewButton(
+    state: Binding<Bool>,
+    action: @escaping () -> ()
+  ) -> some View {
+    let viewFinder = "person.fill.viewfinder"
+    let text = "Find the Character"
+    
+    ADButton(
+      state.wrappedValue ? .active : .inActive,
+      action: action
+    ) {
+      HStack {
+        Image(systemName: viewFinder)
+        Text(text)
+      }
+    }
+  }
+}
+
+extension FindingTheCharacterView {
+  @ViewBuilder
+  func CropImage(with viewStore: MyViewStore) -> some View {
+    if let originalImage = viewStore.sharedState.originalImage,
+       viewStore.isShowCropImageView == true
+    {
+      CropImageView(
+        originalImage: originalImage,
+        croppedImage: viewStore.binding(\.$croppedImage),
+        isShowCropImageView: viewStore.binding(\.$isShowCropImageView),
+        saveNextAction: {
+          
+        })
+    }
+  }
+}
+
 
 struct FindingTheCharacterView_Previews: PreviewProvider {
   static var previews: some View {
