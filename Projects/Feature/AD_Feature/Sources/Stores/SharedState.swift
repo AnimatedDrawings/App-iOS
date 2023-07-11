@@ -14,4 +14,5 @@ public struct SharedState: Equatable {
   
   @BindingState public var curStep: Step = .UploadADrawing
   public var originalImage: UIImage? = nil
+  @BindingState public var croppedImage: UIImage? = nil
 }

@@ -19,15 +19,13 @@ public struct FindingTheCharacterStore: ReducerProtocol {
     public init() {}
     
     @BindingState public var checkState = false
-    
     @BindingState public var isShowCropImageView = false
-    @BindingState public var croppedImage: UIImage? = nil
   }
   
   public enum Action: Equatable, BindableAction {
     case binding(BindingAction<State>)
     case checkAction
-    case showCropImageView
+    case toggleCropImageView
     case uploadImage
     case uploadImageResponse(TaskResult<String>)
   }
@@ -44,12 +42,12 @@ public struct FindingTheCharacterStore: ReducerProtocol {
         state.checkState.toggle()
         return .none
         
-      case .showCropImageView:
+      case .toggleCropImageView:
         state.isShowCropImageView.toggle()
         return .none
         
       case .uploadImage:
-        guard let croppedImage = state.croppedImage else {
+        guard let croppedImage = state.sharedState.croppedImage else {
           print("No CroppedImage")
           return .none
         }

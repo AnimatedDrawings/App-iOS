@@ -37,17 +37,29 @@ struct FindingTheCharacterView: ADUI {
           Spacer()
           
           ShowCropImageViewButton(state: viewStore.binding(\.$checkState)) {
-            viewStore.send(.showCropImageView)
+            viewStore.send(.toggleCropImageView)
           }
         }
         .padding()
       }
       .fullScreenCover(
-        isPresented: viewStore.binding(\.$isShowCropImageView)
-      ) {
-        CropImage(with: viewStore)
-          .transparentBlurBackground()
-      }
+        isPresented: viewStore.binding(\.$isShowCropImageView),
+        onDismiss: {
+          
+        },
+        content: {
+          if let originalImage = viewStore.state.sharedState.originalImage {
+            CropImageView(
+              originalImage: originalImage,
+              croppedImage: viewStore.binding(\.sharedState.$croppedImage),
+              isShowCropImageView: viewStore.binding(\.$isShowCropImageView),
+              saveNextAction: {
+                viewStore.send(.toggleCropImageView)
+              })
+            .transparentBlurBackground()
+          }
+        }
+      )
     }
   }
 }
@@ -104,23 +116,6 @@ extension FindingTheCharacterView {
         Image(systemName: viewFinder)
         Text(text)
       }
-    }
-  }
-}
-
-extension FindingTheCharacterView {
-  @ViewBuilder
-  func CropImage(with viewStore: MyViewStore) -> some View {
-    if let originalImage = viewStore.sharedState.originalImage,
-       viewStore.isShowCropImageView == true
-    {
-      CropImageView(
-        originalImage: originalImage,
-        croppedImage: viewStore.binding(\.$croppedImage),
-        isShowCropImageView: viewStore.binding(\.$isShowCropImageView),
-        saveNextAction: {
-          
-        })
     }
   }
 }
