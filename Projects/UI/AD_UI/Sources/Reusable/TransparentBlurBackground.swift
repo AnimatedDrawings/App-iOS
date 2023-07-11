@@ -25,7 +25,7 @@ struct VisualEffectViewModifier: ViewModifier {
         .edgesIgnoringSafeArea(.all)
       
       content
-        .clearModalBackground()
+        .clearBackground()
     }
   }
 }

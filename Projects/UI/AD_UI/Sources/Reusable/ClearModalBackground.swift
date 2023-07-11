@@ -9,7 +9,7 @@
 import SwiftUI
 
 extension View {
-  func clearModalBackground() -> some View {
+  func clearBackground() -> some View {
     self.modifier(ClearBackgroundViewModifier())
   }
 }
