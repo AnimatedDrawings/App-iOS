@@ -11,13 +11,18 @@ import AD_Feature
 import AD_Utils
 
 struct StepStatusBar: View {
-  @Binding var curStep: Step
+  @Binding var currentStep: Step
+  @Binding var completeStep: Step
   @State var statusBarWidth: CGFloat = 0
   let statusBarSpacing: CGFloat = 4
   let activeColor: Color = ADUtilsAsset.Color.blue1.swiftUIColor
   let inActiveColor: Color = .gray
-  var curIdx: Int {
-    curStep.rawValue
+  let completeColor: Color = ADUtilsAsset.Color.green1.swiftUIColor
+  var currentStepIdx: Int {
+    return self.currentStep.rawValue
+  }
+  var completeStepIdx: Int {
+    return self.completeStep.rawValue
   }
   
   var body: some View {
@@ -33,7 +38,7 @@ extension StepStatusBar {
   func Title() -> some View {
     HStack(spacing: 20) {
       Text("S T E P")
-      Text("\(curIdx) / 4")
+      Text("\(currentStepIdx) / 4")
     }
     .fontWeight(.semibold)
   }
@@ -48,7 +53,7 @@ extension StepStatusBar {
           Capsule()
             .foregroundColor(capsuleColor(idx))
             .frame(width: capsuleWidth(idx))
-            .animation(.easeOut, value: self.curIdx)
+            .animation(.easeOut, value: self.currentStepIdx)
         }
       }
       .onAppear { calStatusBarWidth(proxy: geo) }
@@ -61,55 +66,58 @@ extension StepStatusBar {
   }
   
   func capsuleColor(_ idx: Int) -> Color {
-    return curIdx == idx ? activeColor : inActiveColor
+    if currentStepIdx == idx {
+      return activeColor
+    }
+    else if idx < completeStepIdx {
+      return completeColor
+    }
+    
+    return inActiveColor
   }
   
   func capsuleWidth(_ idx: Int) -> CGFloat {
-    return curIdx == idx ? self.statusBarWidth / 2 : self.statusBarWidth / 6
+    return currentStepIdx == idx ? self.statusBarWidth / 2 : self.statusBarWidth / 6
   }
 }
 
 struct PreviewsStepStatusBar: View {
-  @State var curStep: Step = .UploadADrawing
-  @State var isHide: Bool = false
-  var curIdx: Int {
-    return curStep.rawValue
+  @State var currentStep: Step = .UploadADrawing
+  @State var completeStep: Step = .SeparatingCharacter
+  var currentStepIdx: Int {
+    return currentStep.rawValue
   }
   
   var body: some View {
     VStack(spacing: 100) {
-      if isHide {
-        StepStatusBar(curStep: $curStep)
-          .padding()
-      }
+      StepStatusBar(
+        currentStep: $currentStep,
+        completeStep: $completeStep
+      )
+        .padding()
       Button("MoveUp", action: moveUpAction)
       Button("MoveDown", action: moveDownAction)
-      Button("HideShow", action: hideShowAction)
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .animation(.default, value: isHide)
+    .animation(.default, value: currentStep)
   }
   
   func moveUpAction() {
-    var nexIdx = curIdx + 1
+    var nexIdx = currentStepIdx + 1
     if nexIdx == 5 {
       nexIdx = 1
     }
     
-    self.curStep = Step(rawValue: nexIdx) ?? .UploadADrawing
+    self.currentStep = Step(rawValue: nexIdx) ?? .UploadADrawing
   }
   
   func moveDownAction() {
-    var nexIdx = curIdx - 1
+    var nexIdx = currentStepIdx - 1
     if nexIdx == 0 {
       nexIdx = 4
     }
     
-    self.curStep = Step(rawValue: nexIdx) ?? .SeparatingCharacter
-  }
-  
-  func hideShowAction() {
-    self.isHide.toggle()
+    self.currentStep = Step(rawValue: nexIdx) ?? .SeparatingCharacter
   }
 }
 

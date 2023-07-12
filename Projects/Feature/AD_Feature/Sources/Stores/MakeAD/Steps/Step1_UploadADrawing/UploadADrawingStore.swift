@@ -61,9 +61,9 @@ public struct UploadADrawingStore: ReducerProtocol {
         return .none
         
       case .sampleTapAction(let image):
-        print("sampleTapAction")
         state.sharedState.originalImage = image
-        state.sharedState.curStep = .FindingTheCharacter
+        state.sharedState.completeStep = .FindingTheCharacter
+        state.sharedState.currentStep = .FindingTheCharacter
         return .none
       }
     }

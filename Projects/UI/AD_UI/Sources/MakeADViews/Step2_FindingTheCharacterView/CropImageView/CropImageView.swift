@@ -13,8 +13,8 @@ import AD_Utils
 struct CropImageView: View {
   let originalImage: UIImage
   @Binding var croppedImage: UIImage?
-  @Binding var isShowCropImageView: Bool
-  let saveNextAction: () -> ()
+  let cropNextAction: (Bool) -> ()
+  let cancelAction: () -> ()
   
   @State var cropRect: CGRect = .init()
   @State var imageScale: CGFloat = 0
@@ -26,21 +26,21 @@ struct CropImageView: View {
   init(
     originalImage: UIImage,
     croppedImage: Binding<UIImage?>,
-    isShowCropImageView: Binding<Bool>,
-    saveNextAction: @escaping () -> ()
+    cropNextAction: @escaping (Bool) -> (),
+    cancelAction: @escaping () -> ()
   ) {
     self.originalImage = originalImage
     self._croppedImage = croppedImage
-    self._isShowCropImageView = isShowCropImageView
-    self.saveNextAction = saveNextAction
+    self.cropNextAction = cropNextAction
+    self.cancelAction = cancelAction
   }
   
   var body: some View {
     VStack(spacing: 40) {
       ToolNaviBar(
         height: toolBarHeight,
-        cancelAction: cancelAction,
-        saveAction: saveAction
+        cancelAction: cancel,
+        saveAction: save
       )
       
       Spacer()
@@ -70,18 +70,18 @@ struct CropImageView: View {
 }
 
 extension CropImageView {
-  func cancelAction() {
-    self.isShowCropImageView.toggle()
+  func cancel() {
+    cancelAction()
   }
 }
 
 extension CropImageView {
-  func saveAction() {
-    cropAction()
-    saveNextAction()
+  func save() {
+    let cropResult = crop()
+    cropNextAction(cropResult)
   }
   
-  func cropAction() {
+  func crop() -> Bool {
     let cropCGSize = CGSize(
       width: cropRect.size.width * imageScale,
       height: cropRect.size.height * imageScale
@@ -95,9 +95,14 @@ extension CropImageView {
     UIGraphicsBeginImageContext(cropCGSize)
     
     self.originalImage.draw(at: cropCGPoint)
-    let croppedImage = UIGraphicsGetImageFromCurrentImageContext()
-    UIGraphicsEndImageContext()
-    self.croppedImage = croppedImage
+    
+    if let croppedImage = UIGraphicsGetImageFromCurrentImageContext() {
+      UIGraphicsEndImageContext()
+      self.croppedImage = croppedImage
+      return true
+    }
+    
+    return false
   }
 }
 
@@ -128,7 +133,7 @@ extension CropImageView {
   }
 }
 
-struct PreviewsCropImageView: View {
+struct Previews_CropImageView: View {
   let image: UIImage = ADUtilsAsset.SampleDrawing.garlic.image
   @State var croppedImage: UIImage? = nil
   @State var isShowCropImageView: Bool = false
@@ -141,8 +146,8 @@ struct PreviewsCropImageView: View {
       CropImageView(
         originalImage: image,
         croppedImage: $croppedImage,
-        isShowCropImageView: $isShowCropImageView,
-        saveNextAction: { print("cropped and upload!") }
+        cropNextAction: { _ in print("cropped and upload!") },
+        cancelAction: {}
       )
     }
   }
@@ -150,6 +155,6 @@ struct PreviewsCropImageView: View {
 
 struct CropImageView_Previews: PreviewProvider {
   static var previews: some View {
-    PreviewsCropImageView()
+    Previews_CropImageView()
   }
 }

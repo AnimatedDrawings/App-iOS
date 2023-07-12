@@ -45,17 +45,20 @@ struct FindingTheCharacterView: ADUI {
       .fullScreenCover(
         isPresented: viewStore.binding(\.$isShowCropImageView),
         onDismiss: {
-          
+          viewStore.send(.onDismissCropImageView)
         },
         content: {
           if let originalImage = viewStore.state.sharedState.originalImage {
             CropImageView(
               originalImage: originalImage,
               croppedImage: viewStore.binding(\.sharedState.$croppedImage),
-              isShowCropImageView: viewStore.binding(\.$isShowCropImageView),
-              saveNextAction: {
+              cropNextAction: { cropResult in
+                viewStore.send(.cropNextAction(cropResult))
+              },
+              cancelAction: {
                 viewStore.send(.toggleCropImageView)
-              })
+              }
+            )
             .transparentBlurBackground()
           }
         }

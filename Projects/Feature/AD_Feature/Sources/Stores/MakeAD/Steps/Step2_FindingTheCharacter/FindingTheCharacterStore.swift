@@ -20,14 +20,15 @@ public struct FindingTheCharacterStore: ReducerProtocol {
     
     @BindingState public var checkState = false
     @BindingState public var isShowCropImageView = false
+    var isNewCropImage = false
   }
   
   public enum Action: Equatable, BindableAction {
     case binding(BindingAction<State>)
     case checkAction
     case toggleCropImageView
-    case uploadImage
-    case uploadImageResponse(TaskResult<String>)
+    case cropNextAction(Bool)
+    case onDismissCropImageView
   }
   
   public var body: some ReducerProtocol<State, Action> {
@@ -46,30 +47,18 @@ public struct FindingTheCharacterStore: ReducerProtocol {
         state.isShowCropImageView.toggle()
         return .none
         
-      case .uploadImage:
-        guard let croppedImage = state.sharedState.croppedImage else {
-          print("No CroppedImage")
-          return .none
+      case .cropNextAction(let cropResult):
+        state.isNewCropImage = cropResult
+        return .task {
+          .toggleCropImageView
         }
         
-        state.sharedState.curStep = .SeparatingCharacter
-        
-        return .none
-//        return .task {
-//          await .uploadImageResponse(
-//            TaskResult {
-//              let response = try await adClient.uploadImage(croppedImage)
-//              return response
-//            }
-//          )
-//        }
-        
-      case .uploadImageResponse(.success(let response)):
-        print("Upload Image Success : \(response)")
-        return .none
-        
-      case .uploadImageResponse(.failure(let error)):
-        print("Upload Image Fail : \(error)")
+      case .onDismissCropImageView:
+        if state.isNewCropImage == true {
+          state.sharedState.completeStep = .SeparatingCharacter
+          state.sharedState.currentStep = .SeparatingCharacter
+        }
+        state.isNewCropImage = false
         return .none
       }
     }
