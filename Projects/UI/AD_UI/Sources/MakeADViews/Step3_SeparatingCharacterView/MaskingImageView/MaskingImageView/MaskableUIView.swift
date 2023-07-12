@@ -76,6 +76,7 @@ extension MaskableUIView {
     guard self.frame != myBounds else {
       return
     }
+    
     self.frame = myBounds
     self.croppedImageUIView.frame = self.bounds
     maskLayer.frame = self.layer.bounds
