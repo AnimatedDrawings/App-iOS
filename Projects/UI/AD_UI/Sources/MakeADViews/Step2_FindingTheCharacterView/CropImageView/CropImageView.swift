@@ -19,8 +19,6 @@ struct CropImageView: View {
   @State var cropRect: CGRect = .init()
   @State var imageScale: CGFloat = 0
   
-  let toolBarHeight: CGFloat = 40
-  
   @State var reset = false
   
   init(
@@ -38,7 +36,6 @@ struct CropImageView: View {
   var body: some View {
     VStack(spacing: 40) {
       ToolNaviBar(
-        height: toolBarHeight,
         cancelAction: cancel,
         saveAction: save
       )

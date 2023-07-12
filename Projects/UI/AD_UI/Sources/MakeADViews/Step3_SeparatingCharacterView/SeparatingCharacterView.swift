@@ -34,9 +34,42 @@ struct SeparatingCharacterView: ADUI {
             CheckListContent(with: viewStore)
           }
           
+          ShowMaskingImageViewButton(state: viewStore.maskState) {
+            viewStore.send(.toggleMaskingImageView)
+          }
         }
         .padding()
       }
+      .fullScreenCover(
+        isPresented: viewStore.binding(\.$isShowMaskingImageView),
+        onDismiss: {
+//          viewStore.send(.onDismissCropImageView)
+        },
+        content: {
+//          if let originalImage = viewStore.state.sharedState.originalImage {
+//            CropImageView(
+//              originalImage: originalImage,
+//              croppedImage: viewStore.binding(\.sharedState.$croppedImage),
+//              cropNextAction: { cropResult in
+//                viewStore.send(.cropNextAction(cropResult))
+//              },
+//              cancelAction: {
+//                viewStore.send(.toggleCropImageView)
+//              }
+//            )
+//            .transparentBlurBackground()
+//          }
+          if let croppedImage = viewStore.state.sharedState.croppedImage {
+            MaskingImageView(
+              croppedImage: croppedImage,
+              cancelAction: {
+                viewStore.send(.toggleMaskingImageView)
+              }
+            )
+            .transparentBlurBackground()
+          }
+        }
+      )
     }
   }
 }
@@ -81,7 +114,28 @@ extension SeparatingCharacterView {
   }
 }
 
-struct PreviewsSeparatingCharacterView: View {
+extension SeparatingCharacterView {
+  @ViewBuilder
+  func ShowMaskingImageViewButton(
+    state: Bool,
+    action: @escaping () -> ()
+  ) -> some View {
+    let viewFinder = "figure.dance"
+    let text = "Separate The Character"
+    
+    ADButton(
+      state ? .active : .inActive,
+      action: action
+    ) {
+      HStack {
+        Image(systemName: viewFinder)
+        Text(text)
+      }
+    }
+  }
+}
+
+struct Previews_SeparatingCharacterView: View {
   var body: some View {
     SeparatingCharacterView()
       .environmentObject(StepStatusBarEnvironment())
@@ -90,6 +144,6 @@ struct PreviewsSeparatingCharacterView: View {
 
 struct SeparatingCharacterView_Previews: PreviewProvider {
   static var previews: some View {
-    PreviewsSeparatingCharacterView()
+    Previews_SeparatingCharacterView()
   }
 }

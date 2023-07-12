@@ -10,10 +10,11 @@ import SwiftUI
 import AD_Utils
 
 struct ToolNaviBar: View {
-  let height: CGFloat
   let cancelAction: () -> ()
   let saveAction: () -> ()
+  
   let strokeColor: Color = ADUtilsAsset.Color.blue1.swiftUIColor
+  let height: CGFloat = 40
   
   var body: some View {
     HStack {
@@ -61,7 +62,6 @@ struct Previews_ToolNaviBar: View {
   var body: some View {
     VStack {
       ToolNaviBar(
-        height: 40,
         cancelAction: {},
         saveAction: {}
       )

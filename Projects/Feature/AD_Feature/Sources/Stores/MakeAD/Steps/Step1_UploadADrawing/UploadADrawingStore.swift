@@ -20,7 +20,7 @@ public struct UploadADrawingStore: ReducerProtocol {
     @BindingState public var checkState1 = false
     @BindingState public var checkState2 = false
     @BindingState public var checkState3 = false
-    @BindingState public var uploadState = false
+    public var uploadState = false
   }
   
   public enum Action: BindableAction, Equatable {

@@ -18,7 +18,8 @@ public struct SeparatingCharacterStore: ReducerProtocol {
     
     @BindingState public var checkState1 = false
     @BindingState public var checkState2 = false
-    @BindingState public var maskState = false
+    public var maskState = false
+    @BindingState public var isShowMaskingImageView = false
   }
   
   public enum Action: Equatable, BindableAction {
@@ -26,9 +27,12 @@ public struct SeparatingCharacterStore: ReducerProtocol {
     
     case checkAction1
     case checkAction2
+    case toggleMaskingImageView
   }
   
   public var body: some ReducerProtocol<State, Action> {
+    BindingReducer()
+    
     Reduce { state, action in
       switch action {
       case .binding:
@@ -42,6 +46,10 @@ public struct SeparatingCharacterStore: ReducerProtocol {
       case .checkAction2:
         state.checkState2.toggle()
         activeUploadButton(state: &state)
+        return .none
+        
+      case .toggleMaskingImageView:
+        state.isShowMaskingImageView.toggle()
         return .none
       }
     }
