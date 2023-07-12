@@ -18,9 +18,9 @@ struct MaskingImageView: View {
   
   @State var imageFrame: CGRect = .init()
   @State var toolSizerButtonOffset: CGFloat = 0
+  @State var reloadTrigger: Bool = false
   
   let cancelAction: () -> ()
-  
   
   var body: some View {
     VStack {
@@ -40,6 +40,7 @@ struct MaskingImageView: View {
             Color.clear
               .onAppear {
                 self.imageFrame = geo.frame(in: .global)
+                self.reloadTrigger.toggle()
               }
           }
         )
@@ -52,6 +53,7 @@ struct MaskingImageView: View {
           )
         }
         .padding()
+        .reload(reloadTrigger)
       
       Spacer()
       Spacer()

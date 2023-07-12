@@ -19,7 +19,7 @@ struct CropImageView: View {
   @State var cropRect: CGRect = .init()
   @State var imageScale: CGFloat = 0
   
-  @State var reset = false
+  @State var resetTrigger = false
   
   init(
     originalImage: UIImage,
@@ -53,7 +53,7 @@ struct CropImageView: View {
           .foregroundColor(.white)
           .shadow(radius: 10)
       )
-      .id(reset)
+      .reload(resetTrigger)
       
       Spacer()
       
@@ -126,7 +126,7 @@ extension CropImageView {
   }
   
   func resetAction() {
-    self.reset.toggle()
+    self.resetTrigger.toggle()
   }
 }
 

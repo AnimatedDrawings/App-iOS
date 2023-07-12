@@ -47,7 +47,7 @@ class MaskableUIView: UIView {
     self.croppedImageUIView.image = croppedImage
     self.curDrawingAction = curDrawingAction
     self.curCircleRadius = curCircleRadius
-    super.init(frame: myFrame)
+    super.init(frame: CGRect(origin: .zero, size: myFrame.size))
     addMaskGesture()
     setupLayout()
   }
@@ -71,11 +71,12 @@ class MaskableUIView: UIView {
 }
 
 extension MaskableUIView {
-  func updateBounds() {
-    guard self.bounds != self.croppedImageUIView.frame else {
+  func updateBounds(myFrame: CGRect) {
+    let myBounds = CGRect(origin: .zero, size: myFrame.size)
+    guard self.frame != myBounds else {
       return
     }
-    
+    self.frame = myBounds
     self.croppedImageUIView.frame = self.bounds
     maskLayer.frame = self.layer.bounds
     shapeLayer.frame = self.layer.bounds

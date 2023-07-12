@@ -23,8 +23,6 @@ struct MaskableUIViewRepresentable: UIViewRepresentable {
       curCircleRadius: self.maskToolState.circleRadius
     )
     
-    print(myFrame)
-    
     context.coordinator.maskableUIView = maskableUIView
     context.coordinator.maskToolState = self.maskToolState
     context.coordinator.maskableViewLink = self.maskableViewLink
@@ -33,7 +31,7 @@ struct MaskableUIViewRepresentable: UIViewRepresentable {
   }
   
   func updateUIView(_ uiView: MaskableUIView, context: Context) {
-    uiView.updateBounds()
+    uiView.updateBounds(myFrame: myFrame)
     uiView.curDrawingAction = self.maskToolState.drawingAction
     uiView.curCircleRadius = self.maskToolState.circleRadius
   }
