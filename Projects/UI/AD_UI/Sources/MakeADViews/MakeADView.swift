@@ -16,8 +16,6 @@ struct MakeADView: ADUI {
   typealias MyViewStore = ViewStore<MyStore.State, MyStore.Action>
   let store: StoreOf<MyStore>
   
-  @StateObject var stepStatusBarEnvironment = StepStatusBarEnvironment()
-  
   init(
     store: StoreOf<MyStore> = Store(
       initialState: MyStore.State(),
@@ -31,7 +29,7 @@ struct MakeADView: ADUI {
     WithViewStore(store, observe: { $0 }) { viewStore in
       GeometryReader { geo in
         List {
-          if !self.stepStatusBarEnvironment.isHide {
+          if viewStore.sharedState.isShowStepStatusBar {
             StepStatusBar(
               currentStep: viewStore.binding(\.sharedState.$currentStep),
               completeStep: viewStore.binding(\.sharedState.$completeStep)
@@ -47,7 +45,6 @@ struct MakeADView: ADUI {
             .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
             .listRowBackground(Color.clear)
             .frame(height: geo.size.height + geo.safeAreaInsets.bottom)
-            .environmentObject(stepStatusBarEnvironment)
         }
         .listStyle(.plain)
         .adBackground()
@@ -101,6 +98,5 @@ extension MakeADView {
 struct MakeADView_Previews: PreviewProvider {
   static var previews: some View {
     MakeADView()
-      .environmentObject(StepStatusBarEnvironment())
   }
 }

@@ -29,7 +29,7 @@ struct FindingCharacterJointsView: ADUI {
   
   var body: some View {
     WithViewStore(store, observe: { $0 }) { viewStore in
-      ADScrollView {
+      ADScrollView(viewStore.binding(\.sharedState.$isShowStepStatusBar)) {
         VStack(alignment: .leading, spacing: 20) {
           if let maskedImage = viewStore.state.sharedState.maskedImage {
             Image(uiImage: maskedImage)

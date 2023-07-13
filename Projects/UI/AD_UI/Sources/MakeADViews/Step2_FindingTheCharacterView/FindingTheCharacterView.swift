@@ -29,7 +29,7 @@ struct FindingTheCharacterView: ADUI {
   
   var body: some View {
     WithViewStore(store, observe: { $0 }) { viewStore in
-      ADScrollView {
+      ADScrollView(viewStore.binding(\.sharedState.$isShowStepStatusBar)) {
         VStack(alignment: .leading, spacing: 20) {
           Title()
           
@@ -129,6 +129,5 @@ extension FindingTheCharacterView {
 struct FindingTheCharacterView_Previews: PreviewProvider {
   static var previews: some View {
     FindingTheCharacterView()
-      .environmentObject(StepStatusBarEnvironment())
   }
 }

@@ -17,13 +17,16 @@ public struct FindingCharacterJointsStore: ReducerProtocol {
     public init() {}
   }
   
-  public enum Action: Equatable {
+  public enum Action: Equatable, BindableAction {
+    case binding(BindingAction<State>)
   }
   
   public var body: some ReducerProtocol<State, Action> {
+    BindingReducer()
+    
     Reduce { state, action in
       switch action {
-      default:
+      case .binding:
         return .none
       }
     }
