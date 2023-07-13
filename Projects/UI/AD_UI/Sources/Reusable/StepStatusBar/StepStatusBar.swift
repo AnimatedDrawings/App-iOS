@@ -69,7 +69,7 @@ extension StepStatusBar {
     if currentStepIdx == idx {
       return activeColor
     }
-    else if idx < completeStepIdx {
+    else if idx <= completeStepIdx {
       return completeColor
     }
     

@@ -29,10 +29,16 @@ struct FindingCharacterJointsView: ADUI {
   
   var body: some View {
     WithViewStore(store, observe: { $0 }) { viewStore in
-      if let maskedImage = viewStore.state.sharedState.maskedImage {
-        Text("maskedImage exist!!")
-      } else {
-        Text("no maskedImage...")
+      ADScrollView {
+        VStack(alignment: .leading, spacing: 20) {
+          if let maskedImage = viewStore.state.sharedState.maskedImage {
+            Image(uiImage: maskedImage)
+              .frame(height: 400)
+              .aspectRatio(contentMode: .fit)
+          } else {
+            Text("NO MaskedImage ...")
+          }
+        }
       }
     }
   }
