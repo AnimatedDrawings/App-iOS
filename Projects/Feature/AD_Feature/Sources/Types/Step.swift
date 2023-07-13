@@ -11,8 +11,6 @@ import Foundation
 public enum Step: Int {
   case UploadADrawing = 1
   case FindingTheCharacter = 2
-  
-  public var index: Int {
-    return self.rawValue
-  }
+  case SeparatingCharacter = 3
+  case FindingCharacterJoints = 4
 }

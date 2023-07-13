@@ -12,6 +12,10 @@ import ComposableArchitecture
 public struct SharedState: Equatable {
   public init() {}
   
-  @BindingState public var curStep: Step = .UploadADrawing
+  @BindingState public var currentStep: Step = .UploadADrawing
+  @BindingState public var completeStep: Step = .UploadADrawing
+  
   public var originalImage: UIImage? = nil
+  @BindingState public var croppedImage: UIImage? = nil
+  @BindingState public var maskedImage: UIImage? = nil
 }

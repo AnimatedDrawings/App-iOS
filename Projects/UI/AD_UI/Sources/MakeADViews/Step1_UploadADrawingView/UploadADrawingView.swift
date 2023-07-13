@@ -17,7 +17,10 @@ struct UploadADrawingView: ADUI {
   
   init(
     store: StoreOf<MyStore> = Store(
-      initialState: MyStore.State(sharedState: SharedState(), state: UploadADrawingStore.MyState()),
+      initialState: MyStore.State(
+        sharedState: SharedState(),
+        state: UploadADrawingStore.MyState()
+      ),
       reducer: MyStore()
     )
   ) {
@@ -34,9 +37,10 @@ struct UploadADrawingView: ADUI {
             CheckListContent(with: viewStore)
           }
           
-          UploadButton(state: viewStore.binding(\.$uploadState)) {
-            viewStore.send(.uploadAction)
-          }
+          UploadButton(
+            state: viewStore.uploadState) {
+              viewStore.send(.uploadAction)
+            }
           
           SampleDrawings(with: viewStore)
           
@@ -93,14 +97,14 @@ extension UploadADrawingView {
 extension UploadADrawingView {
   @ViewBuilder
   func UploadButton(
-    state: Binding<Bool>,
+    state: Bool,
     action: @escaping () -> ()
   ) -> some View {
     let photoFill = "photo.fill"
     let text = "Upload Photo"
     
     ADButton(
-      state.wrappedValue ? .active : .inActive,
+      state ? .active : .inActive,
       action: action
     ) {
       HStack {

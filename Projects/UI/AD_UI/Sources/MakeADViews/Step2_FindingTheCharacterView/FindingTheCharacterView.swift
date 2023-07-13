@@ -17,7 +17,10 @@ struct FindingTheCharacterView: ADUI {
   
   init(
     store: StoreOf<MyStore> = Store(
-      initialState: MyStore.State(sharedState: SharedState(), state: FindingTheCharacterStore.MyState()),
+      initialState: MyStore.State(
+        sharedState: SharedState(),
+        state: FindingTheCharacterStore.MyState()
+      ),
       reducer: MyStore()
     )
   ) {
@@ -34,19 +37,35 @@ struct FindingTheCharacterView: ADUI {
             CheckListContent(with: viewStore)
           }
           
-          if let originalImage = viewStore.sharedState.originalImage {
-            CropImageView(
-              originalImage: originalImage,
-              croppedImage: viewStore.binding(\.$croppedImage)
-            ) {
-              viewStore.send(.uploadImage)
-            }
-          }
-          
           Spacer()
+          
+          ShowCropImageViewButton(state: viewStore.binding(\.$checkState)) {
+            viewStore.send(.toggleCropImageView)
+          }
         }
         .padding()
       }
+      .fullScreenCover(
+        isPresented: viewStore.binding(\.$isShowCropImageView),
+        onDismiss: {
+          viewStore.send(.onDismissCropImageView)
+        },
+        content: {
+          if let originalImage = viewStore.state.sharedState.originalImage {
+            CropImageView(
+              originalImage: originalImage,
+              croppedImage: viewStore.binding(\.sharedState.$croppedImage),
+              cropNextAction: { cropResult in
+                viewStore.send(.cropNextAction(cropResult))
+              },
+              cancelAction: {
+                viewStore.send(.toggleCropImageView)
+              }
+            )
+            .transparentBlurBackground()
+          }
+        }
+      )
     }
   }
 }
@@ -82,6 +101,27 @@ extension FindingTheCharacterView {
         GIFView(gifName: "FindingTheCharacter_Preview2")
       }
       .frame(height: 250)
+    }
+  }
+}
+
+extension FindingTheCharacterView {
+  @ViewBuilder
+  func ShowCropImageViewButton(
+    state: Binding<Bool>,
+    action: @escaping () -> ()
+  ) -> some View {
+    let viewFinder = "person.fill.viewfinder"
+    let text = "Find the Character"
+    
+    ADButton(
+      state.wrappedValue ? .active : .inActive,
+      action: action
+    ) {
+      HStack {
+        Image(systemName: viewFinder)
+        Text(text)
+      }
     }
   }
 }

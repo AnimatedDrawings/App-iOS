@@ -19,14 +19,16 @@ public struct FindingTheCharacterStore: ReducerProtocol {
     public init() {}
     
     @BindingState public var checkState = false
-    @BindingState public var croppedImage: UIImage? = nil
+    @BindingState public var isShowCropImageView = false
+    var isNewCropImage = false
   }
   
   public enum Action: Equatable, BindableAction {
     case binding(BindingAction<State>)
     case checkAction
-    case uploadImage
-    case uploadImageResponse(TaskResult<String>)
+    case toggleCropImageView
+    case cropNextAction(Bool)
+    case onDismissCropImageView
   }
   
   public var body: some ReducerProtocol<State, Action> {
@@ -38,30 +40,25 @@ public struct FindingTheCharacterStore: ReducerProtocol {
         return .none
         
       case .checkAction:
-        state.state.checkState.toggle()
+        state.checkState.toggle()
         return .none
         
-      case .uploadImage:
-        guard let croppedImage = state.croppedImage else {
-          print("No CroppedImage")
-          return .none
-        }
+      case .toggleCropImageView:
+        state.isShowCropImageView.toggle()
+        return .none
         
+      case .cropNextAction(let cropResult):
+        state.isNewCropImage = cropResult
         return .task {
-          await .uploadImageResponse(
-            TaskResult {
-              let response = try await adClient.uploadImage(croppedImage)
-              return response
-            }
-          )
+          .toggleCropImageView
         }
         
-      case .uploadImageResponse(.success(let response)):
-        print("Upload Image Success : \(response)")
-        return .none
-        
-      case .uploadImageResponse(.failure(let error)):
-        print("Upload Image Fail : \(error)")
+      case .onDismissCropImageView:
+        if state.isNewCropImage == true {
+          state.sharedState.completeStep = .SeparatingCharacter
+          state.sharedState.currentStep = .SeparatingCharacter
+        }
+        state.isNewCropImage = false
         return .none
       }
     }

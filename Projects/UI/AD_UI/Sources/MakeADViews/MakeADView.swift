@@ -32,7 +32,10 @@ struct MakeADView: ADUI {
       GeometryReader { geo in
         List {
           if !self.stepStatusBarEnvironment.isHide {
-            StepStatusBar(curIdx: viewStore.sharedState.curStep.index)
+            StepStatusBar(
+              currentStep: viewStore.binding(\.sharedState.$currentStep),
+              completeStep: viewStore.binding(\.sharedState.$completeStep)
+            )
               .listRowSeparator(.hidden)
               .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
               .listRowBackground(Color.clear)
@@ -57,7 +60,7 @@ struct MakeADView: ADUI {
 extension MakeADView {
   @ViewBuilder
   func PageTabView(with viewStore: MyViewStore) -> some View {
-    TabView(selection: viewStore.binding(\.sharedState.$curStep)) {
+    TabView(selection: viewStore.binding(\.sharedState.$currentStep)) {
       UploadADrawingView(
         store: self.store.scope(
           state: \.uploadADrawing,
@@ -73,6 +76,22 @@ extension MakeADView {
         )
       )
       .tag(Step.FindingTheCharacter)
+      
+      SeparatingCharacterView(
+        store: self.store.scope(
+          state: \.separatingCharacter,
+          action: MakeADStore.Action.separatingCharacter
+        )
+      )
+      .tag(Step.SeparatingCharacter)
+      
+      FindingCharacterJointsView(
+        store: self.store.scope(
+          state: \.findingCharacterJoints,
+          action: MakeADStore.Action.findingCharacterJoints
+        )
+      )
+      .tag(Step.FindingCharacterJoints)
     }
     .tabViewStyle(.page(indexDisplayMode: .never))
     .ignoresSafeArea()
