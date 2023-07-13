@@ -139,17 +139,17 @@ extension ADScrollView {
     }
     
     func appearStepBar() {
-      if self.isShowStepStatusBar == true {
+      if self.isShowStepStatusBar == false {
         withAnimation {
-          self.isShowStepStatusBar = false
+          self.isShowStepStatusBar = true
         }
       }
     }
     
     func disappearStepBar() {
-      if self.isShowStepStatusBar == false {
+      if self.isShowStepStatusBar == true {
         withAnimation {
-          self.isShowStepStatusBar = true
+          self.isShowStepStatusBar = false
         }
       }
     }
