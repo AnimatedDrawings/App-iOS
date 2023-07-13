@@ -58,10 +58,8 @@ public struct SeparatingCharacterStore: ReducerProtocol {
         
       case .maskNextAction(let maskResult):
         state.isNewMaskedImage = maskResult
-        return .task {
-          .toggleMaskingImageView
-        }
-        
+        return .send(.toggleMaskingImageView)
+          
       case .onDismissMakingImageView:
         if state.isNewMaskedImage == true {
           state.sharedState.completeStep = .FindingCharacterJoints
