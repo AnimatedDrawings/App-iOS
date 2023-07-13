@@ -74,9 +74,6 @@ extension MaskableUIView {
   func updateBounds(myFrame: CGRect) {
     let myBounds = CGRect(origin: .zero, size: myFrame.size)
     
-    print("myBounds : \(myBounds)")
-    print("self.frame : \(self.frame)")
-    
     guard self.frame != myBounds else {
       return
     }

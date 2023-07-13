@@ -18,7 +18,6 @@ struct MaskingImageView: View {
   let backgroundImage: UIImage = ADUtilsAsset.SampleDrawing.checkerboard.image
   @State var imageFrame: CGRect = .init()
   @State var toolSizerButtonOffset: CGFloat = 0
-  @State var reloadTrigger: Bool = false
   
   init(
     croppedImage: UIImage,
@@ -54,7 +53,6 @@ struct MaskingImageView: View {
             Color.clear
               .onAppear {
                 self.imageFrame = geo.frame(in: .global)
-                self.reloadTrigger.toggle()
               }
           }
         )
@@ -67,7 +65,6 @@ struct MaskingImageView: View {
           )
         }
         .padding()
-        .reload(reloadTrigger)
       
       Spacer()
       Spacer()

@@ -39,7 +39,6 @@ extension MaskableViewLink {
   func saveNextAction() {
     self.finishMasking
       .sink { maskResult in
-        print("MASKRESULT : \(maskResult)")
         self.maskNextAction(maskResult)
       }
       .store(in: &self.anyCancellable)

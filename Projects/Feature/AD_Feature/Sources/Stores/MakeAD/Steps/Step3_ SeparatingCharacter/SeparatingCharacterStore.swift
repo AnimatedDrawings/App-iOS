@@ -54,12 +54,10 @@ public struct SeparatingCharacterStore: ReducerProtocol {
         
       case .toggleMaskingImageView:
         state.isShowMaskingImageView.toggle()
-        print("Toggle !!")
         return .none
         
       case .maskNextAction(let maskResult):
         state.isNewMaskedImage = maskResult
-        
         return .task {
           .toggleMaskingImageView
         }
