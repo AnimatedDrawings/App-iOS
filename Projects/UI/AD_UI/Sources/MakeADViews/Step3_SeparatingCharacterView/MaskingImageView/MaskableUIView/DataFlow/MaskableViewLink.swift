@@ -6,9 +6,48 @@
 //
 
 import SwiftUI
+import Combine
 
 class MaskableViewLink: ObservableObject {
-  @Published var startMasking = false
-  @Published var finishMasking = false
-  var maskedImage: UIImage? = nil
+  @Binding var maskedImage: UIImage?
+  
+  var startMasking = PassthroughSubject<Void, Never>()
+  var finishMasking = PassthroughSubject<Bool, Never>()
+  var anyCancellable = Set<AnyCancellable>()
+  
+  private let maskNextAction: (Bool) -> ()
+  private let cancelAction: () -> ()
+  
+  init(
+    maskedImage: Binding<UIImage?>,
+    maskNextAction: @escaping (Bool) -> (),
+    cancelAction: @escaping () -> ()
+  ) {
+    self._maskedImage = maskedImage
+    self.maskNextAction = maskNextAction
+    self.cancelAction = cancelAction
+    
+    saveNextAction()
+  }
+}
+
+extension MaskableViewLink {
+  func save() {
+    self.startMasking.send()
+  }
+  
+  func saveNextAction() {
+    self.finishMasking
+      .sink { maskResult in
+        print("MASKRESULT : \(maskResult)")
+        self.maskNextAction(maskResult)
+      }
+      .store(in: &self.anyCancellable)
+  }
+}
+
+extension MaskableViewLink {
+  func cancel() {
+    self.cancelAction()
+  }
 }

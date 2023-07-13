@@ -12,4 +12,5 @@ public enum Step: Int {
   case UploadADrawing = 1
   case FindingTheCharacter = 2
   case SeparatingCharacter = 3
+  case FindingCharacterJoints = 4
 }

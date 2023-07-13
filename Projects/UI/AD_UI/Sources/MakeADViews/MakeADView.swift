@@ -84,6 +84,14 @@ extension MakeADView {
         )
       )
       .tag(Step.SeparatingCharacter)
+      
+      FindingCharacterJointsView(
+        store: self.store.scope(
+          state: \.findingCharacterJoints,
+          action: MakeADStore.Action.findingCharacterJoints
+        )
+      )
+      .tag(Step.FindingCharacterJoints)
     }
     .tabViewStyle(.page(indexDisplayMode: .never))
     .ignoresSafeArea()

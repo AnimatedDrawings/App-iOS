@@ -11,22 +11,36 @@ import AD_Utils
 
 struct MaskingImageView: View {
   let croppedImage: UIImage
+  
+  @StateObject private var maskToolState = MaskToolState()
+  @StateObject private var maskableViewLink: MaskableViewLink
+  
   let backgroundImage: UIImage = ADUtilsAsset.SampleDrawing.checkerboard.image
-  
-  @StateObject var maskToolState = MaskToolState()
-  @StateObject var maskableViewLink = MaskableViewLink()
-  
   @State var imageFrame: CGRect = .init()
   @State var toolSizerButtonOffset: CGFloat = 0
   @State var reloadTrigger: Bool = false
   
-  let cancelAction: () -> ()
+  init(
+    croppedImage: UIImage,
+    maskedImage: Binding<UIImage?>,
+    maskNextAction: @escaping (Bool) -> (),
+    cancelAction: @escaping () -> ()
+  ) {
+    self.croppedImage = croppedImage
+    self._maskableViewLink = StateObject(
+      wrappedValue: MaskableViewLink(
+        maskedImage: maskedImage,
+        maskNextAction: maskNextAction,
+        cancelAction: cancelAction
+      )
+    )
+  }
   
   var body: some View {
     VStack {
       ToolNaviBar(
-        cancelAction: cancel,
-        saveAction: save
+        cancelAction: maskableViewLink.cancel,
+        saveAction: maskableViewLink.save
       )
       .padding()
       
@@ -57,55 +71,29 @@ struct MaskingImageView: View {
       
       Spacer()
       Spacer()
-        .frame(height: toolSizerButtonOffset)
+        .frame(height: abs(toolSizerButtonOffset))
       
       MaskToolView(
         maskToolState: maskToolState,
         toolSizerButtonOffset: $toolSizerButtonOffset
       )
     }
-//    .toolbar {
-//      ToolbarItem(placement: .navigationBarTrailing) {
-//        Button {
-//          self.maskableViewLink.startMasking.toggle()
-//        } label: {
-//          Image(systemName: "square.and.arrow.down")
-//            .resizable()
-//            .font(.title2)
-//            .fontWeight(.semibold)
-//            .foregroundColor(.black)
-//        }
-//      }
-//    }
-//    .navigationDestination(
-//      isPresented: self.$maskableViewLink.finishMasking
-//    ) {
-//      MaskedImageView(maskedImage: self.maskableViewLink.maskedImage)
-//    }
   }
 }
 
-extension MaskingImageView {
-  func cancel() {
-    cancelAction()
-  }
-}
-
-extension MaskingImageView {
-  func save() {
-    
-  }
-}
-
+// MARK: - Previews
 struct Previews_MaskingImageView: View {
   let croppedImage: UIImage = ADUtilsAsset.SampleDrawing.garlicCropped.image
+  @State var maskedImage: UIImage? = nil
+  @State var isNewMaskedImage = false
   
   var body: some View {
     MaskingImageView(
       croppedImage: croppedImage,
-      cancelAction: {
-        print("cancelAction")
-      })
+      maskedImage: $maskedImage,
+      maskNextAction: { _ in },
+      cancelAction: {}
+    )
   }
 }
 

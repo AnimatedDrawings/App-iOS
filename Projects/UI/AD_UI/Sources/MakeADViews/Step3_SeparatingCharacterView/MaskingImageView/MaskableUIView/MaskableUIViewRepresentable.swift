@@ -46,12 +46,17 @@ extension MaskableUIViewRepresentable {
     
     var maskableViewLink: MaskableViewLink? {
       didSet {
-        self.maskableViewLink?.$startMasking
-          .dropFirst()
-          .sink { _ in
-            let maskedImage = self.maskableUIView?.maskedImage
-            self.maskableViewLink?.maskedImage = maskedImage
-            self.maskableViewLink?.finishMasking.toggle()
+        self.maskableViewLink?.startMasking
+          .sink {
+            guard let maskableViewLink = self.maskableViewLink else {
+              return
+            }
+            guard let maskedImage = self.maskableUIView?.maskedImage else {
+              maskableViewLink.finishMasking.send(false)
+              return
+            }
+            maskableViewLink.maskedImage = maskedImage
+            maskableViewLink.finishMasking.send(true)
           }
           .store(in: &self.cancellable)
       }
@@ -72,7 +77,6 @@ extension MaskableUIViewRepresentable {
           .store(in: &self.cancellable)
         
         self.maskToolState?.$resetAction
-          .dropFirst()
           .sink { action in
             switch action {
             case .undo:

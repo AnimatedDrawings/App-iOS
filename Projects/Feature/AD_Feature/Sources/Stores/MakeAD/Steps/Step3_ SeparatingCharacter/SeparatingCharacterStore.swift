@@ -19,7 +19,9 @@ public struct SeparatingCharacterStore: ReducerProtocol {
     @BindingState public var checkState1 = false
     @BindingState public var checkState2 = false
     public var maskState = false
+    
     @BindingState public var isShowMaskingImageView = false
+    var isNewMaskedImage = false
   }
   
   public enum Action: Equatable, BindableAction {
@@ -28,6 +30,8 @@ public struct SeparatingCharacterStore: ReducerProtocol {
     case checkAction1
     case checkAction2
     case toggleMaskingImageView
+    case maskNextAction(Bool)
+    case onDismissMakingImageView
   }
   
   public var body: some ReducerProtocol<State, Action> {
@@ -50,6 +54,22 @@ public struct SeparatingCharacterStore: ReducerProtocol {
         
       case .toggleMaskingImageView:
         state.isShowMaskingImageView.toggle()
+        print("Toggle !!")
+        return .none
+        
+      case .maskNextAction(let maskResult):
+        state.isNewMaskedImage = maskResult
+        
+        return .task {
+          .toggleMaskingImageView
+        }
+        
+      case .onDismissMakingImageView:
+        if state.isNewMaskedImage == true {
+          state.sharedState.completeStep = .FindingCharacterJoints
+          state.sharedState.currentStep = .FindingCharacterJoints
+        }
+        state.isNewMaskedImage = false
         return .none
       }
     }

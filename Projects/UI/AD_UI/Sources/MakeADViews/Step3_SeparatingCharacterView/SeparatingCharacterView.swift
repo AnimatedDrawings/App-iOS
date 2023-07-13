@@ -17,7 +17,10 @@ struct SeparatingCharacterView: ADUI {
   
   init(
     store: StoreOf<MyStore> = Store(
-      initialState: MyStore.State(sharedState: SharedState(), state: SeparatingCharacterStore.MyState()),
+      initialState: MyStore.State(
+        sharedState: SharedState(),
+        state: SeparatingCharacterStore.MyState()
+      ),
       reducer: MyStore()
     )
   ) {
@@ -43,25 +46,16 @@ struct SeparatingCharacterView: ADUI {
       .fullScreenCover(
         isPresented: viewStore.binding(\.$isShowMaskingImageView),
         onDismiss: {
-//          viewStore.send(.onDismissCropImageView)
+          viewStore.send(.onDismissMakingImageView)
         },
         content: {
-//          if let originalImage = viewStore.state.sharedState.originalImage {
-//            CropImageView(
-//              originalImage: originalImage,
-//              croppedImage: viewStore.binding(\.sharedState.$croppedImage),
-//              cropNextAction: { cropResult in
-//                viewStore.send(.cropNextAction(cropResult))
-//              },
-//              cancelAction: {
-//                viewStore.send(.toggleCropImageView)
-//              }
-//            )
-//            .transparentBlurBackground()
-//          }
           if let croppedImage = viewStore.state.sharedState.croppedImage {
             MaskingImageView(
               croppedImage: croppedImage,
+              maskedImage: viewStore.binding(\.sharedState.$maskedImage),
+              maskNextAction: { maskResult in
+                viewStore.send(.maskNextAction(maskResult))
+              },
               cancelAction: {
                 viewStore.send(.toggleMaskingImageView)
               }

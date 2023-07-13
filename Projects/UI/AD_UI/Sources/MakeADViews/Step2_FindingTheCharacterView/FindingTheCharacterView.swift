@@ -17,7 +17,10 @@ struct FindingTheCharacterView: ADUI {
   
   init(
     store: StoreOf<MyStore> = Store(
-      initialState: MyStore.State(sharedState: SharedState(), state: FindingTheCharacterStore.MyState()),
+      initialState: MyStore.State(
+        sharedState: SharedState(),
+        state: FindingTheCharacterStore.MyState()
+      ),
       reducer: MyStore()
     )
   ) {

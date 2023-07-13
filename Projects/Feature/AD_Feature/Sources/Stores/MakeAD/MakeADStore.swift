@@ -50,6 +50,17 @@ public struct MakeADStore: ReducerProtocol {
       }
     }
     
+    public var _findingCharacterJoints = FindingCharacterJointsStore.MyState()
+    public var findingCharacterJoints: TCABaseState<FindingCharacterJointsStore.MyState> {
+      get {
+        TCABaseState(sharedState: sharedState, state: _findingCharacterJoints)
+      }
+      set {
+        self.sharedState = newValue.sharedState
+        self._findingCharacterJoints = newValue.state
+      }
+    }
+    
   }
   
   public enum Action: Equatable, BindableAction {
@@ -58,6 +69,7 @@ public struct MakeADStore: ReducerProtocol {
     case uploadADrawing(UploadADrawingStore.Action)
     case findingTheCharacter(FindingTheCharacterStore.Action)
     case separatingCharacter(SeparatingCharacterStore.Action)
+    case findingCharacterJoints(FindingCharacterJointsStore.Action)
   }
   
   public var body: some ReducerProtocol<State, Action> {
@@ -75,12 +87,16 @@ public struct MakeADStore: ReducerProtocol {
       SeparatingCharacterStore()
     }
     
+    Scope(state: \.findingCharacterJoints, action: /Action.findingCharacterJoints) {
+      FindingCharacterJointsStore()
+    }
+    
     Reduce { state, action in
       switch action {
       case .binding:
         return .none
         
-      case .uploadADrawing, .findingTheCharacter, .separatingCharacter:
+      case .uploadADrawing, .findingTheCharacter, .separatingCharacter, .findingCharacterJoints:
         return .none
       }
     }
