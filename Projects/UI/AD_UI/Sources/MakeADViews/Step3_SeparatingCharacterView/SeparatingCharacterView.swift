@@ -29,7 +29,7 @@ struct SeparatingCharacterView: ADUI {
   
   var body: some View {
     WithViewStore(store, observe: { $0 }) { viewStore in
-      ADScrollView {
+      ADScrollView(viewStore.binding(\.sharedState.$isShowStepStatusBar)) {
         VStack(alignment: .leading, spacing: 20) {
           Title()
           
@@ -132,7 +132,6 @@ extension SeparatingCharacterView {
 struct Previews_SeparatingCharacterView: View {
   var body: some View {
     SeparatingCharacterView()
-      .environmentObject(StepStatusBarEnvironment())
   }
 }
 

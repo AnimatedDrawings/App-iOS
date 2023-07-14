@@ -6,6 +6,7 @@
 //  Copyright © 2023 chminipark. All rights reserved.
 //
 
+import SwiftUI
 import ComposableArchitecture
 
 public struct SeparatingCharacterStore: ReducerProtocol {
@@ -58,14 +59,15 @@ public struct SeparatingCharacterStore: ReducerProtocol {
         
       case .maskNextAction(let maskResult):
         state.isNewMaskedImage = maskResult
-        return .task {
-          .toggleMaskingImageView
-        }
-        
+        return .send(.toggleMaskingImageView)
+          
       case .onDismissMakingImageView:
         if state.isNewMaskedImage == true {
           state.sharedState.completeStep = .FindingCharacterJoints
           state.sharedState.currentStep = .FindingCharacterJoints
+          withAnimation {
+            state.sharedState.isShowStepStatusBar = true
+          }
         }
         state.isNewMaskedImage = false
         return .none

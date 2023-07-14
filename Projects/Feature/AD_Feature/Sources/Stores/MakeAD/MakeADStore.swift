@@ -65,6 +65,7 @@ public struct MakeADStore: ReducerProtocol {
   
   public enum Action: Equatable, BindableAction {
     case binding(BindingAction<State>)
+    case bindingCurrentStep(Step)
     
     case uploadADrawing(UploadADrawingStore.Action)
     case findingTheCharacter(FindingTheCharacterStore.Action)
@@ -94,6 +95,15 @@ public struct MakeADStore: ReducerProtocol {
     Reduce { state, action in
       switch action {
       case .binding:
+        return .none
+        
+      case .bindingCurrentStep(let nexStep):
+        if state.sharedState.currentStep != nexStep {
+          state.sharedState.currentStep = nexStep
+          withAnimation {
+            state.sharedState.isShowStepStatusBar = true
+          }
+        }
         return .none
         
       case .uploadADrawing, .findingTheCharacter, .separatingCharacter, .findingCharacterJoints:

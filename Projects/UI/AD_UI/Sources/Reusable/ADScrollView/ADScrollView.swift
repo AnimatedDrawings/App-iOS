@@ -11,9 +11,14 @@ import AD_Feature
 
 struct ADScrollView<C: View>: View {
   let topScrollID = "topScrollID"
+  @Binding var isShowStepStatusBar: Bool
   var content: C
   
-  init(@ViewBuilder content: () -> C) {
+  init(
+    _ isShowStepStatusBar: Binding<Bool>,
+    @ViewBuilder content: () -> C
+  ) {
+    self._isShowStepStatusBar = isShowStepStatusBar
     self.content = content()
   }
   
@@ -27,7 +32,8 @@ struct ADScrollView<C: View>: View {
           .background(
             TrackingView(
               topScrollID: topScrollID,
-              scrollViewBottom: scrollViewBottom
+              scrollViewBottom: scrollViewBottom,
+              isShowStepStatusBar: $isShowStepStatusBar
             )
           )
       }
@@ -40,7 +46,17 @@ extension ADScrollView {
   struct TrackingView: View {
     let topScrollID: String
     let scrollViewBottom: CGFloat
-    @EnvironmentObject var stepStatusBarEnvironment: StepStatusBarEnvironment
+    @Binding var isShowStepStatusBar: Bool
+    
+    init(
+      topScrollID: String,
+      scrollViewBottom: CGFloat,
+      isShowStepStatusBar: Binding<Bool>
+    ) {
+      self.topScrollID = topScrollID
+      self.scrollViewBottom = scrollViewBottom
+      self._isShowStepStatusBar = isShowStepStatusBar
+    }
     
     @State var curTop: CGFloat = 0
     @State var lastTop: CGFloat = 0
@@ -123,17 +139,17 @@ extension ADScrollView {
     }
     
     func appearStepBar() {
-      if self.stepStatusBarEnvironment.isHide == true {
+      if self.isShowStepStatusBar == false {
         withAnimation {
-          self.stepStatusBarEnvironment.isHide = false
+          self.isShowStepStatusBar = true
         }
       }
     }
     
     func disappearStepBar() {
-      if self.stepStatusBarEnvironment.isHide == false {
+      if self.isShowStepStatusBar == true {
         withAnimation {
-          self.stepStatusBarEnvironment.isHide = true
+          self.isShowStepStatusBar = false
         }
       }
     }

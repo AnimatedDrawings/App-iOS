@@ -29,7 +29,7 @@ struct UploadADrawingView: ADUI {
   
   var body: some View {
     WithViewStore(store, observe: { $0 }) { viewStore in
-      ADScrollView {
+      ADScrollView(viewStore.binding(\.sharedState.$isShowStepStatusBar)) {
         VStack(alignment: .leading, spacing: 20) {
           Title()
           
@@ -190,6 +190,5 @@ extension UploadADrawingView {
 struct UploadADrawingView_Previews: PreviewProvider {
   static var previews: some View {
     UploadADrawingView()
-      .environmentObject(StepStatusBarEnvironment())
   }
 }

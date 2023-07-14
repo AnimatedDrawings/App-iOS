@@ -49,14 +49,15 @@ public struct FindingTheCharacterStore: ReducerProtocol {
         
       case .cropNextAction(let cropResult):
         state.isNewCropImage = cropResult
-        return .task {
-          .toggleCropImageView
-        }
+        return .send(.toggleCropImageView)
         
       case .onDismissCropImageView:
         if state.isNewCropImage == true {
           state.sharedState.completeStep = .SeparatingCharacter
           state.sharedState.currentStep = .SeparatingCharacter
+          withAnimation {
+            state.sharedState.isShowStepStatusBar = true
+          }
         }
         state.isNewCropImage = false
         return .none
