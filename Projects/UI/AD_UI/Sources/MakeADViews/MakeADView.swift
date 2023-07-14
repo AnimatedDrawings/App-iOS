@@ -13,7 +13,6 @@ import ComposableArchitecture
 
 struct MakeADView: ADUI {
   typealias MyStore = MakeADStore
-  typealias MyViewStore = ViewStore<MyStore.State, MyStore.Action>
   let store: StoreOf<MyStore>
   
   init(
@@ -31,13 +30,13 @@ struct MakeADView: ADUI {
         List {
           if viewStore.sharedState.isShowStepStatusBar {
             StepStatusBar(
-              currentStep: viewStore.binding(\.sharedState.$currentStep),
+              currentStep: bindingCurrentStep(viewStore),
               completeStep: viewStore.binding(\.sharedState.$completeStep)
             )
-              .listRowSeparator(.hidden)
-              .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-              .listRowBackground(Color.clear)
-              .padding()
+            .listRowSeparator(.hidden)
+            .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+            .listRowBackground(Color.clear)
+            .padding()
           }
           
           PageTabView(with: viewStore)
@@ -57,7 +56,7 @@ struct MakeADView: ADUI {
 extension MakeADView {
   @ViewBuilder
   func PageTabView(with viewStore: MyViewStore) -> some View {
-    TabView(selection: viewStore.binding(\.sharedState.$currentStep)) {
+    TabView(selection: bindingCurrentStep(viewStore)) {
       UploadADrawingView(
         store: self.store.scope(
           state: \.uploadADrawing,
@@ -92,6 +91,15 @@ extension MakeADView {
     }
     .tabViewStyle(.page(indexDisplayMode: .never))
     .ignoresSafeArea()
+  }
+}
+
+extension MakeADView {
+  func bindingCurrentStep(_ viewStore: MyViewStore) -> Binding<Step> {
+    return viewStore.binding(
+      get: \.sharedState.currentStep,
+      send: MyStore.Action.bindingCurrentStep
+    )
   }
 }
 

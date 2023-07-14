@@ -13,7 +13,7 @@ public struct SharedState: Equatable {
   public init() {}
   
   @BindingState public var isShowStepStatusBar = true
-  @BindingState public var currentStep: Step = .UploadADrawing
+  public var currentStep: Step = .UploadADrawing
   @BindingState public var completeStep: Step = .UploadADrawing
   
   public var originalImage: UIImage? = nil

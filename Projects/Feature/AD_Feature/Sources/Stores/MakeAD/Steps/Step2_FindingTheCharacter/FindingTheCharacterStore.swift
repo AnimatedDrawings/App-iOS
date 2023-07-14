@@ -55,6 +55,9 @@ public struct FindingTheCharacterStore: ReducerProtocol {
         if state.isNewCropImage == true {
           state.sharedState.completeStep = .SeparatingCharacter
           state.sharedState.currentStep = .SeparatingCharacter
+          withAnimation {
+            state.sharedState.isShowStepStatusBar = true
+          }
         }
         state.isNewCropImage = false
         return .none
