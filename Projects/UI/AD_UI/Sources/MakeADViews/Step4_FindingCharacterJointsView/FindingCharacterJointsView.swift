@@ -31,18 +31,97 @@ struct FindingCharacterJointsView: ADUI {
     WithViewStore(store, observe: { $0 }) { viewStore in
       ADScrollView(viewStore.binding(\.sharedState.$isShowStepStatusBar)) {
         VStack(alignment: .leading, spacing: 20) {
-          if let maskedImage = viewStore.state.sharedState.maskedImage {
-            Image(uiImage: maskedImage)
-              .frame(height: 400)
-              .aspectRatio(contentMode: .fit)
-          } else {
-            Text("NO MaskedImage ...")
+          Title()
+          
+          CheckList {
+            CheckListContent(with: viewStore)
           }
+          
+          NextStepDescription()
+          
+          ShowMaskingImageViewButton(state: viewStore.checkState) {}
+          
+          Spacer().frame(height: 20)
         }
+        .padding()
       }
     }
   }
 }
+
+extension FindingCharacterJointsView {
+  @ViewBuilder
+  func Title() -> some View {
+    let title = "FINDING CHARACTER JOINTS"
+    let description = "Here are your character's joints! Here's an example of what it should look like"
+    let descriptionImage: UIImage = ADUtilsAsset.SampleDrawing.step4Description.image
+    
+    VStack(alignment: .leading, spacing: 20) {
+      Text(title)
+        .font(.system(.largeTitle, weight: .semibold))
+        .foregroundColor(ADUtilsAsset.Color.blue2.swiftUIColor)
+      
+      Text(description)
+      
+      HStack {
+        Spacer()
+        Image(uiImage: descriptionImage)
+          .resizable()
+          .aspectRatio(contentMode: .fit)
+          .frame(height: 200)
+        Spacer()
+      }
+    }
+  }
+}
+
+extension FindingCharacterJointsView {
+  @ViewBuilder
+  func CheckListContent(with viewStore: MyViewStore) -> some View {
+    let description = "If your character doesn't have any arms, drag the elbows and wrist joints far away from the character and it can still be animated"
+    
+    VStack(alignment: .leading, spacing: 15) {
+      CheckListButton(description, state: viewStore.binding(\.$checkState)) {
+        viewStore.send(.checkAction)
+      }
+      
+      GIFView(gifName: "Step4_Preview")
+        .frame(height: 250)
+    }
+  }
+}
+
+extension FindingCharacterJointsView {
+  @ViewBuilder
+  func NextStepDescription() -> some View {
+    let description = "In the next step, we’ll use the segmentation mask and these joints locations to animate your character with motion capture data."
+    
+    Text(description)
+  }
+}
+
+extension FindingCharacterJointsView {
+  @ViewBuilder
+  func ShowMaskingImageViewButton(
+    state: Bool,
+    action: @escaping () -> ()
+  ) -> some View {
+    let viewFinder = "figure.dance"
+    let text = "Separate The Character"
+    
+    ADButton(
+      state ? .active : .inActive,
+      action: action
+    ) {
+      HStack {
+        Image(systemName: viewFinder)
+        Text(text)
+      }
+    }
+  }
+}
+
+
 
 struct FindingCharacterJointsView_Previews: PreviewProvider {
   static var previews: some View {
