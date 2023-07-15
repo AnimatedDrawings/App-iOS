@@ -100,7 +100,12 @@ extension ADScrollView {
     }
     
     func trackingAction() {
-      if -3 < curTop && curTop < 3 {
+      if -5 < curTop && curTop < 5 {
+        appearStepBar()
+        return
+      }
+      
+      if 0 < curTop {
         appearStepBar()
         return
       }

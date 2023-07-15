@@ -40,6 +40,8 @@ struct SeparatingCharacterView: ADUI {
           ShowMaskingImageViewButton(state: viewStore.maskState) {
             viewStore.send(.toggleMaskingImageView)
           }
+          
+          Spacer().frame(height: 20)
         }
         .padding()
       }

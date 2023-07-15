@@ -15,10 +15,13 @@ public struct FindingCharacterJointsStore: ReducerProtocol {
   
   public struct MyState: Equatable {
     public init() {}
+    
+    @BindingState public var checkState = false
   }
   
   public enum Action: Equatable, BindableAction {
     case binding(BindingAction<State>)
+    case checkAction
   }
   
   public var body: some ReducerProtocol<State, Action> {
@@ -27,6 +30,10 @@ public struct FindingCharacterJointsStore: ReducerProtocol {
     Reduce { state, action in
       switch action {
       case .binding:
+        return .none
+        
+      case .checkAction:
+        state.checkState.toggle()
         return .none
       }
     }
