@@ -19,4 +19,5 @@ public struct SharedState: Equatable {
   public var originalImage: UIImage? = nil
   @BindingState public var croppedImage: UIImage? = nil
   @BindingState public var maskedImage: UIImage? = nil
+  public var jointsDTO: JointsDTO? = nil
 }

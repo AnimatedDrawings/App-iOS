@@ -39,12 +39,27 @@ struct FindingCharacterJointsView: ADUI {
           
           NextStepDescription()
           
-          ShowMaskingImageViewButton(state: viewStore.checkState) {}
+          ShowMaskingImageViewButton(state: viewStore.checkState) {
+            viewStore.send(.toggleModifyJointsView)
+          }
           
           Spacer().frame(height: 20)
         }
         .padding()
       }
+      .fullScreenCover(
+        isPresented: viewStore.binding(\.$isShowModifyJointsView),
+        onDismiss: {},
+        content: {
+          if let maskedImage = viewStore.sharedState.maskedImage {
+            ModifyJointsView(
+              maskedImage: maskedImage,
+              jointsDTO: JointsDTO.mockJointsDTO()!
+            )
+            .transparentBlurBackground()
+          }
+        }
+      )
     }
   }
 }
@@ -120,8 +135,6 @@ extension FindingCharacterJointsView {
     }
   }
 }
-
-
 
 struct FindingCharacterJointsView_Previews: PreviewProvider {
   static var previews: some View {

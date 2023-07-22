@@ -10,6 +10,8 @@ import SwiftUI
 import ComposableArchitecture
 
 public struct SeparatingCharacterStore: ReducerProtocol {
+  @Dependency(\.adClient) var adClient
+  
   public init() {}
   
   public typealias State = TCABaseState<SeparatingCharacterStore.MyState>
@@ -62,6 +64,9 @@ public struct SeparatingCharacterStore: ReducerProtocol {
         return .send(.toggleMaskingImageView)
           
       case .onDismissMakingImageView:
+        // savebutton -> progressview -> (3초후) resultview
+        // 5초 지나면 alert창 띄우기
+        
         if state.isNewMaskedImage == true {
           state.sharedState.completeStep = .FindingCharacterJoints
           state.sharedState.currentStep = .FindingCharacterJoints
