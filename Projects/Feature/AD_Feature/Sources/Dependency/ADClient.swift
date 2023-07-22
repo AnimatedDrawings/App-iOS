@@ -13,6 +13,7 @@ import AD_Utils
 
 struct ADClient {
   var uploadImage: @Sendable (UIImage) async throws -> String
+  var imageToAnnotations: @Sendable (UIImage) async throws -> String
 }
 
 extension ADClient: DependencyKey {
@@ -57,11 +58,17 @@ extension ADClient: DependencyKey {
         print(failure.localizedDescription)
         throw failure
       }    
+    },
+    
+    imageToAnnotations: { maskedImage in
+//      try await Task.sleep(until: .now + .seconds(3), clock: .continuous)
+      return "TEtset"
     }
   )
   
   static let testValue = Self(
-    uploadImage: unimplemented("\(Self.self) testValue of search")
+    uploadImage: unimplemented("\(Self.self) testValue of search"),
+    imageToAnnotations: unimplemented("\(Self.self) testValue of search")
   )
 }
 

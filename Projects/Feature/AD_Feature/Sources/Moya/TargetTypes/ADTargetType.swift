@@ -18,6 +18,13 @@ enum ADTargetType {
     fileName: String,
     mimeType: String
   )
+  
+  case imageToAnnotations(
+    maskedImage: Data,
+    name: String,
+    fileName: String,
+    mimeType: String
+  )
 }
 
 fileprivate let makeADPath: String = "/api/makeAD/"
@@ -29,12 +36,16 @@ extension ADTargetType: TargetType {
     switch self {
     case .uploadImage:
       return makeADPath + "upload_image"
+    case .imageToAnnotations:
+      return makeADPath + "image_to_annotations"
     }
   }
   
   var method: Moya.Method {
     switch self {
     case .uploadImage:
+      return .post
+    case .imageToAnnotations:
       return .post
     }
   }
@@ -43,8 +54,9 @@ extension ADTargetType: TargetType {
     switch self {
     case .uploadImage:
       return ["Content-type" : "multipart/form-data"]
+    case .imageToAnnotations:
+      return ["Content-type" : "multipart/form-data"]
     default:
-//      return ["Content-type" : "application/json"]
       return nil
     }
   }
@@ -59,6 +71,16 @@ extension ADTargetType: TargetType {
         mimeType: mimeType
       )
 
+      return .uploadMultipart([imageData])
+      
+    case let .imageToAnnotations(maskedImage, name, fileName, mimeType):
+      let imageData = MultipartFormData(
+        provider: .data(maskedImage),
+        name: name,
+        fileName: fileName,
+        mimeType: mimeType
+      )
+      
       return .uploadMultipart([imageData])
     }
   }

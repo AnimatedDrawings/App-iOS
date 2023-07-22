@@ -17,11 +17,13 @@ public struct FindingCharacterJointsStore: ReducerProtocol {
     public init() {}
     
     @BindingState public var checkState = false
+    @BindingState public var isShowModifyJointsView = false
   }
   
   public enum Action: Equatable, BindableAction {
     case binding(BindingAction<State>)
     case checkAction
+    case toggleModifyJointsView
   }
   
   public var body: some ReducerProtocol<State, Action> {
@@ -34,6 +36,10 @@ public struct FindingCharacterJointsStore: ReducerProtocol {
         
       case .checkAction:
         state.checkState.toggle()
+        return .none
+        
+      case .toggleModifyJointsView:
+        state.isShowModifyJointsView.toggle()
         return .none
       }
     }
