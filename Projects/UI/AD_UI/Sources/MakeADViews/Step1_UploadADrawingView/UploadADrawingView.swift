@@ -38,10 +38,9 @@ struct UploadADrawingView: ADUI {
             CheckListContent(with: viewStore)
           }
           
-          UploadButton(
-            state: viewStore.uploadState) {
-              viewStore.send(.uploadAction)
-            }
+          UploadButton(viewStore.uploadState) { imageData in
+            
+          }
           
           SampleDrawings(with: viewStore)
           
@@ -96,41 +95,45 @@ extension UploadADrawingView {
 }
 
 extension UploadADrawingView {
-  struct TestUploadButton: View {
+  struct UploadButton: View {
     @State private var selectedItem: PhotosPickerItem? = nil
+    var state: Bool
+    var uploadImageAction: (Data) -> ()
     let photoFill = "photo.fill"
     let text = "Upload Photo"
+    
+    var buttonState: ADButtonState {
+      self.state == true ? .active : .inActive
+    }
+    
+    init(_ state: Bool,
+         uploadImageAction: @escaping (Data) -> ()
+    ) {
+      self.state = state
+      self.uploadImageAction = uploadImageAction
+    }
     
     var body: some View {
       PhotosPicker(
         selection: $selectedItem,
-        photoLibrary: .shared()) {
-          HStack {
-            Image(systemName: photoFill)
-            Text(text)
+        photoLibrary: .shared(),
+        label: {
+          ADButtonLabel(buttonState) {
+            HStack {
+              Image(systemName: photoFill)
+              Text(text)
+            }
           }
         }
-    }
-  }
-}
-
-extension UploadADrawingView {
-  @ViewBuilder
-  func UploadButton(
-    state: Bool,
-    action: @escaping () -> ()
-  ) -> some View {
-    let photoFill = "photo.fill"
-    let text = "Upload Photo"
-    
-    ADButton(
-      state ? .active : .inActive,
-      action: action
-    ) {
-      HStack {
-        Image(systemName: photoFill)
-        Text(text)
+      )
+      .onChange(of: selectedItem) { newItem in
+        Task {
+          if let data = try? await newItem?.loadTransferable(type: Data.self) {
+            uploadImageAction(data)
+          }
+        }
       }
+      .allowsHitTesting(self.state)
     }
   }
 }
