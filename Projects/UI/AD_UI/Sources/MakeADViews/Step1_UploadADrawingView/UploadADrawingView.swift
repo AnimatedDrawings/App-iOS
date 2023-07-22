@@ -10,6 +10,7 @@ import SwiftUI
 import AD_Feature
 import AD_Utils
 import ComposableArchitecture
+import PhotosUI
 
 struct UploadADrawingView: ADUI {
   typealias MyStore = UploadADrawingStore
@@ -90,6 +91,25 @@ extension UploadADrawingView {
       CheckListButton(description3, state: viewStore.binding(\.$checkState3)) {
         viewStore.send(.checkAction3)
       }
+    }
+  }
+}
+
+extension UploadADrawingView {
+  struct TestUploadButton: View {
+    @State private var selectedItem: PhotosPickerItem? = nil
+    let photoFill = "photo.fill"
+    let text = "Upload Photo"
+    
+    var body: some View {
+      PhotosPicker(
+        selection: $selectedItem,
+        photoLibrary: .shared()) {
+          HStack {
+            Image(systemName: photoFill)
+            Text(text)
+          }
+        }
     }
   }
 }

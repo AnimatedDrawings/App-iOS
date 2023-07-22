@@ -64,9 +64,7 @@ public struct UploadADrawingStore: ReducerProtocol {
         state.sharedState.originalImage = image
         state.sharedState.completeStep = .FindingTheCharacter
         state.sharedState.currentStep = .FindingTheCharacter
-        withAnimation {
-          state.sharedState.isShowStepStatusBar = true          
-        }
+        state.sharedState.isShowStepStatusBar = true
         return .none
       }
     }

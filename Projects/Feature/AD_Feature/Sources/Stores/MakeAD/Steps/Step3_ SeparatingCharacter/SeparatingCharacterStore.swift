@@ -70,9 +70,7 @@ public struct SeparatingCharacterStore: ReducerProtocol {
         if state.isNewMaskedImage == true {
           state.sharedState.completeStep = .FindingCharacterJoints
           state.sharedState.currentStep = .FindingCharacterJoints
-          withAnimation {
-            state.sharedState.isShowStepStatusBar = true
-          }
+          state.sharedState.isShowStepStatusBar = true
         }
         state.isNewMaskedImage = false
         return .none
