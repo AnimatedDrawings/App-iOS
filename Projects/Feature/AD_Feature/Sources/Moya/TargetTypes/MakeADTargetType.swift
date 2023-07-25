@@ -9,17 +9,17 @@
 import SwiftUI
 import Moya
 
-let providerAD = MoyaProvider<ADTargetType>()
+let providerMakeAD = MoyaProvider<MakeADTargetType>()
 
-enum ADTargetType {
-  case uploadImage(
-    data: Data,
+enum MakeADTargetType {
+  case step1UploadDrawing(
+    imageData: Data,
     name: String,
     fileName: String,
     mimeType: String
   )
   
-  case imageToAnnotations(
+  case step3ImageToAnnotations(
     maskedImage: Data,
     name: String,
     fileName: String,
@@ -27,43 +27,41 @@ enum ADTargetType {
   )
 }
 
-fileprivate let makeADPath: String = "/api/makeAD/"
+fileprivate let makeADPath: String = "/api/make_ad/"
 
-extension ADTargetType: TargetType {
+extension MakeADTargetType: TargetType {
   var baseURL: URL { URL(string: "https://miniiad.duckdns.org")! }
   
   var path: String {
     switch self {
-    case .uploadImage:
-      return makeADPath + "upload_image"
-    case .imageToAnnotations:
-      return makeADPath + "image_to_annotations"
+    case .step1UploadDrawing:
+      return makeADPath + "step1/upload_drawing"
+    case .step3ImageToAnnotations:
+      return makeADPath + "step3/image_to_annotations"
     }
   }
   
   var method: Moya.Method {
     switch self {
-    case .uploadImage:
+    case .step1UploadDrawing:
       return .post
-    case .imageToAnnotations:
+    case .step3ImageToAnnotations:
       return .post
     }
   }
   
   var headers: [String : String]? {
     switch self {
-    case .uploadImage:
+    case .step1UploadDrawing:
       return ["Content-type" : "multipart/form-data"]
-    case .imageToAnnotations:
+    case .step3ImageToAnnotations:
       return ["Content-type" : "multipart/form-data"]
-    default:
-      return nil
     }
   }
   
   var task: Moya.Task {
     switch self {
-    case let .uploadImage(data, name, fileName, mimeType):
+    case let .step1UploadDrawing(data, name, fileName, mimeType):
       let imageData = MultipartFormData(
         provider: .data(data),
         name: name,
@@ -73,7 +71,7 @@ extension ADTargetType: TargetType {
 
       return .uploadMultipart([imageData])
       
-    case let .imageToAnnotations(maskedImage, name, fileName, mimeType):
+    case let .step3ImageToAnnotations(maskedImage, name, fileName, mimeType):
       let imageData = MultipartFormData(
         provider: .data(maskedImage),
         name: name,

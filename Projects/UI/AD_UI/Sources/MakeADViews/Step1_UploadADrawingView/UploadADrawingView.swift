@@ -39,10 +39,12 @@ struct UploadADrawingView: ADUI {
           }
           
           UploadButton(viewStore.uploadState) { imageData in
-            
+            viewStore.send(.uploadDrawing(imageData))
           }
           
-          SampleDrawings(with: viewStore)
+          SampleDrawings { imageData in
+            viewStore.send(.uploadDrawing(imageData))
+          }
           
           Spacer()
         }
@@ -79,16 +81,16 @@ extension UploadADrawingView {
     
     VStack(alignment: .leading, spacing: 15) {
       CheckListButton(description1, state: viewStore.binding(\.$checkState1)) {
-        viewStore.send(.checkAction1)
+        viewStore.send(.checkList1)
       }
       
       CheckListButton(description2, state: viewStore.binding(\.$checkState2)) {
-        viewStore.send(.checkAction2)
+        viewStore.send(.checkList2)
       }
       
       // MARK: "(see our community standards)" 링크추가
       CheckListButton(description3, state: viewStore.binding(\.$checkState3)) {
-        viewStore.send(.checkAction3)
+        viewStore.send(.checkList3)
       }
     }
   }
@@ -98,7 +100,7 @@ extension UploadADrawingView {
   struct UploadButton: View {
     @State private var selectedItem: PhotosPickerItem? = nil
     var state: Bool
-    var uploadImageAction: (Data) -> ()
+    var uploadImageAction: (Data?) -> ()
     let photoFill = "photo.fill"
     let text = "Upload Photo"
     
@@ -107,7 +109,7 @@ extension UploadADrawingView {
     }
     
     init(_ state: Bool,
-         uploadImageAction: @escaping (Data) -> ()
+         uploadImageAction: @escaping (Data?) -> ()
     ) {
       self.state = state
       self.uploadImageAction = uploadImageAction
@@ -128,9 +130,8 @@ extension UploadADrawingView {
       )
       .onChange(of: selectedItem) { newItem in
         Task {
-          if let data = try? await newItem?.loadTransferable(type: Data.self) {
-            uploadImageAction(data)
-          }
+          let data = try? await newItem?.loadTransferable(type: Data.self)
+          uploadImageAction(data)
         }
       }
       .allowsHitTesting(self.state)
@@ -140,9 +141,9 @@ extension UploadADrawingView {
 
 extension UploadADrawingView {
   @ViewBuilder
-  func SampleDrawings(with viewStore: MyViewStore) -> some View {
+  func SampleDrawings(tapCardAction: @escaping (Data?) -> ()) -> some View {
     SampleDrawingsDescription()
-    SampleImages(with: viewStore)
+    SampleImages(tapCardAction: tapCardAction)
   }
   
   @ViewBuilder
@@ -162,50 +163,40 @@ extension UploadADrawingView {
     }
   }
   
-  @ViewBuilder
-  func SampleImages(with viewStore: MyViewStore) -> some View {
-    let sample = ADUtilsAsset.SampleDrawing.self
+  struct SampleImages: View {
+    let tapCardAction: (Data?) -> ()
+    
+    typealias sample = ADUtilsAsset.SampleDrawing
     let example1: ADUtilsImages = sample.example1
     let example2: ADUtilsImages = sample.example2
     let example3: ADUtilsImages = sample.example3
     let example4: ADUtilsImages = sample.example4
-    let imageCardAction: (ADUtilsImages) -> () = { image in
-      viewStore.send(.sampleTapAction(image.image))
+    
+    var body: some View {
+      VStack(spacing: 20) {
+        HStack(spacing: 20) {
+          ImageCardButton(image: example1)
+          ImageCardButton(image: example2)
+        }
+        HStack(spacing: 20) {
+          ImageCardButton(image: example3)
+          ImageCardButton(image: example4)
+        }
+      }
+      .frame(height: 450)
     }
     
-    VStack(spacing: 20) {
-      HStack(spacing: 20) {
-        ImageCardButton(image: example1) {
-          imageCardAction(example1)
-        }
-        
-        ImageCardButton(image: example2) {
-          imageCardAction(example2)
-        }
+    @ViewBuilder
+    func ImageCardButton(image sample: ADUtilsImages) -> some View {
+      Button {
+        tapCardAction(sample.image.pngData())
+      } label: {
+        sample.swiftUIImage
+          .resizable()
+          .mask {
+            RoundedRectangle(cornerRadius: 15)
+          }
       }
-      HStack(spacing: 20) {
-        ImageCardButton(image: example3) {
-          imageCardAction(example3)
-        }
-        ImageCardButton(image: example4) {
-          imageCardAction(example4)
-        }
-      }
-    }
-    .frame(height: 450)
-  }
-  
-  @ViewBuilder
-  func ImageCardButton(
-    image: ADUtilsImages,
-    action: @escaping () -> ()
-  ) -> some View {
-    Button(action: action) {
-      image.swiftUIImage
-        .resizable()
-        .mask {
-          RoundedRectangle(cornerRadius: 15)
-        }
     }
   }
 }

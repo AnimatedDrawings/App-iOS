@@ -10,7 +10,7 @@ import SwiftUI
 import ComposableArchitecture
 
 public struct FindingTheCharacterStore: ReducerProtocol {
-  @Dependency(\.adClient) var adClient
+  @Dependency(\.makeADClient) var makeADClient
   
   public init() {}
   public typealias State = TCABaseState<FindingTheCharacterStore.MyState>
