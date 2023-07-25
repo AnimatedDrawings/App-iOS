@@ -17,6 +17,7 @@ public struct SharedState: Equatable {
   @BindingState public var completeStep: Step = .UploadADrawing
   
   public var originalImage: UIImage? = nil
+  public var boundingBoxDTO: BoundingBoxDTO? = nil
   @BindingState public var croppedImage: UIImage? = nil
   @BindingState public var maskedImage: UIImage? = nil
   public var jointsDTO: JointsDTO? = nil

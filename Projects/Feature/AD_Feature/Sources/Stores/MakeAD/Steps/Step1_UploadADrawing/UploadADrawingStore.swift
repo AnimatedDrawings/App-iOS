@@ -33,6 +33,7 @@ public struct UploadADrawingStore: ReducerProtocol {
     case checkList3
     case uploadDrawing(Data?)
     case uploadDrawingResponse(TaskResult<BoundingBoxDTO>)
+    case uploadDrawingNextAction(UIImage)
   }
   
   public var body: some ReducerProtocol<State, Action> {
@@ -83,14 +84,22 @@ public struct UploadADrawingStore: ReducerProtocol {
               }
             )
           )
+          await send(.uploadDrawingNextAction(originalImage))
         }
         
       case .uploadDrawingResponse(.success(let boundingBox)):
-        print(boundingBox)
+        state.sharedState.boundingBoxDTO = boundingBox
         return .none
         
       case .uploadDrawingResponse(.failure(let error)):
         print(error)
+        return .none
+        
+      case .uploadDrawingNextAction(let originalImage):
+        state.sharedState.originalImage = originalImage
+        state.sharedState.completeStep = .FindingTheCharacter
+        state.sharedState.currentStep = .FindingTheCharacter
+        state.sharedState.isShowStepStatusBar = true
         return .none
       }
     }
