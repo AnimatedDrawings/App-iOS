@@ -36,7 +36,7 @@ struct ViewFinder: View {
             GridView(initRect: cgRect, cropRect: $cropRect)
               .onAppear {
                 self.cropRect = cgRect
-                self.imageScale = self.originalImage.size.width / cgRect.size.width
+                self.imageScale = cgRect.size.width == 0 ? 0 : self.originalImage.size.width / cgRect.size.width
               }
           }
         }

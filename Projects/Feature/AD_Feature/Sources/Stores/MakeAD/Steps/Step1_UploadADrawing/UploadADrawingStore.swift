@@ -32,7 +32,7 @@ public struct UploadADrawingStore: ReducerProtocol {
     case checkList2
     case checkList3
     case uploadDrawing(Data?)
-    case uploadDrawingResponse(TaskResult<String>)
+    case uploadDrawingResponse(TaskResult<BoundingBoxDTO>)
   }
   
   public var body: some ReducerProtocol<State, Action> {
@@ -85,8 +85,8 @@ public struct UploadADrawingStore: ReducerProtocol {
           )
         }
         
-      case .uploadDrawingResponse(.success(let id)):
-        print(id)
+      case .uploadDrawingResponse(.success(let boundingBox)):
+        print(boundingBox)
         return .none
         
       case .uploadDrawingResponse(.failure(let error)):
