@@ -7,7 +7,6 @@
 //
 
 import SwiftUI
-import AD_Feature
 
 struct ADScrollView<C: View>: View {
   let topScrollID = "topScrollID"

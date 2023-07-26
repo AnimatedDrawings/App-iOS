@@ -38,7 +38,7 @@ struct UploadADrawingView: ADUI {
             CheckListContent(with: viewStore)
           }
           
-          UploadButton(viewStore.uploadState) { imageData in
+          UploadButton(viewStore.isEnableUploadButton) { imageData in
             viewStore.send(.uploadDrawing(imageData))
           }
           
@@ -50,6 +50,25 @@ struct UploadADrawingView: ADUI {
         }
         .padding()
       }
+      .fullScreenOverlay(presentationSpace: .named("UploadADrawingView")) {
+        if viewStore.state.uploadProcess {
+          LoadingView(description: "Upload A Drawing...")
+        }
+      }
+//      .fullScreenCover(
+//        isPresented: viewStore.binding(\.$uploadProcess),
+//        onDismiss: { viewStore.send(.uploadDrawingNextAction) },
+//        content: {
+//          LoadingView(description: "Upload A Drawing")
+//        })
+//      .addLoadingView(isShowing: viewStore.uploadProcess, description: "Upload A Drawing")
+//      .fullScreenCover(
+//        isPresented: viewStore.binding(
+//          get: viewStore.state., send: <#T##(Value) -> UploadADrawingStore.Action#>),
+//        onDismiss: {},
+//        content: {
+//          LoadingView(isShowing: <#T##Bool#>, description: <#T##String#>)
+//        })
     }
   }
 }

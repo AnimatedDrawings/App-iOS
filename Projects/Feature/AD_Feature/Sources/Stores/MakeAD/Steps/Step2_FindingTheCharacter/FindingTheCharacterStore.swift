@@ -20,6 +20,7 @@ public struct FindingTheCharacterStore: ReducerProtocol {
     
     @BindingState public var checkState = false
     @BindingState public var isShowCropImageView = false
+    public var isShowLoadingView = false
     var isNewCropImage = false
   }
   
@@ -28,6 +29,7 @@ public struct FindingTheCharacterStore: ReducerProtocol {
     case checkAction
     case toggleCropImageView
     case cropNextAction(Bool)
+    case setLoadingView(Bool)
     case onDismissCropImageView
   }
   
@@ -47,9 +49,21 @@ public struct FindingTheCharacterStore: ReducerProtocol {
         state.isShowCropImageView.toggle()
         return .none
         
+//      case .cropNextAction(let cropResult):
+//        state.isNewCropImage = cropResult
+//        return .send(.toggleCropImageView)
+        
+      case .setLoadingView(let flag):
+        state.isShowLoadingView = flag
+        return .none
+        
       case .cropNextAction(let cropResult):
         state.isNewCropImage = cropResult
-        return .send(.toggleCropImageView)
+        return .run { send in
+          await send(.setLoadingView(true))
+          try await Task.sleep(for: .seconds(3))
+          await send(.setLoadingView(false))
+        }
         
       case .onDismissCropImageView:
         if state.isNewCropImage == true {

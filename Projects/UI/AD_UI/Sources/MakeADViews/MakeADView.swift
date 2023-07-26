@@ -49,6 +49,7 @@ struct MakeADView: ADUI {
         .adBackground()
         .scrollContentBackground(.hidden)
       }
+      .fullScreenOverlayPresentationSpace(.named("UploadADrawingView"))
     }
   }
 }
