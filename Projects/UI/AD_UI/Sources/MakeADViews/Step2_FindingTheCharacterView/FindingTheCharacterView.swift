@@ -51,9 +51,12 @@ struct FindingTheCharacterView: ADUI {
           viewStore.send(.onDismissCropImageView)
         },
         content: {
-          if let originalImage = viewStore.state.sharedState.originalImage {
+          if let originalImage = viewStore.state.sharedState.originalImage,
+             let boundingBoxDTO = viewStore.state.sharedState.boundingBoxDTO
+          {
             CropImageView(
               originalImage: originalImage,
+              boundingBoxDTO: boundingBoxDTO,
               cropAction: { cropResult in
                 viewStore.send(.cropAction(cropResult))
               },

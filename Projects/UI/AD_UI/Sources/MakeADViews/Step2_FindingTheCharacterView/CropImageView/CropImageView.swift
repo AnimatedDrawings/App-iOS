@@ -15,17 +15,24 @@ struct CropImageView: View {
   let cropAction: (CropResult) -> ()
   let cancelAction: () -> ()
   
-  @State var cropRect: CGRect = .init()
-  @State var imageScale: CGFloat = 0
-  
+//  @State var cropRect: CGRect = .init()
+//  @State var imageScale: CGFloat = 0
+//
   @State var resetTrigger = false
+  @StateObject var boundingBoxInfo: BoundingBoxInfo
   
   init(
     originalImage: UIImage,
+    boundingBoxDTO: BoundingBoxDTO,
     cropAction: @escaping (CropResult) -> (),
     cancelAction: @escaping () -> ()
   ) {
     self.originalImage = originalImage
+    self._boundingBoxInfo = StateObject(
+      wrappedValue: BoundingBoxInfo(
+        boundingBoxDTO: boundingBoxDTO
+      )
+    )
     self.cropAction = cropAction
     self.cancelAction = cancelAction
   }
@@ -39,10 +46,14 @@ struct CropImageView: View {
       
       Spacer()
       
+//      ViewFinder(
+//        originalImage: originalImage,
+//        cropRect: $cropRect,
+//        imageScale: $imageScale
+//      )
       ViewFinder(
         originalImage: originalImage,
-        cropRect: $cropRect,
-        imageScale: $imageScale
+        boundingBoxInfo: boundingBoxInfo
       )
       .padding(.vertical, 15)
       .background(
@@ -77,13 +88,13 @@ extension CropImageView {
   
   func crop() -> UIImage? {
     let cropCGSize = CGSize(
-      width: cropRect.size.width * imageScale,
-      height: cropRect.size.height * imageScale
+      width: self.boundingBoxInfo.cropRect.size.width * self.boundingBoxInfo.imageScale,
+      height: self.boundingBoxInfo.cropRect.size.height * self.boundingBoxInfo.imageScale
     )
     
     let cropCGPoint = CGPoint(
-      x: -cropRect.origin.x * imageScale,
-      y: -cropRect.origin.y * imageScale
+      x: -self.boundingBoxInfo.cropRect.origin.x * self.boundingBoxInfo.imageScale,
+      y: -self.boundingBoxInfo.cropRect.origin.y * self.boundingBoxInfo.imageScale
     )
     
     UIGraphicsBeginImageContext(cropCGSize)
@@ -125,38 +136,27 @@ extension CropImageView {
   }
 }
 
-extension BoundingBoxDTO {
-  func toCGRect(scale: CGFloat) -> CGRect {
-    let x: CGFloat = CGFloat(left) * scale
-    let y: CGFloat = CGFloat(top) * scale
-    let width: CGFloat = (right - left) < 0 ? 0 : CGFloat(right - left) * scale
-    let height: CGFloat = (bottom - top) < 0 ? 0 : CGFloat(bottom - top) * scale
-    
-    return CGRect(x: x, y: y, width: width, height: height)
-  }
-}
-
-struct Previews_CropImageView: View {
-  let image: UIImage = ADUtilsAsset.SampleDrawing.garlic.image
-  @State var croppedImage: UIImage? = nil
-  @State var isShowCropImageView: Bool = false
-  
-  var body: some View {
-    ZStack {
-      ADBackground()
-        .blur(radius: 4)
-      
-      CropImageView(
-        originalImage: image,
-        cropAction: { _ in print("cropped and upload!") },
-        cancelAction: {}
-      )
-    }
-  }
-}
-
-struct CropImageView_Previews: PreviewProvider {
-  static var previews: some View {
-    Previews_CropImageView()
-  }
-}
+//struct Previews_CropImageView: View {
+//  let image: UIImage = ADUtilsAsset.SampleDrawing.garlic.image
+//  @State var croppedImage: UIImage? = nil
+//  @State var isShowCropImageView: Bool = false
+//  
+//  var body: some View {
+//    ZStack {
+//      ADBackground()
+//        .blur(radius: 4)
+//      
+//      CropImageView(
+//        originalImage: image,
+//        cropAction: { _ in print("cropped and upload!") },
+//        cancelAction: {}
+//      )
+//    }
+//  }
+//}
+//
+//struct CropImageView_Previews: PreviewProvider {
+//  static var previews: some View {
+//    Previews_CropImageView()
+//  }
+//}

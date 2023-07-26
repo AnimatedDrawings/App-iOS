@@ -23,11 +23,27 @@ struct GridView: View {
   @State var curWidth: CGFloat
   @State var curHeight: CGFloat
   
-  init(initRect: CGRect, cropRect: Binding<CGRect>) {
+//  init(
+//    initRect: CGRect,
+//    cropRect: Binding<CGRect>
+//  ) {
+//    self._cropRect = cropRect
+//    self.maxWidth = cropRect.wrappedValue.width
+//    self.maxHeight = cropRect.wrappedValue.height
+//    self.curX = initRect.origin.x
+//    self.curY = initRect.origin.y
+//    self.curWidth = initRect.size.width
+//    self.curHeight = initRect.size.height
+//  }
+  
+  init(
+    initRect: CGRect,
+    cropRect: Binding<CGRect>,
+    viewSize: CGRect
+  ) {
     self._cropRect = cropRect
-    
-    self.maxWidth = initRect.size.width
-    self.maxHeight = initRect.size.height
+    self.maxWidth = viewSize.width
+    self.maxHeight = viewSize.height
     self.curX = initRect.origin.x
     self.curY = initRect.origin.y
     self.curWidth = initRect.size.width
@@ -302,30 +318,30 @@ extension GridView {
   }
 }
 
-struct TestGridView: View {
-  @State var cropRect: CGRect
-  let initRect: CGRect
-  
-  init() {
-    let rect: CGRect = .init(x: 0, y: 0, width: 300, height: 400)
-    self.cropRect = rect
-    self.initRect = rect
-  }
-  
-  var body: some View {
-    VStack {
-      Rectangle()
-        .frame(width: initRect.width, height: initRect.height)
-        .foregroundColor(.gray.opacity(0.3))
-        .overlay {
-          GridView(initRect: initRect, cropRect: $cropRect)
-        }
-    }
-  }
-}
-
-struct GridView_Previews: PreviewProvider {
-  static var previews: some View {
-    TestGridView()
-  }
-}
+//struct TestGridView: View {
+//  @State var cropRect: CGRect
+//  let initRect: CGRect
+//
+//  init() {
+//    let rect: CGRect = .init(x: 0, y: 0, width: 300, height: 400)
+//    self.cropRect = rect
+//    self.initRect = rect
+//  }
+//
+//  var body: some View {
+//    VStack {
+//      Rectangle()
+//        .frame(width: initRect.width, height: initRect.height)
+//        .foregroundColor(.gray.opacity(0.3))
+//        .overlay {
+//          GridView(initRect: initRect, cropRect: $cropRect)
+//        }
+//    }
+//  }
+//}
+//
+//struct GridView_Previews: PreviewProvider {
+//  static var previews: some View {
+//    TestGridView()
+//  }
+//}
