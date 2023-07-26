@@ -9,10 +9,10 @@
 import Foundation
 
 public struct BoundingBoxDTO: Decodable, Equatable {
-  let top: Int
-  let bottom: Int
-  let left: Int
-  let right: Int
+  public var top: Int
+  public var bottom: Int
+  public var left: Int
+  public var right: Int
   
   public init(top: Int, bottom: Int, left: Int, right: Int) {
     self.top = top
@@ -21,21 +21,10 @@ public struct BoundingBoxDTO: Decodable, Equatable {
     self.right = right
   }
   
-  public enum CodingKeys: String, CodingKey {
+  enum CodingKeys: String, CodingKey {
     case top
     case bottom
     case left
     case right
-  }
-}
-
-extension BoundingBoxDTO {
-  func toCGRect(scale: CGFloat) -> CGRect {
-    let x: CGFloat = CGFloat(left) * scale
-    let y: CGFloat = CGFloat(top) * scale
-    let width: CGFloat = (right - left) < 0 ? 0 : CGFloat(right - left) * scale
-    let height: CGFloat = (bottom - top) < 0 ? 0 : CGFloat(bottom - top) * scale
-    
-    return CGRect(x: x, y: y, width: width, height: height)
   }
 }

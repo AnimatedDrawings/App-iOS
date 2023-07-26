@@ -52,23 +52,9 @@ struct UploadADrawingView: ADUI {
       }
       .fullScreenOverlay(presentationSpace: .named("UploadADrawingView")) {
         if viewStore.state.uploadProcess {
-          LoadingView(description: "Upload A Drawing...")
+          LoadingView(description: "Uploading Drawing...")
         }
       }
-//      .fullScreenCover(
-//        isPresented: viewStore.binding(\.$uploadProcess),
-//        onDismiss: { viewStore.send(.uploadDrawingNextAction) },
-//        content: {
-//          LoadingView(description: "Upload A Drawing")
-//        })
-//      .addLoadingView(isShowing: viewStore.uploadProcess, description: "Upload A Drawing")
-//      .fullScreenCover(
-//        isPresented: viewStore.binding(
-//          get: viewStore.state., send: <#T##(Value) -> UploadADrawingStore.Action#>),
-//        onDismiss: {},
-//        content: {
-//          LoadingView(isShowing: <#T##Bool#>, description: <#T##String#>)
-//        })
     }
   }
 }

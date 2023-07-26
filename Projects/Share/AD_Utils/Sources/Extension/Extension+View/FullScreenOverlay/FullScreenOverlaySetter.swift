@@ -34,7 +34,6 @@ struct FullScreenOverlaySetter<Overlay: View>: ViewModifier {
 }
 
 private extension View {
-  
   func onUpdate(perform action: (() -> Void)? = nil) -> some View {
     if let action = action {
       DispatchQueue.main.async(execute: action)

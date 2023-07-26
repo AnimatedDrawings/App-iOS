@@ -9,7 +9,6 @@
 import SwiftUI
 
 class FullScreenOverlayContainer: ObservableObject {
-  
   static let shared: FullScreenOverlayContainer = .init()
   
   @Published private(set) var overlays: [PresentationSpace: [AnyHashable: AnyView]] = .init()

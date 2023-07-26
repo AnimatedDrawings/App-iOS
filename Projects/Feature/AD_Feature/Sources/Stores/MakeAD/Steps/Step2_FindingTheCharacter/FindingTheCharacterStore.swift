@@ -20,16 +20,24 @@ public struct FindingTheCharacterStore: ReducerProtocol {
     
     @BindingState public var checkState = false
     @BindingState public var isShowCropImageView = false
+    
     public var isShowLoadingView = false
-    var isNewCropImage = false
+    public var descriptionLoadingView = ""
+    
+    var isSuccessCrop = false
+    var isSuccessUpload = false
   }
   
   public enum Action: Equatable, BindableAction {
     case binding(BindingAction<State>)
     case checkAction
     case toggleCropImageView
-    case cropNextAction(Bool)
-    case setLoadingView(Bool)
+//    case cropNextAction(UIImage?)
+    case cropAction(CropResult)
+    case saveInLocalCropResult(CropResult)
+    case uploadCropImage
+    // default value?
+    case setLoadingView(Bool, String? = nil)
     case onDismissCropImageView
   }
   
@@ -49,31 +57,64 @@ public struct FindingTheCharacterStore: ReducerProtocol {
         state.isShowCropImageView.toggle()
         return .none
         
-//      case .cropNextAction(let cropResult):
-//        state.isNewCropImage = cropResult
-//        return .send(.toggleCropImageView)
-        
-      case .setLoadingView(let flag):
-        state.isShowLoadingView = flag
+      case let .setLoadingView(flag, description):
+        if flag, let description = description {
+          state.descriptionLoadingView = description
+        }
+        if state.isShowLoadingView != flag {
+          state.isShowLoadingView = flag
+        }
         return .none
         
-      case .cropNextAction(let cropResult):
-        state.isNewCropImage = cropResult
+      case .cropAction(let cropResult):
         return .run { send in
-          await send(.setLoadingView(true))
+          await send(.setLoadingView(true, "Cropping Image ..."))
+          await send(.saveInLocalCropResult(cropResult))
+          await send(.setLoadingView(true, "Upload Cropped Image ..."))
           try await Task.sleep(for: .seconds(3))
+          await send(.uploadCropImage)
           await send(.setLoadingView(false))
         }
         
+      case .saveInLocalCropResult(let cropResult):
+        guard let croppedImage = cropResult.crop() else {
+          return .none
+        }
+        state.sharedState.croppedImage = croppedImage
+        state.isSuccessCrop = true
+        return .none
+        
+      case .uploadCropImage:
+        let isSuccessUpload = true
+        state.isSuccessUpload = isSuccessUpload
+        if isSuccessUpload {
+          return .send(.toggleCropImageView)
+        }
+        return .none
+        
       case .onDismissCropImageView:
-        if state.isNewCropImage == true {
+        if state.isSuccessCrop && state.isSuccessUpload {
           state.sharedState.completeStep = .SeparatingCharacter
           state.sharedState.currentStep = .SeparatingCharacter
           state.sharedState.isShowStepStatusBar = true
+          state.isSuccessCrop = false
+          state.isSuccessUpload = false
         }
-        state.isNewCropImage = false
         return .none
       }
     }
   }
+}
+
+public struct CropResult: Equatable {
+  public static func == (lhs: CropResult, rhs: CropResult) -> Bool {
+    lhs.id == rhs.id
+  }
+  
+  public init(crop: @escaping () -> UIImage?) {
+    self.crop = crop
+  }
+  
+  public let id = UUID()
+  public let crop: () -> UIImage?
 }
