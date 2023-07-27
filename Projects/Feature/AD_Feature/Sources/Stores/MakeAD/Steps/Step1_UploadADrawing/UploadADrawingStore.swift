@@ -36,7 +36,7 @@ public struct UploadADrawingStore: ReducerProtocol {
     case checkList3
     case setUploadProcess(Bool)
     case uploadDrawing(Data?)
-    case uploadDrawingResponse(TaskResult<BoundingBoxDTO>)
+    case uploadDrawingResponse(TaskResult<UploadADrawingResposne>)
     case uploadDrawingNextAction
   }
   
@@ -99,9 +99,10 @@ public struct UploadADrawingStore: ReducerProtocol {
           await send(.uploadDrawingNextAction)
         }
         
-      case .uploadDrawingResponse(.success(let boundingBox)):
+      case .uploadDrawingResponse(.success(let response)):
         state.isSuccessUploading = true
-        state.sharedState.boundingBoxDTO = boundingBox
+        state.sharedState.ad_id = response.ad_id
+        state.sharedState.boundingBoxDTO = response.boundingBoxDTO
         state.sharedState.originalImage = state.tmpOriginalImage
         return .none
         

@@ -37,7 +37,7 @@ public struct SharedState: Equatable {
     }
   }
   
-  public var id: String? = nil
+  public var ad_id: String? = nil
   
   public var originalImage: UIImage? = nil
   public var boundingBoxDTO: BoundingBoxDTO? = nil

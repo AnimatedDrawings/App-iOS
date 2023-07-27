@@ -12,7 +12,7 @@ import Moya
 import AD_Utils
 
 struct MakeADClient {
-  var step1UploadDrawing: @Sendable (Data) async throws -> BoundingBoxDTO
+  var step1UploadDrawing: @Sendable (Data) async throws -> UploadADrawingResposne
 }
 
 extension MakeADClient: DependencyKey {
@@ -33,10 +33,10 @@ extension MakeADClient: DependencyKey {
       
       switch response {
       case .success(let success):
-        guard let boundingBox = try? JSONDecoder().decode(BoundingBoxDTO.self, from: success.data) else {
+        guard let result = try? JSONDecoder().decode(UploadADrawingResposne.self, from: success.data) else {
           throw MoyaError.jsonMapping(success)
         }
-        return boundingBox
+        return result
         
       case .failure(let failure):
         print(failure.localizedDescription)
