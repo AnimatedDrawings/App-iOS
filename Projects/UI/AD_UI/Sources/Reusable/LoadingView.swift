@@ -44,27 +44,35 @@ struct LoadingView: View {
         .edgesIgnoringSafeArea(.all)
       
       RoundedRectangle(cornerRadius: 10)
-        .frame(height: 180)
-        .padding(.horizontal)
-        .padding(.horizontal)
-        .padding(.horizontal)
+        .frame(height: 200)
         .foregroundColor(.white)
         .shadow(radius: 10)
         .overlay {
           VStack {
             ProgressView()
-              .scaleEffect(2.0, anchor: .center)
+              .scaleEffect(3.0, anchor: .center)
             
             Spacer()
             
+//            Text(description)
+//              .font(.title2)
+//              .fontWeight(.semibold)
+            
             Text(description)
-              .font(.title)
-              .fontWeight(.semibold)
+              .lineLimit(1)
+              .font(.system(size: 100))
+              .minimumScaleFactor(0.001)
+              .frame(maxWidth: .infinity)
+              .frame(height: 50)
+            
           }
           .padding()
           .padding(.vertical)
           .padding(.top)
         }
+        .padding(.horizontal)
+        .padding(.horizontal)
+        .padding(.horizontal)
     }
   }
 }
@@ -81,7 +89,7 @@ struct Previews_LoadingView: View {
       Rectangle()
         .foregroundColor(.blue)
         .frame(width: 300, height: 300)
-        .addLoadingView(isShow: isShow, description: "feawfewa")
+        .addLoadingView(isShow: isShow, description: "fewfefeeafeafeea")
     }
   }
 }
