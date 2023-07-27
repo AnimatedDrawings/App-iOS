@@ -21,8 +21,8 @@ struct GridView: View {
   @Binding var curWidth: CGFloat
   @Binding var curHeight: CGFloat
   
-  @Binding var maxWidth: CGFloat
-  @Binding var maxHeight: CGFloat
+  let maxWidth: CGFloat
+  let maxHeight: CGFloat
   
   init(boundingBoxInfo: ObservedObject<BoundingBoxInfo>) {
     self._croppedRect = boundingBoxInfo.projectedValue.croppedRect
@@ -30,8 +30,8 @@ struct GridView: View {
     self._curY = boundingBoxInfo.projectedValue.curRect.origin.y
     self._curWidth = boundingBoxInfo.projectedValue.curRect.size.width
     self._curHeight = boundingBoxInfo.projectedValue.curRect.size.height
-    self._maxWidth = boundingBoxInfo.projectedValue.viewSize.size.width
-    self._maxHeight = boundingBoxInfo.projectedValue.viewSize.size.height
+    self.maxWidth = boundingBoxInfo.wrappedValue.viewSize.width
+    self.maxHeight = boundingBoxInfo.wrappedValue.viewSize.height
   }
 
   var body: some View {

@@ -27,8 +27,6 @@ struct ViewFinder: View {
           GeometryReader { geo in
             GridView(boundingBoxInfo: _boundingBoxInfo)
             .onAppear {
-              print("Image Size : \(self.originalImage.size)")
-              
               let cgRect: CGRect = geo.frame(in: .local)
               self.boundingBoxInfo.viewSize = cgRect
               self.boundingBoxInfo.imageScale = self.originalImage.size.width != 0 ?

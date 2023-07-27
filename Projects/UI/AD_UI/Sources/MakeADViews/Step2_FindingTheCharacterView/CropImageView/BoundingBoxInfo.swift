@@ -29,9 +29,7 @@ class BoundingBoxInfo: ObservableObject {
   let originBoundingBoxRect: CGRect
   
   init(boundingBoxDTO: BoundingBoxDTO) {
-    let tmp = boundingBoxDTO.toCGRect()
-    print("boundingBoxDTO to CGRect : \(tmp)")
-    self.originBoundingBoxRect = tmp
+    self.originBoundingBoxRect = boundingBoxDTO.toCGRect()
   }
 }
 
