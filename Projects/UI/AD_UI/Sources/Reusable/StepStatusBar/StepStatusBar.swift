@@ -11,8 +11,8 @@ import AD_Feature
 import AD_Utils
 
 struct StepStatusBar: View {
-  @Binding var currentStep: Step
-  @Binding var completeStep: Step
+  let currentStep: Step
+  let completeStep: Step
   @State var statusBarWidth: CGFloat = 0
   let statusBarSpacing: CGFloat = 4
   let activeColor: Color = ADUtilsAsset.Color.blue1.swiftUIColor
@@ -94,10 +94,10 @@ struct PreviewsStepStatusBar: View {
   var body: some View {
     VStack(spacing: 100) {
       StepStatusBar(
-        currentStep: $currentStep,
-        completeStep: $completeStep
+        currentStep: currentStep,
+        completeStep: completeStep
       )
-        .padding()
+      .padding()
       Button("MoveUp", action: moveUpAction)
       Button("MoveDown", action: moveDownAction)
     }

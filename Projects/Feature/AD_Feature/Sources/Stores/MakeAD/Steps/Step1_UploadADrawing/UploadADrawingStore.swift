@@ -74,19 +74,17 @@ public struct UploadADrawingStore: ReducerProtocol {
           return .none
         }
         
-//        state.tmpOriginalImage = originalImage
-        
         let maxKB: Double = 3000
         let originalSize = imageData.getSize(.kilobyte)
         guard let compressedData: Data = originalSize < maxKB ?
                 imageData :
-                  originalImage.reduceFileSize(maxKB: maxKB)
+                  originalImage.reduceFileSize(maxKB: maxKB),
+              let tmpOriginalImage = UIImage(data: compressedData)
         else {
           return .none
         }
-        print(compressedData.getSize(.kilobyte))
         
-        state.tmpOriginalImage = UIImage(data: compressedData)!
+        state.tmpOriginalImage = tmpOriginalImage
         
         return .run { send in
           await send(.setUploadProcess(true))

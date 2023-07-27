@@ -54,10 +54,6 @@ struct LoadingView: View {
             
             Spacer()
             
-//            Text(description)
-//              .font(.title2)
-//              .fontWeight(.semibold)
-            
             Text(description)
               .lineLimit(1)
               .font(.system(size: 100))

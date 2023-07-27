@@ -35,8 +35,7 @@ public struct FindingTheCharacterStore: ReducerProtocol {
 //    case cropNextAction(UIImage?)
     case cropAction(CropResult)
     case saveInLocalCropResult(CropResult)
-    case uploadCropImage
-    // default value?
+    case uploadCroppedImage
     case setLoadingView(Bool, String? = nil)
     case onDismissCropImageView
   }
@@ -71,8 +70,7 @@ public struct FindingTheCharacterStore: ReducerProtocol {
           await send(.setLoadingView(true, "Cropping Image ..."))
           await send(.saveInLocalCropResult(cropResult))
           await send(.setLoadingView(true, "Upload Cropped Image ..."))
-          try await Task.sleep(for: .seconds(3))
-          await send(.uploadCropImage)
+          await send(.uploadCroppedImage)
           await send(.setLoadingView(false))
         }
         
@@ -84,7 +82,7 @@ public struct FindingTheCharacterStore: ReducerProtocol {
         state.isSuccessCrop = true
         return .none
         
-      case .uploadCropImage:
+      case .uploadCroppedImage:
         let isSuccessUpload = true
         state.isSuccessUpload = isSuccessUpload
         if isSuccessUpload {

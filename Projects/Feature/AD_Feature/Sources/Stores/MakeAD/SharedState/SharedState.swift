@@ -14,11 +14,36 @@ public struct SharedState: Equatable {
   
   @BindingState public var isShowStepStatusBar = true
   public var currentStep: Step = .UploadADrawing
-  @BindingState public var completeStep: Step = .UploadADrawing
+  private var _completeStep: Step = .UploadADrawing
+  public var completeStep: Step {
+    get {
+      return self._completeStep
+    }
+    set {
+      self._completeStep = newValue
+      switch newValue {
+      case .UploadADrawing:
+        self.croppedImage = nil
+        self.maskedImage = nil
+        self.jointsDTO = nil
+      case .FindingTheCharacter:
+        self.maskedImage = nil
+        self.jointsDTO = nil
+      case .SeparatingCharacter:
+        self.jointsDTO = nil
+      case .FindingCharacterJoints:
+        return
+      }
+    }
+  }
+  
+  public var id: String? = nil
   
   public var originalImage: UIImage? = nil
   public var boundingBoxDTO: BoundingBoxDTO? = nil
+  
   public var croppedImage: UIImage? = nil
+  
   @BindingState public var maskedImage: UIImage? = nil
   public var jointsDTO: JointsDTO? = nil
 }

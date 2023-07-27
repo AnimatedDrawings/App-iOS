@@ -99,8 +99,8 @@ public struct MakeADStore: ReducerProtocol {
         
       case .bindingCurrentStep(let nexStep):
         if state.sharedState.currentStep != nexStep {
-          state.sharedState.currentStep = nexStep
           state.sharedState.isShowStepStatusBar = true
+          state.sharedState.currentStep = nexStep
         }
         return .none
         
