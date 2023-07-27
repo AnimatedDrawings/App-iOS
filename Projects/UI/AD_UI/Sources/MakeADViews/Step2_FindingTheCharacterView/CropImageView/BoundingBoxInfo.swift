@@ -17,18 +17,21 @@ class BoundingBoxInfo: ObservableObject {
     }
     set {
       self._imageScale = newValue
-      self.initRect = originBoundingBoxRect.scale(newValue)
+      self.curRect = originBoundingBoxRect.scale(newValue)
+      self.croppedRect = originBoundingBoxRect.scale(newValue)
     }
   }
   
-  @Published var initRect: CGRect = .init()
-  @Published var viewSize: CGRect = .init()
-  @Published var cropRect: CGRect = .init()
+  @Published var curRect: CGRect = .init()
+  var croppedRect: CGRect = .init()
+  var viewSize: CGRect = .init()
   
   let originBoundingBoxRect: CGRect
   
   init(boundingBoxDTO: BoundingBoxDTO) {
-    self.originBoundingBoxRect = boundingBoxDTO.toCGRect()
+    let tmp = boundingBoxDTO.toCGRect()
+    print("boundingBoxDTO to CGRect : \(tmp)")
+    self.originBoundingBoxRect = tmp
   }
 }
 

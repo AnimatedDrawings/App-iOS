@@ -14,10 +14,7 @@ struct CropImageView: View {
   let originalImage: UIImage
   let cropAction: (CropResult) -> ()
   let cancelAction: () -> ()
-  
-//  @State var cropRect: CGRect = .init()
-//  @State var imageScale: CGFloat = 0
-//
+
   @State var resetTrigger = false
   @StateObject var boundingBoxInfo: BoundingBoxInfo
   
@@ -45,12 +42,7 @@ struct CropImageView: View {
       )
       
       Spacer()
-      
-//      ViewFinder(
-//        originalImage: originalImage,
-//        cropRect: $cropRect,
-//        imageScale: $imageScale
-//      )
+  
       ViewFinder(
         originalImage: originalImage,
         boundingBoxInfo: boundingBoxInfo
@@ -88,13 +80,13 @@ extension CropImageView {
   
   func crop() -> UIImage? {
     let cropCGSize = CGSize(
-      width: self.boundingBoxInfo.cropRect.size.width * self.boundingBoxInfo.imageScale,
-      height: self.boundingBoxInfo.cropRect.size.height * self.boundingBoxInfo.imageScale
+      width: self.boundingBoxInfo.croppedRect.size.width * self.boundingBoxInfo.imageScale,
+      height: self.boundingBoxInfo.croppedRect.size.height * self.boundingBoxInfo.imageScale
     )
     
     let cropCGPoint = CGPoint(
-      x: -self.boundingBoxInfo.cropRect.origin.x * self.boundingBoxInfo.imageScale,
-      y: -self.boundingBoxInfo.cropRect.origin.y * self.boundingBoxInfo.imageScale
+      x: -self.boundingBoxInfo.croppedRect.origin.x * self.boundingBoxInfo.imageScale,
+      y: -self.boundingBoxInfo.croppedRect.origin.y * self.boundingBoxInfo.imageScale
     )
     
     UIGraphicsBeginImageContext(cropCGSize)
@@ -135,28 +127,3 @@ extension CropImageView {
     self.resetTrigger.toggle()
   }
 }
-
-//struct Previews_CropImageView: View {
-//  let image: UIImage = ADUtilsAsset.SampleDrawing.garlic.image
-//  @State var croppedImage: UIImage? = nil
-//  @State var isShowCropImageView: Bool = false
-//  
-//  var body: some View {
-//    ZStack {
-//      ADBackground()
-//        .blur(radius: 4)
-//      
-//      CropImageView(
-//        originalImage: image,
-//        cropAction: { _ in print("cropped and upload!") },
-//        cancelAction: {}
-//      )
-//    }
-//  }
-//}
-//
-//struct CropImageView_Previews: PreviewProvider {
-//  static var previews: some View {
-//    Previews_CropImageView()
-//  }
-//}
