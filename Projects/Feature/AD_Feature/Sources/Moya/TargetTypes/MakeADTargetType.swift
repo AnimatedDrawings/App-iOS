@@ -35,7 +35,7 @@ extension MakeADTargetType: TargetType {
   var path: String {
     switch self {
     case .step1UploadDrawing:
-      return makeADPath + "step1/upload_drawing"
+      return makeADPath + "step1/upload_a_drawing"
     case .step3ImageToAnnotations:
       return makeADPath + "step3/image_to_annotations"
     }
