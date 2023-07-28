@@ -11,6 +11,7 @@ import AD_Utils
 
 struct MaskingImageView: View {
   let croppedImage: UIImage
+  let initMaskImage: UIImage
   
   @StateObject private var maskToolState = MaskToolState()
   @StateObject private var maskableViewLink: MaskableViewLink
@@ -21,11 +22,13 @@ struct MaskingImageView: View {
   
   init(
     croppedImage: UIImage,
+    initMaskImage: UIImage,
     maskedImage: Binding<UIImage?>,
     maskNextAction: @escaping (Bool) -> (),
     cancelAction: @escaping () -> ()
   ) {
     self.croppedImage = croppedImage
+    self.initMaskImage = initMaskImage
     self._maskableViewLink = StateObject(
       wrappedValue: MaskableViewLink(
         maskedImage: maskedImage,
@@ -60,6 +63,7 @@ struct MaskingImageView: View {
           MaskableUIViewRepresentable(
             myFrame: imageFrame,
             croppedImage: croppedImage,
+            initMaskImage: initMaskImage,
             maskToolState: maskToolState,
             maskableViewLink: maskableViewLink
           )
@@ -81,12 +85,14 @@ struct MaskingImageView: View {
 // MARK: - Previews
 struct Previews_MaskingImageView: View {
   let croppedImage: UIImage = ADUtilsAsset.SampleDrawing.garlicCropped.image
+  let initMaskImage = UIImage()
   @State var maskedImage: UIImage? = nil
   @State var isNewMaskedImage = false
   
   var body: some View {
     MaskingImageView(
       croppedImage: croppedImage,
+      initMaskImage: initMaskImage,
       maskedImage: $maskedImage,
       maskNextAction: { _ in },
       cancelAction: {}

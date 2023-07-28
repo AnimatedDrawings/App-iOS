@@ -15,6 +15,8 @@ class MaskableUIView: UIView {
     return uiImageView
   }()
   
+  let initMaskImage: UIImage
+  
   private var renderer: UIGraphicsImageRenderer?
   private var maskImage: UIImage? = nil
   private var maskLayer = CALayer()
@@ -41,10 +43,12 @@ class MaskableUIView: UIView {
   init(
     myFrame: CGRect,
     croppedImage: UIImage,
+    initMaskImage: UIImage,
     curDrawingAction: DrawingAction,
     curCircleRadius: CGFloat
   ) {
     self.croppedImageUIView.image = croppedImage
+    self.initMaskImage = initMaskImage
     self.curDrawingAction = curDrawingAction
     self.curCircleRadius = curCircleRadius
     super.init(frame: CGRect(origin: .zero, size: myFrame.size))

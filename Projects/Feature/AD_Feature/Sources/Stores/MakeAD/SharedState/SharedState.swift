@@ -42,7 +42,7 @@ public struct SharedState: Equatable {
   public var originalImage: UIImage? = nil
   public var boundingBoxDTO: BoundingBoxDTO? = nil
   
-  public var tmpMaskImage: UIImage? = nil
+  public var initMaskImage: UIImage? = nil
   public var croppedImage: UIImage? = nil
   
   @BindingState public var maskedImage: UIImage? = nil

@@ -120,7 +120,7 @@ public struct FindingTheCharacterStore: ReducerProtocol {
         }
         
       case .downloadMaskImageResponse(.success(let maskImage)):
-        state.sharedState.tmpMaskImage = maskImage
+        state.sharedState.initMaskImage = maskImage
         return .run { send in
           await send(.setLoadingView(false))
           await send(.toggleCropImageView)

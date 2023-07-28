@@ -51,9 +51,12 @@ struct SeparatingCharacterView: ADUI {
           viewStore.send(.onDismissMakingImageView)
         },
         content: {
-          if let croppedImage = viewStore.state.sharedState.croppedImage {
+          if let croppedImage = viewStore.state.sharedState.croppedImage,
+             let initMaskImage = viewStore.state.sharedState.initMaskImage
+          {
             MaskingImageView(
               croppedImage: croppedImage,
+              initMaskImage: initMaskImage,
               maskedImage: viewStore.binding(\.sharedState.$maskedImage),
               maskNextAction: { maskResult in
                 viewStore.send(.maskNextAction(maskResult))
