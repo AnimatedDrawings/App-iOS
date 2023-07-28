@@ -28,3 +28,9 @@ public struct BoundingBoxDTO: Codable, Equatable {
     case right
   }
 }
+
+public extension BoundingBoxDTO {
+  static func mock() -> BoundingBoxDTO {
+    return BoundingBoxDTO(top: 0, bottom: 0, left: 0, right: 0)
+  }
+}

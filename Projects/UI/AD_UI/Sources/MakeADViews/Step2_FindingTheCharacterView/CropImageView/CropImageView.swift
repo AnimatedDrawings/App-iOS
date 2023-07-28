@@ -84,14 +84,16 @@ extension CropImageView {
   }
   
   func crop() -> UIImage? {
+    let reciprocal: CGFloat = 1 / self.boundingBoxInfo.imageScale
+    
     let cropCGSize = CGSize(
-      width: self.boundingBoxInfo.croppedRect.size.width * self.boundingBoxInfo.imageScale,
-      height: self.boundingBoxInfo.croppedRect.size.height * self.boundingBoxInfo.imageScale
+      width: self.boundingBoxInfo.croppedRect.size.width * reciprocal,
+      height: self.boundingBoxInfo.croppedRect.size.height * reciprocal
     )
     
     let cropCGPoint = CGPoint(
-      x: -self.boundingBoxInfo.croppedRect.origin.x * self.boundingBoxInfo.imageScale,
-      y: -self.boundingBoxInfo.croppedRect.origin.y * self.boundingBoxInfo.imageScale
+      x: -self.boundingBoxInfo.croppedRect.origin.x * reciprocal,
+      y: -self.boundingBoxInfo.croppedRect.origin.y * reciprocal
     )
     
     UIGraphicsBeginImageContext(cropCGSize)
