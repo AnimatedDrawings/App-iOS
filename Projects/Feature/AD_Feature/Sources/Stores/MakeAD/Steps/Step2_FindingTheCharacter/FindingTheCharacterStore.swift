@@ -22,9 +22,7 @@ public struct FindingTheCharacterStore: ReducerProtocol {
     @BindingState public var isShowCropImageView = false
     
     public var isShowLoadingView = false
-    public var descriptionLoadingView = ""
     
-    var isSuccessCrop = false
     var isSuccessUpload = false
   }
   
@@ -32,11 +30,9 @@ public struct FindingTheCharacterStore: ReducerProtocol {
     case binding(BindingAction<State>)
     case checkAction
     case toggleCropImageView
-//    case cropNextAction(UIImage?)
-    case cropAction(CropResult)
-    case saveInLocalCropResult(CropResult)
-    case uploadCroppedImage
-    case setLoadingView(Bool, String? = nil)
+    case findTheCharacter(CropResult)
+    case findTheCharacterResponse(TaskResult<FindTheCharacterResponse>)
+    case setLoadingView(Bool)
     case onDismissCropImageView
   }
   
@@ -56,46 +52,50 @@ public struct FindingTheCharacterStore: ReducerProtocol {
         state.isShowCropImageView.toggle()
         return .none
         
-      case let .setLoadingView(flag, description):
-        if flag, let description = description {
-          state.descriptionLoadingView = description
-        }
-        if state.isShowLoadingView != flag {
-          state.isShowLoadingView = flag
-        }
+      case .setLoadingView(let flag):
+        state.isShowLoadingView = flag
         return .none
         
-      case .cropAction(let cropResult):
-        return .run { send in
-          await send(.setLoadingView(true, "Cropping Image ..."))
-          await send(.saveInLocalCropResult(cropResult))
-          await send(.setLoadingView(true, "Upload Cropped Image ..."))
-          await send(.uploadCroppedImage)
-          await send(.setLoadingView(false))
-        }
-        
-      case .saveInLocalCropResult(let cropResult):
-        guard let croppedImage = cropResult.crop() else {
+      case .findTheCharacter(let cropResult):
+        guard let croppedImage = cropResult.croppedImage,
+              let ad_id = state.sharedState.ad_id
+        else {
           return .none
         }
         state.sharedState.croppedImage = croppedImage
-        state.isSuccessCrop = true
-        return .none
+        let findTheCharacterRequest = FindTheCharacterRequest(
+          ad_id: ad_id,
+          boundingBoxDTO: cropResult.boundingBoxDTO
+        )
         
-      case .uploadCroppedImage:
-        let isSuccessUpload = true
-        state.isSuccessUpload = isSuccessUpload
-        if isSuccessUpload {
-          return .send(.toggleCropImageView)
+        return .run { send in
+          await send(.setLoadingView(true))
+          await send(
+            .findTheCharacterResponse(
+              TaskResult {
+                try await makeADClient.step2FindTheCharacter(findTheCharacterRequest)
+              }
+            )
+          )
         }
-        return .none
+        
+      case .findTheCharacterResponse(.success(let response)):
+        print(response)
+        state.isSuccessUpload = true
+        return .run { send in
+          await send(.setLoadingView(false))
+          await send(.toggleCropImageView)
+        }
+        
+      case .findTheCharacterResponse(.failure(let error)):
+        print(error)
+        return .send(.setLoadingView(false))
         
       case .onDismissCropImageView:
-        if state.isSuccessCrop && state.isSuccessUpload {
+        if state.isSuccessUpload {
           state.sharedState.completeStep = .SeparatingCharacter
           state.sharedState.currentStep = .SeparatingCharacter
           state.sharedState.isShowStepStatusBar = true
-          state.isSuccessCrop = false
           state.isSuccessUpload = false
         }
         return .none
@@ -109,10 +109,15 @@ public struct CropResult: Equatable {
     lhs.id == rhs.id
   }
   
-  public init(crop: @escaping () -> UIImage?) {
-    self.crop = crop
+  public init(
+    croppedImage: UIImage?,
+    boundingBoxDTO: BoundingBoxDTO
+  ) {
+    self.croppedImage = croppedImage
+    self.boundingBoxDTO = boundingBoxDTO
   }
-  
+
   public let id = UUID()
-  public let crop: () -> UIImage?
+  public let croppedImage: UIImage?
+  public let boundingBoxDTO: BoundingBoxDTO
 }

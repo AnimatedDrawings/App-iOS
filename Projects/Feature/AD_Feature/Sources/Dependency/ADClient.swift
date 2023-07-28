@@ -13,6 +13,7 @@ import AD_Utils
 
 struct MakeADClient {
   var step1UploadDrawing: @Sendable (Data) async throws -> UploadADrawingResposne
+  var step2FindTheCharacter: @Sendable (FindTheCharacterRequest) async throws -> FindTheCharacterResponse
 }
 
 extension MakeADClient: DependencyKey {
@@ -33,11 +34,25 @@ extension MakeADClient: DependencyKey {
       
       switch response {
       case .success(let success):
-        guard let result = try? JSONDecoder().decode(UploadADrawingResposne.self, from: success.data) else {
+        guard let responseModel = try? JSONDecoder().decode(UploadADrawingResposne.self, from: success.data) else {
           throw MoyaError.jsonMapping(success)
         }
-        return result
+        return responseModel
         
+      case .failure(let failure):
+        print(failure.localizedDescription)
+        throw failure
+      }
+    },
+    
+    step2FindTheCharacter: { request in
+      let response = await providerMakeAD.request(.step2FindTheCharacter(request: request))
+      switch response {
+      case .success(let success):
+        guard let responseModel = try? JSONDecoder().decode(FindTheCharacterResponse.self, from: success.data) else {
+          throw MoyaError.jsonMapping(success)
+        }
+        return responseModel
       case .failure(let failure):
         print(failure.localizedDescription)
         throw failure
@@ -46,7 +61,8 @@ extension MakeADClient: DependencyKey {
   )
   
   static let testValue = Self(
-    step1UploadDrawing: unimplemented("\(Self.self) testValue of search")
+    step1UploadDrawing: unimplemented("\(Self.self) testValue of search"),
+    step2FindTheCharacter: unimplemented("\(Self.self) testValue of search")
   )
 }
 

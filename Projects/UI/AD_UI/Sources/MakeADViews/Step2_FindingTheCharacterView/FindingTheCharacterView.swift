@@ -58,7 +58,7 @@ struct FindingTheCharacterView: ADUI {
               originalImage: originalImage,
               boundingBoxDTO: boundingBoxDTO,
               cropAction: { cropResult in
-                viewStore.send(.cropAction(cropResult))
+                viewStore.send(.findTheCharacter(cropResult))
               },
               cancelAction: {
                 viewStore.send(.toggleCropImageView)
@@ -67,7 +67,7 @@ struct FindingTheCharacterView: ADUI {
             .transparentBlurBackground()
             .addLoadingView(
               isShow: viewStore.state.isShowLoadingView,
-              description: viewStore.state.descriptionLoadingView
+              description: "Cropping Image ..."
             )
           }
         }

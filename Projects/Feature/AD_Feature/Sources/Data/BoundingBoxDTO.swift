@@ -8,22 +8,7 @@
 
 import Foundation
 
-public struct UploadADrawingResposne: Decodable, Equatable {
-  public let ad_id: String
-  public let boundingBoxDTO: BoundingBoxDTO
-  
-  public init(ad_id: String, boundingBoxDTO: BoundingBoxDTO) {
-    self.ad_id = ad_id
-    self.boundingBoxDTO = boundingBoxDTO
-  }
-  
-  enum CodingKeys: String, CodingKey {
-    case ad_id
-    case boundingBoxDTO = "bounding_box"
-  }
-}
-
-public struct BoundingBoxDTO: Decodable, Equatable {
+public struct BoundingBoxDTO: Codable, Equatable {
   public let top: Int
   public let bottom: Int
   public let left: Int

@@ -74,7 +74,12 @@ extension CropImageView {
 
 extension CropImageView {
   func save() {
-    let cropResult = CropResult(crop: self.crop)
+    let croppedImage = self.crop()
+    let boundingBoxDTO = self.boundingBoxInfo.toBoundingBoxDTO()
+    let cropResult = CropResult(
+      croppedImage: croppedImage,
+      boundingBoxDTO: boundingBoxDTO
+    )
     cropAction(cropResult)
   }
   

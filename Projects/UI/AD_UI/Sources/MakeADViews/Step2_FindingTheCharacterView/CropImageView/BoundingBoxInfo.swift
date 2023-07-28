@@ -33,6 +33,18 @@ class BoundingBoxInfo: ObservableObject {
   }
 }
 
+extension BoundingBoxInfo {
+  func toBoundingBoxDTO() -> BoundingBoxDTO {
+    let originRect = self.croppedRect.scale(1 / self.imageScale)
+    let top = Int(originRect.origin.y)
+    let bottom = top + Int(originRect.height)
+    let left = Int(originRect.origin.x)
+    let right = left + Int(originRect.width)
+    
+    return BoundingBoxDTO(top: top, bottom: bottom, left: left, right: right)
+  }
+}
+
 extension CGRect {
   func scale(_ imageScale: CGFloat) -> CGRect {
     let x: CGFloat = self.origin.x * imageScale

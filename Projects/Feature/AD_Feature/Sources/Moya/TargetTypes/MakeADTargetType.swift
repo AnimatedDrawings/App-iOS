@@ -19,6 +19,8 @@ enum MakeADTargetType {
     mimeType: String
   )
   
+  case step2FindTheCharacter(request: FindTheCharacterRequest)
+  
   case step3ImageToAnnotations(
     maskedImage: Data,
     name: String,
@@ -36,6 +38,8 @@ extension MakeADTargetType: TargetType {
     switch self {
     case .step1UploadDrawing:
       return makeADPath + "step1/upload_a_drawing"
+    case .step2FindTheCharacter(let request):
+      return makeADPath + "step2/find_the_character/\(request.ad_id)"
     case .step3ImageToAnnotations:
       return makeADPath + "step3/image_to_annotations"
     }
@@ -44,6 +48,8 @@ extension MakeADTargetType: TargetType {
   var method: Moya.Method {
     switch self {
     case .step1UploadDrawing:
+      return .post
+    case .step2FindTheCharacter:
       return .post
     case .step3ImageToAnnotations:
       return .post
@@ -54,6 +60,8 @@ extension MakeADTargetType: TargetType {
     switch self {
     case .step1UploadDrawing:
       return ["Content-type" : "multipart/form-data"]
+    case .step2FindTheCharacter:
+      return ["Content-type" : "application/json"]
     case .step3ImageToAnnotations:
       return ["Content-type" : "multipart/form-data"]
     }
@@ -70,6 +78,9 @@ extension MakeADTargetType: TargetType {
       )
 
       return .uploadMultipart([imageData])
+      
+    case .step2FindTheCharacter(let request):
+      return .requestJSONEncodable(request.boundingBoxDTO)
       
     case let .step3ImageToAnnotations(maskedImage, name, fileName, mimeType):
       let imageData = MultipartFormData(
