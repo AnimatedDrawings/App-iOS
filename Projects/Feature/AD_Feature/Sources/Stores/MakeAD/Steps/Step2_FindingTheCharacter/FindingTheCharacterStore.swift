@@ -34,6 +34,9 @@ public struct FindingTheCharacterStore: ReducerProtocol {
     case findTheCharacterResponse(TaskResult<FindTheCharacterResponse>)
     case setLoadingView(Bool)
     case onDismissCropImageView
+    
+    case downloadMaskImage
+    case downloadMaskImageResponse(TaskResult<UIImage>)
   }
   
   public var body: some ReducerProtocol<State, Action> {
@@ -81,11 +84,13 @@ public struct FindingTheCharacterStore: ReducerProtocol {
         
       case .findTheCharacterResponse(.success(let response)):
         print(response)
-        state.isSuccessUpload = true
-        return .run { send in
-          await send(.setLoadingView(false))
-          await send(.toggleCropImageView)
+        state.isSuccessUpload = response.isSuccess
+        if response.isSuccess {
+          return .run { send in
+            await send(.downloadMaskImage)
+          }
         }
+        return .send(.setLoadingView(false))
         
       case .findTheCharacterResponse(.failure(let error)):
         print(error)
@@ -98,6 +103,31 @@ public struct FindingTheCharacterStore: ReducerProtocol {
           state.sharedState.isShowStepStatusBar = true
           state.isSuccessUpload = false
         }
+        return .none
+        
+      case .downloadMaskImage:
+        guard let ad_id = state.sharedState.ad_id else {
+          return .none
+        }
+        return .run { send in
+          await send(
+            .downloadMaskImageResponse(
+              TaskResult {
+                try await makeADClient.step2DownloadMaskImage(ad_id)
+              }
+            )
+          )
+        }
+        
+      case .downloadMaskImageResponse(.success(let maskImage)):
+        state.sharedState.tmpMaskImage = maskImage
+        return .run { send in
+          await send(.setLoadingView(false))
+          await send(.toggleCropImageView)
+        }
+        
+      case .downloadMaskImageResponse(.failure(let error)):
+        print(error)
         return .none
       }
     }

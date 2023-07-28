@@ -14,6 +14,7 @@ import AD_Utils
 struct MakeADClient {
   var step1UploadDrawing: @Sendable (Data) async throws -> UploadADrawingResposne
   var step2FindTheCharacter: @Sendable (FindTheCharacterRequest) async throws -> FindTheCharacterResponse
+  var step2DownloadMaskImage: @Sendable (String) async throws -> UIImage
 }
 
 extension MakeADClient: DependencyKey {
@@ -57,12 +58,28 @@ extension MakeADClient: DependencyKey {
         print(failure.localizedDescription)
         throw failure
       }
+    },
+    
+    step2DownloadMaskImage: { ad_id in
+      let response = await providerMakeAD.request(.step2DownloadMaskImage(ad_id: ad_id))
+      switch response {
+      case .success(let success):
+        guard let maskImage = UIImage(data: success.data) else {
+          throw MoyaError.imageMapping(success)
+        }
+        return maskImage
+        
+      case .failure(let failure):
+        print(failure.localizedDescription)
+        throw failure
+      }
     }
   )
   
   static let testValue = Self(
     step1UploadDrawing: unimplemented("\(Self.self) testValue of search"),
-    step2FindTheCharacter: unimplemented("\(Self.self) testValue of search")
+    step2FindTheCharacter: unimplemented("\(Self.self) testValue of search"),
+    step2DownloadMaskImage: unimplemented("\(Self.self) testValue of search")
   )
 }
 

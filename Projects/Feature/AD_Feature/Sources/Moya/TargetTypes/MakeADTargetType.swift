@@ -20,6 +20,7 @@ enum MakeADTargetType {
   )
   
   case step2FindTheCharacter(request: FindTheCharacterRequest)
+  case step2DownloadMaskImage(ad_id: String)
   
   case step3ImageToAnnotations(
     maskedImage: Data,
@@ -38,8 +39,12 @@ extension MakeADTargetType: TargetType {
     switch self {
     case .step1UploadDrawing:
       return makeADPath + "step1/upload_a_drawing"
+      
     case .step2FindTheCharacter(let request):
       return makeADPath + "step2/find_the_character/\(request.ad_id)"
+    case .step2DownloadMaskImage(let ad_id):
+      return makeADPath + "step2/download_mask_image/\(ad_id)"
+      
     case .step3ImageToAnnotations:
       return makeADPath + "step3/image_to_annotations"
     }
@@ -49,8 +54,12 @@ extension MakeADTargetType: TargetType {
     switch self {
     case .step1UploadDrawing:
       return .post
+      
     case .step2FindTheCharacter:
       return .post
+    case .step2DownloadMaskImage:
+      return .get
+      
     case .step3ImageToAnnotations:
       return .post
     }
@@ -60,8 +69,12 @@ extension MakeADTargetType: TargetType {
     switch self {
     case .step1UploadDrawing:
       return ["Content-type" : "multipart/form-data"]
+      
     case .step2FindTheCharacter:
       return ["Content-type" : "application/json"]
+    case .step2DownloadMaskImage:
+      return .none
+      
     case .step3ImageToAnnotations:
       return ["Content-type" : "multipart/form-data"]
     }
@@ -81,6 +94,8 @@ extension MakeADTargetType: TargetType {
       
     case .step2FindTheCharacter(let request):
       return .requestJSONEncodable(request.boundingBoxDTO)
+    case .step2DownloadMaskImage:
+      return .requestPlain
       
     case let .step3ImageToAnnotations(maskedImage, name, fileName, mimeType):
       let imageData = MultipartFormData(

@@ -9,13 +9,13 @@
 import Foundation
 
 public struct FindTheCharacterResponse: Decodable, Equatable {
-  public let ad_id: String
+  public let isSuccess: Bool
   
-  public init(ad_id: String) {
-    self.ad_id = ad_id
+  public init(isSuccess: Bool) {
+    self.isSuccess = isSuccess
   }
   
   enum CodingKeys: String, CodingKey {
-    case ad_id
+    case isSuccess = "is_success"
   }
 }
