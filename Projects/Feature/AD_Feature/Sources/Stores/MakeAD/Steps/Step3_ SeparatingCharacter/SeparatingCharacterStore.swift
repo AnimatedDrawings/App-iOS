@@ -24,7 +24,8 @@ public struct SeparatingCharacterStore: ReducerProtocol {
     public var maskState = false
     
     @BindingState public var isShowMaskingImageView = false
-    var isNewMaskedImage = false
+    var isSuccessSeparateCharacter = false
+    public var isShowLoadingView = false
   }
   
   public enum Action: Equatable, BindableAction {
@@ -33,7 +34,10 @@ public struct SeparatingCharacterStore: ReducerProtocol {
     case checkAction1
     case checkAction2
     case toggleMaskingImageView
+    
+    case setLoadingView(Bool)
     case maskNextAction(Bool)
+    case separateCharacterResponse(TaskResult<JointsDTO>)
     case onDismissMakingImageView
   }
   
@@ -59,20 +63,53 @@ public struct SeparatingCharacterStore: ReducerProtocol {
         state.isShowMaskingImageView.toggle()
         return .none
         
+      case .setLoadingView(let flag):
+        state.isShowLoadingView = flag
+        return .none
+        
       case .maskNextAction(let maskResult):
-        state.isNewMaskedImage = maskResult
-        return .send(.toggleMaskingImageView)
+        guard maskResult,
+              let ad_id = state.sharedState.ad_id,
+              let maskedImageData = state.sharedState.maskedImage?.pngData()
+        else {
+          return .none
+        }
+        
+        let request = SeparateCharacterRequest(
+          ad_id: ad_id,
+          maskedImageData: maskedImageData
+        )
+        
+        return .run { send in
+          await send(.setLoadingView(true))
+          await send(
+            .separateCharacterResponse(
+              TaskResult {
+                try await makeADClient.step3SeparateCharacter(request)
+              }
+            )
+          )
+        }
+        
+      case .separateCharacterResponse(.success(let response)):
+        state.isSuccessSeparateCharacter = true
+        state.sharedState.jointsDTO = response
+        return .run { send in
+          await send(.setLoadingView(false))
+          await send(.toggleMaskingImageView)
+        }
+      
+      case .separateCharacterResponse(.failure(let error)):
+        print(error)
+        return .send(.setLoadingView(false))
           
       case .onDismissMakingImageView:
-        // savebutton -> progressview -> (3초후) resultview
-        // 5초 지나면 alert창 띄우기
-        
-        if state.isNewMaskedImage == true {
+        if state.isSuccessSeparateCharacter == true {
           state.sharedState.completeStep = .FindingCharacterJoints
           state.sharedState.currentStep = .FindingCharacterJoints
           state.sharedState.isShowStepStatusBar = true
+          state.isSuccessSeparateCharacter = false
         }
-        state.isNewMaskedImage = false
         return .none
       }
     }

@@ -22,12 +22,7 @@ enum MakeADTargetType {
   case step2FindTheCharacter(request: FindTheCharacterRequest)
   case step2DownloadMaskImage(ad_id: String)
   
-  case step3ImageToAnnotations(
-    maskedImage: Data,
-    name: String,
-    fileName: String,
-    mimeType: String
-  )
+  case step3SeparateCharacter(request: SeparateCharacterRequest)
 }
 
 fileprivate let makeADPath: String = "/api/make_ad/"
@@ -45,8 +40,8 @@ extension MakeADTargetType: TargetType {
     case .step2DownloadMaskImage(let ad_id):
       return makeADPath + "step2/download_mask_image/\(ad_id)"
       
-    case .step3ImageToAnnotations:
-      return makeADPath + "step3/image_to_annotations"
+    case .step3SeparateCharacter(let request):
+      return makeADPath + "step3/separate_character/\(request.ad_id)"
     }
   }
   
@@ -60,7 +55,7 @@ extension MakeADTargetType: TargetType {
     case .step2DownloadMaskImage:
       return .get
       
-    case .step3ImageToAnnotations:
+    case .step3SeparateCharacter:
       return .post
     }
   }
@@ -75,7 +70,7 @@ extension MakeADTargetType: TargetType {
     case .step2DownloadMaskImage:
       return .none
       
-    case .step3ImageToAnnotations:
+    case .step3SeparateCharacter:
       return ["Content-type" : "multipart/form-data"]
     }
   }
@@ -97,12 +92,12 @@ extension MakeADTargetType: TargetType {
     case .step2DownloadMaskImage:
       return .requestPlain
       
-    case let .step3ImageToAnnotations(maskedImage, name, fileName, mimeType):
+    case .step3SeparateCharacter(let request):
       let imageData = MultipartFormData(
-        provider: .data(maskedImage),
-        name: name,
-        fileName: fileName,
-        mimeType: mimeType
+        provider: .data(request.maskedImageData),
+        name: "file",
+        fileName: "tmp",
+        mimeType: request.maskedImageData.mimeType
       )
       
       return .uploadMultipart([imageData])

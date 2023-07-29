@@ -66,6 +66,10 @@ struct SeparatingCharacterView: ADUI {
               }
             )
             .transparentBlurBackground()
+            .addLoadingView(
+              isShow: viewStore.state.isShowLoadingView,
+              description: "Separating Character..."
+            )
           }
         }
       )
