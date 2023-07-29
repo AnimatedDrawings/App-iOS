@@ -134,3 +134,23 @@ extension CropImageView {
     self.resetTrigger.toggle()
   }
 }
+
+//struct Previews_CropImageView: View {
+//  let originalImage: UIImage = ADUtilsAsset.SampleDrawing.garlic.image
+//  let boundingBoxDTO: BoundingBoxDTO = .mock()
+//  
+//  var body: some View {
+//    CropImageView(
+//      originalImage: originalImage,
+//      boundingBoxDTO: <#T##BoundingBoxDTO#>,
+//      cropAction: <#T##(CropResult) -> ()#>,
+//      cancelAction: <#T##() -> ()#>
+//    )
+//  }
+//}
+//
+//struct CropImageView_Previews: PreviewProvider {
+//  static var previews: some View {
+//    Previews_CropImageView()
+//  }
+//}

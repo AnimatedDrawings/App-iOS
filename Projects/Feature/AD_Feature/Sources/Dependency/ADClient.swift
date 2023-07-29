@@ -35,10 +35,14 @@ extension MakeADClient: DependencyKey {
       
       switch response {
       case .success(let success):
-        guard let responseModel = try? JSONDecoder().decode(UploadADrawingResposne.self, from: success.data) else {
-          throw MoyaError.jsonMapping(success)
+        
+        if let responseModel = try? JSONDecoder().decode(UploadADrawingResposne.self, from: success.data) {
+          return responseModel
         }
-        return responseModel
+        if let errorText = try? success.mapString() {
+          print(errorText)
+        }
+        throw MoyaError.jsonMapping(success)
         
       case .failure(let failure):
         print(failure.localizedDescription)

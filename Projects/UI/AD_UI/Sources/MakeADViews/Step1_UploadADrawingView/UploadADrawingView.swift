@@ -44,6 +44,8 @@ struct UploadADrawingView: ADUI {
           
           SampleDrawings { imageData in
             viewStore.send(.uploadDrawing(imageData))
+//            let garlicData = ADUtilsAsset.SampleDrawing.garlic.image.pngData()
+//            viewStore.send(.uploadDrawing(garlicData))
           }
           
           Spacer()

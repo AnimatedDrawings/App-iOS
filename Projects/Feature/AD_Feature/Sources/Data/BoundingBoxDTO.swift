@@ -33,4 +33,8 @@ public extension BoundingBoxDTO {
   static func mock() -> BoundingBoxDTO {
     return BoundingBoxDTO(top: 0, bottom: 0, left: 0, right: 0)
   }
+  
+  static func garlicMock() -> BoundingBoxDTO {
+    return BoundingBoxDTO(top: 105, bottom: 987, left: 104, right: 835)
+  }
 }
