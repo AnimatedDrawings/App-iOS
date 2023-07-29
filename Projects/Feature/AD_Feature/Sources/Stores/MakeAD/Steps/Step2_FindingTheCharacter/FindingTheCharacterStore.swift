@@ -23,6 +23,7 @@ public struct FindingTheCharacterStore: ReducerProtocol {
     
     public var isShowLoadingView = false
     
+    var tmpCropResult = CropResult(croppedImage: .init(), boundingBoxDTO: .mock())
     var isSuccessUpload = false
   }
   
@@ -60,12 +61,10 @@ public struct FindingTheCharacterStore: ReducerProtocol {
         return .none
         
       case .findTheCharacter(let cropResult):
-        guard let croppedImage = cropResult.croppedImage,
-              let ad_id = state.sharedState.ad_id
-        else {
+        guard let ad_id = state.sharedState.ad_id else {
           return .none
         }
-        state.sharedState.croppedImage = croppedImage
+        state.tmpCropResult = cropResult
         let findTheCharacterRequest = FindTheCharacterRequest(
           ad_id: ad_id,
           boundingBoxDTO: cropResult.boundingBoxDTO
@@ -83,7 +82,6 @@ public struct FindingTheCharacterStore: ReducerProtocol {
         }
         
       case .findTheCharacterResponse(.success(let response)):
-        print(response)
         state.isSuccessUpload = response.isSuccess
         if response.isSuccess {
           return .run { send in
@@ -120,6 +118,8 @@ public struct FindingTheCharacterStore: ReducerProtocol {
         }
         
       case .downloadMaskImageResponse(.success(let maskImage)):
+        state.sharedState.croppedImage = state.tmpCropResult.croppedImage
+        state.sharedState.boundingBoxDTO = state.tmpCropResult.boundingBoxDTO
         state.sharedState.initMaskImage = maskImage
         return .run { send in
           await send(.setLoadingView(false))

@@ -84,8 +84,8 @@ struct MaskingImageView: View {
 
 // MARK: - Previews
 struct Previews_MaskingImageView: View {
-  let croppedImage: UIImage = ADUtilsAsset.SampleDrawing.garlicCropped.image
-  let initMaskImage = UIImage()
+  let croppedImage: UIImage = ADUtilsAsset.Garlic.texture.image
+  let initMaskImage: UIImage = ADUtilsAsset.Garlic.maskedImg.image
   @State var maskedImage: UIImage? = nil
   @State var isNewMaskedImage = false
   

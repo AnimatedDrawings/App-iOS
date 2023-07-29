@@ -9,7 +9,7 @@ import UIKit
 
 class MaskableUIView: UIView {
   // MARK: - Private Property
-  private let croppedImageUIView: UIImageView = {
+  private let croppedImageView: UIImageView = {
     let uiImageView = UIImageView()
     uiImageView.contentMode = .scaleAspectFit
     return uiImageView
@@ -33,8 +33,7 @@ class MaskableUIView: UIView {
     guard let renderer = renderer else { return nil}
     let result = renderer.image {
       context in
-      
-      return self.croppedImageUIView.layer.render(in: context.cgContext)
+      return self.croppedImageView.layer.render(in: context.cgContext)
     }
     return result
   }
@@ -47,7 +46,7 @@ class MaskableUIView: UIView {
     curDrawingAction: DrawingAction,
     curCircleRadius: CGFloat
   ) {
-    self.croppedImageUIView.image = croppedImage
+    self.croppedImageView.image = croppedImage
     self.initMaskImage = initMaskImage
     self.curDrawingAction = curDrawingAction
     self.curCircleRadius = curCircleRadius
@@ -66,11 +65,12 @@ class MaskableUIView: UIView {
   }
   
   private func setupLayout() {
-    self.croppedImageUIView.translatesAutoresizingMaskIntoConstraints = false
-    self.addSubview(croppedImageUIView)
+    self.croppedImageView.translatesAutoresizingMaskIntoConstraints = false
+    self.addSubview(croppedImageView)
     
-    croppedImageUIView.layer.mask = maskLayer
-    croppedImageUIView.layer.superlayer?.addSublayer(shapeLayer)
+    croppedImageView.layer.masksToBounds = true
+    croppedImageView.layer.mask = maskLayer
+    croppedImageView.layer.superlayer?.addSublayer(shapeLayer)
   }
 }
 
@@ -83,7 +83,7 @@ extension MaskableUIView {
     }
     
     self.frame = myBounds
-    self.croppedImageUIView.frame = self.bounds
+    self.croppedImageView.frame = self.bounds
     maskLayer.frame = self.layer.bounds
     shapeLayer.frame = self.layer.bounds
     shapeLayer.fillColor = UIColor.clear.cgColor
@@ -93,8 +93,7 @@ extension MaskableUIView {
       return
     }
     let image = renderer.image { context in
-      UIColor.black.setFill()
-      context.fill(self.bounds, blendMode: .normal)
+      initMaskImage.draw(in: self.bounds)
     }
     maskImage = image
     maskLayer.contents = maskImage?.cgImage
@@ -179,11 +178,16 @@ extension MaskableUIView {
     self.cache = []
     
     shapeLayer.fillColor = UIColor.clear.cgColor
-    guard let renderer = renderer else { return }
-    let image = renderer.image { (ctx) in
-      UIColor.black.setFill()
-      ctx.fill(self.bounds, blendMode: .normal)
+    guard let renderer = renderer else {
+      return
     }
+    let image = renderer.image { context in
+      initMaskImage.draw(in: self.bounds)
+    }
+//    let image = renderer.image { (ctx) in
+//      UIColor.black.setFill()
+//      ctx.fill(self.bounds, blendMode: .normal)
+//    }
     maskImage = image
     maskLayer.contents = maskImage?.cgImage
   }

@@ -22,9 +22,3 @@ public struct UploadADrawingResposne: Decodable, Equatable {
     case boundingBoxDTO = "bounding_box"
   }
 }
-
-public extension UploadADrawingResposne {
-  static func mock() -> UploadADrawingResposne {
-    UploadADrawingResposne(ad_id: "mock", boundingBoxDTO: .mock())
-  }
-}
