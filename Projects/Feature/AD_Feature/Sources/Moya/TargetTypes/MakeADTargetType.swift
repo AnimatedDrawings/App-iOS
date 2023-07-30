@@ -12,17 +12,12 @@ import Moya
 let providerMakeAD = MoyaProvider<MakeADTargetType>()
 
 enum MakeADTargetType {
-  case step1UploadDrawing(
-    imageData: Data,
-    name: String,
-    fileName: String,
-    mimeType: String
-  )
+  case step1UploadDrawing(UploadADrawingRequest)
   
-  case step2FindTheCharacter(request: FindTheCharacterRequest)
+  case step2FindTheCharacter(FindTheCharacterRequest)
   case step2DownloadMaskImage(ad_id: String)
   
-  case step3SeparateCharacter(request: SeparateCharacterRequest)
+  case step3SeparateCharacter(SeparateCharacterRequest)
 }
 
 fileprivate let makeADPath: String = "/api/make_ad/"
@@ -77,14 +72,14 @@ extension MakeADTargetType: TargetType {
   
   var task: Moya.Task {
     switch self {
-    case let .step1UploadDrawing(data, name, fileName, mimeType):
+    case .step1UploadDrawing(let request):
       let imageData = MultipartFormData(
-        provider: .data(data),
-        name: name,
-        fileName: fileName,
-        mimeType: mimeType
+        provider: .data(request.originalImageData),
+        name: "file",
+        fileName: "tmp",
+        mimeType: request.originalImageData.mimeType
       )
-
+      
       return .uploadMultipart([imageData])
       
     case .step2FindTheCharacter(let request):

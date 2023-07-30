@@ -85,13 +85,14 @@ public struct UploadADrawingStore: ReducerProtocol {
         }
         
         state.tmpOriginalImage = tmpOriginalImage
+        let request = UploadADrawingRequest(originalImageData: compressedData)
         
         return .run { send in
           await send(.setUploadProcess(true))
           await send(
             .uploadDrawingResponse(
               TaskResult {
-                try await makeADClient.step1UploadDrawing(compressedData)
+                try await makeADClient.step1UploadDrawing(request)
               }
             )
           )

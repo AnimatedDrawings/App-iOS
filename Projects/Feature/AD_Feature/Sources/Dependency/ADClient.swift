@@ -12,7 +12,7 @@ import Moya
 import AD_Utils
 
 struct MakeADClient {
-  var step1UploadDrawing: @Sendable (Data) async throws -> UploadADrawingResposne
+  var step1UploadDrawing: @Sendable (UploadADrawingRequest) async throws -> UploadADrawingResposne
   var step2FindTheCharacter: @Sendable (FindTheCharacterRequest) async throws -> FindTheCharacterResponse
   var step2DownloadMaskImage: @Sendable (String) async throws -> UIImage
   var step3SeparateCharacter: @Sendable (SeparateCharacterRequest) async throws -> JointsDTO
@@ -20,40 +20,22 @@ struct MakeADClient {
 
 extension MakeADClient: DependencyKey {
   static let liveValue = Self(
-    step1UploadDrawing: { imageData in
-      let name = "file"
-      let fileName = "tmp"
-      let mimeType = imageData.mimeType
-      
-      let response = await providerMakeAD.request(
-        .step1UploadDrawing(
-          imageData: imageData,
-          name: name,
-          fileName: fileName,
-          mimeType: mimeType
-        )
-      )
-      
+    step1UploadDrawing: { request in
+      let response = await providerMakeAD.request(.step1UploadDrawing(request))
       switch response {
       case .success(let success):
-        
-        if let responseModel = try? JSONDecoder().decode(UploadADrawingResposne.self, from: success.data) {
-          return responseModel
+        guard let responseModel = try? JSONDecoder().decode(UploadADrawingResposne.self, from: success.data) else {
+          throw MoyaError.jsonMapping(success)
         }
-        if let errorText = try? success.mapString() {
-          print(errorText)
-        }
-        throw MoyaError.jsonMapping(success)
-        
+        return responseModel
       case .failure(let failure):
         print(failure.localizedDescription)
         throw failure
       }
     },
     
-    
     step2FindTheCharacter: { request in
-      let response = await providerMakeAD.request(.step2FindTheCharacter(request: request))
+      let response = await providerMakeAD.request(.step2FindTheCharacter(request))
       switch response {
       case .success(let success):
         guard let responseModel = try? JSONDecoder().decode(FindTheCharacterResponse.self, from: success.data) else {
@@ -83,7 +65,7 @@ extension MakeADClient: DependencyKey {
     
     
     step3SeparateCharacter: { request in
-      let response = await providerMakeAD.request(.step3SeparateCharacter(request: request))
+      let response = await providerMakeAD.request(.step3SeparateCharacter(request))
       switch response {
       case .success(let success):
         if let jointsDTO = try? JSONDecoder().decode(JointsDTO.self, from: success.data) {
