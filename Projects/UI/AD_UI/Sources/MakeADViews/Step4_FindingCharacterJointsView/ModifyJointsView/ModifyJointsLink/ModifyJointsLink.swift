@@ -17,7 +17,7 @@ class ModifyJointsLink: ObservableObject {
   @Published var currentJoint: String? = nil
   var originData: [String : CGPoint]
   var modifiedJointsDTO: JointsDTO
-  var originalDTOSize: CGSize
+  let originalDTOSize: CGSize
   
   var anyCancellable = Set<AnyCancellable>()
   

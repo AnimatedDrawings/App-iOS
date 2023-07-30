@@ -12,22 +12,28 @@ import AD_Utils
 struct ModifyJointsView: View {
   let maskedImage: UIImage
   @StateObject var modifyJointsLink: ModifyJointsLink
+  let cancel: () -> ()
+  let save: (JointsDTO) -> ()
+  
   let strokeColor: Color = ADUtilsAsset.Color.blue1.swiftUIColor
   
   init(
     maskedImage: UIImage,
-    jointsDTO: JointsDTO
+    jointsDTO: JointsDTO,
+    cancel: @escaping () -> (),
+    save: @escaping (JointsDTO) -> ()
   ) {
     self.maskedImage = maskedImage
     self._modifyJointsLink = StateObject(
       wrappedValue: ModifyJointsLink(jointsDTO: jointsDTO)
     )
+    self.cancel = cancel
+    self.save = save
   }
   
   var body: some View {
     VStack {
-      ToolNaviBar()
-        .frame(height: 40)
+      ToolNaviBar(cancelAction: cancelAction, saveAction: saveAction)
       
       Spacer()
       
@@ -55,36 +61,16 @@ struct ModifyJointsView: View {
 }
 
 extension ModifyJointsView {
-  @ViewBuilder
-  func ToolNaviBar() -> some View {
-    HStack {
-      CancelButton()
-      Spacer()
-      SaveButton()
-    }
-    .padding(.horizontal)
+  func cancelAction() {
+    self.cancel()
   }
   
-  @ViewBuilder
-  func CancelButton() -> some View {
-    Image(systemName: "x.circle")
-      .resizable()
-      .aspectRatio(contentMode: .fit)
-      .fontWeight(.semibold)
-      .foregroundColor(strokeColor)
-  }
-  
-  @ViewBuilder
-  func SaveButton() -> some View {
-    Button {
-      self.modifyJointsLink.startSave.send()
-    } label: {
-      Image(systemName: "square.and.arrow.down")
-        .resizable()
-        .aspectRatio(contentMode: .fit)
-        .fontWeight(.semibold)
-        .foregroundColor(strokeColor)
+  func saveAction() {
+    self.modifyJointsLink.startSave.send()
+    self.modifyJointsLink.$finishSave.sink { _ in
+      self.save(self.modifyJointsLink.modifiedJointsDTO)
     }
+    .store(in: &self.modifyJointsLink.anyCancellable)
   }
 }
 
@@ -150,7 +136,9 @@ struct Previews_ModifyJointsView: View {
     if let jointsDTO = mockJointsDTO {
       ModifyJointsView(
         maskedImage: self.maskedImage,
-        jointsDTO: jointsDTO
+        jointsDTO: jointsDTO,
+        cancel: {},
+        save: { _ in }
       )
     } else {
       Text("No MockJointsDTO")

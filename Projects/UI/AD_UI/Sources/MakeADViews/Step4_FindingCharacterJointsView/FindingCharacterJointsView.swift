@@ -51,12 +51,19 @@ struct FindingCharacterJointsView: ADUI {
         isPresented: viewStore.binding(\.$isShowModifyJointsView),
         onDismiss: {},
         content: {
-          if let maskedImage = viewStore.sharedState.maskedImage {
+          if let maskedImage = viewStore.sharedState.maskedImage,
+             let jointsDTO = viewStore.sharedState.jointsDTO
+          {
             ModifyJointsView(
               maskedImage: maskedImage,
-              jointsDTO: JointsDTO.mockJointsDTO()!
+              jointsDTO: jointsDTO,
+              cancel: { viewStore.send(.toggleModifyJointsView) },
+              save: { modifiedJointsDTO in
+                viewStore.send(.findCharacterJoints(modifiedJointsDTO))
+              }
             )
             .transparentBlurBackground()
+            .addLoadingView(isShow: viewStore.state.isShowLoadingView, description: "Modify Character Joints ...")
           }
         }
       )

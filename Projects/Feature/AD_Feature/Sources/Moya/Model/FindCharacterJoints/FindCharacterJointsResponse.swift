@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct FindCharacterJointsResponse: Codable {
+public struct FindCharacterJointsResponse: Decodable, Equatable {
   public let ad_id: String
   
   public init(ad_id: String) {
