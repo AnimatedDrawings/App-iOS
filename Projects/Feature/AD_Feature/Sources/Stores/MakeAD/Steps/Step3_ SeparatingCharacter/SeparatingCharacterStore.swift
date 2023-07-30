@@ -37,7 +37,7 @@ public struct SeparatingCharacterStore: ReducerProtocol {
     
     case setLoadingView(Bool)
     case maskNextAction(Bool)
-    case separateCharacterResponse(TaskResult<JointsDTO>)
+    case separateCharacterResponse(TaskResult<SeparateCharacterReponse>)
     case onDismissMakingImageView
   }
   
@@ -93,7 +93,7 @@ public struct SeparatingCharacterStore: ReducerProtocol {
         
       case .separateCharacterResponse(.success(let response)):
         state.isSuccessSeparateCharacter = true
-        state.sharedState.jointsDTO = response
+        state.sharedState.jointsDTO = response.jointsDTO
         return .run { send in
           await send(.setLoadingView(false))
           await send(.toggleMaskingImageView)

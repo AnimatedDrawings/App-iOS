@@ -15,7 +15,7 @@ struct MakeADClient {
   var step1UploadDrawing: @Sendable (UploadADrawingRequest) async throws -> UploadADrawingResposne
   var step2FindTheCharacter: @Sendable (FindTheCharacterRequest) async throws -> FindTheCharacterResponse
   var step2DownloadMaskImage: @Sendable (String) async throws -> UIImage
-  var step3SeparateCharacter: @Sendable (SeparateCharacterRequest) async throws -> JointsDTO
+  var step3SeparateCharacter: @Sendable (SeparateCharacterRequest) async throws -> SeparateCharacterReponse
 }
 
 extension MakeADClient: DependencyKey {
@@ -69,7 +69,8 @@ extension MakeADClient: DependencyKey {
       switch response {
       case .success(let success):
         if let jointsDTO = try? JSONDecoder().decode(JointsDTO.self, from: success.data) {
-          return jointsDTO
+          let separateCharacterReponse = SeparateCharacterReponse(jointsDTO: jointsDTO)
+          return separateCharacterReponse
         }
         if let errorText = try? success.mapString() {
           print(errorText)
