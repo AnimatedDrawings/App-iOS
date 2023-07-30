@@ -14,26 +14,26 @@ struct GridView: View {
   let lineWidth: CGFloat = 3
   /// (lineWidth * lineCount) + (minimumSpace * spaceCount)
   let minSize: CGFloat = (3 * 4) + (2 * 3)
-  @Binding var cropRect: CGRect
+  
+  @Binding var croppedRect: CGRect
+  @Binding var curX: CGFloat
+  @Binding var curY: CGFloat
+  @Binding var curWidth: CGFloat
+  @Binding var curHeight: CGFloat
   
   let maxWidth: CGFloat
   let maxHeight: CGFloat
-  @State var curX: CGFloat
-  @State var curY: CGFloat
-  @State var curWidth: CGFloat
-  @State var curHeight: CGFloat
   
-  init(initRect: CGRect, cropRect: Binding<CGRect>) {
-    self._cropRect = cropRect
-    
-    self.maxWidth = initRect.size.width
-    self.maxHeight = initRect.size.height
-    self.curX = initRect.origin.x
-    self.curY = initRect.origin.y
-    self.curWidth = initRect.size.width
-    self.curHeight = initRect.size.height
+  init(boundingBoxInfo: ObservedObject<BoundingBoxInfo>) {
+    self._croppedRect = boundingBoxInfo.projectedValue.croppedRect
+    self._curX = boundingBoxInfo.projectedValue.curRect.origin.x
+    self._curY = boundingBoxInfo.projectedValue.curRect.origin.y
+    self._curWidth = boundingBoxInfo.projectedValue.curRect.size.width
+    self._curHeight = boundingBoxInfo.projectedValue.curRect.size.height
+    self.maxWidth = boundingBoxInfo.wrappedValue.viewSize.width
+    self.maxHeight = boundingBoxInfo.wrappedValue.viewSize.height
   }
-  
+
   var body: some View {
     CropView()
   }
@@ -139,17 +139,17 @@ extension GridView {
   func DragGridGesture() -> some Gesture {
     return DragGesture()
       .onChanged { value in
-        let curOriginX: CGFloat = cropRect.origin.x + value.translation.width
-        let curOriginY: CGFloat = cropRect.origin.y + value.translation.height
+        let curOriginX: CGFloat = croppedRect.origin.x + value.translation.width
+        let curOriginY: CGFloat = croppedRect.origin.y + value.translation.height
         let tmpOriginX: CGFloat = currentOrigin(
           curOrigin: curOriginX,
           maxSize: maxWidth,
-          lastSize: cropRect.size.width
+          lastSize: croppedRect.size.width
         )
         let tmpOriginY: CGFloat = currentOrigin(
           curOrigin: curOriginY,
           maxSize: maxHeight,
-          lastSize: cropRect.size.height
+          lastSize: croppedRect.size.height
         )
         
         if tmpOriginX != curX {
@@ -160,8 +160,8 @@ extension GridView {
         }
       }
       .onEnded { value in
-        cropRect.origin.x = curX
-        cropRect.origin.y = curY
+        croppedRect.origin.x = curX
+        croppedRect.origin.y = curY
       }
   }
 
@@ -211,8 +211,8 @@ extension GridView {
     
     let tmpTranslation: CGFloat = isVertical ? value.translation.width : value.translation.height
     let translation: CGFloat = isTopOrLeft ? -tmpTranslation : tmpTranslation
-    let lastSize: CGFloat = isVertical ? cropRect.width : cropRect.height
-    let lastOrigin: CGFloat = isVertical ? cropRect.origin.x : cropRect.origin.y
+    let lastSize: CGFloat = isVertical ? croppedRect.width : croppedRect.height
+    let lastOrigin: CGFloat = isVertical ? croppedRect.origin.x : croppedRect.origin.y
     let maxSize: CGFloat = isVertical ? maxWidth : maxHeight
     let curSize: CGFloat = isVertical ? curWidth : curHeight
     let tmpSize: CGFloat = currentSize(
@@ -243,11 +243,11 @@ extension GridView {
     value: DragGesture.Value
   ) {
     if line.isVertical {
-      cropRect.size.width = curWidth
-      cropRect.origin.x = curX
+      croppedRect.size.width = curWidth
+      croppedRect.origin.x = curX
     } else {
-      cropRect.size.height = curHeight
-      cropRect.origin.y = curY
+      croppedRect.size.height = curHeight
+      croppedRect.origin.y = curY
     }
   }
   
@@ -299,33 +299,5 @@ extension GridView {
         return false
       }
     }
-  }
-}
-
-struct TestGridView: View {
-  @State var cropRect: CGRect
-  let initRect: CGRect
-  
-  init() {
-    let rect: CGRect = .init(x: 0, y: 0, width: 300, height: 400)
-    self.cropRect = rect
-    self.initRect = rect
-  }
-  
-  var body: some View {
-    VStack {
-      Rectangle()
-        .frame(width: initRect.width, height: initRect.height)
-        .foregroundColor(.gray.opacity(0.3))
-        .overlay {
-          GridView(initRect: initRect, cropRect: $cropRect)
-        }
-    }
-  }
-}
-
-struct GridView_Previews: PreviewProvider {
-  static var previews: some View {
-    TestGridView()
   }
 }

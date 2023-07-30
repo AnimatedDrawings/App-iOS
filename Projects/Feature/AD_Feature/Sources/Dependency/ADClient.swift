@@ -11,70 +11,89 @@ import ComposableArchitecture
 import Moya
 import AD_Utils
 
-struct ADClient {
-  var uploadImage: @Sendable (UIImage) async throws -> String
-  var imageToAnnotations: @Sendable (UIImage) async throws -> String
+struct MakeADClient {
+  var step1UploadDrawing: @Sendable (UploadADrawingRequest) async throws -> UploadADrawingResposne
+  var step2FindTheCharacter: @Sendable (FindTheCharacterRequest) async throws -> FindTheCharacterResponse
+  var step2DownloadMaskImage: @Sendable (String) async throws -> UIImage
+  var step3SeparateCharacter: @Sendable (SeparateCharacterRequest) async throws -> SeparateCharacterReponse
 }
 
-extension ADClient: DependencyKey {
+extension MakeADClient: DependencyKey {
   static let liveValue = Self(
-    uploadImage: { croppedImage in
-      guard let data = croppedImage.pngData() else {
-        throw UploadImageError.convertData
-      }
-      let name = "file"
-      let fileName = "tmp"
-      let mimeType = data.mimeType
-      
-      let endpoint = providerAD.endpoint(
-        .uploadImage(
-          data: data,
-          name: name,
-          fileName: fileName,
-          mimeType: mimeType
-        )
-      )
-      guard let urlRequest = try? endpoint.urlRequest() else {
-        throw UploadImageError.urlRequest
-      }
-      guard urlRequest.httpBody != nil else {
-        throw UploadImageError.multipartFormData
-      }
-      
-      let response = await providerAD.request(
-        .uploadImage(
-          data: data,
-          name: name,
-          fileName: fileName,
-          mimeType: mimeType
-        )
-      )
-
+    step1UploadDrawing: { request in
+      let response = await providerMakeAD.request(.step1UploadDrawing(request))
       switch response {
       case .success(let success):
-        let responseString: String = String(data: success.data, encoding: .utf8) ?? "cannot convert success response data"
-        return responseString
+        guard let responseModel = try? JSONDecoder().decode(UploadADrawingResposne.self, from: success.data) else {
+          throw MoyaError.jsonMapping(success)
+        }
+        return responseModel
       case .failure(let failure):
         print(failure.localizedDescription)
         throw failure
-      }    
+      }
     },
     
-    imageToAnnotations: { maskedImage in
-//      try await Task.sleep(until: .now + .seconds(3), clock: .continuous)
-      return "TEtset"
+    step2FindTheCharacter: { request in
+      let response = await providerMakeAD.request(.step2FindTheCharacter(request))
+      switch response {
+      case .success(let success):
+        guard let responseModel = try? JSONDecoder().decode(FindTheCharacterResponse.self, from: success.data) else {
+          throw MoyaError.jsonMapping(success)
+        }
+        return responseModel
+      case .failure(let failure):
+        print(failure.localizedDescription)
+        throw failure
+      }
+    },
+    
+    step2DownloadMaskImage: { ad_id in
+      let response = await providerMakeAD.request(.step2DownloadMaskImage(ad_id: ad_id))
+      switch response {
+      case .success(let success):
+        guard let maskImage = UIImage(data: success.data) else {
+          throw MoyaError.imageMapping(success)
+        }
+        return maskImage
+        
+      case .failure(let failure):
+        print(failure.localizedDescription)
+        throw failure
+      }
+    },
+    
+    
+    step3SeparateCharacter: { request in
+      let response = await providerMakeAD.request(.step3SeparateCharacter(request))
+      switch response {
+      case .success(let success):
+        if let jointsDTO = try? JSONDecoder().decode(JointsDTO.self, from: success.data) {
+          let separateCharacterReponse = SeparateCharacterReponse(jointsDTO: jointsDTO)
+          return separateCharacterReponse
+        }
+        if let errorText = try? success.mapString() {
+          print(errorText)
+        }
+        throw MoyaError.jsonMapping(success)
+      case .failure(let failure):
+        print(failure.localizedDescription)
+        throw failure
+      }
     }
   )
   
   static let testValue = Self(
-    uploadImage: unimplemented("\(Self.self) testValue of search"),
-    imageToAnnotations: unimplemented("\(Self.self) testValue of search")
+    step1UploadDrawing: unimplemented("\(Self.self) testValue of search"),
+    step2FindTheCharacter: unimplemented("\(Self.self) testValue of search"),
+    step2DownloadMaskImage: unimplemented("\(Self.self) testValue of search"),
+    step3SeparateCharacter: unimplemented("\(Self.self) testValue of search")
   )
 }
 
 extension DependencyValues {
-  var adClient: ADClient {
-    get { self[ADClient.self] }
-    set { self[ADClient.self] = newValue }
+  var makeADClient: MakeADClient {
+    get { self[MakeADClient.self] }
+    set { self[MakeADClient.self] = newValue }
   }
 }

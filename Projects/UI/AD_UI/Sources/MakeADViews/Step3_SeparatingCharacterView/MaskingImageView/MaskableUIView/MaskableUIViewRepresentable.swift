@@ -12,6 +12,7 @@ struct MaskableUIViewRepresentable: UIViewRepresentable {
   typealias UIViewType = MaskableUIView
   let myFrame: CGRect
   let croppedImage: UIImage
+  let initMaskImage: UIImage
   let maskToolState: MaskToolState
   let maskableViewLink: MaskableViewLink
   
@@ -19,6 +20,7 @@ struct MaskableUIViewRepresentable: UIViewRepresentable {
     let maskableUIView = MaskableUIView(
       myFrame: myFrame,
       croppedImage: self.croppedImage,
+      initMaskImage: self.initMaskImage,
       curDrawingAction: self.maskToolState.drawingAction,
       curCircleRadius: self.maskToolState.circleRadius
     )

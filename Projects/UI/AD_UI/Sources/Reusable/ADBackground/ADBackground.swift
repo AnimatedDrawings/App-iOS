@@ -16,10 +16,8 @@ extension View {
   }
 }
 
-public struct ADBackground: View {
-  public init() {}
-  
-  public var body: some View {
+struct ADBackground: View {
+  var body: some View {
     GeometryReader { geo in
       let rect: CGRect = geo.frame(in: .global)
 

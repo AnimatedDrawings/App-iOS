@@ -12,24 +12,25 @@ import AD_Utils
 
 struct CropImageView: View {
   let originalImage: UIImage
-  @Binding var croppedImage: UIImage?
-  let cropNextAction: (Bool) -> ()
+  let cropAction: (CropResult) -> ()
   let cancelAction: () -> ()
-  
-  @State var cropRect: CGRect = .init()
-  @State var imageScale: CGFloat = 0
-  
+
   @State var resetTrigger = false
+  @StateObject var boundingBoxInfo: BoundingBoxInfo
   
   init(
     originalImage: UIImage,
-    croppedImage: Binding<UIImage?>,
-    cropNextAction: @escaping (Bool) -> (),
+    boundingBoxDTO: BoundingBoxDTO,
+    cropAction: @escaping (CropResult) -> (),
     cancelAction: @escaping () -> ()
   ) {
     self.originalImage = originalImage
-    self._croppedImage = croppedImage
-    self.cropNextAction = cropNextAction
+    self._boundingBoxInfo = StateObject(
+      wrappedValue: BoundingBoxInfo(
+        boundingBoxDTO: boundingBoxDTO
+      )
+    )
+    self.cropAction = cropAction
     self.cancelAction = cancelAction
   }
   
@@ -41,11 +42,10 @@ struct CropImageView: View {
       )
       
       Spacer()
-      
+  
       ViewFinder(
         originalImage: originalImage,
-        cropRect: $cropRect,
-        imageScale: $imageScale
+        boundingBoxInfo: boundingBoxInfo
       )
       .padding(.vertical, 15)
       .background(
@@ -74,32 +74,37 @@ extension CropImageView {
 
 extension CropImageView {
   func save() {
-    let cropResult = crop()
-    cropNextAction(cropResult)
+    let croppedImage = self.crop()
+    let boundingBoxDTO = self.boundingBoxInfo.toBoundingBoxDTO()
+    let cropResult = CropResult(
+      croppedImage: croppedImage,
+      boundingBoxDTO: boundingBoxDTO
+    )
+    cropAction(cropResult)
   }
   
-  func crop() -> Bool {
+  func crop() -> UIImage? {
+    let reciprocal: CGFloat = 1 / self.boundingBoxInfo.imageScale
+    
     let cropCGSize = CGSize(
-      width: cropRect.size.width * imageScale,
-      height: cropRect.size.height * imageScale
+      width: self.boundingBoxInfo.croppedRect.size.width * reciprocal,
+      height: self.boundingBoxInfo.croppedRect.size.height * reciprocal
     )
     
     let cropCGPoint = CGPoint(
-      x: -cropRect.origin.x * imageScale,
-      y: -cropRect.origin.y * imageScale
+      x: -self.boundingBoxInfo.croppedRect.origin.x * reciprocal,
+      y: -self.boundingBoxInfo.croppedRect.origin.y * reciprocal
     )
     
     UIGraphicsBeginImageContext(cropCGSize)
     
     self.originalImage.draw(at: cropCGPoint)
     
-    if let croppedImage = UIGraphicsGetImageFromCurrentImageContext() {
-      UIGraphicsEndImageContext()
-      self.croppedImage = croppedImage
-      return true
+    guard let croppedImage = UIGraphicsGetImageFromCurrentImageContext() else {
+      return nil
     }
-    
-    return false
+    UIGraphicsEndImageContext()
+    return croppedImage
   }
 }
 
@@ -127,31 +132,5 @@ extension CropImageView {
   
   func resetAction() {
     self.resetTrigger.toggle()
-  }
-}
-
-struct Previews_CropImageView: View {
-  let image: UIImage = ADUtilsAsset.SampleDrawing.garlic.image
-  @State var croppedImage: UIImage? = nil
-  @State var isShowCropImageView: Bool = false
-  
-  var body: some View {
-    ZStack {
-      ADBackground()
-        .blur(radius: 4)
-      
-      CropImageView(
-        originalImage: image,
-        croppedImage: $croppedImage,
-        cropNextAction: { _ in print("cropped and upload!") },
-        cancelAction: {}
-      )
-    }
-  }
-}
-
-struct CropImageView_Previews: PreviewProvider {
-  static var previews: some View {
-    Previews_CropImageView()
   }
 }

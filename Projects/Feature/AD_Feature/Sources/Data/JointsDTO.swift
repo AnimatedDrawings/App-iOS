@@ -24,7 +24,7 @@ public struct JointsDTO: Decodable, Equatable {
     self.skeletonDTO = skeletonDTO
   }
   
-  public enum CodingKeys: String, CodingKey {
+  enum CodingKeys: String, CodingKey {
     case width
     case height
     case skeletonDTO = "skeleton"

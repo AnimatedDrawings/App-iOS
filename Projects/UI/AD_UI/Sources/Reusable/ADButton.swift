@@ -9,55 +9,73 @@
 import SwiftUI
 import AD_Utils
 
-public struct ADButton<ButtonLabel: View>: View {
-  var state: ADButton.State
-  private let action: () -> ()
-  private let label: ButtonLabel
+struct ADButton<Content: View>: View {
+  var state: ADButtonState
+  let action: () -> ()
+  @ViewBuilder let label: () -> ADButtonLabel<Content>
   
-  public init(
-    _ state: ADButton.State = .active,
+  init(
+    _ state: ADButtonState = .active,
     action: @escaping () -> (),
-    @ViewBuilder label: () -> ButtonLabel
+    content: @escaping () -> Content
   ) {
     self.state = state
     self.action = action
-    self.label = label()
+    self.label = { ADButtonLabel(state, content: content) }
   }
   
-  public init(
-    _ name: String,
-    _ state: ADButton.State = .active,
+  init(
+    _ state: ADButtonState = .active,
+    title: String,
     action: @escaping () -> ()
-  ) where ButtonLabel == AnyView {
+  ) where Content == AnyView {
     self.state = state
     self.action = action
-    self.label = AnyView(
-      Text(name)
-    )
+    self.label = { ADButtonLabel(state, title: title) }
   }
   
-  public var body: some View {
-    Button(action: action) {
-      RoundedRectangle(cornerRadius: 10)
-        .frame(height: 60)
-        .foregroundColor(
-          state == .active ?
-          ADUtilsAsset.Color.blue1.swiftUIColor :
-              .gray
-        )
-        .shadow(radius: 10)
-        .overlay {
-          label
-            .foregroundColor(.white)
-        }
-    }
-    .disabled(state == .inActive)
+  var body: some View {
+    Button(action: action, label: label)
   }
 }
 
-extension ADButton {
-  public enum State {
-    case active
-    case inActive
+struct ADButtonLabel<Content: View>: View {
+  var state: ADButtonState
+  @ViewBuilder let content: () -> Content
+  
+  init(
+    _ state: ADButtonState,
+    content: @escaping () -> Content
+  ) {
+    self.state = state
+    self.content = content
   }
+  
+  init(
+    _ state: ADButtonState,
+    title: String
+  ) where Content == AnyView {
+    self.state = state
+    self.content = { AnyView(Text(title)) }
+  }
+  
+  var body: some View {
+    RoundedRectangle(cornerRadius: 10)
+      .frame(height: 60)
+      .foregroundColor(
+        state == .active ?
+        ADUtilsAsset.Color.blue1.swiftUIColor :
+            .gray
+      )
+      .shadow(radius: 10)
+      .overlay {
+        content()
+          .foregroundColor(.white)
+      }
+  }
+}
+
+enum ADButtonState {
+  case active
+  case inActive
 }

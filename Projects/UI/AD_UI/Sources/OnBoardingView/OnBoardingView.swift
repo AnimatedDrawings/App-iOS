@@ -99,7 +99,7 @@ extension OnBoardingView {
   func StartButton(action: @escaping () -> ()) -> some View {
     let startText = "Get Started"
     
-    ADButton(startText, action: action)
+    ADButton(title: startText, action: action)
   }
 }
 
