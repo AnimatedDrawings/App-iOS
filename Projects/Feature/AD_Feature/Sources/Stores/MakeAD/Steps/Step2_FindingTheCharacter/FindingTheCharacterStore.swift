@@ -135,10 +135,6 @@ public struct FindingTheCharacterStore: ReducerProtocol {
 }
 
 public struct CropResult: Equatable {
-  public static func == (lhs: CropResult, rhs: CropResult) -> Bool {
-    lhs.id == rhs.id
-  }
-  
   public init(
     croppedImage: UIImage?,
     boundingBoxDTO: BoundingBoxDTO
@@ -147,7 +143,6 @@ public struct CropResult: Equatable {
     self.boundingBoxDTO = boundingBoxDTO
   }
 
-  public let id = UUID()
   public let croppedImage: UIImage?
   public let boundingBoxDTO: BoundingBoxDTO
 }

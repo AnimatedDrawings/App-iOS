@@ -18,6 +18,8 @@ enum MakeADTargetType {
   case step2DownloadMaskImage(ad_id: String)
   
   case step3SeparateCharacter(SeparateCharacterRequest)
+  
+  case step4findCharacterJoints(FindCharacterJointsRequest)
 }
 
 fileprivate let makeADPath: String = "/api/make_ad/"
@@ -37,6 +39,9 @@ extension MakeADTargetType: TargetType {
       
     case .step3SeparateCharacter(let request):
       return makeADPath + "step3/separate_character/\(request.ad_id)"
+      
+    case .step4findCharacterJoints(let request):
+      return makeADPath + "step4/find_character_joints/\(request.ad_id)"
     }
   }
   
@@ -51,6 +56,9 @@ extension MakeADTargetType: TargetType {
       return .get
       
     case .step3SeparateCharacter:
+      return .post
+      
+    case .step4findCharacterJoints:
       return .post
     }
   }
@@ -67,6 +75,9 @@ extension MakeADTargetType: TargetType {
       
     case .step3SeparateCharacter:
       return ["Content-type" : "multipart/form-data"]
+      
+    case .step4findCharacterJoints:
+      return ["Content-type" : "application/json"]
     }
   }
   
@@ -96,6 +107,9 @@ extension MakeADTargetType: TargetType {
       )
       
       return .uploadMultipart([imageData])
+      
+    case .step4findCharacterJoints(let request):
+      return .requestJSONEncodable(request.jointsDTO)
     }
   }
 }

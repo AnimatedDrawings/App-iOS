@@ -13,9 +13,13 @@ import AD_Utils
 
 struct MakeADClient {
   var step1UploadDrawing: @Sendable (UploadADrawingRequest) async throws -> UploadADrawingResposne
+  
   var step2FindTheCharacter: @Sendable (FindTheCharacterRequest) async throws -> FindTheCharacterResponse
   var step2DownloadMaskImage: @Sendable (String) async throws -> UIImage
+  
   var step3SeparateCharacter: @Sendable (SeparateCharacterRequest) async throws -> SeparateCharacterReponse
+  
+  var step4findCharacterJoints: @Sendable (FindCharacterJointsRequest) async throws -> FindCharacterJointsResponse
 }
 
 extension MakeADClient: DependencyKey {
@@ -80,6 +84,20 @@ extension MakeADClient: DependencyKey {
         print(failure.localizedDescription)
         throw failure
       }
+    },
+    
+    step4findCharacterJoints: { request in
+      let response = await providerMakeAD.request(.step4findCharacterJoints(request))
+      switch response {
+      case .success(let success):
+        guard let responseModel = try? JSONDecoder().decode(FindCharacterJointsResponse.self, from: success.data) else {
+          throw MoyaError.jsonMapping(success)
+        }
+        return responseModel
+      case .failure(let failure):
+        print(failure.localizedDescription)
+        throw failure
+      }
     }
   )
   
@@ -87,7 +105,8 @@ extension MakeADClient: DependencyKey {
     step1UploadDrawing: unimplemented("\(Self.self) testValue of search"),
     step2FindTheCharacter: unimplemented("\(Self.self) testValue of search"),
     step2DownloadMaskImage: unimplemented("\(Self.self) testValue of search"),
-    step3SeparateCharacter: unimplemented("\(Self.self) testValue of search")
+    step3SeparateCharacter: unimplemented("\(Self.self) testValue of search"),
+    step4findCharacterJoints: unimplemented("\(Self.self) testValue of search")
   )
 }
 

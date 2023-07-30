@@ -8,12 +8,7 @@
 
 import Foundation
 
-public struct JointsDTO: Decodable, Equatable {
-  public static func == (lhs: JointsDTO, rhs: JointsDTO) -> Bool {
-    lhs.id == rhs.id
-  }
-  
-  let id = UUID()
+public struct JointsDTO: Codable, Equatable {
   public var width: Int
   public var height: Int
   public var skeletonDTO: [SkeletonDTO]
@@ -31,7 +26,7 @@ public struct JointsDTO: Decodable, Equatable {
   }
 }
 
-public struct SkeletonDTO: Decodable, Equatable {
+public struct SkeletonDTO: Codable, Equatable {
   public var name: String
   public var location: [Int]
   public var parent: String?
