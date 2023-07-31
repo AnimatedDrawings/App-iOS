@@ -123,7 +123,7 @@ extension SeparatingCharacterView {
     state: Bool,
     action: @escaping () -> ()
   ) -> some View {
-    let viewFinder = "figure.dance"
+    let viewFinder = "hand.draw"
     let text = "Separate The Character"
     
     ADButton(

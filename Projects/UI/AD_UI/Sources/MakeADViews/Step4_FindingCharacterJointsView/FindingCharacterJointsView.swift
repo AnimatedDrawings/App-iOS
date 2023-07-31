@@ -128,8 +128,8 @@ extension FindingCharacterJointsView {
     state: Bool,
     action: @escaping () -> ()
   ) -> some View {
-    let viewFinder = "figure.dance"
-    let text = "Separate The Character"
+    let viewFinder = "figure.yoga"
+    let text = "Find Character Joints"
     
     ADButton(
       state ? .active : .inActive,
