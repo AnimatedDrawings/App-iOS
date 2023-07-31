@@ -15,6 +15,8 @@ struct AddAnimationView: ADUI {
   typealias MyStore = AddAnimationStore
   let store: StoreOf<MyStore>
   
+  let strokeColor: Color = ADUtilsAsset.Color.blue2.swiftUIColor
+  
   init(
     store: StoreOf<MyStore> = Store(
       initialState: MyStore.State(
@@ -57,26 +59,9 @@ extension AddAnimationView {
     VStack(alignment: .leading, spacing: 20) {
       Text(title)
         .font(.system(.largeTitle, weight: .semibold))
-        .foregroundColor(ADUtilsAsset.Color.blue2.swiftUIColor)
+        .foregroundColor(strokeColor)
       
       Text(description)
-    }
-  }
-}
-
-extension AddAnimationView {
-  @ViewBuilder
-  func ShareButton() -> some View {
-    let imageName = "square.and.arrow.up"
-    let color: Color = ADUtilsAsset.Color.blue1.swiftUIColor
-    
-    Button {
-      
-    } label: {
-      Image(systemName: imageName)
-        .resizable()
-        .frame(width: 50, height: 50)
-        .foregroundColor(color)
     }
   }
 }
@@ -94,7 +79,6 @@ extension AddAnimationView {
 extension AddAnimationView {
   @ViewBuilder
   func TabBar() -> some View {
-    let strokeColor: Color = ADUtilsAsset.Color.blue1.swiftUIColor
     let reset = "trash"
     let fix = "arrowshape.turn.up.backward"
     let share = "square.and.arrow.up"
@@ -119,15 +103,11 @@ extension AddAnimationView {
       }
   }
   
-  
-  
   @ViewBuilder
   func TabBarButton(
     imageName: String,
     action: @escaping () -> ()
   ) -> some View {
-    let strokeColor: Color = ADUtilsAsset.Color.blue1.swiftUIColor
-    
     Button(action: action) {
       Image(systemName: imageName)
         .resizable()
