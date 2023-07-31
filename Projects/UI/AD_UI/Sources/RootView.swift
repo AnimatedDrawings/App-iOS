@@ -7,17 +7,37 @@
 //
 
 import SwiftUI
+import AD_Feature
+import AD_Utils
+import ComposableArchitecture
 
 public struct RootView: View {
-  @State var isTapStartButton: Bool = false
+  public typealias MyStore = RootViewStore
+  public let store: StoreOf<MyStore>
   
-  public init() {}
+  public init(
+    store: StoreOf<MyStore> = Store(
+      initialState: MyStore.State(
+        sharedState: SharedState(),
+        state: RootViewStore.MyState()
+      ),
+      reducer: MyStore()
+    )
+  ) {
+    self.store = store
+  }
   
   public var body: some View {
-    if !isTapStartButton {
-      OnBoardingView(isTapStartButton: $isTapStartButton)
-    } else {
-      MakeADView()
+    WithViewStore(store, observe: { $0 }) { viewStore in
+      if !(viewStore.isTapStartButton) {
+        OnBoardingView(isTapStartButton: viewStore.binding(\.$isTapStartButton))
+      } else {
+        if !(viewStore.isCompleteMakeAD) {
+          MakeADView()
+        } else {
+          AddAnimationView()
+        }
+      }
     }
   }
 }
