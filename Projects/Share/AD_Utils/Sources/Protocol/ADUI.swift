@@ -10,8 +10,8 @@ import SwiftUI
 import ComposableArchitecture
 
 public protocol ADUI: View {
-  associatedtype MyStore: ReducerProtocol
-  associatedtype MyViewStore = ViewStore<MyStore.State, MyStore.Action>
+  associatedtype MyFeature: Reducer
+  associatedtype MyViewStore = ViewStore<MyFeature.State, MyFeature.Action>
 
-  var store: StoreOf<MyStore> { get }
+  var store: StoreOf<MyFeature> { get }
 }
