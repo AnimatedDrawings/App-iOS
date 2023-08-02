@@ -26,7 +26,6 @@ struct FindingCharacterJointsView: ADUI {
   
   var body: some View {
     WithViewStore(store, observe: { $0 }) { viewStore in
-      //      ADScrollView(viewStore.sharedState.$isShowStepStatusBar) {
       ADScrollView(
         viewStore.binding(
           get: \.sharedState.isShowStepStatusBar,
@@ -37,14 +36,7 @@ struct FindingCharacterJointsView: ADUI {
           Title()
           
           CheckList {
-            VStack(alignment: .leading, spacing: 15) {
-              CheckListButton1(state: viewStore.$checkState) {
-                viewStore.send(.checkAction)
-              }
-              
-              GIFView(gifName: "Step4_Preview")
-                .frame(height: 250)
-            }
+            CheckListContent(with: viewStore)
           }
           
           NextStepDescription()
@@ -109,13 +101,18 @@ extension FindingCharacterJointsView {
 
 extension FindingCharacterJointsView {
   @ViewBuilder
-  func CheckListButton1(
-    state: Binding<Bool>,
-    action: @escaping () -> ()
-  ) -> some View {
+  @MainActor
+  func CheckListContent(with viewStore: MyViewStore) -> some View {
     let description = "If your character doesn't have any arms, drag the elbows and wrist joints far away from the character and it can still be animated"
     
-    CheckListButton(description, state: state, action: action)
+    VStack(alignment: .leading, spacing: 15) {
+      CheckListButton(description, state: viewStore.$checkState) {
+        viewStore.send(.checkAction)
+      }
+      
+      GIFView(gifName: "Step4_Preview")
+        .frame(height: 250)
+    }
   }
 }
 

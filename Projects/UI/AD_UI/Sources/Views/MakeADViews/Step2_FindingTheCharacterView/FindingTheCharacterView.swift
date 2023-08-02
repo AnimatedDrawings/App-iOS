@@ -26,7 +26,6 @@ struct FindingTheCharacterView: ADUI {
   
   var body: some View {
     WithViewStore(store, observe: { $0 }) { viewStore in
-      //      ADScrollView(viewStore.sharedState.$isShowStepStatusBar) {
       ADScrollView(
         viewStore.binding(
           get: \.sharedState.isShowStepStatusBar,
@@ -104,6 +103,27 @@ extension FindingTheCharacterView {
     }
   }
 }
+
+extension FindingTheCharacterView {
+  @ViewBuilder
+  @MainActor
+  func CheckListContent(with viewStore: MyViewStore) -> some View {
+    let description = "Resize the box to ensure it tightly fits one character."
+    
+    VStack(alignment: .leading, spacing: 15) {
+      CheckListButton(description, state: viewStore.$checkState) {
+        viewStore.send(.checkAction)
+      }
+      
+      HStack {
+        GIFView(gifName: "FindingTheCharacter_Preview1")
+        GIFView(gifName: "FindingTheCharacter_Preview2")
+      }
+      .frame(height: 250)
+    }
+  }
+}
+
 
 extension FindingTheCharacterView {
   @ViewBuilder

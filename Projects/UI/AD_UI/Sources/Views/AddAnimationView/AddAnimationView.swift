@@ -37,7 +37,7 @@ struct AddAnimationView: ADUI {
         
         Spacer()
         
-        TabBar()
+        TabBar(with: viewStore)
         
         Spacer().frame(height: 20)
       }
@@ -75,7 +75,8 @@ extension AddAnimationView {
 
 extension AddAnimationView {
   @ViewBuilder
-  func TabBar() -> some View {
+  @MainActor
+  func TabBar(with viewStore: MyViewStore) -> some View {
     let reset = "trash"
     let fix = "arrowshape.turn.up.backward"
     let share = "square.and.arrow.up"
@@ -95,7 +96,9 @@ extension AddAnimationView {
           TabBarButton(imageName: fix) {}
           TabBarButton(imageName: reset) {}
           TabBarButton(imageName: share) {}
-          TabBarButton(imageName: animation) {}
+          TabBarButton(imageName: animation) {
+            viewStore.send(.toggleIsShowAnimationListView)
+          }
         }
       }
   }

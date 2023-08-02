@@ -27,7 +27,6 @@ struct UploadADrawingView: ADUI {
   
   var body: some View {
     WithViewStore(store, observe: { $0 }) { viewStore in
-      //      ADScrollView(viewStore.sharedState.$isShowStepStatusBar) {
       ADScrollView(
         viewStore.binding(
           get: \.sharedState.isShowStepStatusBar,
@@ -38,19 +37,7 @@ struct UploadADrawingView: ADUI {
           Title()
           
           CheckList {
-            VStack(alignment: .leading, spacing: 15) {
-              CheckListButton1(state: viewStore.$checkState1) {
-                viewStore.send(.checkList1)
-              }
-              
-              CheckListButton2(state: viewStore.$checkState2) {
-                viewStore.send(.checkList2)
-              }
-              
-              CheckListButton3(state: viewStore.$checkState3) {
-                viewStore.send(.checkList3)
-              }
-            }
+            CheckListContent(with: viewStore)
           }
           
           UploadButton(viewStore.isEnableUploadButton) { imageData in
@@ -96,30 +83,25 @@ extension UploadADrawingView {
 
 extension UploadADrawingView {
   @ViewBuilder
-  func CheckListButton1(
-    state: Binding<Bool>,
-    action: @escaping () -> ()
-  ) -> some View {
+  @MainActor
+  func CheckListContent(with viewStore: MyViewStore) -> some View {
     let description1 = "Make sure the character is drawn on a white piece of paper without lines, wrinkles, or tears"
-    CheckListButton(description1, state: state, action: action)
-  }
-  
-  @ViewBuilder
-  func CheckListButton2(
-    state: Binding<Bool>,
-    action: @escaping () -> ()
-  ) -> some View {
     let description2 = "Make sure the drawing is well lit. To minimize shadows, hold the camera further away and zoom in on the drawing."
-    CheckListButton(description2, state: state, action: action)
-  }
-  
-  @ViewBuilder
-  func CheckListButton3(
-    state: Binding<Bool>,
-    action: @escaping () -> ()
-  ) -> some View {
     let description3 = "Don’t include any identifiable information, offensive content (see our community standards), or drawings that infringe on the copyrights of others."
-    CheckListButton(description3, state: state, action: action)
+    
+    VStack(alignment: .leading, spacing: 15) {
+      CheckListButton(description1, state: viewStore.$checkState1) {
+        viewStore.send(.checkList1)
+      }
+      
+      CheckListButton(description2, state: viewStore.$checkState2) {
+        viewStore.send(.checkList2)
+      }
+      
+      CheckListButton(description3, state: viewStore.$checkState3) {
+        viewStore.send(.checkList3)
+      }
+    }
   }
 }
 

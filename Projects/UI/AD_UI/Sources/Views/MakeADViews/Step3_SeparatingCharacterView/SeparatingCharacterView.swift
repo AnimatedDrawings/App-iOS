@@ -26,7 +26,6 @@ struct SeparatingCharacterView: ADUI {
   
   var body: some View {
     WithViewStore(store, observe: { $0 }) { viewStore in
-      //      ADScrollView(viewStore.sharedState.$isShowStepStatusBar) {
       ADScrollView(
         viewStore.binding(
           get: \.sharedState.isShowStepStatusBar,
@@ -37,21 +36,7 @@ struct SeparatingCharacterView: ADUI {
           Title()
           
           CheckList {
-            VStack(alignment: .leading, spacing: 15) {
-              CheckListButton1(state: viewStore.$checkState1) {
-                viewStore.send(.checkAction1)
-              }
-              
-              GIFView(gifName: "SeparatingCharacter_Preview1")
-                .frame(height: 250)
-              
-              CheckListButton2(state: viewStore.$checkState2) {
-                viewStore.send(.checkAction2)
-              }
-              
-              GIFView(gifName: "SeparatingCharacter_Preview2")
-                .frame(height: 250)
-            }
+            CheckListContent(with: viewStore)
           }
           
           ShowMaskingImageViewButton(state: viewStore.maskState) {
@@ -74,7 +59,6 @@ struct SeparatingCharacterView: ADUI {
             MaskingImageView(
               croppedImage: croppedImage,
               initMaskImage: initMaskImage,
-              //              maskedImage: viewStore.sharedState.$maskedImage,
               maskedImage: viewStore.binding(
                 get: \.sharedState.maskedImage,
                 send: MyFeature.Action.bindMaskedImage)
@@ -116,25 +100,29 @@ extension SeparatingCharacterView {
 
 extension SeparatingCharacterView {
   @ViewBuilder
-  func CheckListButton1(
-    state: Binding<Bool>,
-    action: @escaping () -> ()
-  ) -> some View {
-    let description1 = "If the body parts of your character are not highlighted, use the pen and eraser tools to fix it."
-    
-    CheckListButton(description1, state: state, action: action)
-  }
-  
-  @ViewBuilder
-  func CheckListButton2(
-    state: Binding<Bool>,
-    action: @escaping () -> ()
-  ) -> some View {
-    let description2 = "If the arms or legs are stuck together, use the eraser tool to separate them"
-    
-    CheckListButton(description2, state: state, action: action)
+  @MainActor
+  func CheckListContent(with viewStore: MyViewStore) -> some View {
+    VStack(alignment: .leading, spacing: 15) {
+      let description1 = "If the body parts of your character are not highlighted, use the pen and eraser tools to fix it."
+      let description2 = "If the arms or legs are stuck together, use the eraser tool to separate them"
+      
+      CheckListButton(description1, state: viewStore.$checkState1) {
+        viewStore.send(.checkAction1)
+      }
+      
+      GIFView(gifName: "SeparatingCharacter_Preview1")
+        .frame(height: 250)
+      
+      CheckListButton(description2, state: viewStore.$checkState2) {
+        viewStore.send(.checkAction2)
+      }
+      
+      GIFView(gifName: "SeparatingCharacter_Preview2")
+        .frame(height: 250)
+    }
   }
 }
+
 
 extension SeparatingCharacterView {
   @ViewBuilder
