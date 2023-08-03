@@ -51,7 +51,7 @@ struct FindingCharacterJointsView: ADUI {
       }
       .fullScreenCover(
         isPresented: viewStore.$isShowModifyJointsView,
-        onDismiss: {},
+        onDismiss: { viewStore.send(.onDismissModifyJointsView) },
         content: {
           if let maskedImage = viewStore.sharedState.maskedImage,
              let jointsDTO = viewStore.sharedState.jointsDTO

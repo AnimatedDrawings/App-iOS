@@ -107,9 +107,13 @@ extension AnimationListView {
         .frame(height: self.gridItemHeight)
         .overlay {
           GIFView(gifName: adAnimation.previewName)
-            .frame(width: self.gridItemHeight - 10, height: self.gridItemHeight - 10)
+            .frame(width: gifViewSize, height: gifViewSize)
         }
     }
+  }
+  
+  var gifViewSize: CGFloat {
+    max(0, self.gridItemHeight - 10)
   }
 }
 
