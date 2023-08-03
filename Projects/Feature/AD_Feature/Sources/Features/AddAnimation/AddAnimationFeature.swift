@@ -9,6 +9,8 @@
 import ComposableArchitecture
 
 public struct AddAnimationFeature: Reducer {
+  @Dependency(\.addAnimationClient) var addAnimationClient
+  
   public init() {}
   
   public typealias State = TCABaseState<AddAnimationFeature.MyState>
@@ -17,6 +19,7 @@ public struct AddAnimationFeature: Reducer {
     public init() {}
     
     @BindingState public var isShowAnimationListView = false
+    public var isShowLoadingView = false
   }
   
   public enum Action: Equatable, BindableAction {
@@ -25,7 +28,9 @@ public struct AddAnimationFeature: Reducer {
     case toggleIsShowAnimationListView
     case toggleIsShowAddAnimationView
     
+    case setLoadingView(Bool)
     case selectAnimation(ADAnimation)
+    case addAnimationResponse(TaskResult<AddAnimationResponse>)
   }
   
   public var body: some Reducer<State, Action> {
@@ -44,9 +49,35 @@ public struct AddAnimationFeature: Reducer {
         state.sharedState.isShowAddAnimationView.toggle()
         return .none
         
+      case .setLoadingView(let flag):
+        state.isShowLoadingView = flag
+        return .none
+        
       case .selectAnimation(let animation):
-        print(animation.rawValue)
-        return .send(.toggleIsShowAnimationListView)
+        guard let ad_id = state.sharedState.ad_id else {
+          return .none
+        }
+        let request = AddAnimationRequest(ad_id: ad_id, name: animation.rawValue)
+        
+        return .run { send in
+          await send(.setLoadingView(true))
+          await send(
+            .addAnimationResponse(
+              TaskResult {
+                try await addAnimationClient.addAnimation(request)
+              }
+            )
+          )
+        }
+        
+      case .addAnimationResponse(.success(let response)):
+        return .run { send in
+          await send(.setLoadingView(false))
+          await send(.toggleIsShowAnimationListView)
+        }
+        
+      case .addAnimationResponse(.failure(let error)):
+        return .send(.setLoadingView(false))
       }
     }
   }

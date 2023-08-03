@@ -48,6 +48,7 @@ struct AddAnimationView: ADUI {
           viewStore.send(.selectAnimation(selectedAnimation))
         }
         .presentationDragIndicator(.visible)
+        .addLoadingView(isShow: viewStore.isShowLoadingView, description: "Add Animation...")
       }
     }
   }

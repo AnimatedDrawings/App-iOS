@@ -80,7 +80,6 @@ public struct FindingCharacterJointsFeature: Reducer {
         }
         
       case .findCharacterJointsResponse(.success(let response)):
-        print(response)
         state.isSuccessFindCharacterJoints = true
         return .run { send in
           await send(.setLoadingView(false))
@@ -88,7 +87,6 @@ public struct FindingCharacterJointsFeature: Reducer {
         }
         
       case .findCharacterJointsResponse(.failure(let error)):
-        print(error)
         return .send(.setLoadingView(false))
         
       case .onDismissModifyJointsView:
