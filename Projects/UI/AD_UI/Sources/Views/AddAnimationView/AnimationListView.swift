@@ -11,7 +11,16 @@ import AD_Utils
 import AD_Feature
 
 struct AnimationListView: View {
+  @Binding var isShowMyView: Bool
   let tapAnimationItemAction: (ADAnimation) -> ()
+  
+  init(
+    isShow: Binding<Bool>,
+    tapAnimationItemAction: @escaping (ADAnimation) -> Void
+  ) {
+    self._isShowMyView = isShow
+    self.tapAnimationItemAction = tapAnimationItemAction
+  }
   
   @State var selectedCategory: AnimationCategory = .ALL
   @State var gridItemHeight: CGFloat = 0
@@ -19,13 +28,61 @@ struct AnimationListView: View {
   let strokeColor: Color = ADUtilsAsset.Color.blue1.swiftUIColor
   
   var body: some View {
-    VStack {
-      Spacer().frame(height: 20)
-      SegmentView()
-      Spacer().frame(height: 40)
-      AnimationGridView()
+    VStack(spacing: 0) {
+      HStack {
+        Spacer()
+        CancelButton {
+          self.isShowMyView.toggle()
+        }
+      }
+      .padding(.horizontal)
+      ScrollView {
+        Title()
+          .padding(.horizontal)
+        LazyVStack(spacing: 20, pinnedViews: .sectionHeaders) {
+          Section {
+            AnimationGridView()
+          } header: {
+            SegmentView()
+          }
+        }
+        .padding()
+      }
+      .scrollDisabled(true)
     }
-    .padding()
+  }
+}
+
+extension AnimationListView {
+  @ViewBuilder
+  func CancelButton(action: @escaping () -> ()) -> some View {
+    let imageName = "x.circle"
+    
+    Button(action: action) {
+      Image(systemName: imageName)
+        .resizable()
+        .frame(width: 40, height: 40)
+        .aspectRatio(contentMode: .fit)
+        .fontWeight(.semibold)
+        .foregroundColor(strokeColor)
+    }
+  }
+}
+
+extension AnimationListView {
+  @ViewBuilder
+  func Title() -> some View {
+    let title = "ADD ANIMATION"
+    let description = "Choose one of the motions by tapping human button to see your character perform it!"
+    
+    VStack(alignment: .leading, spacing: 20) {
+      Text(title)
+        .font(.system(.largeTitle, weight: .semibold))
+        .foregroundColor(strokeColor)
+      
+      Text(description)
+        .frame(maxWidth: .infinity)
+    }
   }
 }
 
@@ -34,30 +91,45 @@ extension AnimationListView {
   func SegmentView() -> some View {
     HStack {
       ForEach(AnimationCategory.allCases, id: \.rawValue) { item in
-        Category(item)
-          .frame(width: 100)
+        Category(myCategory: item, selectedCategory: self.$selectedCategory)
       }
       Spacer()
     }
   }
   
-  @ViewBuilder
-  func Category(_ myType: AnimationCategory) -> some View {
-    Button {
-      self.selectedCategory = myType
-    } label: {
-      RoundedRectangle(cornerRadius: 20)
-        .stroke(strokeColor, lineWidth: 3)
-        .background(
-          RoundedRectangle(cornerRadius: 25)
-            .foregroundColor(self.selectedCategory == myType ? strokeColor : .white)
-        )
-        .frame(height: 40)
-        .overlay {
-          Text(myType.rawValue)
-            .font(.title2)
-            .foregroundColor(self.selectedCategory == myType ? .white : strokeColor)
+  struct Category: View {
+    let myCategory: AnimationCategory
+    @Binding var selectedCategory: AnimationCategory
+    
+    @State var myWidth: CGFloat = 0
+    let strokeColor: Color = ADUtilsAsset.Color.blue1.swiftUIColor
+    
+    var body: some View {
+      Button {
+        self.selectedCategory = myCategory
+      } label: {
+        ZStack {
+          RoundedRectangle(cornerRadius: 20)
+            .stroke(strokeColor, lineWidth: 3)
+            .background(
+              RoundedRectangle(cornerRadius: 25)
+                .foregroundColor(self.selectedCategory == myCategory ? strokeColor : .white)
+            )
+            .frame(width: self.myWidth, height: 40)
+          
+          Text(myCategory.rawValue)
+            .font(.title3)
+            .foregroundColor(self.selectedCategory == myCategory ? .white : strokeColor)
+            .background(
+              GeometryReader { geo in
+                Color.clear
+                  .onAppear {
+                    self.myWidth = geo.size.width + 20
+                  }
+              }
+            )
         }
+      }
     }
   }
 }
@@ -67,23 +139,21 @@ extension AnimationListView {
   func AnimationGridView() -> some View {
     let columns: [GridItem] = .init(repeating: .init(.flexible()), count: 3)
     
-    ScrollView {
-      LazyVGrid(columns: columns) {
-        if let firstAnimationItem = firstAnimationItem {
-          AnimationGridItem(firstAnimationItem)
-            .background(
-              GeometryReader { geo in
-                Color.clear
-                  .onAppear {
-                    self.gridItemHeight = geo.size.width
-                  }
-              }
-            )
-        }
-        
-        ForEach(restAnimationItem, id: \.rawValue) { item in
-          AnimationGridItem(item)
-        }
+    LazyVGrid(columns: columns) {
+      if let firstAnimationItem = firstAnimationItem {
+        AnimationGridItem(firstAnimationItem)
+          .background(
+            GeometryReader { geo in
+              Color.clear
+                .onAppear {
+                  self.gridItemHeight = geo.size.width
+                }
+            }
+          )
+      }
+      
+      ForEach(restAnimationItem, id: \.rawValue) { item in
+        AnimationGridItem(item)
       }
     }
   }
@@ -140,8 +210,17 @@ extension ADAnimation {
   }
 }
 
+struct Previews_AnimationListView: View {
+  @State var isShow = false
+  
+  var body: some View {
+    AnimationListView(isShow: $isShow) { _ in
+    }
+  }
+}
+
 struct AnimationListView_Previews: PreviewProvider {
   static var previews: some View {
-    AnimationListView { _ in }
+    Previews_AnimationListView()
   }
 }

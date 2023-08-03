@@ -54,17 +54,16 @@ public struct AddAnimationFeature: Reducer {
         return .none
         
       case .selectAnimation(let animation):
-        guard let ad_id = state.sharedState.ad_id else {
-          return .none
-        }
+        let ad_id = "test"
         let request = AddAnimationRequest(ad_id: ad_id, name: animation.rawValue)
         
         return .run { send in
           await send(.setLoadingView(true))
+          try await Task.sleep(for: .seconds(3))
           await send(
             .addAnimationResponse(
               TaskResult {
-                try await addAnimationClient.addAnimation(request)
+                AddAnimationResponse(ad_id: "test")
               }
             )
           )

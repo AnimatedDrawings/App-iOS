@@ -43,13 +43,16 @@ struct AddAnimationView: ADUI {
       }
       .padding()
       .adBackground()
-      .sheet(isPresented: viewStore.$isShowAnimationListView) {
-        AnimationListView { selectedAnimation in
-          viewStore.send(.selectAnimation(selectedAnimation))
+      .fullScreenCover(
+        isPresented: viewStore.$isShowAnimationListView,
+        onDismiss: {},
+        content: {
+          AnimationListView(isShow: viewStore.$isShowAnimationListView) { selectedAnimation in
+            viewStore.send(.selectAnimation(selectedAnimation))
+          }
+          .addLoadingView(isShow: viewStore.isShowLoadingView, description: "Add Animation...")
         }
-        .presentationDragIndicator(.visible)
-        .addLoadingView(isShow: viewStore.isShowLoadingView, description: "Add Animation...")
-      }
+      )
     }
   }
 }
