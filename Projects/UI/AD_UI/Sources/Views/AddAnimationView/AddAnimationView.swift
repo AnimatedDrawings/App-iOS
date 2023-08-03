@@ -99,8 +99,12 @@ extension AddAnimationView {
       }
       .overlay {
         HStack(spacing: 0) {
-          TabBarButton(imageName: fix) {}
-          TabBarButton(imageName: reset) {}
+          TabBarButton(imageName: fix) {
+            viewStore.send(.toggleIsShowAddAnimationView)
+          }
+          TabBarButton(imageName: reset) {
+            viewStore.send(.toggleIsShowAddAnimationView)
+          }
           TabBarButton(imageName: share) {}
           TabBarButton(imageName: animation) {
             viewStore.send(.toggleIsShowAnimationListView)

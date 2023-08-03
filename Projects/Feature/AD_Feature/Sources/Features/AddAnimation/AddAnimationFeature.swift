@@ -23,6 +23,8 @@ public struct AddAnimationFeature: Reducer {
     case binding(BindingAction<State>)
     
     case toggleIsShowAnimationListView
+    case toggleIsShowAddAnimationView
+    
     case selectAnimation(ADAnimation)
   }
   
@@ -36,6 +38,10 @@ public struct AddAnimationFeature: Reducer {
         
       case .toggleIsShowAnimationListView:
         state.isShowAnimationListView.toggle()
+        return .none
+        
+      case .toggleIsShowAddAnimationView:
+        state.sharedState.isShowAddAnimationView.toggle()
         return .none
         
       case .selectAnimation(let animation):
