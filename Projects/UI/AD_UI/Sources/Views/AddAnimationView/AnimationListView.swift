@@ -14,7 +14,6 @@ struct AnimationListView: View {
   let tapAnimationItemAction: (ADAnimation) -> ()
   
   @State var selectedCategory: AnimationCategory = .ALL
-  @State var animationList: [ADAnimation] = []
   @State var gridItemHeight: CGFloat = 0
   
   let strokeColor: Color = ADUtilsAsset.Color.blue1.swiftUIColor
@@ -85,15 +84,12 @@ extension AnimationListView {
         ForEach(restAnimationItem, id: \.rawValue) { item in
           AnimationGridItem(item)
         }
-        
       }
     }
   }
   
   var firstAnimationItem: ADAnimation? {
-    return 0 < selectedCategory.animations.count ?
-    selectedCategory.animations[0] :
-    nil
+    self.selectedCategory.animations.first
   }
   
   var restAnimationItem: [ADAnimation] {
@@ -110,9 +106,8 @@ extension AnimationListView {
         .cornerRadius(15)
         .frame(height: self.gridItemHeight)
         .overlay {
-          Text(adAnimation.rawValue)
-            .font(.title2)
-            .foregroundColor(strokeColor)
+          GIFView(gifName: adAnimation.previewName)
+            .frame(width: self.gridItemHeight - 10, height: self.gridItemHeight - 10)
         }
     }
   }
@@ -132,6 +127,12 @@ enum AnimationCategory: String, CaseIterable {
     case .FUNNY:
       return [.zombie]
     }
+  }
+}
+
+extension ADAnimation {
+  var previewName: String {
+    return self.rawValue + "_preview"
   }
 }
 
