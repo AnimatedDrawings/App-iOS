@@ -16,13 +16,14 @@ public struct AddAnimationFeature: Reducer {
   public struct MyState: Equatable {
     public init() {}
     
-    public var isShowAnimationListView = false
+    @BindingState public var isShowAnimationListView = false
   }
   
   public enum Action: Equatable, BindableAction {
     case binding(BindingAction<State>)
     
     case toggleIsShowAnimationListView
+    case selectAnimation(ADAnimation)
   }
   
   public var body: some Reducer<State, Action> {
@@ -32,9 +33,14 @@ public struct AddAnimationFeature: Reducer {
       switch action {
       case .binding:
         return .none
+        
       case .toggleIsShowAnimationListView:
         state.isShowAnimationListView.toggle()
         return .none
+        
+      case .selectAnimation(let animation):
+        print(animation.rawValue)
+        return .send(.toggleIsShowAnimationListView)
       }
     }
   }

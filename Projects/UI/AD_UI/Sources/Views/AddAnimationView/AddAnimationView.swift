@@ -43,6 +43,12 @@ struct AddAnimationView: ADUI {
       }
       .padding()
       .adBackground()
+      .sheet(isPresented: viewStore.$isShowAnimationListView) {
+        AnimationListView { selectedAnimation in
+          viewStore.send(.selectAnimation(selectedAnimation))
+        }
+        .presentationDragIndicator(.visible)
+      }
     }
   }
 }
