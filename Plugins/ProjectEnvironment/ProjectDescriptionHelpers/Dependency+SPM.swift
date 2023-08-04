@@ -12,7 +12,7 @@ extension SwiftPackageManagerDependencies {
 extension Package {
   static let ComposableArchitecture = Package.remote(
     url: "https://github.com/pointfreeco/swift-composable-architecture.git",
-    requirement: .exact("0.55.1")
+    requirement: .exact("1.0.0")
   )
   
   static let Moya = Package.remote(
