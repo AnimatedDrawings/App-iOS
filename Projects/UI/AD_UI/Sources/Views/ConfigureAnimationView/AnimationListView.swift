@@ -176,7 +176,7 @@ extension AnimationListView {
         .cornerRadius(15)
         .frame(height: self.gridItemHeight)
         .overlay {
-          GIFView(gifName: adAnimation.previewName)
+          GIFViewName(adAnimation.previewName)
             .frame(width: gifViewSize, height: gifViewSize)
         }
     }

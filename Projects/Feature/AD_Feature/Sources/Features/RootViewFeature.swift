@@ -73,8 +73,8 @@ public struct RootViewFeature: Reducer {
       }
     }
     
-    private var _addAnimationState = AddAnimationFeature.MyState()
-    public var addAnimationState: AddAnimationFeature.State {
+    private var _addAnimationState = ConfigureAnimationFeature.MyState()
+    public var addAnimationState: ConfigureAnimationFeature.State {
       get {
         return TCABaseState(sharedState: sharedState, state: _addAnimationState)
       }
@@ -93,7 +93,7 @@ public struct RootViewFeature: Reducer {
     case findingTheCharacterAction(FindingTheCharacterFeature.Action)
     case separatingCharacterAction(SeparatingCharacterFeature.Action)
     case findingCharacterJointsAction(FindingCharacterJointsFeature.Action)
-    case addAnimationAction(AddAnimationFeature.Action)
+    case addAnimationAction(ConfigureAnimationFeature.Action)
   }
   
   public var body: some Reducer<State, Action> {
@@ -120,7 +120,7 @@ public struct RootViewFeature: Reducer {
     }
     
     Scope(state: \.addAnimationState, action: /Action.addAnimationAction) {
-      AddAnimationFeature()
+      ConfigureAnimationFeature()
     }
     
     Reduce { state, action in

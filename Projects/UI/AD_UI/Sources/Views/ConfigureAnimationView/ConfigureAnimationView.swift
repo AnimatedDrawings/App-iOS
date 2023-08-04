@@ -1,5 +1,5 @@
 //
-//  AddAnimationView.swift
+//  ConfigureAnimationView.swift
 //  AD_UI
 //
 //  Created by minii on 2023/07/30.
@@ -11,8 +11,8 @@ import AD_Feature
 import AD_Utils
 import ComposableArchitecture
 
-struct AddAnimationView: ADUI {
-  typealias MyFeature = AddAnimationFeature
+struct ConfigureAnimationView: ADUI {
+  typealias MyFeature = ConfigureAnimationFeature
   let store: StoreOf<MyFeature>
   
   let strokeColor: Color = ADUtilsAsset.Color.blue2.swiftUIColor
@@ -33,7 +33,16 @@ struct AddAnimationView: ADUI {
         
         Spacer()
         
-        ResultView()
+//        MyAnimationView(with: viewStore)
+        RoundedRectangle(cornerRadius: 15)
+          .foregroundColor(.white)
+          .frame(height: 400)
+          .shadow(radius: 10)
+          .overlay {
+            if let gifData = viewStore.state.myAnimation {
+              GIFViewData(gifData)
+            }
+          }
         
         Spacer()
         
@@ -45,7 +54,7 @@ struct AddAnimationView: ADUI {
       .adBackground()
       .fullScreenCover(
         isPresented: viewStore.$isShowAnimationListView,
-        onDismiss: {},
+        onDismiss: { viewStore.send(.onDismissAnimationListView) },
         content: {
           AnimationListView(isShow: viewStore.$isShowAnimationListView) { selectedAnimation in
             viewStore.send(.selectAnimation(selectedAnimation))
@@ -57,7 +66,7 @@ struct AddAnimationView: ADUI {
   }
 }
 
-extension AddAnimationView {
+extension ConfigureAnimationView {
   @ViewBuilder
   func Title() -> some View {
     let title = "ADD ANIMATION"
@@ -73,17 +82,23 @@ extension AddAnimationView {
   }
 }
 
-extension AddAnimationView {
+extension ConfigureAnimationView {
   @ViewBuilder
-  func ResultView() -> some View {
+  @MainActor
+  func MyAnimationView(with viewStore: MyViewStore) -> some View {
     RoundedRectangle(cornerRadius: 15)
       .foregroundColor(.white)
-      .shadow(radius: 10)
       .frame(height: 400)
+      .shadow(radius: 10)
+      .overlay {
+        if let gifData = viewStore.state.myAnimation {
+          GIFViewData(gifData)
+        }
+      }
   }
 }
 
-extension AddAnimationView {
+extension ConfigureAnimationView {
   @ViewBuilder
   @MainActor
   func TabBar(with viewStore: MyViewStore) -> some View {
@@ -135,7 +150,7 @@ extension AddAnimationView {
 
 struct Previews_AddAnimationView: View {
   var body: some View {
-    AddAnimationView()
+    ConfigureAnimationView()
   }
 }
 

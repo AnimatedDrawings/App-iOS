@@ -1,5 +1,5 @@
 //
-//  AddAnimationResponse.swift
+//  ConfigureAnimationResponse.swift
 //  AD_Feature
 //
 //  Created by minii on 2023/08/03.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct AddAnimationResponse: Decodable, Equatable {
+public struct ConfigureAnimationResponse: Decodable, Equatable {
   public let ad_id: String
   
   public init(ad_id: String) {

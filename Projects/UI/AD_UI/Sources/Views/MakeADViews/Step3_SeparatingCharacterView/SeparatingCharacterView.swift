@@ -110,14 +110,14 @@ extension SeparatingCharacterView {
         viewStore.send(.checkAction1)
       }
       
-      GIFView(gifName: "SeparatingCharacter_Preview1")
+      GIFViewName("SeparatingCharacter_Preview1")
         .frame(height: 250)
       
       CheckListButton(description2, state: viewStore.$checkState2) {
         viewStore.send(.checkAction2)
       }
       
-      GIFView(gifName: "SeparatingCharacter_Preview2")
+      GIFViewName("SeparatingCharacter_Preview2")
         .frame(height: 250)
     }
   }

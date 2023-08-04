@@ -110,7 +110,7 @@ extension FindingCharacterJointsView {
         viewStore.send(.checkAction)
       }
       
-      GIFView(gifName: "Step4_Preview")
+      GIFViewName("Step4_Preview")
         .frame(height: 250)
     }
   }

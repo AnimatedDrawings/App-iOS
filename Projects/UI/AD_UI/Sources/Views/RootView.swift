@@ -31,7 +31,7 @@ public struct RootView: View {
         if !(viewStore.sharedState.isShowAddAnimationView) {
           MakeADView()
         } else {
-          AddAnimationView()
+          ConfigureAnimationView()
         }
       }
     }

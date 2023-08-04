@@ -14,7 +14,23 @@ class GIFPlayerView: UIView {
   
   convenience init(gifName: String) {
     self.init()
+    setGifName(gifName: gifName)
+  }
+  
+  convenience init(gifData: Data) {
+    self.init()
+    setGifData(gifData: gifData)
+  }
+  
+  func setGifName(gifName: String) {
     let gif = UIImage.gif(asset: gifName)
+    imageView.image = gif
+    imageView.contentMode = .scaleAspectFit
+    self.addSubview(imageView)
+  }
+  
+  func setGifData(gifData: Data) {
+    let gif = UIImage.gif(data: gifData)
     imageView.image = gif
     imageView.contentMode = .scaleAspectFit
     self.addSubview(imageView)
@@ -34,15 +50,37 @@ class GIFPlayerView: UIView {
   }
 }
 
-struct GIFView: UIViewRepresentable {
+struct GIFViewName: UIViewRepresentable {
+  typealias UIViewType = GIFPlayerView
   var gifName: String
   
-  func updateUIView(_ uiView: UIView, context: UIViewRepresentableContext<GIFView>) {
-    
+  init(_ gifName: String) {
+    self.gifName = gifName
   }
   
-  func makeUIView(context: Context) -> UIView {
+  func updateUIView(_ uiView: GIFPlayerView, context: Context) {
+    uiView.setGifName(gifName: gifName)
+  }
+  
+  func makeUIView(context: Context) -> GIFPlayerView {
     return GIFPlayerView(gifName: gifName)
+  }
+}
+
+struct GIFViewData: UIViewRepresentable {
+  typealias UIViewType = GIFPlayerView
+  var gifData: Data
+
+  init(_ gifData: Data) {
+    self.gifData = gifData
+  }
+
+  func updateUIView(_ uiView: GIFPlayerView, context: Context) {
+    uiView.setGifData(gifData: gifData)
+  }
+
+  func makeUIView(context: Context) -> GIFPlayerView {
+    return GIFPlayerView(gifData: gifData)
   }
 }
 

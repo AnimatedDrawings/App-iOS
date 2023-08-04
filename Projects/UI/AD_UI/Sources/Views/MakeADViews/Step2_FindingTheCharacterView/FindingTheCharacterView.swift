@@ -42,8 +42,8 @@ struct FindingTheCharacterView: ADUI {
               }
               
               HStack {
-                GIFView(gifName: "FindingTheCharacter_Preview1")
-                GIFView(gifName: "FindingTheCharacter_Preview2")
+                GIFViewName("FindingTheCharacter_Preview1")
+                GIFViewName("FindingTheCharacter_Preview2")
               }
               .frame(height: 250)
             }
@@ -116,8 +116,8 @@ extension FindingTheCharacterView {
       }
       
       HStack {
-        GIFView(gifName: "FindingTheCharacter_Preview1")
-        GIFView(gifName: "FindingTheCharacter_Preview2")
+        GIFViewName("FindingTheCharacter_Preview1")
+        GIFViewName("FindingTheCharacter_Preview2")
       }
       .frame(height: 250)
     }
