@@ -26,7 +26,14 @@ struct LoadingViewModifier: ViewModifier {
           .blur(radius: isShow ? 2 : 0)
         
         if isShow {
-          LoadingView(description: description)
+          ZStack {
+            Color.black
+              .opacity(0.5)
+              .ignoresSafeArea()
+              .edgesIgnoringSafeArea(.all)
+            
+            LoadingView(description: description)
+          }
         }
       }
     }
@@ -38,11 +45,6 @@ struct LoadingView: View {
   
   var body: some View {
     ZStack {
-      Color.black
-        .opacity(0.5)
-        .ignoresSafeArea()
-        .edgesIgnoringSafeArea(.all)
-      
       RoundedRectangle(cornerRadius: 10)
         .frame(height: 200)
         .foregroundColor(.white)
@@ -69,6 +71,24 @@ struct LoadingView: View {
         .padding(.horizontal)
         .padding(.horizontal)
         .padding(.horizontal)
+    }
+  }
+}
+
+struct LoadingView_Previews: PreviewProvider {
+  static var previews: some View {
+    ZStack {
+      ADBackground()
+      
+      LoadingView(description: "TestLoadingView...")
+//        .transparentBlurBackground(
+//          effect: UIBlurEffect(style: .regular),
+//          intensity: 0.9
+//        )
+        .transparentBlurBackground(
+          effect: UIBlurEffect(style: .regular),
+          intensity: 1
+        )
     }
   }
 }
