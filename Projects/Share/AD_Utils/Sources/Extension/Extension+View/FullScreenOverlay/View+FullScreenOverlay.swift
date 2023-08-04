@@ -10,16 +10,15 @@ import SwiftUI
 
 public extension View {
   func fullScreenOverlayPresentationSpace<T: Hashable>(name: T) -> some View {
-    self
-      .modifier(FullScreenOverlayPresenter(presentationSpace: .named(name)))
+    self.modifier(FullScreenOverlayPresenter(presentationSpace: .named(name)))
   }
   
   func fullScreenOverlayPresentationSpace(_ presentationSpace: PresentationSpace) -> some View {
-    self
-      .modifier(FullScreenOverlayPresenter(presentationSpace: presentationSpace))
+    self.modifier(FullScreenOverlayPresenter(presentationSpace: presentationSpace))
   }
   
-  @ViewBuilder func fullScreenOverlay<Overlay: View>(
+  @ViewBuilder
+  func fullScreenOverlay<Overlay: View>(
     presentationSpace: PresentationSpace,
     @ViewBuilder content: () -> Overlay
   ) -> some View {

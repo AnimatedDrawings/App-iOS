@@ -72,27 +72,3 @@ struct LoadingView: View {
     }
   }
 }
-
-struct Previews_LoadingView: View {
-  var isShow = true
-
-  var body: some View {
-    VStack {
-      Rectangle()
-        .foregroundColor(.red)
-        .frame(width: 300, height: 300)
-      
-      Rectangle()
-        .foregroundColor(.blue)
-        .frame(width: 300, height: 300)
-        .addLoadingView(isShow: isShow, description: "fewfefeeafeafeea")
-    }
-  }
-}
-
-struct LoadingView_Previews: PreviewProvider {
-  static var previews: some View {
-    Previews_LoadingView()
-  }
-}
-
