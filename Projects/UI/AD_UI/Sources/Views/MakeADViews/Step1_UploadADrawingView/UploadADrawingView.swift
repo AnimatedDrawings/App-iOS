@@ -55,7 +55,7 @@ struct UploadADrawingView: ADUI {
         .padding()
       }
       .fullScreenOverlay(presentationSpace: .named("UploadADrawingView")) {
-        if viewStore.state.uploadProcess {
+        if viewStore.state.isShowLoadingView {
           LoadingView(description: "Uploading Drawing...")
             .transparentBlurBackground(
               effect: UIBlurEffect(style: .light),
@@ -63,6 +63,15 @@ struct UploadADrawingView: ADUI {
             )
         }
       }
+      .alert(
+        viewStore.titleAlert,
+        isPresented: viewStore.$isShowAlert,
+        actions: {
+          Button("OK") {}
+        },
+        message: {
+          Text(viewStore.descriptionAlert)
+        })
     }
   }
 }

@@ -28,13 +28,19 @@ extension MakeADClient: DependencyKey {
       let response = await providerMakeAD.request(.step1UploadDrawing(request))
       switch response {
       case .success(let success):
-        guard let responseModel = try? JSONDecoder().decode(UploadADrawingResposne.self, from: success.data) else {
-          throw MoyaError.jsonMapping(success)
+        guard let responseModel = try? JSONDecoder()
+          .decode(MakeADResponse<UploadADrawingResposne>.self, from: success.data)
+        else {
+          throw ADError.jsonMapping
         }
-        return responseModel
+        if !responseModel.isSuccess {
+          print(responseModel.message)
+          throw ADError.calculateInServer
+        }
+        return responseModel.response
       case .failure(let failure):
         print(failure.localizedDescription)
-        throw failure
+        throw ADError.connection
       }
     },
     
