@@ -14,7 +14,7 @@ import AD_Utils
 struct MakeADClient {
   var step1UploadDrawing: @Sendable (UploadADrawingRequest) async throws -> UploadADrawingResposne
   
-  var step2FindTheCharacter: @Sendable (FindTheCharacterRequest) async throws -> FindTheCharacterResponse
+  var step2FindTheCharacter: @Sendable (FindTheCharacterRequest) async throws -> EmptyResponse
   var step2DownloadMaskImage: @Sendable (String) async throws -> UIImage
   
   var step3SeparateCharacter: @Sendable (SeparateCharacterRequest) async throws -> SeparateCharacterReponse
@@ -29,32 +29,41 @@ extension MakeADClient: DependencyKey {
       switch response {
       case .success(let success):
         guard let responseModel = try? JSONDecoder()
-          .decode(MakeADResponse<UploadADrawingResposne>.self, from: success.data)
+          .decode(DefaultResponse<UploadADrawingResposne>.self, from: success.data)
         else {
           throw ADError.jsonMapping
         }
-        if !responseModel.isSuccess {
+        guard responseModel.isSuccess,
+              let responseModel = responseModel.response
+        else {
           print(responseModel.message)
           throw ADError.calculateInServer
         }
-        return responseModel.response
+        return responseModel
       case .failure(let failure):
         print(failure.localizedDescription)
         throw ADError.connection
       }
     },
     
+    
     step2FindTheCharacter: { request in
       let response = await providerMakeAD.request(.step2FindTheCharacter(request))
       switch response {
       case .success(let success):
-        guard let responseModel = try? JSONDecoder().decode(FindTheCharacterResponse.self, from: success.data) else {
-          throw MoyaError.jsonMapping(success)
+        guard let responseModel = try? JSONDecoder()
+          .decode(EmptyResponseType.self, from: success.data)
+        else {
+          throw ADError.jsonMapping
         }
-        return responseModel
+        guard responseModel.isSuccess else {
+          print(responseModel.message)
+          throw ADError.calculateInServer
+        }
+        return EmptyResponse()
       case .failure(let failure):
         print(failure.localizedDescription)
-        throw failure
+        throw ADError.connection
       }
     },
     
@@ -63,13 +72,13 @@ extension MakeADClient: DependencyKey {
       switch response {
       case .success(let success):
         guard let maskImage = UIImage(data: success.data) else {
-          throw MoyaError.imageMapping(success)
+          throw ADError.imageMapping
         }
         return maskImage
         
       case .failure(let failure):
         print(failure.localizedDescription)
-        throw failure
+        throw ADError.connection
       }
     },
     

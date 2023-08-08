@@ -25,6 +25,10 @@ public struct FindingTheCharacterFeature: Reducer {
     
     var tmpCropResult = CropResult(croppedImage: .init(), boundingBoxDTO: .mock())
     var isSuccessUpload = false
+    
+    @BindingState public var isShowAlert = false
+    public var titleAlert = ""
+    public var descriptionAlert = ""
   }
   
   public enum Action: Equatable, BindableAction {
@@ -35,12 +39,14 @@ public struct FindingTheCharacterFeature: Reducer {
     case checkAction
     case toggleCropImageView
     case findTheCharacter(CropResult)
-    case findTheCharacterResponse(TaskResult<FindTheCharacterResponse>)
+    case findTheCharacterResponse(TaskResult<EmptyResponse>)
     case setLoadingView(Bool)
     case onDismissCropImageView
     
     case downloadMaskImage
     case downloadMaskImageResponse(TaskResult<UIImage>)
+    
+    case showAlert(ADError)
   }
   
   public var body: some Reducer<State, Action> {
@@ -88,18 +94,16 @@ public struct FindingTheCharacterFeature: Reducer {
           )
         }
         
-      case .findTheCharacterResponse(.success(let response)):
-        state.isSuccessUpload = response.isSuccess
-        if response.isSuccess {
-          return .run { send in
-            await send(.downloadMaskImage)
-          }
-        }
-        return .send(.setLoadingView(false))
+      case .findTheCharacterResponse(.success):
+        return .send(.downloadMaskImage)
         
       case .findTheCharacterResponse(.failure(let error)):
         print(error)
-        return .send(.setLoadingView(false))
+        let adError = error as? ADError ?? .connection
+        return .run { send in
+          await send(.setLoadingView(false))
+          await send(.showAlert(adError))
+        }
         
       case .onDismissCropImageView:
         if state.isSuccessUpload {
@@ -128,6 +132,7 @@ public struct FindingTheCharacterFeature: Reducer {
         state.sharedState.croppedImage = state.tmpCropResult.croppedImage
         state.sharedState.boundingBoxDTO = state.tmpCropResult.boundingBoxDTO
         state.sharedState.initMaskImage = maskImage
+        state.isSuccessUpload = true
         return .run { send in
           await send(.setLoadingView(false))
           await send(.toggleCropImageView)
@@ -135,6 +140,16 @@ public struct FindingTheCharacterFeature: Reducer {
         
       case .downloadMaskImageResponse(.failure(let error)):
         print(error)
+        let adError = error as? ADError ?? .connection
+        return .run { send in
+          await send(.setLoadingView(false))
+          await send(.showAlert(adError))
+        }
+        
+      case .showAlert(let adError):
+        state.titleAlert = adError.title
+        state.descriptionAlert = adError.description
+        state.isShowAlert.toggle()
         return .none
       }
     }

@@ -8,25 +8,26 @@
 
 import Foundation
 
-enum ADError: Error {
+public enum ADError: Error {
   case jsonMapping
   case calculateInServer
   case connection
+  case imageMapping
   
-  var title: String {
+  public var title: String {
     switch self {
     case .jsonMapping, .connection:
       return "Connection Error"
-    case .calculateInServer:
+    case .calculateInServer, .imageMapping:
       return "Animating Error"
     }
   }
   
-  var description: String {
+  public var description: String {
     switch self {
     case .jsonMapping, .connection:
       return "Please check device network condition."
-    case .calculateInServer:
+    case .calculateInServer, .imageMapping:
       return "Cannot caculate Animated Drawings. Proceed Step Manually."
     }
   }

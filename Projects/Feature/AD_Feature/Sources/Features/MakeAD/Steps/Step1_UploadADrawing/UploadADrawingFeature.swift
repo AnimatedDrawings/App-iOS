@@ -135,8 +135,9 @@ public struct UploadADrawingFeature: Reducer {
           state.sharedState.currentStep = .FindingTheCharacter
           state.sharedState.isShowStepStatusBar = true
           state.isSuccessUploading = false
+        } else {
+          state.isShowAlert.toggle()
         }
-        state.isShowAlert.toggle()
         return .none
       }
     }

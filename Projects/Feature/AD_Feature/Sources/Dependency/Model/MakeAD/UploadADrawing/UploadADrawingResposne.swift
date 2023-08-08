@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct UploadADrawingResposne: Decodable, Equatable {
+public struct UploadADrawingResposne: Responsable {
   public let ad_id: String
   public let boundingBoxDTO: BoundingBoxDTO
   
