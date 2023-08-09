@@ -87,17 +87,21 @@ extension MakeADClient: DependencyKey {
       let response = await providerMakeAD.request(.step3SeparateCharacter(request))
       switch response {
       case .success(let success):
-        if let jointsDTO = try? JSONDecoder().decode(JointsDTO.self, from: success.data) {
-          let separateCharacterReponse = SeparateCharacterReponse(jointsDTO: jointsDTO)
-          return separateCharacterReponse
+        guard let responseModel = try? JSONDecoder()
+          .decode(DefaultResponse<SeparateCharacterReponse>.self, from: success.data)
+        else {
+          throw ADError.jsonMapping
         }
-        if let errorText = try? success.mapString() {
-          print(errorText)
+        guard responseModel.isSuccess,
+              let responseModel = responseModel.response
+        else {
+          print(responseModel.message)
+          throw ADError.calculateInServer
         }
-        throw MoyaError.jsonMapping(success)
+        return responseModel
       case .failure(let failure):
         print(failure.localizedDescription)
-        throw failure
+        throw ADError.connection
       }
     },
     
