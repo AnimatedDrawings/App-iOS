@@ -71,7 +71,8 @@ struct UploadADrawingView: ADUI {
         },
         message: {
           Text(viewStore.descriptionAlert)
-        })
+        }
+      )
     }
   }
 }

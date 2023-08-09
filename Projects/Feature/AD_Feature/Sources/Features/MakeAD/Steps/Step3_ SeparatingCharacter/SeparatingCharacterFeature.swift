@@ -26,6 +26,10 @@ public struct SeparatingCharacterFeature: Reducer {
     @BindingState public var isShowMaskingImageView = false
     var isSuccessSeparateCharacter = false
     public var isShowLoadingView = false
+    
+    @BindingState public var isShowAlert = false
+    public var titleAlert = ""
+    public var descriptionAlert = ""
   }
   
   public enum Action: Equatable, BindableAction {
@@ -42,6 +46,8 @@ public struct SeparatingCharacterFeature: Reducer {
     case maskNextAction(Bool)
     case separateCharacterResponse(TaskResult<SeparateCharacterReponse>)
     case onDismissMakingImageView
+    
+    case showAlert(ADError)
   }
   
   public var body: some Reducer<State, Action> {
@@ -112,7 +118,11 @@ public struct SeparatingCharacterFeature: Reducer {
       
       case .separateCharacterResponse(.failure(let error)):
         print(error)
-        return .send(.setLoadingView(false))
+        let adError = error as? ADError ?? .connection
+        return .run { send in
+          await send(.setLoadingView(false))
+          await send(.showAlert(adError))
+        }
           
       case .onDismissMakingImageView:
         if state.isSuccessSeparateCharacter == true {
@@ -121,6 +131,12 @@ public struct SeparatingCharacterFeature: Reducer {
           state.sharedState.isShowStepStatusBar = true
           state.isSuccessSeparateCharacter = false
         }
+        return .none
+        
+      case .showAlert(let adError):
+        state.titleAlert = adError.title
+        state.descriptionAlert = adError.description
+        state.isShowAlert.toggle()
         return .none
       }
     }
