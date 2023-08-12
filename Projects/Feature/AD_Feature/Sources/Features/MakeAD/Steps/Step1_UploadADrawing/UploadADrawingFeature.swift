@@ -23,10 +23,14 @@ public struct UploadADrawingFeature: Reducer {
     @BindingState public var checkState2 = false
     @BindingState public var checkState3 = false
     public var isEnableUploadButton = false
-    @BindingState public var uploadProcess = false
+    public var isShowLoadingView = false
     
     var tmpOriginalImage = UIImage()
     var isSuccessUploading = false
+    
+    @BindingState public var isShowAlert = false
+    public var titleAlert = ""
+    public var descriptionAlert = ""
   }
   
   public enum Action: BindableAction, Equatable {
@@ -37,7 +41,7 @@ public struct UploadADrawingFeature: Reducer {
     case checkList1
     case checkList2
     case checkList3
-    case setUploadProcess(Bool)
+    case setIsShowLoadingView(Bool)
     case uploadDrawing(Data?)
     case uploadDrawingResponse(TaskResult<UploadADrawingResposne>)
     case uploadDrawingNextAction
@@ -70,8 +74,8 @@ public struct UploadADrawingFeature: Reducer {
         activeUploadButton(state: &state)
         return .none
         
-      case .setUploadProcess(let flag):
-        state.uploadProcess = flag
+      case .setIsShowLoadingView(let flag):
+        state.isShowLoadingView = flag
         return .none
         
       case .uploadDrawing(let imageData):
@@ -95,7 +99,7 @@ public struct UploadADrawingFeature: Reducer {
         let request = UploadADrawingRequest(originalImageData: compressedData)
         
         return .run { send in
-          await send(.setUploadProcess(true))
+          await send(.setIsShowLoadingView(true))
           await send(
             .uploadDrawingResponse(
               TaskResult {
@@ -103,7 +107,7 @@ public struct UploadADrawingFeature: Reducer {
               }
             )
           )
-          await send(.setUploadProcess(false))
+          await send(.setIsShowLoadingView(false))
           await send(.uploadDrawingNextAction)
         }
         
@@ -115,8 +119,14 @@ public struct UploadADrawingFeature: Reducer {
         return .none
         
       case .uploadDrawingResponse(.failure(let error)):
-        state.isSuccessUploading = false
-        print(error)
+        var titleAlert = ADError.connection.title
+        var descriptionAlert = ADError.connection.description
+        if let adError = error as? ADError {
+          titleAlert = adError.title
+          descriptionAlert = adError.description
+        }
+        state.titleAlert = titleAlert
+        state.descriptionAlert = descriptionAlert
         return .none
         
       case .uploadDrawingNextAction:
@@ -124,9 +134,10 @@ public struct UploadADrawingFeature: Reducer {
           state.sharedState.completeStep = .FindingTheCharacter
           state.sharedState.currentStep = .FindingTheCharacter
           state.sharedState.isShowStepStatusBar = true
+          state.isSuccessUploading = false
+        } else {
+          state.isShowAlert.toggle()
         }
-        // else { showAlert = true }
-        state.isSuccessUploading = false
         return .none
       }
     }

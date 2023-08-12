@@ -28,6 +28,11 @@ public struct ConfigureAnimationFeature: Reducer {
         dict[key] = nil
       }
     public var myAnimation: Data? = nil
+    var isSuccessAddAnimation = false
+    
+    @BindingState public var isShowAlert = false
+    public var titleAlert = ""
+    public var descriptionAlert = ""
   }
   
   public enum Action: Equatable, BindableAction {
@@ -38,12 +43,14 @@ public struct ConfigureAnimationFeature: Reducer {
     
     case setLoadingView(Bool)
     case selectAnimation(ADAnimation)
-    case addAnimationResponse(TaskResult<ConfigureAnimationResponse>)
+    case addAnimationResponse(TaskResult<EmptyResponse>)
     case downloadVideo
     case downloadVideoResponse(TaskResult<Data>)
     case onDismissAnimationListView
     
     case addToCache(Data)
+    
+    case showAlert(ADError)
   }
 
   public var body: some Reducer<State, Action> {
@@ -67,19 +74,24 @@ public struct ConfigureAnimationFeature: Reducer {
         return .none
         
       case .selectAnimation(let animation):
+        state.selectedAnimation = animation
         if let tmpGifDataInCache = state.cache[animation],
            let gifDataInCache = tmpGifDataInCache
         {
+          state.isSuccessAddAnimation = true
           state.myAnimation = gifDataInCache
+          state.isSuccessAddAnimation = true
           return .send(.toggleIsShowAnimationListView)
         }
         
         guard let ad_id = state.sharedState.ad_id else {
           return .none
         }
-        state.selectedAnimation = animation
         
-        let request = ConfigureAnimationRequest(ad_id: ad_id, name: animation.rawValue)
+        let request = ConfigureAnimationRequest(
+          ad_id: ad_id,
+          adAnimationDTO: .init(adAnimation: animation)
+        )
         
         return .run { send in
           await send(.setLoadingView(true))
@@ -92,11 +104,16 @@ public struct ConfigureAnimationFeature: Reducer {
           )
         }
         
-      case .addAnimationResponse(.success(let response)):
+      case .addAnimationResponse(.success):
         return .send(.downloadVideo)
         
       case .addAnimationResponse(.failure(let error)):
-        return .none
+        print(error)
+        let adError = error as? ADError ?? .connection
+        return .run { send in
+          await send(.setLoadingView(true))
+          await send(.showAlert(adError))
+        }
         
       case .downloadVideo:
         guard let ad_id = state.sharedState.ad_id,
@@ -105,7 +122,10 @@ public struct ConfigureAnimationFeature: Reducer {
           return .none
         }
         
-        let request = ConfigureAnimationRequest(ad_id: ad_id, name: selectedAnimation.rawValue)
+        let request = ConfigureAnimationRequest(
+          ad_id: ad_id,
+          adAnimationDTO: .init(adAnimation: selectedAnimation)
+        )
         
         return .run { send in
           await send(
@@ -118,6 +138,7 @@ public struct ConfigureAnimationFeature: Reducer {
         }
         
       case .downloadVideoResponse(.success(let response)):
+        state.isSuccessAddAnimation = true
         return .run { send in
           await send(.addToCache(response))
           await send(.setLoadingView(false))
@@ -125,17 +146,25 @@ public struct ConfigureAnimationFeature: Reducer {
         }
         
       case .downloadVideoResponse(.failure(let error)):
-        return .send(.setLoadingView(false))
-        
-      case .onDismissAnimationListView:
-        guard let selectedAnimation = state.selectedAnimation,
-              let tmpGifDataInCache = state.cache[selectedAnimation],
-              let gifDataInCache = tmpGifDataInCache
-        else {
-          return .none
+        print(error)
+        let adError = error as? ADError ?? .connection
+        return .run { send in
+          await send(.setLoadingView(false))
+          await send(.showAlert(adError))
         }
         
-        state.myAnimation = gifDataInCache
+      case .onDismissAnimationListView:
+        if state.isSuccessAddAnimation {
+          guard let selectedAnimation = state.selectedAnimation,
+                let tmpGifDataInCache = state.cache[selectedAnimation],
+                let gifDataInCache = tmpGifDataInCache
+          else {
+            return .none
+          }
+          
+          state.myAnimation = gifDataInCache
+          state.isSuccessAddAnimation = false
+        }
         return .none
         
       case .addToCache(let data):
@@ -144,6 +173,12 @@ public struct ConfigureAnimationFeature: Reducer {
         }
         state.cache[selectedAnimation] = data
         print(data)
+        return .none
+        
+      case .showAlert(let adError):
+        state.titleAlert = adError.title
+        state.descriptionAlert = adError.description
+        state.isShowAlert.toggle()
         return .none
       }
     }

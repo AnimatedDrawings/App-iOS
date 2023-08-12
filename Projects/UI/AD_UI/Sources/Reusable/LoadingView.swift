@@ -26,7 +26,14 @@ struct LoadingViewModifier: ViewModifier {
           .blur(radius: isShow ? 2 : 0)
         
         if isShow {
-          LoadingView(description: description)
+          ZStack {
+            Color.black
+              .opacity(0.5)
+              .ignoresSafeArea()
+              .edgesIgnoringSafeArea(.all)
+            
+            LoadingView(description: description)
+          }
         }
       }
     }
@@ -38,11 +45,6 @@ struct LoadingView: View {
   
   var body: some View {
     ZStack {
-      Color.black
-        .opacity(0.5)
-        .ignoresSafeArea()
-        .edgesIgnoringSafeArea(.all)
-      
       RoundedRectangle(cornerRadius: 10)
         .frame(height: 200)
         .foregroundColor(.white)
@@ -73,26 +75,20 @@ struct LoadingView: View {
   }
 }
 
-struct Previews_LoadingView: View {
-  var isShow = true
-
-  var body: some View {
-    VStack {
-      Rectangle()
-        .foregroundColor(.red)
-        .frame(width: 300, height: 300)
+struct LoadingView_Previews: PreviewProvider {
+  static var previews: some View {
+    ZStack {
+      ADBackground()
       
-      Rectangle()
-        .foregroundColor(.blue)
-        .frame(width: 300, height: 300)
-        .addLoadingView(isShow: isShow, description: "fewfefeeafeafeea")
+      LoadingView(description: "TestLoadingView...")
+//        .transparentBlurBackground(
+//          effect: UIBlurEffect(style: .regular),
+//          intensity: 0.9
+//        )
+        .transparentBlurBackground(
+          effect: UIBlurEffect(style: .regular),
+          intensity: 1
+        )
     }
   }
 }
-
-struct LoadingView_Previews: PreviewProvider {
-  static var previews: some View {
-    Previews_LoadingView()
-  }
-}
-

@@ -14,12 +14,12 @@ import AD_Utils
 struct MakeADClient {
   var step1UploadDrawing: @Sendable (UploadADrawingRequest) async throws -> UploadADrawingResposne
   
-  var step2FindTheCharacter: @Sendable (FindTheCharacterRequest) async throws -> FindTheCharacterResponse
+  var step2FindTheCharacter: @Sendable (FindTheCharacterRequest) async throws -> EmptyResponse
   var step2DownloadMaskImage: @Sendable (String) async throws -> UIImage
   
   var step3SeparateCharacter: @Sendable (SeparateCharacterRequest) async throws -> SeparateCharacterReponse
   
-  var step4findCharacterJoints: @Sendable (FindCharacterJointsRequest) async throws -> FindCharacterJointsResponse
+  var step4findCharacterJoints: @Sendable (FindCharacterJointsRequest) async throws -> EmptyResponse
 }
 
 extension MakeADClient: DependencyKey {
@@ -28,27 +28,42 @@ extension MakeADClient: DependencyKey {
       let response = await providerMakeAD.request(.step1UploadDrawing(request))
       switch response {
       case .success(let success):
-        guard let responseModel = try? JSONDecoder().decode(UploadADrawingResposne.self, from: success.data) else {
-          throw MoyaError.jsonMapping(success)
+        guard let responseModel = try? JSONDecoder()
+          .decode(DefaultResponse<UploadADrawingResposne>.self, from: success.data)
+        else {
+          throw ADError.jsonMapping
+        }
+        guard responseModel.isSuccess,
+              let responseModel = responseModel.response
+        else {
+          print(responseModel.message)
+          throw ADError.calculateInServer
         }
         return responseModel
       case .failure(let failure):
         print(failure.localizedDescription)
-        throw failure
+        throw ADError.connection
       }
     },
+    
     
     step2FindTheCharacter: { request in
       let response = await providerMakeAD.request(.step2FindTheCharacter(request))
       switch response {
       case .success(let success):
-        guard let responseModel = try? JSONDecoder().decode(FindTheCharacterResponse.self, from: success.data) else {
-          throw MoyaError.jsonMapping(success)
+        guard let responseModel = try? JSONDecoder()
+          .decode(EmptyResponseType.self, from: success.data)
+        else {
+          throw ADError.jsonMapping
         }
-        return responseModel
+        guard responseModel.isSuccess else {
+          print(responseModel.message)
+          throw ADError.calculateInServer
+        }
+        return EmptyResponse()
       case .failure(let failure):
         print(failure.localizedDescription)
-        throw failure
+        throw ADError.connection
       }
     },
     
@@ -57,13 +72,13 @@ extension MakeADClient: DependencyKey {
       switch response {
       case .success(let success):
         guard let maskImage = UIImage(data: success.data) else {
-          throw MoyaError.imageMapping(success)
+          throw ADError.imageMapping
         }
         return maskImage
         
       case .failure(let failure):
         print(failure.localizedDescription)
-        throw failure
+        throw ADError.connection
       }
     },
     
@@ -72,17 +87,21 @@ extension MakeADClient: DependencyKey {
       let response = await providerMakeAD.request(.step3SeparateCharacter(request))
       switch response {
       case .success(let success):
-        if let jointsDTO = try? JSONDecoder().decode(JointsDTO.self, from: success.data) {
-          let separateCharacterReponse = SeparateCharacterReponse(jointsDTO: jointsDTO)
-          return separateCharacterReponse
+        guard let responseModel = try? JSONDecoder()
+          .decode(DefaultResponse<SeparateCharacterReponse>.self, from: success.data)
+        else {
+          throw ADError.jsonMapping
         }
-        if let errorText = try? success.mapString() {
-          print(errorText)
+        guard responseModel.isSuccess,
+              let responseModel = responseModel.response
+        else {
+          print(responseModel.message)
+          throw ADError.calculateInServer
         }
-        throw MoyaError.jsonMapping(success)
+        return responseModel
       case .failure(let failure):
         print(failure.localizedDescription)
-        throw failure
+        throw ADError.connection
       }
     },
     
@@ -90,13 +109,19 @@ extension MakeADClient: DependencyKey {
       let response = await providerMakeAD.request(.step4findCharacterJoints(request))
       switch response {
       case .success(let success):
-        guard let responseModel = try? JSONDecoder().decode(FindCharacterJointsResponse.self, from: success.data) else {
-          throw MoyaError.jsonMapping(success)
+        guard let responseModel = try? JSONDecoder()
+          .decode(EmptyResponseType.self, from: success.data)
+        else {
+          throw ADError.jsonMapping
         }
-        return responseModel
+        guard responseModel.isSuccess else {
+          print(responseModel.message)
+          throw ADError.calculateInServer
+        }
+        return EmptyResponse()
       case .failure(let failure):
         print(failure.localizedDescription)
-        throw failure
+        throw ADError.connection
       }
     }
   )

@@ -12,7 +12,7 @@ import Moya
 import AD_Utils
 
 struct ConfigureAnimationClient {
-  var add: @Sendable (ConfigureAnimationRequest) async throws -> ConfigureAnimationResponse
+  var add: @Sendable (ConfigureAnimationRequest) async throws -> EmptyResponse
   var downloadVideo: @Sendable (ConfigureAnimationRequest) async throws -> Data
 }
 
@@ -22,16 +22,19 @@ extension ConfigureAnimationClient: DependencyKey {
       let response = await providerConfigureAnimation.request(.add(request))
       switch response {
       case .success(let success):
-        if let responseModel = try? JSONDecoder().decode(ConfigureAnimationResponse.self, from: success.data) {
-          return responseModel
+        guard let responseModel = try? JSONDecoder()
+          .decode(EmptyResponseType.self, from: success.data)
+        else {
+          throw ADError.jsonMapping
         }
-        if let errorText = try? success.mapString() {
-          print(errorText)
+        guard responseModel.isSuccess else {
+          print(responseModel.message)
+          throw ADError.calculateInServer
         }
-        throw MoyaError.jsonMapping(success)
+        return EmptyResponse()
       case .failure(let failure):
         print(failure.localizedDescription)
-        throw failure
+        throw ADError.connection
       }
     },
     
@@ -40,12 +43,9 @@ extension ConfigureAnimationClient: DependencyKey {
       switch response {
       case .success(let success):
         return success.data
-//        if let errorText = try? success.mapString() {
-//          print(errorText)
-//        }
       case .failure(let failure):
         print(failure.localizedDescription)
-        throw failure
+        throw ADError.connection
       }
     }
   )

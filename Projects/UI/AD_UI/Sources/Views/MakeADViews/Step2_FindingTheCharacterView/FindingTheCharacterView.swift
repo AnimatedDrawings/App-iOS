@@ -81,6 +81,16 @@ struct FindingTheCharacterView: ADUI {
               isShow: viewStore.state.isShowLoadingView,
               description: "Cropping Image ..."
             )
+            .alert(
+              viewStore.titleAlert,
+              isPresented: viewStore.$isShowAlert,
+              actions: {
+                Button("OK") {}
+              },
+              message: {
+                Text(viewStore.descriptionAlert)
+              }
+            )
           }
         }
       )

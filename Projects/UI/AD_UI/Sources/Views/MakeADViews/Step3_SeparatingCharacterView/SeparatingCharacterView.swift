@@ -75,6 +75,16 @@ struct SeparatingCharacterView: ADUI {
               isShow: viewStore.state.isShowLoadingView,
               description: "Separating Character..."
             )
+            .alert(
+              viewStore.titleAlert,
+              isPresented: viewStore.$isShowAlert,
+              actions: {
+                Button("OK") {}
+              },
+              message: {
+                Text(viewStore.descriptionAlert)
+              }
+            )
           }
         }
       )

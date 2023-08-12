@@ -51,9 +51,9 @@ extension ConfigureAnimationTargetType: TargetType {
   var task: Moya.Task {
     switch self {
     case .add(let request):
-      return .requestJSONEncodable(request)
+      return .requestJSONEncodable(request.adAnimationDTO)
     case .downloadVideo(let request):
-      return .requestJSONEncodable(request)
+      return .requestJSONEncodable(request.adAnimationDTO)
     }
   }
 }

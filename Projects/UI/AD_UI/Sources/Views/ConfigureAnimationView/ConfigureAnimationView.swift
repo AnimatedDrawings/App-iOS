@@ -33,16 +33,7 @@ struct ConfigureAnimationView: ADUI {
         
         Spacer()
         
-//        MyAnimationView(with: viewStore)
-        RoundedRectangle(cornerRadius: 15)
-          .foregroundColor(.white)
-          .frame(height: 400)
-          .shadow(radius: 10)
-          .overlay {
-            if let gifData = viewStore.state.myAnimation {
-              GIFViewData(gifData)
-            }
-          }
+        MyAnimationView(with: viewStore)
         
         Spacer()
         
@@ -60,6 +51,16 @@ struct ConfigureAnimationView: ADUI {
             viewStore.send(.selectAnimation(selectedAnimation))
           }
           .addLoadingView(isShow: viewStore.isShowLoadingView, description: "Add Animation...")
+          .alert(
+            viewStore.titleAlert,
+            isPresented: viewStore.$isShowAlert,
+            actions: {
+              Button("OK") {}
+            },
+            message: {
+              Text(viewStore.descriptionAlert)
+            }
+          )
         }
       )
     }
