@@ -21,6 +21,10 @@ public struct FindingCharacterJointsFeature: Reducer {
     @BindingState public var isShowModifyJointsView = false
     public var isShowLoadingView = false
     var isSuccessFindCharacterJoints = false
+    
+    @BindingState public var isShowAlert = false
+    public var titleAlert = ""
+    public var descriptionAlert = ""
   }
   
   public enum Action: Equatable, BindableAction {
@@ -33,8 +37,10 @@ public struct FindingCharacterJointsFeature: Reducer {
     
     case setLoadingView(Bool)
     case findCharacterJoints(JointsDTO)
-    case findCharacterJointsResponse(TaskResult<FindCharacterJointsResponse>)
+    case findCharacterJointsResponse(TaskResult<EmptyResponse>)
     case onDismissModifyJointsView
+    
+    case showAlert(ADError)
   }
   
   public var body: some Reducer<State, Action> {
@@ -79,7 +85,7 @@ public struct FindingCharacterJointsFeature: Reducer {
           )
         }
         
-      case .findCharacterJointsResponse(.success(let response)):
+      case .findCharacterJointsResponse(.success):
         state.isSuccessFindCharacterJoints = true
         return .run { send in
           await send(.setLoadingView(false))
@@ -87,7 +93,12 @@ public struct FindingCharacterJointsFeature: Reducer {
         }
         
       case .findCharacterJointsResponse(.failure(let error)):
-        return .send(.setLoadingView(false))
+        print(error)
+        let adError = error as? ADError ?? .connection
+        return .run { send in
+          await send(.setLoadingView(false))
+          await send(.showAlert(adError))
+        }
         
       case .onDismissModifyJointsView:
         if state.isSuccessFindCharacterJoints == true {
@@ -95,6 +106,12 @@ public struct FindingCharacterJointsFeature: Reducer {
           state.isSuccessFindCharacterJoints = false
           state.sharedState.isShowAddAnimationView = true
         }
+        return .none
+        
+      case .showAlert(let adError):
+        state.titleAlert = adError.title
+        state.descriptionAlert = adError.description
+        state.isShowAlert.toggle()
         return .none
       }
     }

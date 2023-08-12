@@ -19,7 +19,7 @@ struct MakeADClient {
   
   var step3SeparateCharacter: @Sendable (SeparateCharacterRequest) async throws -> SeparateCharacterReponse
   
-  var step4findCharacterJoints: @Sendable (FindCharacterJointsRequest) async throws -> FindCharacterJointsResponse
+  var step4findCharacterJoints: @Sendable (FindCharacterJointsRequest) async throws -> EmptyResponse
 }
 
 extension MakeADClient: DependencyKey {
@@ -109,13 +109,19 @@ extension MakeADClient: DependencyKey {
       let response = await providerMakeAD.request(.step4findCharacterJoints(request))
       switch response {
       case .success(let success):
-        guard let responseModel = try? JSONDecoder().decode(FindCharacterJointsResponse.self, from: success.data) else {
-          throw MoyaError.jsonMapping(success)
+        guard let responseModel = try? JSONDecoder()
+          .decode(EmptyResponseType.self, from: success.data)
+        else {
+          throw ADError.jsonMapping
         }
-        return responseModel
+        guard responseModel.isSuccess else {
+          print(responseModel.message)
+          throw ADError.calculateInServer
+        }
+        return EmptyResponse()
       case .failure(let failure):
         print(failure.localizedDescription)
-        throw failure
+        throw ADError.connection
       }
     }
   )

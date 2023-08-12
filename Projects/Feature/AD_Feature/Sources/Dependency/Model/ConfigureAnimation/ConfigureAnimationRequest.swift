@@ -8,12 +8,12 @@
 
 import Foundation
 
-public struct ConfigureAnimationRequest: Encodable {
+public struct ConfigureAnimationRequest {
   public let ad_id: String
-  public let name: String
+  public let adAnimationDTO: ADAnimationDTO
   
-  public init(ad_id: String, name: String) {
+  public init(ad_id: String, adAnimationDTO: ADAnimationDTO) {
     self.ad_id = ad_id
-    self.name = name
+    self.adAnimationDTO = adAnimationDTO
   }
 }
