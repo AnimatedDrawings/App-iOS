@@ -2,9 +2,14 @@ import ProjectDescription
 
 public enum MyModule: String {
   case AD_iOS
+  
   case AD_Feature
+  
   case AD_UI
   case AD_UIDemo
+  
+  case AD_MaskingImage
+  
   case AD_Utils
 }
 
@@ -43,6 +48,15 @@ extension TargetDependency {
     return .project(
       target: MyModule.AD_UI.rawValue,
       path: .relativeToProjects(layer: .UI, project: [.AD_UI])
+    )
+  }
+  
+  public static var AD_MaskingImage: Self {
+    let pathString = "Projects/UI/AD_UI_Helper/AD_MaskingImage"
+    
+    return .project(
+      target: MyModule.AD_MaskingImage.rawValue,
+      path: .relativeToRoot(pathString)
     )
   }
 }
