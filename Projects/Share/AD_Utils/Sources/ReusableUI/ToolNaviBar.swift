@@ -7,16 +7,23 @@
 //
 
 import SwiftUI
-import AD_Utils
 
-struct ToolNaviBar: View {
+public struct ToolNaviBar: View {
   let cancelAction: () -> ()
   let saveAction: () -> ()
   
   let strokeColor: Color = ADUtilsAsset.Color.blue1.swiftUIColor
   let height: CGFloat = 40
   
-  var body: some View {
+  public init(
+    cancelAction: @escaping () -> Void,
+    saveAction: @escaping () -> Void
+  ) {
+    self.cancelAction = cancelAction
+    self.saveAction = saveAction
+  }
+  
+  public var body: some View {
     HStack {
       Cancel()
       Spacer()

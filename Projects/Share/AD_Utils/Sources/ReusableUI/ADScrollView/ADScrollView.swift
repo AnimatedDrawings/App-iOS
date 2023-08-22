@@ -8,12 +8,12 @@
 
 import SwiftUI
 
-struct ADScrollView<C: View>: View {
+public struct ADScrollView<C: View>: View {
   let topScrollID = "topScrollID"
   @Binding var isShowStepStatusBar: Bool
   var content: C
   
-  init(
+  public init(
     _ isShowStepStatusBar: Binding<Bool>,
     @ViewBuilder content: () -> C
   ) {
@@ -21,7 +21,7 @@ struct ADScrollView<C: View>: View {
     self.content = content()
   }
   
-  var body: some View {
+  public var body: some View {
     GeometryReader { geo in
       let rect: CGRect = geo.frame(in: .global)
       let scrollViewBottom: CGFloat = rect.origin.y + rect.size.height

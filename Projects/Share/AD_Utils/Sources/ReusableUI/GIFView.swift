@@ -7,17 +7,16 @@
 //
 
 import SwiftUI
-import AD_Utils
 
-class GIFPlayerView: UIView {
+public class GIFPlayerView: UIView {
   private let imageView = UIImageView()
   
-  convenience init(gifName: String) {
+  public convenience init(gifName: String) {
     self.init()
     setGifName(gifName: gifName)
   }
   
-  convenience init(gifData: Data) {
+  public convenience init(gifData: Data) {
     self.init()
     setGifData(gifData: gifData)
   }
@@ -44,42 +43,42 @@ class GIFPlayerView: UIView {
     fatalError("init(coder:) has not been implemented")
   }
   
-  override func layoutSubviews() {
+  public override func layoutSubviews() {
     super.layoutSubviews()
     imageView.frame = bounds
   }
 }
 
-struct GIFViewName: UIViewRepresentable {
-  typealias UIViewType = GIFPlayerView
+public struct GIFViewName: UIViewRepresentable {
+  public typealias UIViewType = GIFPlayerView
   var gifName: String
   
-  init(_ gifName: String) {
+  public init(_ gifName: String) {
     self.gifName = gifName
   }
   
-  func updateUIView(_ uiView: GIFPlayerView, context: Context) {
+  public func updateUIView(_ uiView: GIFPlayerView, context: Context) {
     uiView.setGifName(gifName: gifName)
   }
   
-  func makeUIView(context: Context) -> GIFPlayerView {
+  public func makeUIView(context: Context) -> GIFPlayerView {
     return GIFPlayerView(gifName: gifName)
   }
 }
 
-struct GIFViewData: UIViewRepresentable {
-  typealias UIViewType = GIFPlayerView
+public struct GIFViewData: UIViewRepresentable {
+  public typealias UIViewType = GIFPlayerView
   var gifData: Data
 
-  init(_ gifData: Data) {
+  public init(_ gifData: Data) {
     self.gifData = gifData
   }
 
-  func updateUIView(_ uiView: GIFPlayerView, context: Context) {
+  public func updateUIView(_ uiView: GIFPlayerView, context: Context) {
     uiView.setGifData(gifData: gifData)
   }
 
-  func makeUIView(context: Context) -> GIFPlayerView {
+  public func makeUIView(context: Context) -> GIFPlayerView {
     return GIFPlayerView(gifData: gifData)
   }
 }

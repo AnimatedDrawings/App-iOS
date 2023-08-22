@@ -7,15 +7,14 @@
 //
 
 import SwiftUI
-import AD_Utils
 
-struct CheckListButton: View {
+public struct CheckListButton: View {
   let checkmarkCircle = "checkmark.circle"
   let description: String
   @Binding var state: Bool
   let action: () -> ()
   
-  init(
+  public init(
     _ description: String,
     state: Binding<Bool>,
     action: @escaping () -> ()
@@ -25,7 +24,7 @@ struct CheckListButton: View {
     self.action = action
   }
   
-  var body: some View {
+  public var body: some View {
     Button(action: action) {
       HStack(alignment: .top) {
         Image(systemName: checkmarkCircle)

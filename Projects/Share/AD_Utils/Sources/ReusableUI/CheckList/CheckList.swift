@@ -8,15 +8,15 @@
 
 import SwiftUI
 
-struct CheckList<C: View>: View {
+public struct CheckList<C: View>: View {
   let title = "C H E C K L I S T"
   let CheckListContent: C
   
-  init(@ViewBuilder content: () -> C) {
+  public init(@ViewBuilder content: () -> C) {
     self.CheckListContent = content()
   }
   
-  var body: some View {
+  public var body: some View {
     VStack(alignment:.leading, spacing: 15) {
       Title()
       CheckListContent
