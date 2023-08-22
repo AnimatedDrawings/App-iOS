@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import AD_MaskingImage
 import AD_Feature
 import AD_Utils
 import ComposableArchitecture

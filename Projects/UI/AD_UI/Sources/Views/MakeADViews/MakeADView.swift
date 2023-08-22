@@ -30,8 +30,8 @@ struct MakeADView: ADUI {
         List {
           if viewStore.sharedState.isShowStepStatusBar {
             StepStatusBar(
-              currentStep: viewStore.state.sharedState.currentStep,
-              completeStep: viewStore.state.sharedState.completeStep
+              currentStepIdx: viewStore.state.sharedState.currentStep.rawValue,
+              completeStepIdx: viewStore.state.sharedState.completeStep.rawValue
             )
             .listRowSeparator(.hidden)
             .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))

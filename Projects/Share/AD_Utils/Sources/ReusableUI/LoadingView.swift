@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-extension View {
+public extension View {
   func addLoadingView(isShow: Bool, description: String) -> some View {
     self.modifier(LoadingViewModifier(isShow: isShow, description: description))
   }
@@ -40,10 +40,14 @@ struct LoadingViewModifier: ViewModifier {
   }
 }
 
-struct LoadingView: View {
+public struct LoadingView: View {
   let description: String
   
-  var body: some View {
+  public init(description: String) {
+    self.description = description
+  }
+  
+  public var body: some View {
     ZStack {
       RoundedRectangle(cornerRadius: 10)
         .frame(height: 200)

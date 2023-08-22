@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 import AD_Utils
 
-struct MaskingImageView: View {
+public struct MaskingImageView: View {
   let croppedImage: UIImage
   let initMaskImage: UIImage
   
@@ -20,7 +20,7 @@ struct MaskingImageView: View {
   @State var imageFrame: CGRect = .init()
   @State var toolSizerButtonOffset: CGFloat = 0
   
-  init(
+  public init(
     croppedImage: UIImage,
     initMaskImage: UIImage,
     maskedImage: Binding<UIImage?>,
@@ -38,7 +38,7 @@ struct MaskingImageView: View {
     )
   }
   
-  var body: some View {
+  public var body: some View {
     VStack {
       ToolNaviBar(
         cancelAction: maskableViewLink.cancel,
@@ -84,10 +84,10 @@ struct MaskingImageView: View {
 
 // MARK: - Previews
 struct Previews_MaskingImageView: View {
-  let croppedImage: UIImage = ADUtilsAsset.Garlic.texture.image
-  let initMaskImage: UIImage = ADUtilsAsset.Garlic.maskedImg.image
+  let croppedImage: UIImage = ADMaskingImageAsset.croppedImage.image
+  let initMaskImage: UIImage = ADMaskingImageAsset.maskedImage.image
+  
   @State var maskedImage: UIImage? = nil
-  @State var isNewMaskedImage = false
   
   var body: some View {
     MaskingImageView(

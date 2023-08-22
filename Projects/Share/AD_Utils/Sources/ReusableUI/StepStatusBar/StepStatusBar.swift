@@ -7,25 +7,32 @@
 //
 
 import SwiftUI
-import AD_Feature
-import AD_Utils
 
-struct StepStatusBar: View {
-  let currentStep: Step
-  let completeStep: Step
+public struct StepStatusBar: View {
+//  let currentStep: Step
+//  let completeStep: Step
+  
+  let currentStepIdx: Int
+  let completeStepIdx: Int
+  
   @State var statusBarWidth: CGFloat = 0
   let statusBarSpacing: CGFloat = 4
   let activeColor: Color = ADUtilsAsset.Color.blue1.swiftUIColor
   let inActiveColor: Color = .gray
   let completeColor: Color = ADUtilsAsset.Color.green1.swiftUIColor
-  var currentStepIdx: Int {
-    return self.currentStep.rawValue
-  }
-  var completeStepIdx: Int {
-    return self.completeStep.rawValue
+//  var currentStepIdx: Int {
+//    return self.currentStep.rawValue
+//  }
+//  var completeStepIdx: Int {
+//    return self.completeStep.rawValue
+//  }
+  
+  public init(currentStepIdx: Int, completeStepIdx: Int) {
+    self.currentStepIdx = currentStepIdx
+    self.completeStepIdx = completeStepIdx
   }
   
-  var body: some View {
+  public var body: some View {
     VStack(alignment: .leading) {
       Title()
       StatusBar()
@@ -83,50 +90,3 @@ extension StepStatusBar {
     return currentStepIdx == idx ? self.statusBarWidth / 2 : self.statusBarWidth / 6
   }
 }
-
-struct PreviewsStepStatusBar: View {
-  @State var currentStep: Step = .UploadADrawing
-  @State var completeStep: Step = .SeparatingCharacter
-  var currentStepIdx: Int {
-    return currentStep.rawValue
-  }
-  
-  var body: some View {
-    VStack(spacing: 100) {
-      StepStatusBar(
-        currentStep: currentStep,
-        completeStep: completeStep
-      )
-      .padding()
-      Button("MoveUp", action: moveUpAction)
-      Button("MoveDown", action: moveDownAction)
-    }
-    .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .animation(.default, value: currentStep)
-  }
-  
-  func moveUpAction() {
-    var nexIdx = currentStepIdx + 1
-    if nexIdx == 5 {
-      nexIdx = 1
-    }
-    
-    self.currentStep = Step(rawValue: nexIdx) ?? .UploadADrawing
-  }
-  
-  func moveDownAction() {
-    var nexIdx = currentStepIdx - 1
-    if nexIdx == 0 {
-      nexIdx = 4
-    }
-    
-    self.currentStep = Step(rawValue: nexIdx) ?? .SeparatingCharacter
-  }
-}
-
-struct StepStatusBar_Previews: PreviewProvider {
-  static var previews: some View {
-    PreviewsStepStatusBar()
-  }
-}
-

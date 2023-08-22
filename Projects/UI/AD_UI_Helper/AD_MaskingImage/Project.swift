@@ -1,16 +1,21 @@
+//
+//  Project.swift
+//  Config
+//
+//  Created by minii on 2023/08/21.
+//
+
 import ProjectDescription
 import ProjectEnvironment
 
 let project = Project.makeModule(
-  myModule: .AD_UI,
+  myModule: .AD_MaskingImage,
   platform: .iOS,
 //  product: .staticFramework,
   product: .framework,
   dependencies: [
-    .AD_MaskingImage,
-    .AD_Feature,
-    .AD_Utils,
-    .ComposableArchitecture
+    .AD_Utils
   ],
+  resources: ["Resources/**"],
   withTest: false
 )

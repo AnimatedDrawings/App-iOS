@@ -11,7 +11,7 @@ class MaskableUIView: UIView {
   // MARK: - Private Property
   private let croppedImageView: UIImageView = {
     let uiImageView = UIImageView()
-    uiImageView.contentMode = .scaleAspectFit
+    uiImageView.contentMode = .scaleToFill
     return uiImageView
   }()
   

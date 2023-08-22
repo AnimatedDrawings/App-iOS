@@ -7,10 +7,9 @@
 //
 
 import SwiftUI
-import AD_Utils
 
 /// Use
-extension View {
+public extension View {
   func adBackground() -> some View {
     self.background(ADBackground())
   }

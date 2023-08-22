@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-extension View {
+public extension View {
   func transparentBlurBackground(
     effect: UIVisualEffect? = UIBlurEffect(style: .regular),
     intensity: CGFloat = 1
