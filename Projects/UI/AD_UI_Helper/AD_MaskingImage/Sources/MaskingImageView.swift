@@ -88,15 +88,46 @@ struct Previews_MaskingImageView: View {
   let initMaskImage: UIImage = ADMaskingImageAsset.maskedImage.image
   
   @State var maskedImage: UIImage? = nil
+  @State var isPresentedMaskResultView: Bool = false
   
   var body: some View {
-    MaskingImageView(
-      croppedImage: croppedImage,
-      initMaskImage: initMaskImage,
-      maskedImage: $maskedImage,
-      maskNextAction: { _ in },
-      cancelAction: {}
-    )
+    NavigationStack {
+      VStack {
+        MaskingImageView(
+          croppedImage: croppedImage,
+          initMaskImage: initMaskImage,
+          maskedImage: $maskedImage,
+          maskNextAction: { isFinishMaskingImage in
+            if isFinishMaskingImage {
+              if let tmpImageData = self.maskedImage?.pngData() {
+                self.maskedImage = UIImage(data: tmpImageData)
+                self.isPresentedMaskResultView.toggle()
+              }
+            }
+          },
+          cancelAction: {}
+        )
+      }
+      .navigationDestination(isPresented: $isPresentedMaskResultView) {
+        Previews_MaskResultView(maskedImage: $maskedImage)
+      }
+    }
+  }
+}
+
+struct Previews_MaskResultView: View {
+  @Binding var maskedImage: UIImage?
+  
+  var body: some View {
+    if let maskedImage = maskedImage {
+      Rectangle()
+        .frame(width: 300, height: 400)
+        .foregroundColor(.red)
+        .overlay {
+          Image(uiImage: maskedImage)
+            .resizable()
+        }
+    }
   }
 }
 
