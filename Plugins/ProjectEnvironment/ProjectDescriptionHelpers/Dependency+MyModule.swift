@@ -9,6 +9,8 @@ public enum MyModule: String {
   case AD_UIDemo
   
   case AD_MaskingImage
+  case AD_CropImage
+  case AD_ModifyJoints
   
   case AD_Utils
 }
@@ -56,6 +58,24 @@ extension TargetDependency {
     
     return .project(
       target: MyModule.AD_MaskingImage.rawValue,
+      path: .relativeToRoot(pathString)
+    )
+  }
+  
+  public static var AD_CropImage: Self {
+    let pathString = "Projects/UI/AD_UI_Helper/AD_CropImage"
+    
+    return .project(
+      target: MyModule.AD_CropImage.rawValue,
+      path: .relativeToRoot(pathString)
+    )
+  }
+  
+  public static var AD_ModifyJoints: Self {
+    let pathString = "Projects/UI/AD_UI_Helper/AD_ModifyJoints"
+    
+    return .project(
+      target: MyModule.AD_ModifyJoints.rawValue,
       path: .relativeToRoot(pathString)
     )
   }

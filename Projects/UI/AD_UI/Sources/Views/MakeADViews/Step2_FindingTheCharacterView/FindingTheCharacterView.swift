@@ -10,6 +10,7 @@ import SwiftUI
 import AD_Feature
 import AD_Utils
 import ComposableArchitecture
+import AD_CropImage
 
 struct FindingTheCharacterView: ADUI {
   typealias MyFeature = FindingTheCharacterFeature
@@ -63,35 +64,37 @@ struct FindingTheCharacterView: ADUI {
           viewStore.send(.onDismissCropImageView)
         },
         content: {
-          if let originalImage = viewStore.state.sharedState.originalImage,
-             let boundingBoxDTO = viewStore.state.sharedState.boundingBoxDTO
-          {
-            CropImageView(
-              originalImage: originalImage,
-              boundingBoxDTO: boundingBoxDTO,
-              cropAction: { cropResult in
-                viewStore.send(.findTheCharacter(cropResult))
-              },
-              cancelAction: {
-                viewStore.send(.toggleCropImageView)
-              }
-            )
-            .transparentBlurBackground()
-            .addLoadingView(
-              isShow: viewStore.state.isShowLoadingView,
-              description: "Cropping Image ..."
-            )
-            .alert(
-              viewStore.titleAlert,
-              isPresented: viewStore.$isShowAlert,
-              actions: {
-                Button("OK") {}
-              },
-              message: {
-                Text(viewStore.descriptionAlert)
-              }
-            )
-          }
+          EmptyView()
+          
+//          if let originalImage = viewStore.state.sharedState.originalImage,
+//             let boundingBoxDTO = viewStore.state.sharedState.boundingBoxDTO
+//          {
+//            CropImageView(
+//              originalImage: originalImage,
+//              boundingBoxDTO: boundingBoxDTO,
+//              cropAction: { cropResult in
+//                viewStore.send(.findTheCharacter(cropResult))
+//              },
+//              cancelAction: {
+//                viewStore.send(.toggleCropImageView)
+//              }
+//            )
+//            .transparentBlurBackground()
+//            .addLoadingView(
+//              isShow: viewStore.state.isShowLoadingView,
+//              description: "Cropping Image ..."
+//            )
+//            .alert(
+//              viewStore.titleAlert,
+//              isPresented: viewStore.$isShowAlert,
+//              actions: {
+//                Button("OK") {}
+//              },
+//              message: {
+//                Text(viewStore.descriptionAlert)
+//              }
+//            )
+//          }
         }
       )
     }
