@@ -9,7 +9,7 @@
 import SwiftUI
 import AD_Utils
 
-struct CropImageView: View {
+public struct CropImageView: View {
   let originalImage: UIImage
   let cropNextAction: (UIImage?, CGRect) -> ()
   let cancelAction: () -> ()
@@ -17,7 +17,7 @@ struct CropImageView: View {
   @State var resetTrigger = false
   @StateObject var boundingBoxInfo: BoundingBoxInfo
   
-  init(
+  public init(
     originalImage: UIImage,
     originCGRect: CGRect,
     cropNextAction: @escaping (UIImage?, CGRect) -> Void,
@@ -33,23 +33,7 @@ struct CropImageView: View {
     )
   }
   
-//  init(
-//    originalImage: UIImage,
-//    boundingBoxDTO: BoundingBoxDTO,
-//    cropAction: @escaping (CropResult) -> (),
-//    cancelAction: @escaping () -> ()
-//  ) {
-//    self.originalImage = originalImage
-//    self._boundingBoxInfo = StateObject(
-//      wrappedValue: BoundingBoxInfo(
-//        boundingBoxDTO: boundingBoxDTO
-//      )
-//    )
-//    self.cropAction = cropAction
-//    self.cancelAction = cancelAction
-//  }
-  
-  var body: some View {
+  public var body: some View {
     VStack(spacing: 40) {
       ToolNaviBar(
         cancelAction: cancel,
@@ -148,6 +132,7 @@ extension CropImageView {
 }
 
 // MARK: - Previews_CropImageView
+
 struct Previews_CropImageView: View {
   let originalImage: UIImage = ADCropImageAsset.garlic.image
   let originCGRect: CGRect = .init(origin: .init(x: 100, y: 100), size: .init(width: 200, height: 200))

@@ -64,37 +64,34 @@ struct FindingTheCharacterView: ADUI {
           viewStore.send(.onDismissCropImageView)
         },
         content: {
-          EmptyView()
-          
-//          if let originalImage = viewStore.state.sharedState.originalImage,
-//             let boundingBoxDTO = viewStore.state.sharedState.boundingBoxDTO
-//          {
-//            CropImageView(
-//              originalImage: originalImage,
-//              boundingBoxDTO: boundingBoxDTO,
-//              cropAction: { cropResult in
-//                viewStore.send(.findTheCharacter(cropResult))
-//              },
-//              cancelAction: {
-//                viewStore.send(.toggleCropImageView)
-//              }
-//            )
-//            .transparentBlurBackground()
-//            .addLoadingView(
-//              isShow: viewStore.state.isShowLoadingView,
-//              description: "Cropping Image ..."
-//            )
-//            .alert(
-//              viewStore.titleAlert,
-//              isPresented: viewStore.$isShowAlert,
-//              actions: {
-//                Button("OK") {}
-//              },
-//              message: {
-//                Text(viewStore.descriptionAlert)
-//              }
-//            )
-//          }
+          if let originalImage = viewStore.state.sharedState.originalImage,
+             let boundingBoxDTO = viewStore.state.sharedState.boundingBoxDTO {
+            CropImageView(
+              originalImage: originalImage,
+              originCGRect: boundingBoxDTO.toCGRect(),
+              cropNextAction: { croppedUIImage, croppedCGRect in
+                viewStore.send(.findTheCharacter(croppedUIImage, croppedCGRect))
+              },
+              cancelAction: {
+                viewStore.send(.toggleCropImageView)
+              }
+            )
+            .transparentBlurBackground()
+            .addLoadingView(
+              isShow: viewStore.state.isShowLoadingView,
+              description: "Cropping Image ..."
+            )
+            .alert(
+              viewStore.titleAlert,
+              isPresented: viewStore.$isShowAlert,
+              actions: {
+                Button("OK") {}
+              },
+              message: {
+                Text(viewStore.descriptionAlert)
+              }
+            )
+          }
         }
       )
     }
