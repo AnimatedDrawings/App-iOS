@@ -46,7 +46,7 @@ struct MakeADView: ADUI {
             .frame(height: geo.size.height + geo.safeAreaInsets.bottom)
         }
         .listStyle(.plain)
-        .adBackground()
+        .addBackground()
         .scrollContentBackground(.hidden)
       }
       .fullScreenOverlayPresentationSpace(.named("UploadADrawingView"))

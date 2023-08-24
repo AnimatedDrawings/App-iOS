@@ -42,7 +42,13 @@ struct ConfigureAnimationView: ADUI {
         Spacer().frame(height: 20)
       }
       .padding()
-      .adBackground()
+      .addBackground()
+      .sheet(isPresented: viewStore.$isShowShareView) {
+        if let myAnimation = viewStore.myAnimation {
+          ShareView(gifData: myAnimation)
+            .presentationDetents([.medium, .large])
+        }
+      }
       .fullScreenCover(
         isPresented: viewStore.$isShowAnimationListView,
         onDismiss: { viewStore.send(.onDismissAnimationListView) },
@@ -125,7 +131,9 @@ extension ConfigureAnimationView {
           TabBarButton(imageName: reset) {
             viewStore.send(.toggleIsShowAddAnimationView)
           }
-          TabBarButton(imageName: share) {}
+          TabBarButton(imageName: share) {
+            viewStore.send(.toggleIsShowShareView)
+          }
           TabBarButton(imageName: animation) {
             viewStore.send(.toggleIsShowAnimationListView)
           }

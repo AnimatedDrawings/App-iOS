@@ -54,7 +54,7 @@ extension TargetDependency {
   }
   
   public static var AD_MaskingImage: Self {
-    let pathString = "Projects/UI/AD_UI_Helper/AD_MaskingImage"
+    let pathString = "Projects/UI/AD_UIHelper/AD_MaskingImage"
     
     return .project(
       target: MyModule.AD_MaskingImage.rawValue,
@@ -63,7 +63,7 @@ extension TargetDependency {
   }
   
   public static var AD_CropImage: Self {
-    let pathString = "Projects/UI/AD_UI_Helper/AD_CropImage"
+    let pathString = "Projects/UI/AD_UIHelper/AD_CropImage"
     
     return .project(
       target: MyModule.AD_CropImage.rawValue,
@@ -72,7 +72,7 @@ extension TargetDependency {
   }
   
   public static var AD_ModifyJoints: Self {
-    let pathString = "Projects/UI/AD_UI_Helper/AD_ModifyJoints"
+    let pathString = "Projects/UI/AD_UIHelper/AD_ModifyJoints"
     
     return .project(
       target: MyModule.AD_ModifyJoints.rawValue,

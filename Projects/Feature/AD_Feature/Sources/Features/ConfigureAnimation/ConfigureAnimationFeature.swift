@@ -21,6 +21,7 @@ public struct ConfigureAnimationFeature: Reducer {
     
     @BindingState public var isShowAnimationListView = false
     public var isShowLoadingView = false
+    @BindingState public var isShowShareView = false
     
     public var selectedAnimation: ADAnimation? = nil
     public var cache: [ADAnimation : Data?] = ADAnimation.allCases
@@ -40,6 +41,7 @@ public struct ConfigureAnimationFeature: Reducer {
     
     case toggleIsShowAnimationListView
     case toggleIsShowAddAnimationView
+    case toggleIsShowShareView
     
     case setLoadingView(Bool)
     case selectAnimation(ADAnimation)
@@ -67,6 +69,10 @@ public struct ConfigureAnimationFeature: Reducer {
         
       case .toggleIsShowAddAnimationView:
         state.sharedState.isShowAddAnimationView.toggle()
+        return .none
+        
+      case .toggleIsShowShareView:
+        state.isShowShareView.toggle()
         return .none
         
       case .setLoadingView(let flag):
