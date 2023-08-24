@@ -10,6 +10,14 @@ import SwiftUI
 import AD_Feature
 import AD_Utils
 import ComposableArchitecture
+import AD_ModifyJoints
+
+public struct TestModifyJointsView: View {
+  public init () {}
+  public var body: some View {
+    Previews_ModifyJointsView()
+  }
+}
 
 struct FindingCharacterJointsView: ADUI {
   typealias MyFeature = FindingCharacterJointsFeature
@@ -56,26 +64,28 @@ struct FindingCharacterJointsView: ADUI {
           if let maskedImage = viewStore.sharedState.maskedImage,
              let jointsDTO = viewStore.sharedState.jointsDTO
           {
-            ModifyJointsView(
-              maskedImage: maskedImage,
-              jointsDTO: jointsDTO,
-              cancel: { viewStore.send(.toggleModifyJointsView) },
-              save: { modifiedJointsDTO in
-                viewStore.send(.findCharacterJoints(modifiedJointsDTO))
-              }
-            )
-            .transparentBlurBackground()
-            .addLoadingView(isShow: viewStore.state.isShowLoadingView, description: "Modify Character Joints ...")
-            .alert(
-              viewStore.titleAlert,
-              isPresented: viewStore.$isShowAlert,
-              actions: {
-                Button("OK") {}
-              },
-              message: {
-                Text(viewStore.descriptionAlert)
-              }
-            )
+            EmptyView()
+            
+//            ModifyJointsView(
+//              maskedImage: maskedImage,
+//              jointsDTO: jointsDTO,
+//              cancel: { viewStore.send(.toggleModifyJointsView) },
+//              save: { modifiedJointsDTO in
+//                viewStore.send(.findCharacterJoints(modifiedJointsDTO))
+//              }
+//            )
+//            .transparentBlurBackground()
+//            .addLoadingView(isShow: viewStore.state.isShowLoadingView, description: "Modify Character Joints ...")
+//            .alert(
+//              viewStore.titleAlert,
+//              isPresented: viewStore.$isShowAlert,
+//              actions: {
+//                Button("OK") {}
+//              },
+//              message: {
+//                Text(viewStore.descriptionAlert)
+//              }
+//            )
           }
         }
       )

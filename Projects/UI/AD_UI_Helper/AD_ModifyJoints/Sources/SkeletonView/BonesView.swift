@@ -11,10 +11,7 @@ struct BonesView: View {
   @ObservedObject var modifyJointsLink: ModifyJointsLink
   let strokeColor: Color
   var skeletonDict: [String : SkeletonInfo] {
-    return self.modifyJointsLink.jointsInfo.skeletonInfo
-  }
-  var viewRect: CGRect {
-    return CGRect(origin: .init(), size: modifyJointsLink.jointsInfo.viewSize)
+    return self.modifyJointsLink.jointsInfo.skeletons
   }
   
   var body: some View {
@@ -30,10 +27,17 @@ struct BonesView: View {
 }
 
 extension BonesView {
+  var viewRect: CGRect {
+    return CGRect(
+      origin: .init(),
+      size: self.modifyJointsLink.viewSize
+    )
+  }
+  
   @ViewBuilder
-  func BoneLine(me: CGPoint, parent: CGPoint) -> some View {
-    let myPoint: CGPoint = calPoint(cgPoint: me)
-    let parentPoint: CGPoint = calPoint(cgPoint: parent)
+  func BoneLine(me: RatioPoint, parent: RatioPoint) -> some View {
+    let myPoint: CGPoint = calPoint(me)
+    let parentPoint: CGPoint = calPoint(parent)
     LineShape(myPoint: myPoint, parentPoint: parentPoint)
       .path(in: self.viewRect)
       .stroke(lineWidth: 5)
@@ -54,9 +58,9 @@ extension BonesView {
     }
   }
   
-  func calPoint(cgPoint: CGPoint) -> CGPoint {
-    let x = (self.viewRect.width * cgPoint.x)
-    let y = (self.viewRect.height * cgPoint.y)
+  func calPoint(_ ratioPoint: RatioPoint) -> CGPoint {
+    let x = (self.viewRect.width * ratioPoint.x)
+    let y = (self.viewRect.height * ratioPoint.y)
     
     return CGPoint(x: x, y: y)
   }

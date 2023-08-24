@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SkeletonView: View {
-  let maskedImage: UIImage
+  let croppedImage: UIImage
   @ObservedObject var modifyJointsLink: ModifyJointsLink
   let strokeColor: Color
   
@@ -18,7 +18,7 @@ struct SkeletonView: View {
         .foregroundColor(.white)
         .shadow(radius: 10)
         .overlay {
-          Image(uiImage: maskedImage)
+          Image(uiImage: croppedImage)
             .resizable()
             .overlay {
               GeometryReader { geo in
@@ -26,7 +26,7 @@ struct SkeletonView: View {
                   Color.clear
                     .onAppear {
                       let viewSize = geo.frame(in: .local).size
-                      self.modifyJointsLink.jointsInfo.viewSize = viewSize
+                      self.modifyJointsLink.viewSize = viewSize
                     }
                   
                   BonesView(

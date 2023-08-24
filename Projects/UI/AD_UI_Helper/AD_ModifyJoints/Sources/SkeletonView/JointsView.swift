@@ -12,7 +12,7 @@ struct JointsView: View {
   let strokeColor: Color
   let jointCircleSize: CGFloat = 15
   var skeletonDict: [String : SkeletonInfo] {
-    return self.modifyJointsLink.jointsInfo.skeletonInfo
+    return self.modifyJointsLink.jointsInfo.skeletons
   }
   
   let enableDragGesture: Bool
@@ -29,14 +29,14 @@ struct JointsView: View {
   
   var body: some View {
     ForEach(Array(skeletonDict.keys), id: \.self) { name in
-      if let mySkeleton = skeletonDict[name] {
+      if var mySkeleton = skeletonDict[name] {
         JointCircle()
           .offset(calJointOffset(mySkeleton))
           .gesture(
             DragGesture(coordinateSpace: .local)
               .onChanged({ value in
                 updateCurrentJoint(mySkeleton)
-                dragOnChanged(value, skeletonInfo: mySkeleton)
+                dragOnChanged(value, skeletonInfo: &mySkeleton)
               })
               .onEnded(dragOnEnded(_:))
           )
@@ -60,8 +60,8 @@ extension JointsView {
 
 extension JointsView {
   func calJointOffset(_ skeletonInfo: SkeletonInfo) -> CGSize {
-    let widthView: CGFloat = self.modifyJointsLink.jointsInfo.viewSize.width
-    let heightView: CGFloat = self.modifyJointsLink.jointsInfo.viewSize.height
+    let widthView: CGFloat = self.modifyJointsLink.viewSize.width
+    let heightView: CGFloat = self.modifyJointsLink.viewSize.height
     
     let ratioX: CGFloat = skeletonInfo.ratioPoint.x
     let ratioY: CGFloat = skeletonInfo.ratioPoint.y
@@ -78,19 +78,21 @@ extension JointsView {
     }
   }
   
-  func dragOnChanged(_ value: DragGesture.Value, skeletonInfo: SkeletonInfo) {
-    let widthView: CGFloat = self.modifyJointsLink.jointsInfo.viewSize.width
-    let heightView: CGFloat = self.modifyJointsLink.jointsInfo.viewSize.height
+  func dragOnChanged(_ value: DragGesture.Value, skeletonInfo: inout SkeletonInfo) {
+    let widthView: CGFloat = self.modifyJointsLink.viewSize.width
+    let heightView: CGFloat = self.modifyJointsLink.viewSize.height
     let nexX: CGFloat = value.location.x
     let nexY: CGFloat = value.location.y
     
     guard 0 <= nexX && nexX <= widthView &&
-            0 <= nexY && nexY <= heightView else {
+            0 <= nexY && nexY <= heightView
+    else {
       return
     }
     
-    let nexRatioPoint = CGPoint(x: nexX / widthView, y: nexY / heightView)
-    skeletonInfo.ratioPoint = nexRatioPoint
+    let nexRatioPoint = RatioPoint(x: nexX / widthView, y: nexY / heightView)
+    
+    print(self.modifyJointsLink.jointsInfo.skeletons[skeletonInfo.name])
   }
   
   func dragOnEnded(_ value: DragGesture.Value) {

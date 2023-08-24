@@ -6,34 +6,35 @@
 //
 
 import SwiftUI
-import AD_Feature
 import AD_Utils
 
 struct ModifyJointsView: View {
-  let maskedImage: UIImage
+  let croppedImage: UIImage
   @StateObject var modifyJointsLink: ModifyJointsLink
+  let modifyNextAction: (JointsInfo) -> ()
   let cancel: () -> ()
-  let save: (JointsDTO) -> ()
   
   let strokeColor: Color = ADUtilsAsset.Color.blue1.swiftUIColor
   
   init(
-    maskedImage: UIImage,
-    jointsDTO: JointsDTO,
-    cancel: @escaping () -> (),
-    save: @escaping (JointsDTO) -> ()
+    croppedImage: UIImage,
+    jointsInfo: JointsInfo,
+    modifyNextAction: @escaping (JointsInfo) -> Void,
+    cancel: @escaping () -> Void
   ) {
-    self.maskedImage = maskedImage
+    self.croppedImage = croppedImage
     self._modifyJointsLink = StateObject(
-      wrappedValue: ModifyJointsLink(jointsDTO: jointsDTO)
+      wrappedValue: ModifyJointsLink(
+        jointsInfo: jointsInfo
+      )
     )
+    self.modifyNextAction = modifyNextAction
     self.cancel = cancel
-    self.save = save
   }
   
   var body: some View {
     VStack {
-      ToolNaviBar(cancelAction: cancelAction, saveAction: saveAction)
+      ToolNaviBar(cancelAction: cancel, saveAction: save)
       
       Spacer()
       
@@ -42,7 +43,7 @@ struct ModifyJointsView: View {
           .frame(height: 50)
         
         SkeletonView(
-          maskedImage: maskedImage,
+          croppedImage: croppedImage,
           modifyJointsLink: self.modifyJointsLink,
           strokeColor: strokeColor
         )
@@ -61,16 +62,15 @@ struct ModifyJointsView: View {
 }
 
 extension ModifyJointsView {
-  func cancelAction() {
-    self.cancel()
-  }
-  
-  func saveAction() {
-    self.modifyJointsLink.startSave.send()
-    self.modifyJointsLink.$finishSave.sink { _ in
-      self.save(self.modifyJointsLink.modifiedJointsDTO)
-    }
-    .store(in: &self.modifyJointsLink.anyCancellable)
+//  func saveAction() {
+//    self.modifyJointsLink.startSave.send()
+//    self.modifyJointsLink.$finishSave.sink { _ in
+//      self.save(self.modifyJointsLink.modifiedJointsDTO)
+//    }
+//    .store(in: &self.modifyJointsLink.anyCancellable)
+//  }
+  func save() {
+    self.modifyNextAction(self.modifyJointsLink.jointsInfo)
   }
 }
 
@@ -124,25 +124,27 @@ extension ModifyJointsView {
   }
   
   func resetAction() {
-    self.modifyJointsLink.resetSkeletonRatio()
+    self.modifyJointsLink.resetSkeletons()
   }
 }
 
-struct Previews_ModifyJointsView: View {
-  let maskedImage: UIImage = ADUtilsAsset.SampleDrawing.garlicCroppedCutout.image
-  let mockJointsDTO = JointsDTO.mockJointsDTO()
+// MARK: - Previews_ModifyJointsView
+
+public struct Previews_ModifyJointsView: View {
+  let croppedImage: UIImage = ADModifyJointsAsset.croppedGarlic.image
+  let mockJointsInfo = JointsInfo.mockData()!
   
-  var body: some View {
-    if let jointsDTO = mockJointsDTO {
-      ModifyJointsView(
-        maskedImage: self.maskedImage,
-        jointsDTO: jointsDTO,
-        cancel: {},
-        save: { _ in }
-      )
-    } else {
-      Text("No MockJointsDTO")
-    }
+  public init () {}
+  
+  public var body: some View {
+    ModifyJointsView(
+      croppedImage: croppedImage,
+      jointsInfo: mockJointsInfo,
+      modifyNextAction: { modifiedJointsInfo in
+        
+      },
+      cancel: {}
+    )
   }
 }
 
