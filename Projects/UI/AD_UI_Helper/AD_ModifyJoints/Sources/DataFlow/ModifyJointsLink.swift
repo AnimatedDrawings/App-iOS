@@ -20,14 +20,17 @@ class ModifyJointsLink: ObservableObject {
   
 //  var anyCancellable = Set<AnyCancellable>()
   
-  @Published var jointsInfo: JointsInfo
+//  @Published var jointsInfo: JointsInfo
+  @Published var skeletons: [String : SkeletonInfo]
+  
   @Published var viewSize: CGSize = .init()
   
   @Published var currentJoint: String? = nil
   let originSkeletons: [String : SkeletonInfo]
   
   init(jointsInfo: JointsInfo) {
-    self.jointsInfo = jointsInfo
+//    self.jointsInfo = jointsInfo
+    self.skeletons = jointsInfo.skeletons
     self.originSkeletons = jointsInfo.skeletons
   }
   
@@ -80,7 +83,8 @@ extension ModifyJointsLink {
   
 //  func resetSkeletonRatio() {
   func resetSkeletons() {
-    self.jointsInfo.skeletons = self.originSkeletons
+//    self.jointsInfo.skeletons = self.originSkeletons
+    self.skeletons = self.originSkeletons
 //    self.originSkeletons.forEach { name, cgPoint in
 //      guard let curSkeletonInfo = self.jointsInfo.skeletons[name] else {
 //        return

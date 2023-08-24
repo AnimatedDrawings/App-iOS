@@ -37,6 +37,16 @@ public struct RatioPoint: Codable {
   }
 }
 
+extension SkeletonInfo {
+  func updatePoint(with newPoint: RatioPoint) -> SkeletonInfo {
+    return SkeletonInfo(
+      name: self.name,
+      ratioPoint: newPoint,
+      parent: self.parent
+    )
+  }
+}
+
 public extension JointsInfo {
   static func mockData() -> JointsInfo? {
     do {

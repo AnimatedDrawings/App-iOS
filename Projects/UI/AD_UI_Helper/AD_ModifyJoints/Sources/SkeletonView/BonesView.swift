@@ -11,7 +11,8 @@ struct BonesView: View {
   @ObservedObject var modifyJointsLink: ModifyJointsLink
   let strokeColor: Color
   var skeletonDict: [String : SkeletonInfo] {
-    return self.modifyJointsLink.jointsInfo.skeletons
+//    return self.modifyJointsLink.jointsInfo.skeletons
+    return self.modifyJointsLink.skeletons
   }
   
   var body: some View {

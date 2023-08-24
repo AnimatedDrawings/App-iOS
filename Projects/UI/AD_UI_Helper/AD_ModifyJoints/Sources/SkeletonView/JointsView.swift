@@ -12,7 +12,8 @@ struct JointsView: View {
   let strokeColor: Color
   let jointCircleSize: CGFloat = 15
   var skeletonDict: [String : SkeletonInfo] {
-    return self.modifyJointsLink.jointsInfo.skeletons
+//    return self.modifyJointsLink.jointsInfo.skeletons
+    return self.modifyJointsLink.skeletons
   }
   
   let enableDragGesture: Bool
@@ -28,15 +29,15 @@ struct JointsView: View {
   }
   
   var body: some View {
-    ForEach(Array(skeletonDict.keys), id: \.self) { name in
-      if var mySkeleton = skeletonDict[name] {
+    ForEach(Array(modifyJointsLink.skeletons.keys), id: \.self) { name in
+      if var mySkeleton = modifyJointsLink.skeletons[name] {
         JointCircle()
           .offset(calJointOffset(mySkeleton))
           .gesture(
             DragGesture(coordinateSpace: .local)
               .onChanged({ value in
                 updateCurrentJoint(mySkeleton)
-                dragOnChanged(value, skeletonInfo: &mySkeleton)
+                dragOnChanged(value, skeletonInfo: mySkeleton)
               })
               .onEnded(dragOnEnded(_:))
           )
@@ -78,7 +79,7 @@ extension JointsView {
     }
   }
   
-  func dragOnChanged(_ value: DragGesture.Value, skeletonInfo: inout SkeletonInfo) {
+  func dragOnChanged(_ value: DragGesture.Value, skeletonInfo: SkeletonInfo) {
     let widthView: CGFloat = self.modifyJointsLink.viewSize.width
     let heightView: CGFloat = self.modifyJointsLink.viewSize.height
     let nexX: CGFloat = value.location.x
@@ -91,8 +92,8 @@ extension JointsView {
     }
     
     let nexRatioPoint = RatioPoint(x: nexX / widthView, y: nexY / heightView)
-    
-    print(self.modifyJointsLink.jointsInfo.skeletons[skeletonInfo.name])
+    let newSkeletonInfo = skeletonInfo.updatePoint(with: nexRatioPoint)
+    self.modifyJointsLink.skeletons[newSkeletonInfo.name] = newSkeletonInfo
   }
   
   func dragOnEnded(_ value: DragGesture.Value) {

@@ -70,7 +70,10 @@ extension ModifyJointsView {
 //    .store(in: &self.modifyJointsLink.anyCancellable)
 //  }
   func save() {
-    self.modifyNextAction(self.modifyJointsLink.jointsInfo)
+    let modifiedJointsInfo = JointsInfo(
+      skeletons: self.modifyJointsLink.skeletons
+    )
+    self.modifyNextAction(modifiedJointsInfo)
   }
 }
 
