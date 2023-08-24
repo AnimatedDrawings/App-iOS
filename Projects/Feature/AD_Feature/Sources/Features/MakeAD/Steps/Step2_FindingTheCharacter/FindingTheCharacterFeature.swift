@@ -23,7 +23,8 @@ public struct FindingTheCharacterFeature: Reducer {
     
     public var isShowLoadingView = false
     
-    var tmpCropResult = CropResult(croppedImage: .init(), boundingBoxDTO: .mock())
+    var tmpCroppedImage: UIImage = .init()
+    var tmpBoundingBoxDTO: BoundingBoxDTO = .init()
     var isSuccessUpload = false
     
     @BindingState public var isShowAlert = false
@@ -38,7 +39,7 @@ public struct FindingTheCharacterFeature: Reducer {
     
     case checkAction
     case toggleCropImageView
-    case findTheCharacter(CropResult)
+    case findTheCharacter(UIImage?, CGRect)
     case findTheCharacterResponse(TaskResult<EmptyResponse>)
     case setLoadingView(Bool)
     case onDismissCropImageView
@@ -73,14 +74,19 @@ public struct FindingTheCharacterFeature: Reducer {
         state.isShowLoadingView = flag
         return .none
         
-      case .findTheCharacter(let cropResult):
-        guard let ad_id = state.sharedState.ad_id else {
+      case let .findTheCharacter(croppedUIImage, croppedCGRect):
+        guard let ad_id = state.sharedState.ad_id,
+              let croppedUIImage = croppedUIImage
+        else {
           return .none
         }
-        state.tmpCropResult = cropResult
+        let boundingBoxDTO = croppedCGRect.toBoundingBoxDTO
+        state.tmpCroppedImage = croppedUIImage
+        state.tmpBoundingBoxDTO = boundingBoxDTO
+        
         let findTheCharacterRequest = FindTheCharacterRequest(
           ad_id: ad_id,
-          boundingBoxDTO: cropResult.boundingBoxDTO
+          boundingBoxDTO: boundingBoxDTO
         )
         
         return .run { send in
@@ -129,8 +135,8 @@ public struct FindingTheCharacterFeature: Reducer {
         }
         
       case .downloadMaskImageResponse(.success(let maskImage)):
-        state.sharedState.croppedImage = state.tmpCropResult.croppedImage
-        state.sharedState.boundingBoxDTO = state.tmpCropResult.boundingBoxDTO
+        state.sharedState.croppedImage = state.tmpCroppedImage
+        state.sharedState.boundingBoxDTO = state.tmpBoundingBoxDTO
         state.sharedState.initMaskImage = maskImage
         state.isSuccessUpload = true
         return .run { send in
@@ -156,15 +162,13 @@ public struct FindingTheCharacterFeature: Reducer {
   }
 }
 
-public struct CropResult: Equatable {
-  public init(
-    croppedImage: UIImage?,
-    boundingBoxDTO: BoundingBoxDTO
-  ) {
-    self.croppedImage = croppedImage
-    self.boundingBoxDTO = boundingBoxDTO
+extension CGRect {
+  var toBoundingBoxDTO: BoundingBoxDTO {
+    let top = Int(self.origin.y)
+    let bottom = top + Int(self.height)
+    let left = Int(self.origin.x)
+    let right = left + Int(self.width)
+    
+    return BoundingBoxDTO(top: top, bottom: bottom, left: left, right: right)
   }
-
-  public let croppedImage: UIImage?
-  public let boundingBoxDTO: BoundingBoxDTO
 }

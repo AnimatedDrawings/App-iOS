@@ -10,6 +10,7 @@ import SwiftUI
 import AD_Feature
 import AD_Utils
 import ComposableArchitecture
+import AD_CropImage
 
 struct FindingTheCharacterView: ADUI {
   typealias MyFeature = FindingTheCharacterFeature
@@ -36,17 +37,7 @@ struct FindingTheCharacterView: ADUI {
           Title()
           
           CheckList {
-            VStack(alignment: .leading, spacing: 15) {
-              CheckListButton1(state: viewStore.$checkState) {
-                viewStore.send(.checkAction)
-              }
-              
-              HStack {
-                GIFViewName("FindingTheCharacter_Preview1")
-                GIFViewName("FindingTheCharacter_Preview2")
-              }
-              .frame(height: 250)
-            }
+            CheckListContent(with: viewStore)
           }
           
           Spacer()
@@ -64,13 +55,12 @@ struct FindingTheCharacterView: ADUI {
         },
         content: {
           if let originalImage = viewStore.state.sharedState.originalImage,
-             let boundingBoxDTO = viewStore.state.sharedState.boundingBoxDTO
-          {
+             let boundingBoxDTO = viewStore.state.sharedState.boundingBoxDTO {
             CropImageView(
               originalImage: originalImage,
-              boundingBoxDTO: boundingBoxDTO,
-              cropAction: { cropResult in
-                viewStore.send(.findTheCharacter(cropResult))
+              originCGRect: boundingBoxDTO.toCGRect(),
+              cropNextAction: { croppedUIImage, croppedCGRect in
+                viewStore.send(.findTheCharacter(croppedUIImage, croppedCGRect))
               },
               cancelAction: {
                 viewStore.send(.toggleCropImageView)
@@ -126,8 +116,8 @@ extension FindingTheCharacterView {
       }
       
       HStack {
-        GIFViewName("FindingTheCharacter_Preview1")
-        GIFViewName("FindingTheCharacter_Preview2")
+        GIFViewName("step2Gif1")
+        GIFViewName("step2Gif2")
       }
       .frame(height: 250)
     }

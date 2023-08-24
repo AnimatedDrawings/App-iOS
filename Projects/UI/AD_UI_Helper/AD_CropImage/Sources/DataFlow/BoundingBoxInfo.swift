@@ -7,7 +7,6 @@
 //
 
 import SwiftUI
-import AD_Feature
 
 class BoundingBoxInfo: ObservableObject {
   private var _imageScale: CGFloat = 0
@@ -28,20 +27,14 @@ class BoundingBoxInfo: ObservableObject {
   
   let originBoundingBoxRect: CGRect
   
-  init(boundingBoxDTO: BoundingBoxDTO) {
-    self.originBoundingBoxRect = boundingBoxDTO.toCGRect()
+  init(originCGRect: CGRect) {
+    self.originBoundingBoxRect = originCGRect
   }
 }
 
 extension BoundingBoxInfo {
-  func toBoundingBoxDTO() -> BoundingBoxDTO {
-    let originRect = self.croppedRect.scale(1 / self.imageScale)
-    let top = Int(originRect.origin.y)
-    let bottom = top + Int(originRect.height)
-    let left = Int(originRect.origin.x)
-    let right = left + Int(originRect.width)
-    
-    return BoundingBoxDTO(top: top, bottom: bottom, left: left, right: right)
+  func getCroppedCGRect() -> CGRect {
+    return self.croppedRect.scale(1 / self.imageScale)
   }
 }
 
@@ -52,17 +45,6 @@ extension CGRect {
     let width: CGFloat = self.size.width * imageScale
     let height: CGFloat = self.size.height * imageScale
     
-    return CGRect(x: x, y: y, width: width, height: height)
-  }
-}
-
-extension BoundingBoxDTO {
-  func toCGRect() -> CGRect {
-    let x: CGFloat = CGFloat(left)
-    let y: CGFloat = CGFloat(top)
-    let width: CGFloat = (right - left) < 0 ? 0 : CGFloat(right - left)
-    let height: CGFloat = (bottom - top) < 0 ? 0 : CGFloat(bottom - top)
-
     return CGRect(x: x, y: y, width: width, height: height)
   }
 }

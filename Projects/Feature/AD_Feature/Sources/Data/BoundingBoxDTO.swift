@@ -21,6 +21,13 @@ public struct BoundingBoxDTO: Codable, Equatable {
     self.right = right
   }
   
+  public init() {
+    self.top = 0
+    self.bottom = 0
+    self.left = 0
+    self.right = 0
+  }
+  
   enum CodingKeys: String, CodingKey {
     case top
     case bottom
@@ -30,11 +37,12 @@ public struct BoundingBoxDTO: Codable, Equatable {
 }
 
 public extension BoundingBoxDTO {
-  static func mock() -> BoundingBoxDTO {
-    return BoundingBoxDTO(top: 0, bottom: 0, left: 0, right: 0)
-  }
-  
-  static func garlicMock() -> BoundingBoxDTO {
-    return BoundingBoxDTO(top: 105, bottom: 987, left: 104, right: 835)
+  func toCGRect() -> CGRect {
+    let x: CGFloat = CGFloat(left)
+    let y: CGFloat = CGFloat(top)
+    let width: CGFloat = (right - left) < 0 ? 0 : CGFloat(right - left)
+    let height: CGFloat = (bottom - top) < 0 ? 0 : CGFloat(bottom - top)
+    
+    return CGRect(x: x, y: y, width: width, height: height)
   }
 }

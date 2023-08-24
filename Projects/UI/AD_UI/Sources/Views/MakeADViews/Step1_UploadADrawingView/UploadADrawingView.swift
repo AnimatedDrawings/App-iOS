@@ -188,10 +188,10 @@ extension UploadADrawingView {
     let tapCardAction: (Data?) -> ()
     
     typealias sample = ADUtilsAsset.SampleDrawing
-    let example1: ADUtilsImages = sample.example1
-    let example2: ADUtilsImages = sample.example2
-    let example3: ADUtilsImages = sample.example3
-    let example4: ADUtilsImages = sample.example4
+    let example1: ADUtilsImages = sample.step1Example1
+    let example2: ADUtilsImages = sample.step1Example2
+    let example3: ADUtilsImages = sample.step1Example3
+    let example4: ADUtilsImages = sample.step1Example4
     
     var body: some View {
       VStack(spacing: 20) {

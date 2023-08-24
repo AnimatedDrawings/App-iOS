@@ -10,6 +10,7 @@ import SwiftUI
 import AD_Feature
 import AD_Utils
 import ComposableArchitecture
+import AD_ModifyJoints
 
 struct FindingCharacterJointsView: ADUI {
   typealias MyFeature = FindingCharacterJointsFeature
@@ -53,16 +54,22 @@ struct FindingCharacterJointsView: ADUI {
         isPresented: viewStore.$isShowModifyJointsView,
         onDismiss: { viewStore.send(.onDismissModifyJointsView) },
         content: {
-          if let maskedImage = viewStore.sharedState.maskedImage,
+          if let croppedImage = viewStore.sharedState.croppedImage,
              let jointsDTO = viewStore.sharedState.jointsDTO
           {
             ModifyJointsView(
-              maskedImage: maskedImage,
-              jointsDTO: jointsDTO,
-              cancel: { viewStore.send(.toggleModifyJointsView) },
-              save: { modifiedJointsDTO in
+              croppedImage: croppedImage,
+              jointsInfo: jointsDTO.toDomain(),
+              modifyNextAction: { modifiedJointsInfo in
+                let modifiedJointsDTO = modifiedJointsInfo.toDTO(
+                  originImageSize: .init(
+                    width: jointsDTO.width,
+                    height: jointsDTO.height
+                  )
+                )
                 viewStore.send(.findCharacterJoints(modifiedJointsDTO))
-              }
+              },
+              cancel: { viewStore.send(.toggleModifyJointsView) }
             )
             .transparentBlurBackground()
             .addLoadingView(isShow: viewStore.state.isShowLoadingView, description: "Modify Character Joints ...")
@@ -120,7 +127,7 @@ extension FindingCharacterJointsView {
         viewStore.send(.checkAction)
       }
       
-      GIFViewName("Step4_Preview")
+      GIFViewName("step4Gif")
         .frame(height: 250)
     }
   }
@@ -153,6 +160,48 @@ extension FindingCharacterJointsView {
         Text(text)
       }
     }
+  }
+}
+
+extension JointsDTO {
+  func toDomain() -> JointsInfo {
+    let imageWidth = CGFloat(self.width)
+    let imageHeight = CGFloat(self.height)
+    
+    return JointsInfo(
+      skeletons: self.skeletonDTO
+        .reduce(into: [String : SkeletonInfo](), { dict, dto in
+          let name: String = dto.name
+          let ratioX: CGFloat = imageWidth == 0 ? 0 : CGFloat(dto.location[0]) / imageWidth
+          let ratioY: CGFloat = imageHeight == 0 ? 0 : CGFloat(dto.location[1]) / imageHeight
+          let ratioPoint = RatioPoint(x: ratioX, y: ratioY)
+          
+          dict[name] = SkeletonInfo(
+            name: name,
+            ratioPoint: ratioPoint,
+            parent: dto.parent
+          )
+        })
+    )
+  }
+}
+
+extension JointsInfo {
+  func toDTO(originImageSize: CGSize) -> JointsDTO {
+    return JointsDTO(
+      width: Int(originImageSize.width),
+      height: Int(originImageSize.height),
+      skeletonDTO: self.skeletons.map { _, skeletonInfo in
+        let locationX = Int(skeletonInfo.ratioPoint.x * originImageSize.width)
+        let locationY = Int(skeletonInfo.ratioPoint.y * originImageSize.height)
+        
+        return SkeletonDTO(
+          name: skeletonInfo.name,
+          location: [locationX, locationY],
+          parent: skeletonInfo.parent
+        )
+      }
+    )
   }
 }
 

@@ -7,34 +7,33 @@
 //
 
 import SwiftUI
-import AD_Feature
 import AD_Utils
 
-struct CropImageView: View {
+public struct CropImageView: View {
   let originalImage: UIImage
-  let cropAction: (CropResult) -> ()
+  let cropNextAction: (UIImage?, CGRect) -> ()
   let cancelAction: () -> ()
 
   @State var resetTrigger = false
   @StateObject var boundingBoxInfo: BoundingBoxInfo
   
-  init(
+  public init(
     originalImage: UIImage,
-    boundingBoxDTO: BoundingBoxDTO,
-    cropAction: @escaping (CropResult) -> (),
-    cancelAction: @escaping () -> ()
+    originCGRect: CGRect,
+    cropNextAction: @escaping (UIImage?, CGRect) -> Void,
+    cancelAction: @escaping () -> Void
   ) {
     self.originalImage = originalImage
+    self.cropNextAction = cropNextAction
+    self.cancelAction = cancelAction
     self._boundingBoxInfo = StateObject(
       wrappedValue: BoundingBoxInfo(
-        boundingBoxDTO: boundingBoxDTO
+        originCGRect: originCGRect
       )
     )
-    self.cropAction = cropAction
-    self.cancelAction = cancelAction
   }
   
-  var body: some View {
+  public var body: some View {
     VStack(spacing: 40) {
       ToolNaviBar(
         cancelAction: cancel,
@@ -74,16 +73,13 @@ extension CropImageView {
 
 extension CropImageView {
   func save() {
-    let croppedImage = self.crop()
-    let boundingBoxDTO = self.boundingBoxInfo.toBoundingBoxDTO()
-    let cropResult = CropResult(
-      croppedImage: croppedImage,
-      boundingBoxDTO: boundingBoxDTO
-    )
-    cropAction(cropResult)
+    let croppedImage = self.cropImage()
+    let croppedCGRect = self.boundingBoxInfo.getCroppedCGRect()
+    
+    cropNextAction(croppedImage, croppedCGRect)
   }
   
-  func crop() -> UIImage? {
+  func cropImage() -> UIImage? {
     let reciprocal: CGFloat = 1 / self.boundingBoxInfo.imageScale
     
     let cropCGSize = CGSize(
@@ -132,5 +128,64 @@ extension CropImageView {
   
   func resetAction() {
     self.resetTrigger.toggle()
+  }
+}
+
+// MARK: - Previews_CropImageView
+
+struct Previews_CropImageView: View {
+  let originalImage: UIImage = ADCropImageAsset.garlic.image
+  let originCGRect: CGRect = .init(origin: .init(x: 100, y: 100), size: .init(width: 200, height: 200))
+  
+  @State var isPresentedCropResultView = false
+  @State var croppedUIImage: UIImage = .init()
+  @State var croppedCGRect: CGRect = .init()
+  
+  var body: some View {
+    NavigationStack {
+      VStack {
+        CropImageView(
+          originalImage: originalImage,
+          originCGRect: originCGRect) { croppedUIImage, croppedCGRect in
+            if let croppedUIImage = croppedUIImage {
+              self.croppedUIImage = croppedUIImage
+              self.croppedCGRect = croppedCGRect
+              self.isPresentedCropResultView.toggle()
+            }
+          } cancelAction: {
+            
+          }
+      }
+      .navigationDestination(isPresented: $isPresentedCropResultView) {
+        Previews_CropResultView(croppedUIImage: self.croppedUIImage, croppedCGRect: self.croppedCGRect)
+      }
+    }
+  }
+}
+
+struct Previews_CropResultView: View {
+  let croppedUIImage: UIImage
+  let croppedCGRect: CGRect
+  
+  var body: some View {
+    VStack {
+      Text("x : \(croppedCGRect.origin.x), y : \(croppedCGRect.origin.y)")
+      Text("width : \(croppedCGRect.width), height : \(croppedCGRect.height)")
+      
+      Rectangle()
+        .frame(width: 300, height: 400)
+        .foregroundColor(.red)
+        .overlay {
+          Image(uiImage: croppedUIImage)
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+        }
+    }
+  }
+}
+
+struct CropImageView_Previews: PreviewProvider {
+  static var previews: some View {
+    Previews_CropImageView()
   }
 }
