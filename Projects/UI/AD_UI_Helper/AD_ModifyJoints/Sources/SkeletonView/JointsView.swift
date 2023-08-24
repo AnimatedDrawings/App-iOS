@@ -12,7 +12,6 @@ struct JointsView: View {
   let strokeColor: Color
   let jointCircleSize: CGFloat = 15
   var skeletonDict: [String : SkeletonInfo] {
-//    return self.modifyJointsLink.jointsInfo.skeletons
     return self.modifyJointsLink.skeletons
   }
   
@@ -29,8 +28,8 @@ struct JointsView: View {
   }
   
   var body: some View {
-    ForEach(Array(modifyJointsLink.skeletons.keys), id: \.self) { name in
-      if var mySkeleton = modifyJointsLink.skeletons[name] {
+    ForEach(Array(skeletonDict.keys), id: \.self) { name in
+      if let mySkeleton = skeletonDict[name] {
         JointCircle()
           .offset(calJointOffset(mySkeleton))
           .gesture(

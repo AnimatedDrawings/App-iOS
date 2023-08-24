@@ -8,7 +8,7 @@
 import SwiftUI
 import AD_Utils
 
-struct ModifyJointsView: View {
+public struct ModifyJointsView: View {
   let croppedImage: UIImage
   @StateObject var modifyJointsLink: ModifyJointsLink
   let modifyNextAction: (JointsInfo) -> ()
@@ -16,7 +16,7 @@ struct ModifyJointsView: View {
   
   let strokeColor: Color = ADUtilsAsset.Color.blue1.swiftUIColor
   
-  init(
+  public init(
     croppedImage: UIImage,
     jointsInfo: JointsInfo,
     modifyNextAction: @escaping (JointsInfo) -> Void,
@@ -32,7 +32,7 @@ struct ModifyJointsView: View {
     self.cancel = cancel
   }
   
-  var body: some View {
+  public var body: some View {
     VStack {
       ToolNaviBar(cancelAction: cancel, saveAction: save)
       
@@ -62,13 +62,6 @@ struct ModifyJointsView: View {
 }
 
 extension ModifyJointsView {
-//  func saveAction() {
-//    self.modifyJointsLink.startSave.send()
-//    self.modifyJointsLink.$finishSave.sink { _ in
-//      self.save(self.modifyJointsLink.modifiedJointsDTO)
-//    }
-//    .store(in: &self.modifyJointsLink.anyCancellable)
-//  }
   func save() {
     let modifiedJointsInfo = JointsInfo(
       skeletons: self.modifyJointsLink.skeletons
