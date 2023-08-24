@@ -68,7 +68,7 @@ extension OnBoardingView {
 extension OnBoardingView {
   @ViewBuilder
   func Preview() -> some View {
-    let previewName = "ADApp_Preview"
+    let previewName = "PreviewADApp"
     let withExtension = "mp4"
     
     ZStack {

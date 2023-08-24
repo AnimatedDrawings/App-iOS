@@ -37,17 +37,7 @@ struct FindingTheCharacterView: ADUI {
           Title()
           
           CheckList {
-            VStack(alignment: .leading, spacing: 15) {
-              CheckListButton1(state: viewStore.$checkState) {
-                viewStore.send(.checkAction)
-              }
-              
-              HStack {
-                GIFViewName("FindingTheCharacter_Preview1")
-                GIFViewName("FindingTheCharacter_Preview2")
-              }
-              .frame(height: 250)
-            }
+            CheckListContent(with: viewStore)
           }
           
           Spacer()
@@ -126,8 +116,8 @@ extension FindingTheCharacterView {
       }
       
       HStack {
-        GIFViewName("FindingTheCharacter_Preview1")
-        GIFViewName("FindingTheCharacter_Preview2")
+        GIFViewName("step2Gif1")
+        GIFViewName("step2Gif2")
       }
       .frame(height: 250)
     }

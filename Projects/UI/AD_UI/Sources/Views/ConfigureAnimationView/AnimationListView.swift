@@ -176,7 +176,7 @@ extension AnimationListView {
         .cornerRadius(15)
         .frame(height: self.gridItemHeight)
         .overlay {
-          GIFViewName(adAnimation.previewName)
+          GIFViewName(adAnimation.rawValue)
             .frame(width: gifViewSize, height: gifViewSize)
         }
     }
@@ -201,12 +201,6 @@ enum AnimationCategory: String, CaseIterable {
     case .FUNNY:
       return [.zombie]
     }
-  }
-}
-
-extension ADAnimation {
-  var previewName: String {
-    return self.rawValue + "_preview"
   }
 }
 

@@ -83,28 +83,6 @@ struct FindingCharacterJointsView: ADUI {
                 Text(viewStore.descriptionAlert)
               }
             )
-            
-            
-//            ModifyJointsView(
-//              maskedImage: maskedImage,
-//              jointsDTO: jointsDTO,
-//              cancel: { viewStore.send(.toggleModifyJointsView) },
-//              save: { modifiedJointsDTO in
-//                viewStore.send(.findCharacterJoints(modifiedJointsDTO))
-//              }
-//            )
-//            .transparentBlurBackground()
-//            .addLoadingView(isShow: viewStore.state.isShowLoadingView, description: "Modify Character Joints ...")
-//            .alert(
-//              viewStore.titleAlert,
-//              isPresented: viewStore.$isShowAlert,
-//              actions: {
-//                Button("OK") {}
-//              },
-//              message: {
-//                Text(viewStore.descriptionAlert)
-//              }
-//            )
           }
         }
       )
@@ -149,7 +127,7 @@ extension FindingCharacterJointsView {
         viewStore.send(.checkAction)
       }
       
-      GIFViewName("Step4_Preview")
+      GIFViewName("step4Gif")
         .frame(height: 250)
     }
   }
