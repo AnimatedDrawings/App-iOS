@@ -22,6 +22,7 @@ public struct ConfigureAnimationFeature: Reducer {
     @BindingState public var isShowAnimationListView = false
     public var isShowLoadingView = false
     @BindingState public var isShowShareView = false
+    @BindingState public var isShowActionSheet = false
     
     public var selectedAnimation: ADAnimation? = nil
     public var myAnimationData: Data? = nil
@@ -43,6 +44,7 @@ public struct ConfigureAnimationFeature: Reducer {
     case toggleIsShowAnimationListView
     case toggleIsShowAddAnimationView
     case toggleIsShowShareView
+    case toggleIsShowActionSheet
     
     case setLoadingView(Bool)
     
@@ -77,6 +79,10 @@ public struct ConfigureAnimationFeature: Reducer {
         
       case .toggleIsShowShareView:
         state.isShowShareView.toggle()
+        return .none
+        
+      case .toggleIsShowActionSheet:
+        state.isShowActionSheet.toggle()
         return .none
         
       case .setLoadingView(let flag):

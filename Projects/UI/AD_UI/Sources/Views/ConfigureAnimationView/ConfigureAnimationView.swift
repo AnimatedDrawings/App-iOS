@@ -43,9 +43,19 @@ struct ConfigureAnimationView: ADUI {
       }
       .padding()
       .addBackground()
+      .confirmationDialog("", isPresented: viewStore.$isShowActionSheet) {
+        Button("Save GIF In Camera Roll") {
+          
+        }
+        Button("Share") {
+          if viewStore.myAnimationURL != nil {
+            viewStore.send(.toggleIsShowShareView)
+          }
+        }
+      }
       .sheet(isPresented: viewStore.$isShowShareView) {
-        if let myAnimation = viewStore.myAnimationURL {
-          ShareView(gifURL: myAnimation)
+        if let myAnimationURL = viewStore.myAnimationURL {
+          ShareView(gifURL: myAnimationURL)
             .presentationDetents([.medium, .large])
         }
       }
@@ -132,9 +142,7 @@ extension ConfigureAnimationView {
             viewStore.send(.toggleIsShowAddAnimationView)
           }
           TabBarButton(imageName: share) {
-            if viewStore.myAnimationURL != nil {
-              viewStore.send(.toggleIsShowShareView)
-            }
+            viewStore.send(.toggleIsShowActionSheet)
           }
           TabBarButton(imageName: animation) {
             viewStore.send(.toggleIsShowAnimationListView)
