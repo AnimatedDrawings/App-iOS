@@ -7,53 +7,31 @@
 //
 
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct ShareView: View {
-  let gifData: Data
+  let gifURL: URL
   
   var body: some View {
-    ShareUIViewControllerRepresentable(gifData: gifData)
+    ShareUIViewControllerRepresentable(gifURL: gifURL)
   }
 }
 
 struct ShareUIViewControllerRepresentable: UIViewControllerRepresentable {
   typealias UIViewControllerType = UIActivityViewController
   
-  let gifData: Data
+  let gifURL: URL
   
   func makeUIViewController(context: Context) -> UIActivityViewController {
-    let uiActivityController = UIActivityViewController(
-      activityItems: [gifData],
-      applicationActivities: nil)
+    let vc = UIActivityViewController(
+      activityItems: [gifURL],
+      applicationActivities: nil
+    )
     
-    return uiActivityController
+    return vc
   }
   
   func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {
     
-  }
-}
-
-// MARK: - Previews_ShareView
-
-struct Previews_ShareView: View {
-  @State var isShowShareView = false
-  
-  var body: some View {
-    VStack {
-      Button("ShowShareView") {
-        self.isShowShareView.toggle()
-      }
-    }
-    .sheet(isPresented: $isShowShareView) {
-      ShareView(gifData: Data())
-        .presentationDetents([.medium, .large])
-    }
-  }
-}
-
-struct ShareView_Previews: PreviewProvider {
-  static var previews: some View {
-    Previews_ShareView()
   }
 }

@@ -44,8 +44,8 @@ struct ConfigureAnimationView: ADUI {
       .padding()
       .addBackground()
       .sheet(isPresented: viewStore.$isShowShareView) {
-        if let myAnimation = viewStore.myAnimation {
-          ShareView(gifData: myAnimation)
+        if let myAnimation = viewStore.myAnimationURL {
+          ShareView(gifURL: myAnimation)
             .presentationDetents([.medium, .large])
         }
       }
@@ -98,7 +98,7 @@ extension ConfigureAnimationView {
       .frame(height: 400)
       .shadow(radius: 10)
       .overlay {
-        if let gifData = viewStore.state.myAnimation {
+        if let gifData = viewStore.state.myAnimationData {
           GIFViewData(gifData)
         }
       }
@@ -132,7 +132,9 @@ extension ConfigureAnimationView {
             viewStore.send(.toggleIsShowAddAnimationView)
           }
           TabBarButton(imageName: share) {
-            viewStore.send(.toggleIsShowShareView)
+            if viewStore.myAnimationURL != nil {
+              viewStore.send(.toggleIsShowShareView)
+            }
           }
           TabBarButton(imageName: animation) {
             viewStore.send(.toggleIsShowAnimationListView)

@@ -119,9 +119,9 @@ public struct UploadADrawingFeature: Reducer {
         return .none
         
       case .uploadDrawingResponse(.failure(let error)):
-        var titleAlert = ADError.connection.title
-        var descriptionAlert = ADError.connection.description
-        if let adError = error as? ADError {
+        var titleAlert = ADMoyaError.connection.title
+        var descriptionAlert = ADMoyaError.connection.description
+        if let adError = error as? ADMoyaError {
           titleAlert = adError.title
           descriptionAlert = adError.description
         }
