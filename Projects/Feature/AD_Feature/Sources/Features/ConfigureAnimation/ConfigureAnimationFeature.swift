@@ -8,6 +8,7 @@
 
 import SwiftUI
 import ComposableArchitecture
+import Photos
 
 public struct ConfigureAnimationFeature: Reducer {
   @Dependency(\.configureAnimationClient) var configureAnimationClient
@@ -54,11 +55,14 @@ public struct ConfigureAnimationFeature: Reducer {
     case downloadVideo
     case downloadVideoResponse(TaskResult<Data>)
     
+    case saveGIFInCameraRoll(URL)
+    
     case onDismissAnimationListView
     
     case addToCache(URL)
     
     case showAlert(ADMoyaError)
+    case saveGIFResultAlert(Bool)
   }
 
   public var body: some Reducer<State, Action> {
@@ -203,7 +207,43 @@ public struct ConfigureAnimationFeature: Reducer {
         state.descriptionAlert = adError.description
         state.isShowAlert.toggle()
         return .none
+        
+      case .saveGIFInCameraRoll(let gifURL):
+        return .run(
+          operation: { send in
+            try await PHPhotoLibrary.shared().performChanges {
+              let request = PHAssetCreationRequest.forAsset()
+              request.addResource(with: .photo, fileURL: gifURL, options: nil)
+            }
+            await send(.saveGIFResultAlert(true))
+          },
+          catch: { error, send in
+            await send(.saveGIFResultAlert(false))
+          }
+        )
+        
+      case .saveGIFResultAlert(let isSuccess):
+        let titleAlert = isSuccess ? "Save Success!" : "Save GIF Error"
+        let descriptionAlert = isSuccess ? "" : "Cannot Save GIF.."
+        state.titleAlert = titleAlert
+        state.descriptionAlert = descriptionAlert
+        state.isShowAlert.toggle()
+        return .none
       }
     }
   }
 }
+
+
+
+
+//PHPhotoLibrary.shared().performChanges({
+//    let request = PHAssetCreationRequest.forAsset()
+//    request.addResource(with: .photo, fileURL: 'YOUR_GIF_URL', options: nil)
+//}) { (success, error) in
+//    if let error = error {
+//        print(error.localizedDescription)
+//    } else {
+//        print("GIF has saved")
+//    }
+//}

@@ -43,9 +43,21 @@ struct ConfigureAnimationView: ADUI {
       }
       .padding()
       .addBackground()
+      .alert(
+        viewStore.titleAlert,
+        isPresented: viewStore.$isShowAlert,
+        actions: {
+          Button("OK") {}
+        },
+        message: {
+          Text(viewStore.descriptionAlert)
+        }
+      )
       .confirmationDialog("", isPresented: viewStore.$isShowActionSheet) {
         Button("Save GIF In Camera Roll") {
-          
+          if let gifURL = viewStore.myAnimationURL {
+            viewStore.send(.saveGIFInCameraRoll(gifURL))
+          }
         }
         Button("Share") {
           if viewStore.myAnimationURL != nil {
