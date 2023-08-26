@@ -47,7 +47,7 @@ public struct FindingTheCharacterFeature: Reducer {
     case downloadMaskImage
     case downloadMaskImageResponse(TaskResult<UIImage>)
     
-    case showAlert(ADError)
+    case showAlert(ADMoyaError)
   }
   
   public var body: some Reducer<State, Action> {
@@ -105,7 +105,7 @@ public struct FindingTheCharacterFeature: Reducer {
         
       case .findTheCharacterResponse(.failure(let error)):
         print(error)
-        let adError = error as? ADError ?? .connection
+        let adError = error as? ADMoyaError ?? .connection
         return .run { send in
           await send(.setLoadingView(false))
           await send(.showAlert(adError))
@@ -146,7 +146,7 @@ public struct FindingTheCharacterFeature: Reducer {
         
       case .downloadMaskImageResponse(.failure(let error)):
         print(error)
-        let adError = error as? ADError ?? .connection
+        let adError = error as? ADMoyaError ?? .connection
         return .run { send in
           await send(.setLoadingView(false))
           await send(.showAlert(adError))

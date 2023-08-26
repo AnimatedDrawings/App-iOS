@@ -47,7 +47,7 @@ public struct SeparatingCharacterFeature: Reducer {
     case separateCharacterResponse(TaskResult<SeparateCharacterReponse>)
     case onDismissMakingImageView
     
-    case showAlert(ADError)
+    case showAlert(ADMoyaError)
   }
   
   public var body: some Reducer<State, Action> {
@@ -118,7 +118,7 @@ public struct SeparatingCharacterFeature: Reducer {
       
       case .separateCharacterResponse(.failure(let error)):
         print(error)
-        let adError = error as? ADError ?? .connection
+        let adError = error as? ADMoyaError ?? .connection
         return .run { send in
           await send(.setLoadingView(false))
           await send(.showAlert(adError))

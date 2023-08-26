@@ -31,18 +31,18 @@ extension MakeADClient: DependencyKey {
         guard let responseModel = try? JSONDecoder()
           .decode(DefaultResponse<UploadADrawingResposne>.self, from: success.data)
         else {
-          throw ADError.jsonMapping
+          throw ADMoyaError.jsonMapping
         }
         guard responseModel.isSuccess,
               let responseModel = responseModel.response
         else {
           print(responseModel.message)
-          throw ADError.calculateInServer
+          throw ADMoyaError.calculateInServer
         }
         return responseModel
       case .failure(let failure):
         print(failure.localizedDescription)
-        throw ADError.connection
+        throw ADMoyaError.connection
       }
     },
     
@@ -54,16 +54,16 @@ extension MakeADClient: DependencyKey {
         guard let responseModel = try? JSONDecoder()
           .decode(EmptyResponseType.self, from: success.data)
         else {
-          throw ADError.jsonMapping
+          throw ADMoyaError.jsonMapping
         }
         guard responseModel.isSuccess else {
           print(responseModel.message)
-          throw ADError.calculateInServer
+          throw ADMoyaError.calculateInServer
         }
         return EmptyResponse()
       case .failure(let failure):
         print(failure.localizedDescription)
-        throw ADError.connection
+        throw ADMoyaError.connection
       }
     },
     
@@ -72,13 +72,13 @@ extension MakeADClient: DependencyKey {
       switch response {
       case .success(let success):
         guard let maskImage = UIImage(data: success.data) else {
-          throw ADError.imageMapping
+          throw ADMoyaError.imageMapping
         }
         return maskImage
         
       case .failure(let failure):
         print(failure.localizedDescription)
-        throw ADError.connection
+        throw ADMoyaError.connection
       }
     },
     
@@ -90,18 +90,18 @@ extension MakeADClient: DependencyKey {
         guard let responseModel = try? JSONDecoder()
           .decode(DefaultResponse<SeparateCharacterReponse>.self, from: success.data)
         else {
-          throw ADError.jsonMapping
+          throw ADMoyaError.jsonMapping
         }
         guard responseModel.isSuccess,
               let responseModel = responseModel.response
         else {
           print(responseModel.message)
-          throw ADError.calculateInServer
+          throw ADMoyaError.calculateInServer
         }
         return responseModel
       case .failure(let failure):
         print(failure.localizedDescription)
-        throw ADError.connection
+        throw ADMoyaError.connection
       }
     },
     
@@ -112,16 +112,16 @@ extension MakeADClient: DependencyKey {
         guard let responseModel = try? JSONDecoder()
           .decode(EmptyResponseType.self, from: success.data)
         else {
-          throw ADError.jsonMapping
+          throw ADMoyaError.jsonMapping
         }
         guard responseModel.isSuccess else {
           print(responseModel.message)
-          throw ADError.calculateInServer
+          throw ADMoyaError.calculateInServer
         }
         return EmptyResponse()
       case .failure(let failure):
         print(failure.localizedDescription)
-        throw ADError.connection
+        throw ADMoyaError.connection
       }
     }
   )

@@ -1,5 +1,5 @@
 //
-//  ADError.swift
+//  ADMoyaError.swift
 //  AD_Feature
 //
 //  Created by minii on 2023/08/07.
@@ -8,12 +8,13 @@
 
 import Foundation
 
-public enum ADError: Error {
+public enum ADMoyaError: Error {
   case jsonMapping
   case calculateInServer
   case connection
   case imageMapping
   
+  // 수정
   public var title: String {
     switch self {
     case .jsonMapping, .connection:

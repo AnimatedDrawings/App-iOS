@@ -40,7 +40,7 @@ public struct FindingCharacterJointsFeature: Reducer {
     case findCharacterJointsResponse(TaskResult<EmptyResponse>)
     case onDismissModifyJointsView
     
-    case showAlert(ADError)
+    case showAlert(ADMoyaError)
   }
   
   public var body: some Reducer<State, Action> {
@@ -94,7 +94,7 @@ public struct FindingCharacterJointsFeature: Reducer {
         
       case .findCharacterJointsResponse(.failure(let error)):
         print(error)
-        let adError = error as? ADError ?? .connection
+        let adError = error as? ADMoyaError ?? .connection
         return .run { send in
           await send(.setLoadingView(false))
           await send(.showAlert(adError))

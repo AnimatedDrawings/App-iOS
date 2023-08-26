@@ -25,16 +25,16 @@ extension ConfigureAnimationClient: DependencyKey {
         guard let responseModel = try? JSONDecoder()
           .decode(EmptyResponseType.self, from: success.data)
         else {
-          throw ADError.jsonMapping
+          throw ADMoyaError.jsonMapping
         }
         guard responseModel.isSuccess else {
           print(responseModel.message)
-          throw ADError.calculateInServer
+          throw ADMoyaError.calculateInServer
         }
         return EmptyResponse()
       case .failure(let failure):
         print(failure.localizedDescription)
-        throw ADError.connection
+        throw ADMoyaError.connection
       }
     },
     
@@ -45,7 +45,7 @@ extension ConfigureAnimationClient: DependencyKey {
         return success.data
       case .failure(let failure):
         print(failure.localizedDescription)
-        throw ADError.connection
+        throw ADMoyaError.connection
       }
     }
   )

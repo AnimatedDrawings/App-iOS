@@ -30,7 +30,7 @@ struct OnBoardingView: View {
     .padding()
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .ignoresSafeArea()
-    .adBackground()
+    .addBackground()
   }
 }
 

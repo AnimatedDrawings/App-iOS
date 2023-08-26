@@ -42,7 +42,35 @@ struct ConfigureAnimationView: ADUI {
         Spacer().frame(height: 20)
       }
       .padding()
-      .adBackground()
+      .addBackground()
+      .alert(
+        viewStore.titleAlert,
+        isPresented: viewStore.$isShowAlert,
+        actions: {
+          Button("OK") {}
+        },
+        message: {
+          Text(viewStore.descriptionAlert)
+        }
+      )
+      .confirmationDialog("", isPresented: viewStore.$isShowActionSheet) {
+        Button("Save GIF In Camera Roll") {
+          if let gifURL = viewStore.myAnimationURL {
+            viewStore.send(.saveGIFInCameraRoll(gifURL))
+          }
+        }
+        Button("Share") {
+          if viewStore.myAnimationURL != nil {
+            viewStore.send(.toggleIsShowShareView)
+          }
+        }
+      }
+      .sheet(isPresented: viewStore.$isShowShareView) {
+        if let myAnimationURL = viewStore.myAnimationURL {
+          ShareView(gifURL: myAnimationURL)
+            .presentationDetents([.medium, .large])
+        }
+      }
       .fullScreenCover(
         isPresented: viewStore.$isShowAnimationListView,
         onDismiss: { viewStore.send(.onDismissAnimationListView) },
@@ -92,7 +120,7 @@ extension ConfigureAnimationView {
       .frame(height: 400)
       .shadow(radius: 10)
       .overlay {
-        if let gifData = viewStore.state.myAnimation {
+        if let gifData = viewStore.state.myAnimationData {
           GIFViewData(gifData)
         }
       }
@@ -125,7 +153,9 @@ extension ConfigureAnimationView {
           TabBarButton(imageName: reset) {
             viewStore.send(.toggleIsShowAddAnimationView)
           }
-          TabBarButton(imageName: share) {}
+          TabBarButton(imageName: share) {
+            viewStore.send(.toggleIsShowActionSheet)
+          }
           TabBarButton(imageName: animation) {
             viewStore.send(.toggleIsShowAnimationListView)
           }
