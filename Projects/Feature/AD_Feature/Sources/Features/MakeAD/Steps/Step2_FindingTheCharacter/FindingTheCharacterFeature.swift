@@ -161,14 +161,3 @@ public struct FindingTheCharacterFeature: Reducer {
     }
   }
 }
-
-extension CGRect {
-  var toBoundingBoxDTO: BoundingBoxDTO {
-    let top = Int(self.origin.y)
-    let bottom = top + Int(self.height)
-    let left = Int(self.origin.x)
-    let right = left + Int(self.width)
-    
-    return BoundingBoxDTO(top: top, bottom: bottom, left: left, right: right)
-  }
-}
