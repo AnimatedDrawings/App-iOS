@@ -43,20 +43,11 @@ struct ConfigureAnimationView: ADUI {
       }
       .padding()
       .addBackground()
-      .alert(
-        viewStore.titleAlert,
-        isPresented: viewStore.$isShowAlert,
-        actions: {
-          Button("OK") {}
-        },
-        message: {
-          Text(viewStore.descriptionAlert)
-        }
-      )
+      .alert(store: store.scope(state: \.$alert, action: { .alert($0) }))
       .confirmationDialog("", isPresented: viewStore.$isShowActionSheet) {
-        Button("Save GIF In Camera Roll") {
+        Button("Save GIF In Photos") {
           if let gifURL = viewStore.myAnimationURL {
-            viewStore.send(.saveGIFInCameraRoll(gifURL))
+            viewStore.send(.saveGIFInPhotos(gifURL))
           }
         }
         Button("Share") {
@@ -79,16 +70,7 @@ struct ConfigureAnimationView: ADUI {
             viewStore.send(.selectAnimation(selectedAnimation))
           }
           .addLoadingView(isShow: viewStore.isShowLoadingView, description: "Add Animation...")
-          .alert(
-            viewStore.titleAlert,
-            isPresented: viewStore.$isShowAlert,
-            actions: {
-              Button("OK") {}
-            },
-            message: {
-              Text(viewStore.descriptionAlert)
-            }
-          )
+          .alert(store: store.scope(state: \.$alert, action: { .alert($0) }))
         }
       )
     }
@@ -131,7 +113,7 @@ extension ConfigureAnimationView {
   @ViewBuilder
   @MainActor
   func TabBar(with viewStore: MyViewStore) -> some View {
-    let reset = "trash"
+    let trash = "trash"
     let fix = "arrowshape.turn.up.backward"
     let share = "square.and.arrow.up"
     let animation = "figure.dance"
@@ -150,11 +132,11 @@ extension ConfigureAnimationView {
           TabBarButton(imageName: fix) {
             viewStore.send(.toggleIsShowAddAnimationView)
           }
-          TabBarButton(imageName: reset) {
-            viewStore.send(.toggleIsShowAddAnimationView)
+          TabBarButton(imageName: trash) {
+            viewStore.send(.trashMakeAD)
           }
           TabBarButton(imageName: share) {
-            viewStore.send(.toggleIsShowActionSheet)
+            viewStore.send(.toggleIsShowShareActionSheet)
           }
           TabBarButton(imageName: animation) {
             viewStore.send(.toggleIsShowAnimationListView)
