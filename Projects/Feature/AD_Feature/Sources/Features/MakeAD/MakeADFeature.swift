@@ -20,7 +20,7 @@ public struct MakeADFeature: Reducer {
   
   public enum Action: Equatable, BindableAction {
     case binding(BindingAction<State>)
-    case bindingCurrentStep(Step)
+    case setCurrentStep(Step)
   }
   
   public var body: some Reducer<State, Action> {
@@ -31,7 +31,7 @@ public struct MakeADFeature: Reducer {
       case .binding:
         return .none
         
-      case .bindingCurrentStep(let nexStep):
+      case .setCurrentStep(let nexStep):
         if state.sharedState.currentStep != nexStep {
           state.sharedState.isShowStepStatusBar = true
           state.sharedState.currentStep = nexStep
