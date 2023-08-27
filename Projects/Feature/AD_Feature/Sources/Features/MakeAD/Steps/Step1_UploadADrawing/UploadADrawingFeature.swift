@@ -162,7 +162,6 @@ extension UploadADrawingFeature {
   }
 }
 
-
 extension UploadADrawingFeature {
   func activeUploadButton(state: inout UploadADrawingFeature.State) {
     if state.checkState1 && state.checkState2 && state.checkState3 {
