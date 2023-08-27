@@ -27,9 +27,7 @@ public struct SeparatingCharacterFeature: Reducer {
     var isSuccessSeparateCharacter = false
     public var isShowLoadingView = false
     
-    @BindingState public var isShowAlert = false
-    public var titleAlert = ""
-    public var descriptionAlert = ""
+    @PresentationState public var alert: AlertState<MyAlertState>? = nil
   }
   
   public enum Action: Equatable, BindableAction {
@@ -47,12 +45,19 @@ public struct SeparatingCharacterFeature: Reducer {
     case separateCharacterResponse(TaskResult<SeparateCharacterReponse>)
     case onDismissMakingImageView
     
-    case showAlert(ADMoyaError)
+    case alert(PresentationAction<MyAlertState>)
+    case showAlert(MyAlertState)
   }
   
   public var body: some Reducer<State, Action> {
     BindingReducer()
-    
+    MainReducer()
+      .ifLet(\.$alert, action: /Action.alert)
+  }
+}
+
+extension SeparatingCharacterFeature {
+  func MainReducer() -> some Reducer<State, Action> {
     Reduce { state, action in
       switch action {
       case .binding:
@@ -118,10 +123,11 @@ public struct SeparatingCharacterFeature: Reducer {
       
       case .separateCharacterResponse(.failure(let error)):
         print(error)
-        let adError = error as? ADMoyaError ?? .connection
+        state.isSuccessSeparateCharacter = false
+        let adMoyaError = error as? ADMoyaError ?? .connection
         return .run { send in
           await send(.setLoadingView(false))
-          await send(.showAlert(adError))
+          await send(.showAlert(.networkError(adMoyaError)))
         }
           
       case .onDismissMakingImageView:
@@ -133,15 +139,30 @@ public struct SeparatingCharacterFeature: Reducer {
         }
         return .none
         
-      case .showAlert(let adError):
-        state.titleAlert = adError.title
-        state.descriptionAlert = adError.description
-        state.isShowAlert.toggle()
+      case .alert:
+        return .none
+      case .showAlert(let myAlertState):
+        state.alert = myAlertState.state
         return .none
       }
     }
   }
-  
+}
+
+extension SeparatingCharacterFeature {
+  public enum MyAlertState: ADAlertState {
+    case networkError(ADMoyaError)
+    
+    var state: AlertState<Self> {
+      switch self {
+      case .networkError(let adMoyaError):
+        return adMoyaError.alertState()
+      }
+    }
+  }
+}
+
+extension SeparatingCharacterFeature {
   func activeUploadButton(state: inout SeparatingCharacterFeature.State) {
     if state.checkState1 && state.checkState2 {
       state.maskState = true
