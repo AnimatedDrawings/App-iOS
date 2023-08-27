@@ -22,9 +22,7 @@ public struct FindingCharacterJointsFeature: Reducer {
     public var isShowLoadingView = false
     var isSuccessFindCharacterJoints = false
     
-    @BindingState public var isShowAlert = false
-    public var titleAlert = ""
-    public var descriptionAlert = ""
+    @PresentationState public var alert: AlertState<MyAlertState>? = nil
   }
   
   public enum Action: Equatable, BindableAction {
@@ -40,12 +38,19 @@ public struct FindingCharacterJointsFeature: Reducer {
     case findCharacterJointsResponse(TaskResult<EmptyResponse>)
     case onDismissModifyJointsView
     
-    case showAlert(ADMoyaError)
+    case alert(PresentationAction<MyAlertState>)
+    case showAlert(MyAlertState)
   }
   
   public var body: some Reducer<State, Action> {
     BindingReducer()
-    
+    MainReducer()
+      .ifLet(\.$alert, action: /Action.alert)
+  }
+}
+
+extension FindingCharacterJointsFeature {
+  func MainReducer() -> some Reducer<State, Action> {
     Reduce { state, action in
       switch action {
       case .binding:
@@ -94,10 +99,11 @@ public struct FindingCharacterJointsFeature: Reducer {
         
       case .findCharacterJointsResponse(.failure(let error)):
         print(error)
-        let adError = error as? ADMoyaError ?? .connection
+        state.isSuccessFindCharacterJoints = false
+        let adMoyaError = error as? ADMoyaError ?? .connection
         return .run { send in
           await send(.setLoadingView(false))
-          await send(.showAlert(adError))
+          await send(.showAlert(.networkError(adMoyaError)))
         }
         
       case .onDismissModifyJointsView:
@@ -108,11 +114,24 @@ public struct FindingCharacterJointsFeature: Reducer {
         }
         return .none
         
-      case .showAlert(let adError):
-        state.titleAlert = adError.title
-        state.descriptionAlert = adError.description
-        state.isShowAlert.toggle()
+      case .alert:
         return .none
+      case .showAlert(let adAlertState):
+        state.alert = adAlertState.state
+        return .none
+      }
+    }
+  }
+}
+
+extension FindingCharacterJointsFeature {
+  public enum MyAlertState: ADAlertState {
+    case networkError(ADMoyaError)
+    
+    var state: AlertState<Self> {
+      switch self {
+      case .networkError(let adMoyaError):
+        return adMoyaError.alertState()
       }
     }
   }
