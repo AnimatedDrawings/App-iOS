@@ -43,7 +43,8 @@ struct ConfigureAnimationView: ADUI {
       }
       .padding()
       .addBackground()
-      .alert(store: store.scope(state: \.$alert, action: { .alert($0) }))
+      .alert(store: self.store.scope(state: \.$alertShared, action: { .alertShared($0) }))
+      .alert(store: self.store.scope(state: \.$alertTrashMakeAD, action: { .alertTrashMakeAD($0) }))
       .confirmationDialog("", isPresented: viewStore.$isShowActionSheet) {
         Button("Save GIF In Photos") {
           if let gifURL = viewStore.myAnimationURL {
@@ -70,7 +71,7 @@ struct ConfigureAnimationView: ADUI {
             viewStore.send(.selectAnimation(selectedAnimation))
           }
           .addLoadingView(isShow: viewStore.isShowLoadingView, description: "Add Animation...")
-          .alert(store: store.scope(state: \.$alert, action: { .alert($0) }))
+          .alert(store: self.store.scope(state: \.$alertShared, action: { .alertShared($0) }))
         }
       )
     }
@@ -133,7 +134,7 @@ extension ConfigureAnimationView {
             viewStore.send(.toggleIsShowAddAnimationView)
           }
           TabBarButton(imageName: trash) {
-            viewStore.send(.trashMakeAD)
+            viewStore.send(.showAlertTrashMakeAD)
           }
           TabBarButton(imageName: share) {
             viewStore.send(.toggleIsShowShareActionSheet)
