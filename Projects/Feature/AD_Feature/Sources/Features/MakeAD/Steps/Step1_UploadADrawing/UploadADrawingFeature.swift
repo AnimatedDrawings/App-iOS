@@ -132,7 +132,7 @@ extension UploadADrawingFeature {
         
       case .uploadDrawingNextAction:
         if state.isSuccessUploading {
-          state.sharedState.completeStep = .FindingTheCharacter
+          state.sharedState.completeStep = .UploadADrawing
           state.sharedState.currentStep = .FindingTheCharacter
           state.sharedState.isShowStepStatusBar = true
           state.isSuccessUploading = false

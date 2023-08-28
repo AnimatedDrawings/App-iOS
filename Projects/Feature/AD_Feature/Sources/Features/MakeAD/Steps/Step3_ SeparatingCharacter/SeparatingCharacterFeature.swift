@@ -132,7 +132,7 @@ extension SeparatingCharacterFeature {
           
       case .onDismissMakingImageView:
         if state.isSuccessSeparateCharacter == true {
-          state.sharedState.completeStep = .FindingCharacterJoints
+          state.sharedState.completeStep = .SeparatingCharacter
           state.sharedState.currentStep = .FindingCharacterJoints
           state.sharedState.isShowStepStatusBar = true
           state.isSuccessSeparateCharacter = false

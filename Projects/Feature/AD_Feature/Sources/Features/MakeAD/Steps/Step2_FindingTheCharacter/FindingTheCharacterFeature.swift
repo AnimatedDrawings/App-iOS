@@ -152,7 +152,7 @@ extension FindingTheCharacterFeature {
         
       case .onDismissCropImageView:
         if state.isSuccessUpload {
-          state.sharedState.completeStep = .SeparatingCharacter
+          state.sharedState.completeStep = .FindingTheCharacter
           state.sharedState.currentStep = .SeparatingCharacter
           state.sharedState.isShowStepStatusBar = true
           state.isSuccessUpload = false
