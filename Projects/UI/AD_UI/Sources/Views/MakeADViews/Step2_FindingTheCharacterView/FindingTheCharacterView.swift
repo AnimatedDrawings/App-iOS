@@ -42,7 +42,7 @@ struct FindingTheCharacterView: ADUI {
           
           Spacer()
           
-          ShowCropImageViewButton(state: viewStore.$checkState) {
+          ShowCropImageViewButton(state: viewStore.checkState) {
             viewStore.send(.toggleCropImageView)
           }
         }
@@ -131,14 +131,14 @@ extension FindingTheCharacterView {
 extension FindingTheCharacterView {
   @ViewBuilder
   func ShowCropImageViewButton(
-    state: Binding<Bool>,
+    state: Bool,
     action: @escaping () -> ()
   ) -> some View {
     let viewFinder = "person.fill.viewfinder"
     let text = "Find the Character"
     
     ADButton(
-      state.wrappedValue ? .active : .inActive,
+      state ? .active : .inActive,
       action: action
     ) {
       HStack {

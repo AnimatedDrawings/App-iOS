@@ -26,7 +26,7 @@ public struct ADScrollView<C: View>: View {
       let rect: CGRect = geo.frame(in: .global)
       let scrollViewBottom: CGFloat = rect.origin.y + rect.size.height
       
-      ScrollView(.vertical) {
+      ScrollView(.vertical, showsIndicators: false) {
         content
           .background(
             TrackingView(

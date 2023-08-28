@@ -18,7 +18,10 @@ public struct CheckList<C: View>: View {
   
   public var body: some View {
     VStack(alignment:.leading, spacing: 15) {
-      Title()
+      HStack {
+        Title()
+        FloatingAlert("Tap CheckList!")
+      }
       CheckListContent
     }
     .frame(maxWidth: .infinity, alignment: .leading)
