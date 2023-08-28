@@ -227,6 +227,9 @@ extension ConfigureAnimationFeature {
         return .none
       case .alertShared:
         return .none
+      case .alertTrashMakeAD(.presented(.trash)):
+        state.sharedState = SharedState()
+        return .none
       case .alertTrashMakeAD:
         return .none
       }
@@ -247,7 +250,7 @@ extension ConfigureAnimationFeature {
       },
       actions: {
         ButtonState(role: .cancel) {
-          TextState("cancel")
+          TextState("Cancel")
         }
       },
       message: {
@@ -266,7 +269,7 @@ extension ConfigureAnimationFeature {
       },
       actions: {
         ButtonState(role: .cancel) {
-          TextState("cancel")
+          TextState("Cancel")
         }
       },
       message: {
@@ -282,10 +285,10 @@ extension ConfigureAnimationFeature {
       },
       actions: {
         ButtonState(role: .cancel) {
-          TextState("cancel")
+          TextState("Cancel")
         }
         ButtonState(action: .trash) {
-          TextState("cancel")
+          TextState("Reset")
         }
       },
       message: {
