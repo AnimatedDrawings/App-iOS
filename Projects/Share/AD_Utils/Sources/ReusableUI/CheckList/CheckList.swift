@@ -58,7 +58,7 @@ extension CheckList {
   @ViewBuilder
   func Title() -> some View {
     Text(title)
-      .font(.system(.title3, weight: .medium))
+      .font(.system(.title3, weight: .semibold))
       .foregroundColor(.black)
   }
 }

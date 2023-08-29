@@ -41,14 +41,29 @@ extension OnBoardingView {
     let right = "DRAWINGS"
     let subTitle = "PRESENTED BY META AI RESEARCH"
     let description = "Bring children's drawings to life, by animating characters to move around!"
+    var titleSize: Font.TextStyle {
+      switch UIDevice.current.userInterfaceIdiom {
+      case .phone:
+        if let screenWidth = UIScreen.current?.bounds.size.width,
+           screenWidth > 400
+        {
+          return .largeTitle
+        }
+        else {
+          return .title
+        }
+      default:
+        return .largeTitle
+      }
+    }
     
     VStack {
       HStack {
         Text(left)
-          .font(.system(.largeTitle, weight: .semibold))
+          .font(.system(titleSize, weight: .semibold))
           .foregroundColor(ADUtilsAsset.Color.blue1.swiftUIColor)
         Text(right)
-          .font(.system(.largeTitle, weight: .semibold))
+          .font(.system(titleSize, weight: .semibold))
           .foregroundColor(ADUtilsAsset.Color.blue3.swiftUIColor)
       }
       
@@ -59,7 +74,7 @@ extension OnBoardingView {
       Spacer().frame(height: 20)
       
       Text(description)
-        .font(.system(.title3, weight: .medium))
+        .font(.system(.headline, weight: .medium))
         .multilineTextAlignment(.center)
     }
   }

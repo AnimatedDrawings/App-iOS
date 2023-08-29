@@ -93,7 +93,7 @@ extension FindingCharacterJointsView {
     
     VStack(alignment: .leading, spacing: 20) {
       Text(title)
-        .font(.system(.largeTitle, weight: .semibold))
+        .font(.system(.title, weight: .semibold))
         .foregroundColor(ADUtilsAsset.Color.blue2.swiftUIColor)
       
       Text(description)
