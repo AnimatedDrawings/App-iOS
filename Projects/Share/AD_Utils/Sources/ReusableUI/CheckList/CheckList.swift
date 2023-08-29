@@ -17,9 +17,17 @@ public struct CheckList<C: View>: View {
   var alertText: String {
     switch (myStepIdx, completeStepIdx) {
     case let (x, y) where y + 1 < x:
-      return "Complete previous step"
+      return "Complete Previous Step"
     default:
       return "Read & Check"
+    }
+  }
+  var isDisableContent: Bool {
+    switch (myStepIdx, completeStepIdx) {
+    case let (x, y) where y + 1 < x:
+      return true
+    default:
+      return false
     }
   }
   
@@ -40,6 +48,7 @@ public struct CheckList<C: View>: View {
         FloatingAlert(alertText)
       }
       CheckListContent
+        .disabled(isDisableContent)
     }
     .frame(maxWidth: .infinity, alignment: .leading)
   }
