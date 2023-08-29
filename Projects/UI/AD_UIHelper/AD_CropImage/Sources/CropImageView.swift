@@ -46,7 +46,7 @@ public struct CropImageView: View {
         originalImage: originalImage,
         boundingBoxInfo: boundingBoxInfo
       )
-      .padding(.vertical, 15)
+      .padding()
       .background(
         RoundedRectangle(cornerRadius: 15)
           .foregroundColor(.white)

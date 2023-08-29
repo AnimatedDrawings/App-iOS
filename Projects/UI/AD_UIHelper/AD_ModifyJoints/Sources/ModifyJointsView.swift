@@ -33,7 +33,7 @@ public struct ModifyJointsView: View {
   }
   
   public var body: some View {
-    VStack {
+    VStack(spacing: 40) {
       ToolNaviBar(cancelAction: cancel, saveAction: save)
       
       Spacer()
@@ -47,7 +47,6 @@ public struct ModifyJointsView: View {
           modifyJointsLink: self.modifyJointsLink,
           strokeColor: strokeColor
         )
-        .frame(height: 450)
       }
       
       Spacer()

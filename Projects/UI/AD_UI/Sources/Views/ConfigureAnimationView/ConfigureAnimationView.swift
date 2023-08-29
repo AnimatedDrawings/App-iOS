@@ -28,14 +28,14 @@ struct ConfigureAnimationView: ADUI {
   
   var body: some View {
     WithViewStore(store, observe: { $0 }) { viewStore in
-      VStack {
+      VStack(spacing: 0) {
         Title()
         
-        Spacer()
+        Spacer().frame(height: 50)
         
         MyAnimationView(with: viewStore)
         
-        Spacer()
+        Spacer().frame(height: 50)
         
         TabBar(with: viewStore)
         
@@ -100,9 +100,9 @@ extension ConfigureAnimationView {
   func MyAnimationView(with viewStore: MyViewStore) -> some View {
     RoundedRectangle(cornerRadius: 15)
       .foregroundColor(.white)
-      .frame(height: 350)
+//      .frame(height: 350)
       .shadow(radius: 10)
-      .overlay {
+      .overlay(alignment: .center) {
         if let gifData = viewStore.state.myAnimationData {
           GIFViewData(gifData)
         }
