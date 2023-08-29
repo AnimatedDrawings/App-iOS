@@ -90,6 +90,7 @@ extension ConfigureAnimationView {
         .foregroundColor(ADUtilsAsset.Color.blue2.swiftUIColor)
       
       Text(description)
+        .frame(maxWidth: .infinity)
     }
   }
 }
@@ -100,7 +101,6 @@ extension ConfigureAnimationView {
   func MyAnimationView(with viewStore: MyViewStore) -> some View {
     RoundedRectangle(cornerRadius: 15)
       .foregroundColor(.white)
-//      .frame(height: 350)
       .shadow(radius: 10)
       .overlay(alignment: .center) {
         if let gifData = viewStore.state.myAnimationData {

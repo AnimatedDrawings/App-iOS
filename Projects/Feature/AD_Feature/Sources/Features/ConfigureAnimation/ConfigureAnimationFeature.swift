@@ -308,6 +308,8 @@ extension ConfigureAnimationFeature {
         }
         ButtonState(action: .trash) {
           TextState("Reset")
+            .fontWeight(.semibold)
+            .foregroundColor(.red)
         }
       },
       message: {

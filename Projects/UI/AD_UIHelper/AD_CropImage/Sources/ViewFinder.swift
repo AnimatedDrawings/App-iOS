@@ -19,22 +19,23 @@ struct ViewFinder: View {
   }
   
   var body: some View {
-    VStack {
-      Image(uiImage: originalImage)
-        .resizable()
-        .aspectRatio(contentMode: .fit)
-        .overlay {
-          GeometryReader { geo in
-            GridView(boundingBoxInfo: _boundingBoxInfo)
-              .onAppear {
-                let cgRect: CGRect = geo.frame(in: .local)
-                self.boundingBoxInfo.viewSize = cgRect
-                self.boundingBoxInfo.imageScale = self.originalImage.size.width != 0 ?
-                cgRect.size.width / self.originalImage.size.width :
-                0
-              }
-          }
+    Image(uiImage: originalImage)
+      .resizable()
+      .aspectRatio(contentMode: .fit)
+      .background(
+        GeometryReader { geo in
+          Color.clear
+            .onAppear {
+              let cgRect: CGRect = geo.frame(in: .local)
+              self.boundingBoxInfo.viewSize = cgRect
+              self.boundingBoxInfo.imageScale = self.originalImage.size.width != 0 ?
+              cgRect.size.width / self.originalImage.size.width :
+              0
+            }
         }
-    }
+      )
+      .overlay {
+        GridView(boundingBoxInfo: _boundingBoxInfo)
+      }
   }
 }

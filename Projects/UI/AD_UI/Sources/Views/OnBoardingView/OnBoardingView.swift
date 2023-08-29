@@ -45,12 +45,12 @@ extension OnBoardingView {
       switch UIDevice.current.userInterfaceIdiom {
       case .phone:
         if let screenWidth = UIScreen.current?.bounds.size.width,
-           screenWidth > 400
+           screenWidth < 380
         {
-          return .largeTitle
+          return .title
         }
         else {
-          return .title
+          return .largeTitle
         }
       default:
         return .largeTitle
