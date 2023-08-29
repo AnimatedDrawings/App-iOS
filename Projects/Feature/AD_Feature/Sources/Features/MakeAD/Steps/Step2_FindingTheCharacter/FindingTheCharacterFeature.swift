@@ -19,8 +19,8 @@ public struct FindingTheCharacterFeature: Reducer {
     public init() {}
     
     @BindingState public var checkState = false
-    @BindingState public var isShowCropImageView = false
     
+    @BindingState public var isShowCropImageView = false
     public var isShowLoadingView = false
     
     var tmpCroppedImage: UIImage = .init()

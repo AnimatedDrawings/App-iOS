@@ -37,8 +37,10 @@ struct FindingCharacterJointsView: ADUI {
           Title()
           
           CheckList(
-            myStep: Step.FindingCharacterJoints.rawValue,
-            completeStep: viewStore.sharedState.completeStep.rawValue
+            isCorrectStep: Step.isCorrectStep(
+              myStep: .FindingCharacterJoints,
+              completeStep: viewStore.sharedState.completeStep
+            )
           ) {
             CheckListContent(with: viewStore)
           }

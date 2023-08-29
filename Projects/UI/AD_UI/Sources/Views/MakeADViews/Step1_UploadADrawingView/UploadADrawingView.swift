@@ -37,8 +37,10 @@ struct UploadADrawingView: ADUI {
           Title()
           
           CheckList(
-            myStep: Step.UploadADrawing.rawValue,
-            completeStep: viewStore.sharedState.completeStep.rawValue
+            isCorrectStep: Step.isCorrectStep(
+              myStep: .UploadADrawing,
+              completeStep: viewStore.sharedState.completeStep
+            )
           ) {
             CheckListContent(with: viewStore)
           }

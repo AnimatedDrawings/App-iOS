@@ -15,3 +15,14 @@ public enum Step: Int {
   case SeparatingCharacter = 3
   case FindingCharacterJoints = 4
 }
+
+public extension Step {
+  static func isCorrectStep(myStep: Step, completeStep: Step) -> Bool {
+    switch (myStep.rawValue, completeStep.rawValue) {
+    case let (x, y) where y + 1 < x:
+      return false
+    default:
+      return true
+    }
+  }
+}

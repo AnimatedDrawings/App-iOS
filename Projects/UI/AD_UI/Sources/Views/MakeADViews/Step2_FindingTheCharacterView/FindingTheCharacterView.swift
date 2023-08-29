@@ -37,8 +37,10 @@ struct FindingTheCharacterView: ADUI {
           Title()
           
           CheckList(
-            myStep: Step.FindingTheCharacter.rawValue,
-            completeStep: viewStore.sharedState.completeStep.rawValue
+            isCorrectStep: Step.isCorrectStep(
+              myStep: .FindingTheCharacter,
+              completeStep: viewStore.sharedState.completeStep
+            )
           ) {
             CheckListContent(with: viewStore)
           }
@@ -115,19 +117,6 @@ extension FindingTheCharacterView {
       }
       .frame(height: 250)
     }
-  }
-}
-
-
-extension FindingTheCharacterView {
-  @ViewBuilder
-  func CheckListButton1(
-    state: Binding<Bool>,
-    action: @escaping () -> ()
-  ) -> some View {
-    let description = "Resize the box to ensure it tightly fits one character."
-    
-    CheckListButton(description, state: state, action: action)
   }
 }
 

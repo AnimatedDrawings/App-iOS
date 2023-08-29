@@ -37,8 +37,10 @@ struct SeparatingCharacterView: ADUI {
           Title()
           
           CheckList(
-            myStep: Step.SeparatingCharacter.rawValue,
-            completeStep: viewStore.sharedState.completeStep.rawValue
+            isCorrectStep: Step.isCorrectStep(
+              myStep: .SeparatingCharacter,
+              completeStep: viewStore.sharedState.completeStep
+            )
           ) {
             CheckListContent(with: viewStore)
           }

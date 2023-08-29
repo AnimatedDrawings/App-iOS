@@ -31,23 +31,3 @@ struct FloatingAnimation: ViewModifier {
       }
   }
 }
-
-public struct Previews_FloatingAnimation: View {
-  public init () {}
-  
-  public var body: some View {
-    HStack {
-      CheckList(
-        myStep: 1,
-        completeStep: 0
-      ) {
-      }
-    }
-  }
-}
-
-struct FloatingAnimation_Previews: PreviewProvider {
-  static var previews: some View {
-    Previews_FloatingAnimation()
-  }
-}

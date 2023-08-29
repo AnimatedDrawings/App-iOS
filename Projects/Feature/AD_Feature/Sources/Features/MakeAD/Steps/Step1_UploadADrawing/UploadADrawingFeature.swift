@@ -22,6 +22,7 @@ public struct UploadADrawingFeature: Reducer {
     @BindingState public var checkState1 = false
     @BindingState public var checkState2 = false
     @BindingState public var checkState3 = false
+    
     public var isEnableUploadButton = false
     public var isShowLoadingView = false
     
