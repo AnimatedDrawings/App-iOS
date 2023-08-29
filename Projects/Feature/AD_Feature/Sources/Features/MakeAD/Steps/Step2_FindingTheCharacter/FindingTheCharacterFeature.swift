@@ -26,8 +26,8 @@ public struct FindingTheCharacterFeature: Reducer {
     var tmpCroppedImage: UIImage = .init()
     var tmpBoundingBoxDTO: BoundingBoxDTO = .init()
     var isSuccessUpload = false
-    
-    @PresentationState public var alert: AlertState<MyAlertState>? = nil
+   
+    @PresentationState public var alertShared: AlertState<AlertShared>? = nil
   }
   
   public enum Action: Equatable, BindableAction {
@@ -45,14 +45,14 @@ public struct FindingTheCharacterFeature: Reducer {
     case downloadMaskImage
     case downloadMaskImageResponse(TaskResult<UIImage>)
     
-    case alert(PresentationAction<MyAlertState>)
-    case showAlert(MyAlertState)
+    case alertShared(PresentationAction<AlertShared>)
+    case showAlertShared(AlertState<AlertShared>)
   }
   
   public var body: some Reducer<State, Action> {
     BindingReducer()
     MainReducer()
-      .ifLet(\.$alert, action: /Action.alert)
+      .ifLet(\.$alertShared, action: /Action.alertShared)
   }
 }
 
@@ -114,7 +114,7 @@ extension FindingTheCharacterFeature {
         let adMoyaError = error as? ADMoyaError ?? .connection
         return .run { send in
           await send(.setLoadingView(false))
-          await send(.showAlert(.networkError(adMoyaError)))
+          await send(.showAlertShared(initAlertNetworkError()))
         }
         
       case .downloadMaskImage:
@@ -147,7 +147,7 @@ extension FindingTheCharacterFeature {
         let adMoyaError = error as? ADMoyaError ?? .connection
         return .run { send in
           await send(.setLoadingView(false))
-          await send(.showAlert(.networkError(adMoyaError)))
+          await send(.showAlertShared(initAlertNetworkError()))
         }
         
       case .onDismissCropImageView:
@@ -159,10 +159,10 @@ extension FindingTheCharacterFeature {
         }
         return .none
         
-      case .alert:
+      case .alertShared:
         return .none
-      case .showAlert(let myAlertState):
-        state.alert = myAlertState.state
+      case .showAlertShared(let alertState):
+        state.alertShared = alertState
         return .none
       }
     }
@@ -170,14 +170,21 @@ extension FindingTheCharacterFeature {
 }
 
 extension FindingTheCharacterFeature {
-  public enum MyAlertState: ADAlertState {
-    case networkError(ADMoyaError)
-    
-    var state: AlertState<Self> {
-      switch self {
-      case .networkError(let adMoyaError):
-        return adMoyaError.alertState()
+  public enum AlertShared: Equatable {}
+  
+  func initAlertNetworkError() -> AlertState<AlertShared> {
+    return AlertState(
+      title: {
+        TextState("Connection Error")
+      },
+      actions: {
+        ButtonState(role: .cancel) {
+          TextState("Cancel")
+        }
+      },
+      message: {
+        TextState("Please check device network condition.")
       }
-    }
+    )
   }
 }

@@ -74,7 +74,7 @@ struct FindingTheCharacterView: ADUI {
               isShow: viewStore.state.isShowLoadingView,
               description: "Cropping Image ..."
             )
-            .alert(store: self.store.scope(state: \.$alert, action: { .alert($0) }))
+            .alert(store: self.store.scope(state: \.$alertShared, action: { .alertShared($0) }))
           }
         }
       )

@@ -79,7 +79,7 @@ struct SeparatingCharacterView: ADUI {
               isShow: viewStore.state.isShowLoadingView,
               description: "Separating Character..."
             )
-            .alert(store: self.store.scope(state: \.$alert, action: { .alert($0) }))
+            .alert(store: self.store.scope(state: \.$alertShared, action: { .alertShared($0) }))
           }
         }
       )

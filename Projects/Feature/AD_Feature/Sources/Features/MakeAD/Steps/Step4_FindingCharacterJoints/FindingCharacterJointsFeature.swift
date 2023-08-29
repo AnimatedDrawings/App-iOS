@@ -22,7 +22,7 @@ public struct FindingCharacterJointsFeature: Reducer {
     public var isShowLoadingView = false
     var isSuccessFindCharacterJoints = false
     
-    @PresentationState public var alert: AlertState<MyAlertState>? = nil
+    @PresentationState public var alertShared: AlertState<AlertShared>? = nil
   }
   
   public enum Action: Equatable, BindableAction {
@@ -38,14 +38,14 @@ public struct FindingCharacterJointsFeature: Reducer {
     case findCharacterJointsResponse(TaskResult<EmptyResponse>)
     case onDismissModifyJointsView
     
-    case alert(PresentationAction<MyAlertState>)
-    case showAlert(MyAlertState)
+    case showAlertShared(AlertState<AlertShared>)
+    case alertShared(PresentationAction<AlertShared>)
   }
   
   public var body: some Reducer<State, Action> {
     BindingReducer()
     MainReducer()
-      .ifLet(\.$alert, action: /Action.alert)
+      .ifLet(\.$alertShared, action: /Action.alertShared)
   }
 }
 
@@ -103,7 +103,7 @@ extension FindingCharacterJointsFeature {
         let adMoyaError = error as? ADMoyaError ?? .connection
         return .run { send in
           await send(.setLoadingView(false))
-          await send(.showAlert(.networkError(adMoyaError)))
+          await send(.showAlertShared(initAlertNetworkError()))
         }
         
       case .onDismissModifyJointsView:
@@ -114,10 +114,10 @@ extension FindingCharacterJointsFeature {
         }
         return .none
         
-      case .alert:
+      case .alertShared:
         return .none
-      case .showAlert(let adAlertState):
-        state.alert = adAlertState.state
+      case .showAlertShared(let alertState):
+        state.alertShared = alertState
         return .none
       }
     }
@@ -125,14 +125,52 @@ extension FindingCharacterJointsFeature {
 }
 
 extension FindingCharacterJointsFeature {
-  public enum MyAlertState: ADAlertState {
-    case networkError(ADMoyaError)
-    
-    var state: AlertState<Self> {
-      switch self {
-      case .networkError(let adMoyaError):
-        return adMoyaError.alertState()
+  public enum AlertShared: Equatable {}
+  
+  func initAlertNetworkError() -> AlertState<AlertShared> {
+    return AlertState(
+      title: {
+        TextState("Connection Error")
+      },
+      actions: {
+        ButtonState(role: .cancel) {
+          TextState("Cancel")
+        }
+      },
+      message: {
+        TextState("Please check device network condition.")
       }
-    }
+    )
   }
 }
+
+
+//extension ADMoyaError {
+//  func alertState<S: ADAlertState>() -> AlertState<S> {
+//    let title: String
+//    let message: String
+//
+//    switch self {
+//    case .jsonMapping, .connection:
+//      title = "Connection Error"
+//      message = "Please check device network condition."
+//    default:
+//      title = "Animating Error"
+//      message = "Cannot caculate Animated Drawings. Proceed Step Manually."
+//    }
+//
+//    return AlertState(
+//      title: {
+//        TextState(title)
+//      },
+//      actions: {
+//        ButtonState(role: .cancel) {
+//          TextState("cancel")
+//        }
+//      },
+//      message: {
+//        TextState(message)
+//      }
+//    )
+//  }
+//}

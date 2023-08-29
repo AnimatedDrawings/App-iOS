@@ -28,7 +28,7 @@ public struct UploadADrawingFeature: Reducer {
     var tmpOriginalImage = UIImage()
     var isSuccessUploading = false
     
-    @PresentationState public var alert: AlertState<MyAlertState>? = nil
+    @PresentationState public var alertShared: AlertState<AlertShared>? = nil
   }
   
   public enum Action: BindableAction, Equatable {
@@ -44,14 +44,14 @@ public struct UploadADrawingFeature: Reducer {
     case uploadDrawingResponse(TaskResult<UploadADrawingResposne>)
     case uploadDrawingNextAction
     
-    case alert(PresentationAction<MyAlertState>)
-    case showAlert(MyAlertState)
+    case showAlertShared(AlertState<AlertShared>)
+    case alertShared(PresentationAction<AlertShared>)
   }
   
   public var body: some Reducer<State, Action> {
     BindingReducer()
     MainReducer()
-      .ifLet(\.$alert, action: /Action.alert)
+      .ifLet(\.$alertShared, action: /Action.alertShared)
   }
 }
 
@@ -128,7 +128,7 @@ extension UploadADrawingFeature {
       case .uploadDrawingResponse(.failure(let error)):
         state.isSuccessUploading = false
         let adMoyaError = error as? ADMoyaError ?? .connection
-        return .send(.showAlert(.networkError(adMoyaError)))
+        return .send(.showAlertShared(initAlertNetworkError()))
         
       case .uploadDrawingNextAction:
         if state.isSuccessUploading {
@@ -139,10 +139,10 @@ extension UploadADrawingFeature {
         }
         return .none
         
-      case .alert:
+      case .alertShared:
         return .none
-      case .showAlert(let myAlertState):
-        state.alert = myAlertState.state
+      case .showAlertShared(let alertState):
+        state.alertShared = alertState
         return .none
       }
     }
@@ -150,15 +150,22 @@ extension UploadADrawingFeature {
 }
 
 extension UploadADrawingFeature {
-  public enum MyAlertState: ADAlertState {
-    case networkError(ADMoyaError)
-    
-    var state: AlertState<Self> {
-      switch self {
-      case .networkError(let adMoyaError):
-        return adMoyaError.alertState()
+  public enum AlertShared: Equatable {}
+  
+  func initAlertNetworkError() -> AlertState<AlertShared> {
+    return AlertState(
+      title: {
+        TextState("Connection Error")
+      },
+      actions: {
+        ButtonState(role: .cancel) {
+          TextState("Cancel")
+        }
+      },
+      message: {
+        TextState("Please check device network condition.")
       }
-    }
+    )
   }
 }
 
