@@ -9,9 +9,6 @@
 import SwiftUI
 
 public struct StepStatusBar: View {
-//  let currentStep: Step
-//  let completeStep: Step
-  
   let currentStepIdx: Int
   let completeStepIdx: Int
   
@@ -20,16 +17,9 @@ public struct StepStatusBar: View {
   let activeColor: Color = ADUtilsAsset.Color.blue1.swiftUIColor
   let inActiveColor: Color = .gray
   let completeColor: Color = ADUtilsAsset.Color.green1.swiftUIColor
-//  var currentStepIdx: Int {
-//    return self.currentStep.rawValue
-//  }
-//  var completeStepIdx: Int {
-//    return self.completeStep.rawValue
-//  }
-  
   public init(currentStepIdx: Int, completeStepIdx: Int) {
     self.currentStepIdx = currentStepIdx
-    self.completeStepIdx = completeStepIdx
+    self.completeStepIdx = completeStepIdx + 1
   }
   
   public var body: some View {
@@ -79,9 +69,9 @@ extension StepStatusBar {
     if idx < completeStepIdx {
       return completeColor
     }
-    if idx == 4 && completeStepIdx == 4 {
-      return completeColor
-    }
+//    if idx == 4 && completeStepIdx == 4 {
+//      return completeColor
+//    }
     
     return inActiveColor
   }

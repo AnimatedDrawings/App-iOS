@@ -36,7 +36,10 @@ struct SeparatingCharacterView: ADUI {
         VStack(alignment: .leading, spacing: 20) {
           Title()
           
-          CheckList {
+          CheckList(
+            myStep: Step.SeparatingCharacter.rawValue,
+            completeStep: viewStore.sharedState.completeStep.rawValue
+          ) {
             CheckListContent(with: viewStore)
           }
           
@@ -76,16 +79,7 @@ struct SeparatingCharacterView: ADUI {
               isShow: viewStore.state.isShowLoadingView,
               description: "Separating Character..."
             )
-            .alert(
-              viewStore.titleAlert,
-              isPresented: viewStore.$isShowAlert,
-              actions: {
-                Button("OK") {}
-              },
-              message: {
-                Text(viewStore.descriptionAlert)
-              }
-            )
+            .alert(store: self.store.scope(state: \.$alertShared, action: { .alertShared($0) }))
           }
         }
       )

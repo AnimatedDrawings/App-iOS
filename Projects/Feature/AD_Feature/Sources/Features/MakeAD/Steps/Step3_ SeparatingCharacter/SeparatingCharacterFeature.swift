@@ -27,9 +27,7 @@ public struct SeparatingCharacterFeature: Reducer {
     var isSuccessSeparateCharacter = false
     public var isShowLoadingView = false
     
-    @BindingState public var isShowAlert = false
-    public var titleAlert = ""
-    public var descriptionAlert = ""
+    @PresentationState public var alertShared: AlertState<AlertShared>? = nil
   }
   
   public enum Action: Equatable, BindableAction {
@@ -47,12 +45,19 @@ public struct SeparatingCharacterFeature: Reducer {
     case separateCharacterResponse(TaskResult<SeparateCharacterReponse>)
     case onDismissMakingImageView
     
-    case showAlert(ADMoyaError)
+    case showAlertShared(AlertState<AlertShared>)
+    case alertShared(PresentationAction<AlertShared>)
   }
   
   public var body: some Reducer<State, Action> {
     BindingReducer()
-    
+    MainReducer()
+      .ifLet(\.$alertShared, action: /Action.alertShared)
+  }
+}
+
+extension SeparatingCharacterFeature {
+  func MainReducer() -> some Reducer<State, Action> {
     Reduce { state, action in
       switch action {
       case .binding:
@@ -118,30 +123,53 @@ public struct SeparatingCharacterFeature: Reducer {
       
       case .separateCharacterResponse(.failure(let error)):
         print(error)
-        let adError = error as? ADMoyaError ?? .connection
+        state.isSuccessSeparateCharacter = false
+        let adMoyaError = error as? ADMoyaError ?? .connection
         return .run { send in
           await send(.setLoadingView(false))
-          await send(.showAlert(adError))
+          await send(.showAlertShared(initAlertNetworkError()))
         }
           
       case .onDismissMakingImageView:
         if state.isSuccessSeparateCharacter == true {
-          state.sharedState.completeStep = .FindingCharacterJoints
+          state.sharedState.completeStep = .SeparatingCharacter
           state.sharedState.currentStep = .FindingCharacterJoints
           state.sharedState.isShowStepStatusBar = true
           state.isSuccessSeparateCharacter = false
         }
         return .none
         
-      case .showAlert(let adError):
-        state.titleAlert = adError.title
-        state.descriptionAlert = adError.description
-        state.isShowAlert.toggle()
+      case .alertShared:
+        return .none
+      case .showAlertShared(let alertState):
+        state.alertShared = alertState
         return .none
       }
     }
   }
+}
+
+extension SeparatingCharacterFeature {
+  public enum AlertShared: Equatable {}
   
+  func initAlertNetworkError() -> AlertState<AlertShared> {
+    return AlertState(
+      title: {
+        TextState("Connection Error")
+      },
+      actions: {
+        ButtonState(role: .cancel) {
+          TextState("Cancel")
+        }
+      },
+      message: {
+        TextState("Please check device network condition.")
+      }
+    )
+  }
+}
+
+extension SeparatingCharacterFeature {
   func activeUploadButton(state: inout SeparatingCharacterFeature.State) {
     if state.checkState1 && state.checkState2 {
       state.maskState = true

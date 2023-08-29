@@ -36,7 +36,10 @@ struct UploadADrawingView: ADUI {
         VStack(alignment: .leading, spacing: 20) {
           Title()
           
-          CheckList {
+          CheckList(
+            myStep: Step.UploadADrawing.rawValue,
+            completeStep: viewStore.sharedState.completeStep.rawValue
+          ) {
             CheckListContent(with: viewStore)
           }
           
@@ -61,16 +64,7 @@ struct UploadADrawingView: ADUI {
             )
         }
       }
-      .alert(
-        viewStore.titleAlert,
-        isPresented: viewStore.$isShowAlert,
-        actions: {
-          Button("OK") {}
-        },
-        message: {
-          Text(viewStore.descriptionAlert)
-        }
-      )
+      .alert(store: self.store.scope(state: \.$alertShared, action: { .alertShared($0) }))
     }
   }
 }

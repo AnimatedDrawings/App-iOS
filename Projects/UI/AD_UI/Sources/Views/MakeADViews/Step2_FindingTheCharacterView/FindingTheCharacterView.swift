@@ -36,13 +36,16 @@ struct FindingTheCharacterView: ADUI {
         VStack(alignment: .leading, spacing: 20) {
           Title()
           
-          CheckList {
+          CheckList(
+            myStep: Step.FindingTheCharacter.rawValue,
+            completeStep: viewStore.sharedState.completeStep.rawValue
+          ) {
             CheckListContent(with: viewStore)
           }
           
           Spacer()
           
-          ShowCropImageViewButton(state: viewStore.$checkState) {
+          ShowCropImageViewButton(state: viewStore.checkState) {
             viewStore.send(.toggleCropImageView)
           }
         }
@@ -71,16 +74,7 @@ struct FindingTheCharacterView: ADUI {
               isShow: viewStore.state.isShowLoadingView,
               description: "Cropping Image ..."
             )
-            .alert(
-              viewStore.titleAlert,
-              isPresented: viewStore.$isShowAlert,
-              actions: {
-                Button("OK") {}
-              },
-              message: {
-                Text(viewStore.descriptionAlert)
-              }
-            )
+            .alert(store: self.store.scope(state: \.$alertShared, action: { .alertShared($0) }))
           }
         }
       )
@@ -140,14 +134,14 @@ extension FindingTheCharacterView {
 extension FindingTheCharacterView {
   @ViewBuilder
   func ShowCropImageViewButton(
-    state: Binding<Bool>,
+    state: Bool,
     action: @escaping () -> ()
   ) -> some View {
     let viewFinder = "person.fill.viewfinder"
     let text = "Find the Character"
     
     ADButton(
-      state.wrappedValue ? .active : .inActive,
+      state ? .active : .inActive,
       action: action
     ) {
       HStack {

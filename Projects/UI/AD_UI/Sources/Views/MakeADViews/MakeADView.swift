@@ -55,12 +55,13 @@ struct MakeADView: ADUI {
 }
 
 extension MakeADView {
+  @MainActor
   @ViewBuilder
   func PageTabView(with viewStore: MyViewStore) -> some View {
     TabView(
       selection: viewStore.binding(
         get: \.sharedState.currentStep,
-        send: MyFeature.Action.bindingCurrentStep
+        send: MyFeature.Action.setCurrentStep
       )
     ) {
       UploadADrawingView()

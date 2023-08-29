@@ -34,9 +34,8 @@ public struct ConfigureAnimationFeature: Reducer {
       }
     var isSuccessAddAnimation = false
     
-    @BindingState public var isShowAlert = false
-    public var titleAlert = ""
-    public var descriptionAlert = ""
+    @PresentationState public var alertShared: AlertState<AlertShared>?
+    @PresentationState public var alertTrashMakeAD: AlertState<AlertTrashMakeAD>?
   }
   
   public enum Action: Equatable, BindableAction {
@@ -45,7 +44,7 @@ public struct ConfigureAnimationFeature: Reducer {
     case toggleIsShowAnimationListView
     case toggleIsShowAddAnimationView
     case toggleIsShowShareView
-    case toggleIsShowActionSheet
+    case toggleIsShowShareActionSheet
     
     case setLoadingView(Bool)
     
@@ -55,19 +54,29 @@ public struct ConfigureAnimationFeature: Reducer {
     case downloadVideo
     case downloadVideoResponse(TaskResult<Data>)
     
-    case saveGIFInCameraRoll(URL)
+    case saveGIFInPhotos(URL)
     
     case onDismissAnimationListView
     
     case addToCache(URL)
     
-    case showAlert(ADMoyaError)
-    case saveGIFResultAlert(Bool)
+    case showAlertShared(AlertState<AlertShared>)
+    case showAlertTrashMakeAD
+    
+    case alertShared(PresentationAction<AlertShared>)
+    case alertTrashMakeAD(PresentationAction<AlertTrashMakeAD>)
   }
-
+  
   public var body: some Reducer<State, Action> {
     BindingReducer()
-    
+    MainReducer()
+      .ifLet(\.$alertShared, action: /Action.alertShared)
+      .ifLet(\.$alertTrashMakeAD, action: /Action.alertTrashMakeAD)
+  }
+}
+
+extension ConfigureAnimationFeature {
+  func MainReducer() -> some Reducer<State, Action> {
     Reduce { state, action in
       switch action {
       case .binding:
@@ -76,16 +85,13 @@ public struct ConfigureAnimationFeature: Reducer {
       case .toggleIsShowAnimationListView:
         state.isShowAnimationListView.toggle()
         return .none
-        
       case .toggleIsShowAddAnimationView:
         state.sharedState.isShowAddAnimationView.toggle()
         return .none
-        
       case .toggleIsShowShareView:
         state.isShowShareView.toggle()
         return .none
-        
-      case .toggleIsShowActionSheet:
+      case .toggleIsShowShareActionSheet:
         state.isShowActionSheet.toggle()
         return .none
         
@@ -130,7 +136,7 @@ public struct ConfigureAnimationFeature: Reducer {
         let adError = error as? ADMoyaError ?? .connection
         return .run { send in
           await send(.setLoadingView(true))
-          await send(.showAlert(adError))
+          await send(.showAlertShared(initAlertNetworkError()))
         }
         
       case .downloadVideo:
@@ -171,19 +177,16 @@ public struct ConfigureAnimationFeature: Reducer {
         let adError = error as? ADMoyaError ?? .connection
         return .run { send in
           await send(.setLoadingView(false))
-          await send(.showAlert(adError))
+          await send(.showAlertShared(initAlertNetworkError()))
         }
         
       case .onDismissAnimationListView:
         if state.isSuccessAddAnimation {
           guard let selectedAnimation = state.selectedAnimation,
                 let tmpGifURLInCache = state.cache[selectedAnimation],
-                let gifURLInCache = tmpGifURLInCache
+                let gifURLInCache = tmpGifURLInCache,
+                let dataFromURL: Data = try? ADFileManager.shared.read(with: gifURLInCache)
           else {
-            return .none
-          }
-          
-          guard let dataFromURL: Data = try? ADFileManager.shared.read(with: gifURLInCache) else {
             return .none
           }
           
@@ -202,48 +205,95 @@ public struct ConfigureAnimationFeature: Reducer {
         state.isSuccessAddAnimation = true
         return .none
         
-      case .showAlert(let adError):
-        state.titleAlert = adError.title
-        state.descriptionAlert = adError.description
-        state.isShowAlert.toggle()
-        return .none
-        
-      case .saveGIFInCameraRoll(let gifURL):
+      case .saveGIFInPhotos(let gifURL):
         return .run(
           operation: { send in
             try await PHPhotoLibrary.shared().performChanges {
               let request = PHAssetCreationRequest.forAsset()
               request.addResource(with: .photo, fileURL: gifURL, options: nil)
             }
-            await send(.saveGIFResultAlert(true))
+            await send(.showAlertShared(initAlertSaveGIFInPhotosResult(isSuccess: true)))
           },
           catch: { error, send in
-            await send(.saveGIFResultAlert(false))
+            await send(.showAlertShared(initAlertSaveGIFInPhotosResult(isSuccess: false)))
           }
         )
         
-      case .saveGIFResultAlert(let isSuccess):
-        let titleAlert = isSuccess ? "Save Success!" : "Save GIF Error"
-        let descriptionAlert = isSuccess ? "" : "Cannot Save GIF.."
-        state.titleAlert = titleAlert
-        state.descriptionAlert = descriptionAlert
-        state.isShowAlert.toggle()
+      case .showAlertShared(let alertState):
+        state.alertShared = alertState
+        return .none
+      case .showAlertTrashMakeAD:
+        state.alertTrashMakeAD = initAlertTrashMakeAD()
+        return .none
+      case .alertShared:
+        return .none
+      case .alertTrashMakeAD(.presented(.trash)):
+        state.sharedState = SharedState()
+        return .none
+      case .alertTrashMakeAD:
         return .none
       }
     }
   }
 }
 
+extension ConfigureAnimationFeature {
+  public enum AlertShared: Equatable {}
+  public enum AlertTrashMakeAD: Equatable {
+    case trash
+  }
+  
+  func initAlertNetworkError() -> AlertState<AlertShared> {
+    return AlertState(
+      title: {
+        TextState("Connection Error")
+      },
+      actions: {
+        ButtonState(role: .cancel) {
+          TextState("Cancel")
+        }
+      },
+      message: {
+        TextState("Please check device network condition.")
+      }
+    )
+  }
+  
+  func initAlertSaveGIFInPhotosResult(isSuccess: Bool) -> AlertState<AlertShared> {
+    let title = isSuccess ? "Save Success!" : "Save GIF Error"
+    let description = isSuccess ? "" : "Cannot Save GIF.."
 
-
-
-//PHPhotoLibrary.shared().performChanges({
-//    let request = PHAssetCreationRequest.forAsset()
-//    request.addResource(with: .photo, fileURL: 'YOUR_GIF_URL', options: nil)
-//}) { (success, error) in
-//    if let error = error {
-//        print(error.localizedDescription)
-//    } else {
-//        print("GIF has saved")
-//    }
-//}
+    return AlertState(
+      title: {
+        TextState(title)
+      },
+      actions: {
+        ButtonState(role: .cancel) {
+          TextState("Cancel")
+        }
+      },
+      message: {
+        TextState(description)
+      }
+    )
+  }
+  
+  func initAlertTrashMakeAD() -> AlertState<AlertTrashMakeAD> {
+    return AlertState<AlertTrashMakeAD>(
+      title: {
+        TextState("Reset Animated Drawing")
+      },
+      actions: {
+        ButtonState(role: .cancel) {
+          TextState("Cancel")
+        }
+        ButtonState(action: .trash) {
+          TextState("Reset")
+        }
+      },
+      message: {
+        TextState("Are you sure to reset making animation all step?")
+      }
+    )
+  }
+}

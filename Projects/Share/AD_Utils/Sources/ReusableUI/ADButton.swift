@@ -35,6 +35,7 @@ public struct ADButton<Content: View>: View {
   
   public var body: some View {
     Button(action: action, label: label)
+      .disabled(state == .active ? false : true)
   }
 }
 

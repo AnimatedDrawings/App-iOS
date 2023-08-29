@@ -36,7 +36,10 @@ struct FindingCharacterJointsView: ADUI {
         VStack(alignment: .leading, spacing: 20) {
           Title()
           
-          CheckList {
+          CheckList(
+            myStep: Step.FindingCharacterJoints.rawValue,
+            completeStep: viewStore.sharedState.completeStep.rawValue
+          ) {
             CheckListContent(with: viewStore)
           }
           
@@ -73,16 +76,7 @@ struct FindingCharacterJointsView: ADUI {
             )
             .transparentBlurBackground()
             .addLoadingView(isShow: viewStore.state.isShowLoadingView, description: "Modify Character Joints ...")
-            .alert(
-              viewStore.titleAlert,
-              isPresented: viewStore.$isShowAlert,
-              actions: {
-                Button("OK") {}
-              },
-              message: {
-                Text(viewStore.descriptionAlert)
-              }
-            )
+            .alert(store: self.store.scope(state: \.$alertShared, action: { .alertShared($0) }))
           }
         }
       )

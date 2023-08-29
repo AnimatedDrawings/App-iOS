@@ -9,6 +9,7 @@
 import Foundation
 
 public enum Step: Int {
+  case None = 0
   case UploadADrawing = 1
   case FindingTheCharacter = 2
   case SeparatingCharacter = 3

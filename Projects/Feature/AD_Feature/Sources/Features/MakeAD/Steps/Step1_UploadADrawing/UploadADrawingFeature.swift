@@ -28,9 +28,7 @@ public struct UploadADrawingFeature: Reducer {
     var tmpOriginalImage = UIImage()
     var isSuccessUploading = false
     
-    @BindingState public var isShowAlert = false
-    public var titleAlert = ""
-    public var descriptionAlert = ""
+    @PresentationState public var alertShared: AlertState<AlertShared>? = nil
   }
   
   public enum Action: BindableAction, Equatable {
@@ -45,11 +43,20 @@ public struct UploadADrawingFeature: Reducer {
     case uploadDrawing(Data?)
     case uploadDrawingResponse(TaskResult<UploadADrawingResposne>)
     case uploadDrawingNextAction
+    
+    case showAlertShared(AlertState<AlertShared>)
+    case alertShared(PresentationAction<AlertShared>)
   }
   
   public var body: some Reducer<State, Action> {
     BindingReducer()
-    
+    MainReducer()
+      .ifLet(\.$alertShared, action: /Action.alertShared)
+  }
+}
+
+extension UploadADrawingFeature {
+  func MainReducer() -> some Reducer<State, Action> {
     Reduce { state, action in
       switch action {
       case .binding:
@@ -119,28 +126,46 @@ public struct UploadADrawingFeature: Reducer {
         return .none
         
       case .uploadDrawingResponse(.failure(let error)):
-        var titleAlert = ADMoyaError.connection.title
-        var descriptionAlert = ADMoyaError.connection.description
-        if let adError = error as? ADMoyaError {
-          titleAlert = adError.title
-          descriptionAlert = adError.description
-        }
-        state.titleAlert = titleAlert
-        state.descriptionAlert = descriptionAlert
-        return .none
+        state.isSuccessUploading = false
+        let adMoyaError = error as? ADMoyaError ?? .connection
+        return .send(.showAlertShared(initAlertNetworkError()))
         
       case .uploadDrawingNextAction:
         if state.isSuccessUploading {
-          state.sharedState.completeStep = .FindingTheCharacter
+          state.sharedState.completeStep = .UploadADrawing
           state.sharedState.currentStep = .FindingTheCharacter
           state.sharedState.isShowStepStatusBar = true
           state.isSuccessUploading = false
-        } else {
-          state.isShowAlert.toggle()
         }
+        return .none
+        
+      case .alertShared:
+        return .none
+      case .showAlertShared(let alertState):
+        state.alertShared = alertState
         return .none
       }
     }
+  }
+}
+
+extension UploadADrawingFeature {
+  public enum AlertShared: Equatable {}
+  
+  func initAlertNetworkError() -> AlertState<AlertShared> {
+    return AlertState(
+      title: {
+        TextState("Connection Error")
+      },
+      actions: {
+        ButtonState(role: .cancel) {
+          TextState("Cancel")
+        }
+      },
+      message: {
+        TextState("Please check device network condition.")
+      }
+    )
   }
 }
 

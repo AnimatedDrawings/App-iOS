@@ -26,10 +26,8 @@ public struct FindingTheCharacterFeature: Reducer {
     var tmpCroppedImage: UIImage = .init()
     var tmpBoundingBoxDTO: BoundingBoxDTO = .init()
     var isSuccessUpload = false
-    
-    @BindingState public var isShowAlert = false
-    public var titleAlert = ""
-    public var descriptionAlert = ""
+   
+    @PresentationState public var alertShared: AlertState<AlertShared>? = nil
   }
   
   public enum Action: Equatable, BindableAction {
@@ -47,12 +45,19 @@ public struct FindingTheCharacterFeature: Reducer {
     case downloadMaskImage
     case downloadMaskImageResponse(TaskResult<UIImage>)
     
-    case showAlert(ADMoyaError)
+    case alertShared(PresentationAction<AlertShared>)
+    case showAlertShared(AlertState<AlertShared>)
   }
   
   public var body: some Reducer<State, Action> {
     BindingReducer()
-    
+    MainReducer()
+      .ifLet(\.$alertShared, action: /Action.alertShared)
+  }
+}
+
+extension FindingTheCharacterFeature {
+  func MainReducer() -> some Reducer<State, Action> {
     Reduce { state, action in
       switch action {
       case .binding:
@@ -105,20 +110,12 @@ public struct FindingTheCharacterFeature: Reducer {
         
       case .findTheCharacterResponse(.failure(let error)):
         print(error)
-        let adError = error as? ADMoyaError ?? .connection
+        state.isSuccessUpload = false
+        let adMoyaError = error as? ADMoyaError ?? .connection
         return .run { send in
           await send(.setLoadingView(false))
-          await send(.showAlert(adError))
+          await send(.showAlertShared(initAlertNetworkError()))
         }
-        
-      case .onDismissCropImageView:
-        if state.isSuccessUpload {
-          state.sharedState.completeStep = .SeparatingCharacter
-          state.sharedState.currentStep = .SeparatingCharacter
-          state.sharedState.isShowStepStatusBar = true
-          state.isSuccessUpload = false
-        }
-        return .none
         
       case .downloadMaskImage:
         guard let ad_id = state.sharedState.ad_id else {
@@ -146,29 +143,48 @@ public struct FindingTheCharacterFeature: Reducer {
         
       case .downloadMaskImageResponse(.failure(let error)):
         print(error)
-        let adError = error as? ADMoyaError ?? .connection
+        state.isSuccessUpload = false
+        let adMoyaError = error as? ADMoyaError ?? .connection
         return .run { send in
           await send(.setLoadingView(false))
-          await send(.showAlert(adError))
+          await send(.showAlertShared(initAlertNetworkError()))
         }
         
-      case .showAlert(let adError):
-        state.titleAlert = adError.title
-        state.descriptionAlert = adError.description
-        state.isShowAlert.toggle()
+      case .onDismissCropImageView:
+        if state.isSuccessUpload {
+          state.sharedState.completeStep = .FindingTheCharacter
+          state.sharedState.currentStep = .SeparatingCharacter
+          state.sharedState.isShowStepStatusBar = true
+          state.isSuccessUpload = false
+        }
+        return .none
+        
+      case .alertShared:
+        return .none
+      case .showAlertShared(let alertState):
+        state.alertShared = alertState
         return .none
       }
     }
   }
 }
 
-extension CGRect {
-  var toBoundingBoxDTO: BoundingBoxDTO {
-    let top = Int(self.origin.y)
-    let bottom = top + Int(self.height)
-    let left = Int(self.origin.x)
-    let right = left + Int(self.width)
-    
-    return BoundingBoxDTO(top: top, bottom: bottom, left: left, right: right)
+extension FindingTheCharacterFeature {
+  public enum AlertShared: Equatable {}
+  
+  func initAlertNetworkError() -> AlertState<AlertShared> {
+    return AlertState(
+      title: {
+        TextState("Connection Error")
+      },
+      actions: {
+        ButtonState(role: .cancel) {
+          TextState("Cancel")
+        }
+      },
+      message: {
+        TextState("Please check device network condition.")
+      }
+    )
   }
 }
