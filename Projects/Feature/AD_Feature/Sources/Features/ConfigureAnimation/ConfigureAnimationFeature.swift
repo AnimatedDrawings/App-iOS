@@ -92,6 +92,9 @@ extension ConfigureAnimationFeature {
         state.isShowShareView.toggle()
         return .none
       case .toggleIsShowShareActionSheet:
+        if state.myAnimationURL == nil {
+          return .send(.showAlertShared(initAlertShareAction()))
+        }
         state.isShowActionSheet.toggle()
         return .none
         
@@ -274,6 +277,22 @@ extension ConfigureAnimationFeature {
       },
       message: {
         TextState(description)
+      }
+    )
+  }
+  
+  func initAlertShareAction() -> AlertState<AlertShared> {
+    return AlertState(
+      title: {
+        TextState("No Animated Drawings File")
+      },
+      actions: {
+        ButtonState(role: .cancel) {
+          TextState("Cancel")
+        }
+      },
+      message: {
+        TextState("The file does not exist. Make a Animation First")
       }
     )
   }
