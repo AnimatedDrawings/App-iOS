@@ -36,7 +36,10 @@ struct FindingTheCharacterView: ADUI {
         VStack(alignment: .leading, spacing: 20) {
           Title()
           
-          CheckList {
+          CheckList(
+            myStep: Step.FindingTheCharacter.rawValue,
+            completeStep: viewStore.sharedState.completeStep.rawValue
+          ) {
             CheckListContent(with: viewStore)
           }
           

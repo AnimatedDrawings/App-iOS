@@ -8,6 +8,7 @@
 
 import SwiftUI
 import AD_UI
+import AD_Utils
 
 @main
 struct UIDemoApp: App {
