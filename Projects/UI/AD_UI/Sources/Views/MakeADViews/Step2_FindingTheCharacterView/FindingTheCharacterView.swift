@@ -107,7 +107,7 @@ extension FindingTheCharacterView {
     let description = "Resize the box to ensure it tightly fits one character."
     
     VStack(alignment: .leading, spacing: 15) {
-      CheckListButton(description, state: viewStore.$checkState) {
+      CheckListButton(description, state: viewStore.checkState) {
         viewStore.send(.checkAction)
       }
       

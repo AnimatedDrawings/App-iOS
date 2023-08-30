@@ -19,9 +19,11 @@ public struct SeparatingCharacterFeature: Reducer {
   public struct MyState: Equatable {
     public init() {}
     
-    @BindingState public var checkState1 = false
-    @BindingState public var checkState2 = false
-    public var maskState = false
+//    @BindingState public var checkState1 = false
+//    @BindingState public var checkState2 = false
+    public var checkState1 = false
+    public var checkState2 = false
+    public var isActiveMaskingImageButton = false
     
     @BindingState public var isShowMaskingImageView = false
     var isSuccessSeparateCharacter = false
@@ -172,9 +174,9 @@ extension SeparatingCharacterFeature {
 extension SeparatingCharacterFeature {
   func activeUploadButton(state: inout SeparatingCharacterFeature.State) {
     if state.checkState1 && state.checkState2 {
-      state.maskState = true
+      state.isActiveMaskingImageButton = true
     } else {
-      state.maskState = false
+      state.isActiveMaskingImageButton = false
     }
   }
 }

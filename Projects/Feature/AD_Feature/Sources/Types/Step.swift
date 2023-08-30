@@ -25,4 +25,13 @@ public extension Step {
       return true
     }
   }
+  
+  static func isActiveButton(myStep: Step, completeStep: Step) -> Bool {
+    switch (myStep.rawValue, completeStep.rawValue) {
+    case let (x, y) where y < x:
+      return false
+    default:
+      return true
+    }
+  }
 }

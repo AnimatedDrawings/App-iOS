@@ -18,7 +18,8 @@ public struct FindingTheCharacterFeature: Reducer {
   public struct MyState: Equatable {
     public init() {}
     
-    @BindingState public var checkState = false
+//    @BindingState public var checkState = false
+    public var checkState = false
     
     @BindingState public var isShowCropImageView = false
     public var isShowLoadingView = false

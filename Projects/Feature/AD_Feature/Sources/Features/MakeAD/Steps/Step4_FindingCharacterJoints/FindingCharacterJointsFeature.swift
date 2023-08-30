@@ -17,7 +17,8 @@ public struct FindingCharacterJointsFeature: Reducer {
   public struct MyState: Equatable {
     public init() {}
     
-    @BindingState public var checkState = false
+//    @BindingState public var checkState = false
+    public var checkState = false
     @BindingState public var isShowModifyJointsView = false
     public var isShowLoadingView = false
     var isSuccessFindCharacterJoints = false

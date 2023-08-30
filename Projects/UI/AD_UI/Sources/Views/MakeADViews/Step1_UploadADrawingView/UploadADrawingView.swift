@@ -98,15 +98,15 @@ extension UploadADrawingView {
     let description3 = "Don’t include any identifiable information, offensive content (see our community standards), or drawings that infringe on the copyrights of others."
     
     VStack(alignment: .leading, spacing: 15) {
-      CheckListButton(description1, state: viewStore.$checkState1) {
+      CheckListButton(description1, state: viewStore.checkState1) {
         viewStore.send(.checkList1)
       }
       
-      CheckListButton(description2, state: viewStore.$checkState2) {
+      CheckListButton(description2, state: viewStore.checkState2) {
         viewStore.send(.checkList2)
       }
       
-      CheckListButton(description3, state: viewStore.$checkState3) {
+      CheckListButton(description3, state: viewStore.checkState3) {
         viewStore.send(.checkList3)
       }
     }
