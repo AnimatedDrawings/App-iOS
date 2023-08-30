@@ -7,6 +7,7 @@
 //
 
 import ComposableArchitecture
+import AD_Utils
 
 public struct RootViewFeature: Reducer {
   public init() {}
@@ -16,7 +17,16 @@ public struct RootViewFeature: Reducer {
     
     @BindingState public var isTapStartButton = false
     
-    public var sharedState = SharedState()
+    private var _sharedState = SharedState()
+    public var sharedState: SharedState {
+      get {
+        return self._sharedState
+      }
+      set {
+        setMakeADButtonState(newValue)
+        self._sharedState = newValue
+      }
+    }
 
     private var _makeADState = MakeADFeature.MyState()
     public var makeADState: MakeADFeature.State {
@@ -136,6 +146,41 @@ public struct RootViewFeature: Reducer {
           .addAnimationAction:
         return .none
       }
+    }
+  }
+}
+
+extension RootViewFeature.State {
+  mutating func setMakeADButtonState(_ newValue: SharedState) {
+    if self._sharedState.completeStep != newValue.completeStep {
+      let flagUploadADrawing = Step.isActiveButton(
+        myStep: .UploadADrawing,
+        completeStep: newValue.completeStep
+      )
+      self._uploadADrawingState.checkState1.isActiveButton(flagUploadADrawing)
+      self._uploadADrawingState.checkState2.isActiveButton(flagUploadADrawing)
+      self._uploadADrawingState.checkState3.isActiveButton(flagUploadADrawing)
+      self._uploadADrawingState.isEnableUploadButton.isActiveButton(flagUploadADrawing)
+      
+      let flagFindingTheCharacter = Step.isActiveButton(
+        myStep: .FindingTheCharacter,
+        completeStep: newValue.completeStep
+      )
+      self._findingTheCharacterState.checkState.isActiveButton(flagFindingTheCharacter)
+      
+      let flagSeparatingCharacter = Step.isActiveButton(
+        myStep: .SeparatingCharacter,
+        completeStep: newValue.completeStep
+      )
+      self._separatingCharacterState.checkState1.isActiveButton(flagSeparatingCharacter)
+      self._separatingCharacterState.checkState2.isActiveButton(flagSeparatingCharacter)
+      self._separatingCharacterState.isActiveMaskingImageButton.isActiveButton(flagSeparatingCharacter)
+      
+      let flagFindingCharacterJoints = Step.isActiveButton(
+        myStep: .FindingCharacterJoints,
+        completeStep: newValue.completeStep
+      )
+      self._findingCharacterJointsState.checkState.isActiveButton(flagFindingCharacterJoints)
     }
   }
 }

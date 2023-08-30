@@ -11,16 +11,16 @@ import SwiftUI
 public struct CheckListButton: View {
   let checkmarkCircle = "checkmark.circle"
   let description: String
-  @Binding var state: Bool
+  let state: Bool
   let action: () -> ()
   
   public init(
     _ description: String,
-    state: Binding<Bool>,
+    state: Bool,
     action: @escaping () -> ()
   ) {
     self.description = description
-    self._state = state
+    self.state = state
     self.action = action
   }
   

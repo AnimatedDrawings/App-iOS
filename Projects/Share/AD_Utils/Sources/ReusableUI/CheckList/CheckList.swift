@@ -9,35 +9,22 @@
 import SwiftUI
 
 public struct CheckList<C: View>: View {
-  let myStepIdx: Int
-  let completeStepIdx: Int
+  let isCorrectStep: Bool
   let CheckListContent: C
   
   let title = "C H E C K L I S T"
   var alertText: String {
-    switch (myStepIdx, completeStepIdx) {
-    case let (x, y) where y + 1 < x:
-      return "Complete Previous Step"
-    default:
-      return "Read & Check"
-    }
+    return isCorrectStep ? "Read & Check" : "Complete Previous Step"
   }
   var isDisableContent: Bool {
-    switch (myStepIdx, completeStepIdx) {
-    case let (x, y) where y + 1 < x:
-      return true
-    default:
-      return false
-    }
+    return !isCorrectStep
   }
   
   public init(
-    myStep myStepIdx: Int,
-    completeStep completeStepIdx: Int,
+    isCorrectStep: Bool,
     @ViewBuilder content: () -> C
   ) {
-    self.myStepIdx = myStepIdx
-    self.completeStepIdx = completeStepIdx
+    self.isCorrectStep = isCorrectStep
     self.CheckListContent = content()
   }
   
@@ -46,6 +33,7 @@ public struct CheckList<C: View>: View {
       HStack {
         Title()
         FloatingAlert(alertText)
+          .reload(isCorrectStep)
       }
       CheckListContent
         .disabled(isDisableContent)
@@ -58,7 +46,7 @@ extension CheckList {
   @ViewBuilder
   func Title() -> some View {
     Text(title)
-      .font(.system(.title3, weight: .medium))
+      .font(.system(.title3, weight: .semibold))
       .foregroundColor(.black)
   }
 }

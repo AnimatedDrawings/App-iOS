@@ -37,8 +37,10 @@ struct UploadADrawingView: ADUI {
           Title()
           
           CheckList(
-            myStep: Step.UploadADrawing.rawValue,
-            completeStep: viewStore.sharedState.completeStep.rawValue
+            isCorrectStep: Step.isCorrectStep(
+              myStep: .UploadADrawing,
+              completeStep: viewStore.sharedState.completeStep
+            )
           ) {
             CheckListContent(with: viewStore)
           }
@@ -79,7 +81,7 @@ extension UploadADrawingView {
     
     VStack(alignment: .leading, spacing: 20) {
       Text(title)
-        .font(.system(.largeTitle, weight: .semibold))
+        .font(.system(.title, weight: .semibold))
         .foregroundColor(ADUtilsAsset.Color.blue2.swiftUIColor)
       
       Text(left) + Text(one).fontWeight(.bold) + Text(right)
@@ -96,15 +98,15 @@ extension UploadADrawingView {
     let description3 = "Don’t include any identifiable information, offensive content (see our community standards), or drawings that infringe on the copyrights of others."
     
     VStack(alignment: .leading, spacing: 15) {
-      CheckListButton(description1, state: viewStore.$checkState1) {
+      CheckListButton(description1, state: viewStore.checkState1) {
         viewStore.send(.checkList1)
       }
       
-      CheckListButton(description2, state: viewStore.$checkState2) {
+      CheckListButton(description2, state: viewStore.checkState2) {
         viewStore.send(.checkList2)
       }
       
-      CheckListButton(description3, state: viewStore.$checkState3) {
+      CheckListButton(description3, state: viewStore.checkState3) {
         viewStore.send(.checkList3)
       }
     }
@@ -170,9 +172,9 @@ extension UploadADrawingView {
     VStack(alignment: .leading, spacing: 15) {
       HStack(spacing: 15) {
         Text(leftTitle)
-          .font(.system(.title3, weight: .medium))
+          .font(.system(.title3, weight: .semibold))
         Text(rightTitle)
-          .font(.system(.title3, weight: .medium))
+          .font(.system(.title3, weight: .semibold))
       }
       Text(description)
     }

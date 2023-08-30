@@ -39,7 +39,7 @@ public struct MaskingImageView: View {
   }
   
   public var body: some View {
-    VStack {
+    VStack(spacing: 20) {
       ToolNaviBar(
         cancelAction: maskableViewLink.cancel,
         saveAction: maskableViewLink.save
@@ -48,31 +48,35 @@ public struct MaskingImageView: View {
       
       Spacer()
       
-      Image(uiImage: backgroundImage)
-        .resizable()
-        .frame(height: 450)
-        .background(
-          GeometryReader { geo in
-            Color.clear
-              .onAppear {
-                self.imageFrame = geo.frame(in: .global)
-              }
-          }
-        )
+      RoundedRectangle(cornerRadius: 15)
+        .foregroundColor(.white)
+        .shadow(radius: 10)
         .overlay {
-          MaskableUIViewRepresentable(
-            myFrame: imageFrame,
-            croppedImage: croppedImage,
-            initMaskImage: initMaskImage,
-            maskToolState: maskToolState,
-            maskableViewLink: maskableViewLink
-          )
+          Image(uiImage: backgroundImage)
+            .resizable()
+            .overlay {
+              MaskableUIViewRepresentable(
+                myFrame: imageFrame,
+                croppedImage: croppedImage,
+                initMaskImage: initMaskImage,
+                maskToolState: maskToolState,
+                maskableViewLink: maskableViewLink
+              )
+            }
+            .background(
+              GeometryReader { geo in
+                Color.clear
+                  .onAppear {
+                    self.imageFrame = geo.frame(in: .global)
+                  }
+              }
+            )
+            .padding()
         }
         .padding()
+        .padding(.bottom)
       
       Spacer()
-      Spacer()
-        .frame(height: abs(toolSizerButtonOffset))
       
       MaskToolView(
         maskToolState: maskToolState,

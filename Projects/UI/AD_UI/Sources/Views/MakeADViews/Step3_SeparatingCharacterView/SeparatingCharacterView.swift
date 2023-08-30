@@ -37,13 +37,15 @@ struct SeparatingCharacterView: ADUI {
           Title()
           
           CheckList(
-            myStep: Step.SeparatingCharacter.rawValue,
-            completeStep: viewStore.sharedState.completeStep.rawValue
+            isCorrectStep: Step.isCorrectStep(
+              myStep: .SeparatingCharacter,
+              completeStep: viewStore.sharedState.completeStep
+            )
           ) {
             CheckListContent(with: viewStore)
           }
           
-          ShowMaskingImageViewButton(state: viewStore.maskState) {
+          ShowMaskingImageViewButton(state: viewStore.isActiveMaskingImageButton) {
             viewStore.send(.toggleMaskingImageView)
           }
           
@@ -95,7 +97,7 @@ extension SeparatingCharacterView {
     
     VStack(alignment: .leading, spacing: 20) {
       Text(title)
-        .font(.system(.largeTitle, weight: .semibold))
+        .font(.system(.title, weight: .semibold))
         .foregroundColor(ADUtilsAsset.Color.blue2.swiftUIColor)
       
       Text(description)
@@ -111,14 +113,14 @@ extension SeparatingCharacterView {
       let description1 = "If the body parts of your character are not highlighted, use the pen and eraser tools to fix it."
       let description2 = "If the arms or legs are stuck together, use the eraser tool to separate them"
       
-      CheckListButton(description1, state: viewStore.$checkState1) {
+      CheckListButton(description1, state: viewStore.checkState1) {
         viewStore.send(.checkAction1)
       }
       
       GIFViewName("step3Gif1")
         .frame(height: 250)
       
-      CheckListButton(description2, state: viewStore.$checkState2) {
+      CheckListButton(description2, state: viewStore.checkState2) {
         viewStore.send(.checkAction2)
       }
       

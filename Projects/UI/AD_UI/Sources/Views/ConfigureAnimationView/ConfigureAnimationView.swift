@@ -28,14 +28,14 @@ struct ConfigureAnimationView: ADUI {
   
   var body: some View {
     WithViewStore(store, observe: { $0 }) { viewStore in
-      VStack(spacing: 20) {
+      VStack(spacing: 0) {
         Title()
         
-        Spacer()
+        Spacer().frame(height: 50)
         
         MyAnimationView(with: viewStore)
         
-        Spacer()
+        Spacer().frame(height: 50)
         
         TabBar(with: viewStore)
         
@@ -86,10 +86,11 @@ extension ConfigureAnimationView {
     
     VStack(alignment: .leading, spacing: 20) {
       Text(title)
-        .font(.system(.largeTitle, weight: .semibold))
-        .foregroundColor(strokeColor)
+        .font(.system(.title, weight: .semibold))
+        .foregroundColor(ADUtilsAsset.Color.blue2.swiftUIColor)
       
       Text(description)
+        .frame(maxWidth: .infinity)
     }
   }
 }
@@ -100,9 +101,8 @@ extension ConfigureAnimationView {
   func MyAnimationView(with viewStore: MyViewStore) -> some View {
     RoundedRectangle(cornerRadius: 15)
       .foregroundColor(.white)
-      .frame(height: 400)
       .shadow(radius: 10)
-      .overlay {
+      .overlay(alignment: .center) {
         if let gifData = viewStore.state.myAnimationData {
           GIFViewData(gifData)
         }

@@ -37,8 +37,10 @@ struct FindingCharacterJointsView: ADUI {
           Title()
           
           CheckList(
-            myStep: Step.FindingCharacterJoints.rawValue,
-            completeStep: viewStore.sharedState.completeStep.rawValue
+            isCorrectStep: Step.isCorrectStep(
+              myStep: .FindingCharacterJoints,
+              completeStep: viewStore.sharedState.completeStep
+            )
           ) {
             CheckListContent(with: viewStore)
           }
@@ -93,7 +95,7 @@ extension FindingCharacterJointsView {
     
     VStack(alignment: .leading, spacing: 20) {
       Text(title)
-        .font(.system(.largeTitle, weight: .semibold))
+        .font(.system(.title, weight: .semibold))
         .foregroundColor(ADUtilsAsset.Color.blue2.swiftUIColor)
       
       Text(description)
@@ -117,7 +119,7 @@ extension FindingCharacterJointsView {
     let description = "If your character doesn't have any arms, drag the elbows and wrist joints far away from the character and it can still be animated"
     
     VStack(alignment: .leading, spacing: 15) {
-      CheckListButton(description, state: viewStore.$checkState) {
+      CheckListButton(description, state: viewStore.checkState) {
         viewStore.send(.checkAction)
       }
       
