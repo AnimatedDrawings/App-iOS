@@ -94,7 +94,7 @@ extension OnBoardingView {
       
       RoundedRectangle(cornerRadius: 10)
         .overlay {
-          LoopingPlayer(name: previewName, withExtension: withExtension)
+          LoopingVideoPlayer(name: previewName, withExtension: withExtension)
             .mask {
               RoundedRectangle(cornerRadius: 8)
             }

@@ -1,24 +1,28 @@
 //
-//  LoopingPlayer.swift
-//  AD_UI
+//  LoopingVideoPlayer.swift
+//  AD_Utils
 //
-//  Created by minii on 2023/05/29.
+//  Created by minii on 2023/08/30.
 //  Copyright © 2023 chminipark. All rights reserved.
 //
 
 import SwiftUI
 import AVFoundation
-import AD_Utils
 
-struct LoopingPlayer: UIViewRepresentable {
+public struct LoopingVideoPlayer: UIViewRepresentable {
   let name: String
   let withExtension: String
   
-  func makeUIView(context: Context) -> UIView {
+  public init(name: String, withExtension: String) {
+    self.name = name
+    self.withExtension = withExtension
+  }
+  
+  public func makeUIView(context: Context) -> UIView {
     return QueuePlayerUIView(name: name, withExtension: withExtension, frame: .zero)
   }
   
-  func updateUIView(_ uiView: UIView, context: Context) {
+  public func updateUIView(_ uiView: UIView, context: Context) {
     // Do nothing here
   }
 }
@@ -64,8 +68,9 @@ class QueuePlayerUIView: UIView {
 struct LoopingPlayer_Previews: PreviewProvider {
   static var previews: some View {
     VStack {
-      LoopingPlayer(name: "ADApp_Preview", withExtension: "mp4")
+      LoopingVideoPlayer(name: "ADApp_Preview", withExtension: "mp4")
     }
     .frame(width: 300, height: 300)
   }
 }
+
