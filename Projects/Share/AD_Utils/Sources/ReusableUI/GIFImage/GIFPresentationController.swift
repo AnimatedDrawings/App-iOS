@@ -19,20 +19,21 @@ struct GIFPresentationController {
     self.gifData = gifData
   }
   
-  func start(changeFrame: (CGImage) async -> Void) async {
+  func start(errorImage: CGImage, changeFrame: (CGImage) async -> Void) async {
     do {
       repeat {
-        for try await cgImage in try CGImageSourceFrameSequence(data: gifData) {
-          try await update(cgImage: cgImage, changeFrame: changeFrame)
+        for try await imageFrame in try CGImageSourceFrameSequence(data: gifData) {
+          try await update(imageFrame: imageFrame, changeFrame: changeFrame)
         }
       } while(true)
     } catch {
-      
+      await changeFrame(errorImage)
     }
   }
   
-  private func update(cgImage: CGImage, changeFrame: (CGImage) async -> Void) async throws {
-    await changeFrame(cgImage)
-    try await Task.sleep(nanoseconds: UInt64(kDefaultGIFFrameInterval * 1_000_000_000.0))
+  private func update(imageFrame: ImageFrame, changeFrame: (CGImage) async -> Void) async throws {
+    await changeFrame(imageFrame.image)
+    let interval: Double = imageFrame.interval ?? kDefaultGIFFrameInterval
+    try await Task.sleep(nanoseconds: UInt64(interval * 1_000_000_000.0))
   }
 }

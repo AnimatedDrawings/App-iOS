@@ -9,30 +9,8 @@
 import Foundation
 import ImageIO
 
-struct CGImageSourceIterator: AsyncIteratorProtocol {
-  let frameCount: Int
-  let source: CGImageSource
-  private(set) var currentFrame: Int
-  
-  init(source: CGImageSource) {
-    self.source = source
-    self.frameCount = CGImageSourceGetCount(source)
-    self.currentFrame = 0
-  }
-  
-  mutating func next() async throws -> CGImage? {
-    guard currentFrame < frameCount else {
-      return nil
-    }
-    
-    let cgImage: CGImage? = CGImageSourceCreateImageAtIndex(source, currentFrame, nil)
-    currentFrame += 1
-    return cgImage
-  }
-}
-
 struct CGImageSourceFrameSequence: AsyncSequence {
-  typealias Element = CGImage
+  typealias Element = ImageFrame
   
   let source: CGImageSource
   
@@ -67,3 +45,67 @@ struct CGImageSourceFrameSequence: AsyncSequence {
     CGImageSourceIterator(source: source)
   }
 }
+
+struct CGImageSourceIterator: AsyncIteratorProtocol {
+  let frameCount: Int
+  let source: CGImageSource
+  private(set) var currentFrame: Int
+  
+  init(source: CGImageSource) {
+    self.source = source
+    self.frameCount = CGImageSourceGetCount(source)
+    self.currentFrame = 0
+  }
+  
+  mutating func next() async throws -> ImageFrame? {
+    guard currentFrame < frameCount else {
+      return nil
+    }
+    
+    let imageFrame: ImageFrame?
+    if let nextImage = CGImageSourceCreateImageAtIndex(source, currentFrame, nil) {
+      imageFrame = ImageFrame(image: nextImage, interval: source.intervalAtIndex(currentFrame))
+    } else {
+      imageFrame = nil
+    }
+    currentFrame += 1
+    return imageFrame
+  }
+}
+
+extension CFString {
+  var asKey: UnsafeMutableRawPointer {
+    return Unmanaged.passUnretained(self).toOpaque()
+  }
+}
+
+extension CGImageSource {
+  func intervalAtIndex(_ index: Int) -> TimeInterval? {
+    guard let properties = CGImageSourceCopyPropertiesAtIndex(self, index, nil) else {
+      return nil
+    }
+    
+    guard let gifProperties = CFDictionaryGetValue(properties, kCGImagePropertyGIFDictionary.asKey) else {
+      return nil
+    }
+    
+    let dictionary = unsafeBitCast(gifProperties, to: CFDictionary.self)
+    
+    let pointer: UnsafeRawPointer
+    if let delay = CFDictionaryGetValue(dictionary, kCGImagePropertyGIFDelayTime.asKey) {
+      pointer = delay
+    } else if let unclampedDelay = CFDictionaryGetValue(dictionary, kCGImagePropertyGIFUnclampedDelayTime.asKey) {
+      pointer = unclampedDelay
+    } else {
+      return nil
+    }
+    
+    let interval = unsafeBitCast(pointer, to: AnyObject.self).doubleValue ?? 0.0
+    if interval > 0.0 {
+      return interval
+    } else {
+      return nil
+    }
+  }
+}
+

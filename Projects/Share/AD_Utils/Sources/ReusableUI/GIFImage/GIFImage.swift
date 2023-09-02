@@ -11,14 +11,16 @@ import SwiftUI
 public struct GIFImage: View {
   private let gifData: Data
   private let gifPresentationController: GIFPresentationController
-  @MainActor @State var imageFrame: CGImage?
+  @MainActor @State var currentFrame: CGImage?
   @MainActor var convertUIImage: UIImage {
-    if let imageFrame = self.imageFrame {
-      return UIImage(cgImage: imageFrame)
+    if let currentFrame = self.currentFrame {
+      return UIImage(cgImage: currentFrame)
     }
     return UIImage()
   }
   @State private var presentationTask: Task<(), Never>?
+  
+  private let errorImage: CGImage = ADUtilsAsset.SampleDrawing.checkerboard.image.cgImage!
   
   public init(gifData: Data) {
     self.gifData = gifData
@@ -40,14 +42,14 @@ public struct GIFImage: View {
 
 extension GIFImage {
   @MainActor
-  @Sendable private func changeFrame(_ imageFrame: CGImage) async {
-    self.imageFrame = imageFrame
+  @Sendable private func changeFrame(_ currentFrame: CGImage) async {
+    self.currentFrame = currentFrame
   }
   
   @Sendable private func load() {
     presentationTask?.cancel()
     presentationTask = Task {
-      await gifPresentationController.start(changeFrame: changeFrame(_:))
+      await gifPresentationController.start(errorImage: errorImage, changeFrame: changeFrame(_:))
     }
   }
 }
