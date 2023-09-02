@@ -7,8 +7,22 @@
 //
 
 import Foundation
+import AD_Utils
 
 public enum ADAnimation: String, CaseIterable {
   case dab
   case zombie
+}
+
+public extension ADAnimation {
+  var gifData: Data {
+    typealias myAsset = ADUtilsAsset.ADAnimation
+    
+    switch self {
+    case .dab:
+      return myAsset.dab.data.data
+    case .zombie:
+      return myAsset.zombie.data.data
+    }
+  }
 }

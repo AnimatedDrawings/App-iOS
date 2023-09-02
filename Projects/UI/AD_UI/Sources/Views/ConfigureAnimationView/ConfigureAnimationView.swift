@@ -104,7 +104,7 @@ extension ConfigureAnimationView {
       .shadow(radius: 10)
       .overlay(alignment: .center) {
         if let gifData = viewStore.state.myAnimationData {
-          GIFViewData(gifData)
+          GIFImage(gifData: gifData)
         }
       }
   }

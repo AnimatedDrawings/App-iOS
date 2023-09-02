@@ -123,8 +123,9 @@ extension FindingCharacterJointsView {
         viewStore.send(.checkAction)
       }
       
-      GIFViewName("step4Gif")
+      GIFImage(sample: ADUtilsAsset.Gifs.step4Gif)
         .frame(height: 250)
+        .frame(maxWidth: .infinity, alignment: .center)
     }
   }
 }

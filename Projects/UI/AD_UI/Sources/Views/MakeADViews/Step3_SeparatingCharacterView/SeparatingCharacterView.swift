@@ -117,15 +117,17 @@ extension SeparatingCharacterView {
         viewStore.send(.checkAction1)
       }
       
-      GIFViewName("step3Gif1")
+      GIFImage(sample: ADUtilsAsset.Gifs.step2Gif1)
         .frame(height: 250)
+        .frame(maxWidth: .infinity, alignment: .center)
       
       CheckListButton(description2, state: viewStore.checkState2) {
         viewStore.send(.checkAction2)
       }
       
-      GIFViewName("step3Gif2")
-        .frame(height: 250)
+      GIFImage(sample: ADUtilsAsset.Gifs.step3Gif2)
+        .frame(height: 250, alignment: .center)
+        .frame(maxWidth: .infinity, alignment: .center)
     }
   }
 }

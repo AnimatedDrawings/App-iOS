@@ -112,8 +112,8 @@ extension FindingTheCharacterView {
       }
       
       HStack {
-        GIFViewName("step2Gif1")
-        GIFViewName("step2Gif2")
+        GIFImage(sample: ADUtilsAsset.Gifs.step2Gif1)
+        GIFImage(sample: ADUtilsAsset.Gifs.step2Gif2)
       }
       .frame(height: 250)
     }
