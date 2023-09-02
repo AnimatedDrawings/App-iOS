@@ -166,6 +166,16 @@ extension AnimationListView {
     return Array(selectedCategory.animations.dropFirst())
   }
   
+  func getGIFData(_ adAnimation: ADAnimation) -> Data {
+    guard let gifURL = ADUtilsResources.bundle.url(forResource: adAnimation.rawValue, withExtension: "gif"),
+          let gifData = try? Data(contentsOf: gifURL)
+    else {
+      return Data()
+    }
+    
+    return gifData
+  }
+  
   @ViewBuilder
   func AnimationGridItem(_ adAnimation: ADAnimation) -> some View {
     Button {
@@ -176,7 +186,7 @@ extension AnimationListView {
         .cornerRadius(15)
         .frame(height: self.gridItemHeight)
         .overlay {
-          GIFViewName(adAnimation.rawValue)
+          GIFImage(gifData: adAnimation.gifData)
             .frame(width: gifViewSize, height: gifViewSize)
         }
     }
