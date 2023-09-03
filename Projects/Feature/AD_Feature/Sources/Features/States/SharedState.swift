@@ -24,5 +24,5 @@ public struct SharedState: Equatable {
   public var maskedImage: UIImage? = nil
   public var jointsDTO: JointsDTO? = nil
   
-  public var isShowAddAnimationView = false
+  public var isShowConfigureAnimationView = false
 }

@@ -28,10 +28,8 @@ public struct ConfigureAnimationFeature: Reducer {
     public var selectedAnimation: ADAnimation? = nil
     public var myAnimationData: Data? = nil
     public var myAnimationURL: URL? = nil
-    public var cache: [ADAnimation : URL?] = ADAnimation.allCases
-      .reduce(into: [ADAnimation : URL?]()) { dict, key in
-        dict[key] = nil
-      }
+    public var cache: [ADAnimation : URL?] = initCache()
+    
     var isSuccessAddAnimation = false
     
     @PresentationState public var alertShared: AlertState<AlertShared>?
@@ -42,7 +40,7 @@ public struct ConfigureAnimationFeature: Reducer {
     case binding(BindingAction<State>)
     
     case toggleIsShowAnimationListView
-    case toggleIsShowAddAnimationView
+    case toggleIsShowConfigureAnimationView
     case toggleIsShowShareView
     case toggleIsShowShareActionSheet
     
@@ -85,8 +83,8 @@ extension ConfigureAnimationFeature {
       case .toggleIsShowAnimationListView:
         state.isShowAnimationListView.toggle()
         return .none
-      case .toggleIsShowAddAnimationView:
-        state.sharedState.isShowAddAnimationView.toggle()
+      case .toggleIsShowConfigureAnimationView:
+        state.sharedState.isShowConfigureAnimationView.toggle()
         return .none
       case .toggleIsShowShareView:
         state.isShowShareView.toggle()
@@ -231,6 +229,10 @@ extension ConfigureAnimationFeature {
       case .alertShared:
         return .none
       case .alertTrashMakeAD(.presented(.trash)):
+        state.selectedAnimation = nil
+        state.myAnimationData = nil
+        state.myAnimationURL = nil
+        state.cache = ConfigureAnimationFeature.MyState.initCache()
         state.sharedState = SharedState()
         return .none
       case .alertTrashMakeAD:
@@ -308,7 +310,6 @@ extension ConfigureAnimationFeature {
         }
         ButtonState(action: .trash) {
           TextState("Reset")
-            .fontWeight(.semibold)
             .foregroundColor(.red)
         }
       },
@@ -316,5 +317,14 @@ extension ConfigureAnimationFeature {
         TextState("Are you sure to reset making animation all step?")
       }
     )
+  }
+}
+
+extension ConfigureAnimationFeature.MyState {
+  static func initCache() -> [ADAnimation : URL?] {
+    return ADAnimation.allCases
+      .reduce(into: [ADAnimation : URL?]()) { dict, key in
+        dict[key] = nil
+      }
   }
 }

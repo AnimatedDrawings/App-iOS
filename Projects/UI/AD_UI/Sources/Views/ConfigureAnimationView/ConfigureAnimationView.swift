@@ -131,7 +131,7 @@ extension ConfigureAnimationView {
       .overlay {
         HStack(spacing: 0) {
           TabBarButton(imageName: fix) {
-            viewStore.send(.toggleIsShowAddAnimationView)
+            viewStore.send(.toggleIsShowConfigureAnimationView)
           }
           TabBarButton(imageName: trash) {
             viewStore.send(.showAlertTrashMakeAD)

@@ -111,7 +111,7 @@ extension FindingCharacterJointsFeature {
         if state.isSuccessFindCharacterJoints == true {
           state.sharedState.completeStep = .FindingCharacterJoints
           state.isSuccessFindCharacterJoints = false
-          state.sharedState.isShowAddAnimationView = true
+          state.sharedState.isShowConfigureAnimationView = true
         }
         return .none
         

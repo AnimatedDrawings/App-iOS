@@ -28,7 +28,7 @@ public struct RootView: View {
       if !(viewStore.isTapStartButton) {
         OnBoardingView(isTapStartButton: viewStore.$isTapStartButton)
       } else {
-        if !(viewStore.sharedState.isShowAddAnimationView) {
+        if !(viewStore.sharedState.isShowConfigureAnimationView) {
           MakeADView()
         } else {
           ConfigureAnimationView()
