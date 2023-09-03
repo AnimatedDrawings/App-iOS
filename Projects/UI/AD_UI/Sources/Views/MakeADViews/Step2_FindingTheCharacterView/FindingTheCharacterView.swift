@@ -50,6 +50,8 @@ struct FindingTheCharacterView: ADUI {
           ShowCropImageViewButton(state: viewStore.checkState) {
             viewStore.send(.toggleCropImageView)
           }
+          
+          Spacer().frame(height: 20)
         }
         .padding()
       }

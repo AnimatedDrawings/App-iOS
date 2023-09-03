@@ -15,11 +15,11 @@ struct OnBoardingView: View {
     VStack {
       Title()
       
-      Spacer().frame(height: 80)
+      Spacer()
       
       Preview()
       
-      Spacer().frame(height: 80)
+      Spacer()
       
       StartButton {
         if isTapStartButton == false {
@@ -28,6 +28,7 @@ struct OnBoardingView: View {
       }
     }
     .padding()
+    .padding(.vertical)
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .ignoresSafeArea()
     .addBackground()
