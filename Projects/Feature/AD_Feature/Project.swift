@@ -4,8 +4,7 @@ import ProjectEnvironment
 let project = Project.makeModule(
   myModule: .AD_Feature,
   platform: .iOS,
-//  product: .staticFramework,
-  product: .framework,
+  product: .staticLibrary,
   dependencies: [
     .AD_Utils,
     .ComposableArchitecture,
