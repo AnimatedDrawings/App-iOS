@@ -19,7 +19,6 @@ let project = Project.makeProject(
       targetName: myModule.name,
       product: .app,
       infoPlist: infoPlist,
-      resources: nil,
       dependencies: [.release(.AD_UI)]
     )
   ],
