@@ -1,87 +1,123 @@
 import ProjectDescription
 
 public extension Project {
-  static func makeModule(
+  static func makeProject(
     myModule: MyModule,
-    platform: Platform,
-    product: Product,
     organizationName: String = "chminipark",
+    options: Project.Options = .options(),
     packages: [Package] = [],
-    deploymentTarget: DeploymentTarget? = .iOS(targetVersion: "16.0", devices: [.iphone, .ipad]),
-    dependencies: [TargetDependency] = [],
-    sources: SourceFilesList = ["Sources/**"],
-    resources: ResourceFileElements? = nil,
-    infoPlist: InfoPlist = .default,
-    withTest: Bool
-  ) -> Project {
-    let settings: Settings = .settings(
-      base: [:],
-      configurations: [
-        .debug(name: .debug),
-        .release(name: .release)
-      ],
-      defaultSettings: .recommended
-    )
-    
-    let name = myModule.rawValue
-    
-    let appTarget = Target(
-      name: name,
-      platform: platform,
-      product: product,
-      bundleId: "\(organizationName).\(name)".replaceBar,
-      deploymentTarget: deploymentTarget,
-      infoPlist: infoPlist,
-      sources: sources,
-      resources: resources,
-      dependencies: dependencies
-    )
-    
-    var targets: [Target] = [appTarget]
-    
-    if withTest {
-      let testTarget = Target(
-        name: "\(name)Tests",
-        platform: platform,
-        product: .unitTests,
-        bundleId: "\(organizationName).\(name)Tests".replaceBar,
-        deploymentTarget: deploymentTarget,
-        infoPlist: .default,
-        sources: ["Tests/**"],
-        dependencies: [.target(name: name)]
-      )
-      targets.append(testTarget)
-    }
-    
-    let schemes: [Scheme] = [.makeScheme(target: .debug, name: name, withTest: withTest)]
+    settings: ProjectDescription.Settings? = nil,
+    targets: [Target],
+    schemes: [Scheme],
+    fileHeaderTemplate: ProjectDescription.FileHeaderTemplate? = nil,
+    additionalFiles: [FileElement] = [],
+    resourceSynthesizers: [ProjectDescription.ResourceSynthesizer] = .default
+  )
+  -> Project {
+    let name: String = myModule.name
     
     return Project(
       name: name,
       organizationName: organizationName,
+      options: options,
       packages: packages,
       settings: settings,
       targets: targets,
-      schemes: schemes
+      schemes: schemes,
+      fileHeaderTemplate: nil,
+      additionalFiles: additionalFiles,
+      resourceSynthesizers: resourceSynthesizers
     )
   }
 }
 
-extension Scheme {
+public extension Target {
+  static func makeTestTarget(
+    targetName: String,
+    platform: Platform = .iOS,
+    organizationName: String = "chminipark",
+    deploymentTarget: DeploymentTarget = .iOS(targetVersion: "16.0", devices: [.iphone]),
+    sources: SourceFilesList = ["Tests/**"]
+  ) -> Target
+  {
+    return Target(
+      name: "\(targetName)Tests",
+      platform: platform,
+      product: .unitTests,
+      bundleId: "\(organizationName).\(targetName)Tests".replaceBar,
+      deploymentTarget: deploymentTarget,
+      infoPlist: .default,
+      sources: sources,
+      dependencies: [.target(name: targetName)]
+    )
+  }
+  
+  static func makeTarget(
+    targetName: String,
+    platform: ProjectDescription.Platform = .iOS,
+    product: ProjectDescription.Product,
+    productName: String? = nil,
+    organizationName: String = "chminipark",
+    deploymentTarget: DeploymentTarget? = .iOS(targetVersion: "16.0", devices: [.iphone]),
+    infoPlist: InfoPlist = .default,
+    sources: SourceFilesList = ["Sources/**"],
+    resources: ResourceFileElements? = ["Resources/**"],
+    copyFiles: [ProjectDescription.CopyFilesAction]? = nil,
+    headers: ProjectDescription.Headers? = nil,
+    entitlements: ProjectDescription.Path? = nil,
+    scripts: [ProjectDescription.TargetScript] = [],
+    dependencies: [TargetDependency] = [],
+    settings: ProjectDescription.Settings? = nil,
+    coreDataModels: [ProjectDescription.CoreDataModel] = [],
+    environment: [String : String] = [:],
+    launchArguments: [ProjectDescription.LaunchArgument] = [],
+    additionalFiles: [ProjectDescription.FileElement] = [],
+    buildRules: [ProjectDescription.BuildRule] = []
+  ) -> Target
+  {
+    return Target(
+      name: targetName,
+      platform: platform,
+      product: product,
+      productName: productName,
+      bundleId: "\(organizationName).\(targetName)".replaceBar,
+      deploymentTarget: deploymentTarget,
+      infoPlist: infoPlist,
+      sources: sources,
+      resources: resources,
+      copyFiles: copyFiles,
+      headers: headers,
+      entitlements: entitlements,
+      scripts: scripts,
+      dependencies: dependencies,
+      settings: settings,
+      coreDataModels: coreDataModels,
+      environment: environment,
+      launchArguments: launchArguments,
+      additionalFiles: additionalFiles,
+      buildRules: buildRules
+    )
+  }
+}
+
+public extension Scheme {
   static func makeScheme(
+    targetName: String,
     target: ConfigurationName,
-    name: String,
     withTest: Bool
   ) -> Scheme {
-    let testAction: TestAction? = withTest ? .targets(
-      ["\(name)Tests"],
-      configuration: target,
-      options: .options(coverage: true, codeCoverageTargets: ["\(name)"])
-    ) : nil
+    let testAction: TestAction? = withTest ?
+      .targets(
+        ["\(targetName)Tests"],
+        configuration: target,
+        options: .options(coverage: true, codeCoverageTargets: ["\(targetName)"])
+      ) :
+    nil
     
     return Scheme(
-      name: name,
+      name: targetName,
       shared: true,
-      buildAction: .buildAction(targets: ["\(name)"]),
+      buildAction: .buildAction(targets: ["\(targetName)"]),
       testAction: testAction,
       runAction: .runAction(configuration: target),
       archiveAction: .archiveAction(configuration: target),

@@ -8,13 +8,18 @@
 import ProjectDescription
 import ProjectEnvironment
 
-let project = Project.makeModule(
-  myModule: .AD_MaskingImage,
-  platform: .iOS,
-  product: .framework,
-  dependencies: [
-    .AD_Utils
+let myModule: MyModule = .AD_MaskingImage
+
+let project: Project = .makeProject(
+  myModule: myModule,
+  targets: [
+    .makeTarget(
+      targetName: myModule.name,
+      product: .staticLibrary,
+      dependencies: [
+        .release(.AD_Utils)
+      ]
+    )
   ],
-  resources: ["Resources/**"],
-  withTest: false
+  schemes: []
 )

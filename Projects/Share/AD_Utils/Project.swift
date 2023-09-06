@@ -1,10 +1,15 @@
 import ProjectDescription
 import ProjectEnvironment
 
-let project = Project.makeModule(
-  myModule: .AD_Utils,
-  platform: .iOS,
-  product: .framework,
-  resources: ["Resources/**"],
-  withTest: false
+let myModule: MyModule = .AD_Utils
+
+let project: Project = .makeProject(
+  myModule: myModule,
+  targets: [
+    .makeTarget(
+      targetName: myModule.name,
+      product: .staticFramework
+    )
+  ],
+  schemes: []
 )

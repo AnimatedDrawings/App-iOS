@@ -1,21 +1,27 @@
 import ProjectDescription
 import ProjectEnvironment
 
-let project = Project.makeModule(
-  myModule: .AD_iOS,
-  platform: .iOS,
-  product: .app,
-  dependencies: [
-    .AD_UI
+let infoPlist: InfoPlist = .extendingDefault(with: [
+  "UIMainStoryboardFile": "",
+  "UILaunchStoryboardName": "LaunchScreen",
+  "ENABLE_TESTS": .boolean(true),
+  "NSPhotoLibraryUsageDescription": "We need access to photo library so that photos can be selected",
+  "NSPhotoLibraryAddUsageDescription": "This app requires access to the photo library.",
+  "UIUserInterfaceStyle": "Light"
+])
+
+let myModule: MyModule = .AD_iOS
+
+let project = Project.makeProject(
+  myModule: myModule,
+  targets: [
+    .makeTarget(
+      targetName: myModule.name,
+      product: .app,
+      infoPlist: infoPlist,
+      resources: nil,
+      dependencies: [.release(.AD_UI)]
+    )
   ],
-  resources: ["Resources/**"],
-  infoPlist: .extendingDefault(with: [
-    "UIMainStoryboardFile": "",
-    "UILaunchStoryboardName": "LaunchScreen",
-    "ENABLE_TESTS": .boolean(true),
-    "NSPhotoLibraryUsageDescription": "We need access to photo library so that photos can be selected",
-    "NSPhotoLibraryAddUsageDescription": "This app requires access to the photo library.",
-    "UIUserInterfaceStyle": "Light"
-  ]),
-  withTest: false
+  schemes: []
 )

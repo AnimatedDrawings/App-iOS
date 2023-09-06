@@ -3,8 +3,7 @@ import ProjectDescription
 let workspace = Workspace(
   name: "AnimatedDrawings",
   projects: [
-    "Projects/App/AD_iOS",
-    "Projects/UI/AD_UIDemo"
+    "Projects/App/AD_iOS"
   ],
   schemes: [],
   additionalFiles: [
