@@ -11,7 +11,7 @@ let infoPlist: InfoPlist = .extendingDefault(with: [
   "UISupportedInterfaceOrientations": ["UIInterfaceOrientationPortrait"]
 ])
 
-let myModule: MyModule = .AD_iOS
+let myModule: MyModule = .AD_App
 
 let project = Project.makeProject(
   myModule: myModule,

@@ -26,20 +26,20 @@ public extension Path {
 extension MyModule {
   var path: Path {
     switch self {
-    case .AD_iOS:
-      return .relativeToRoot("Projects/App/AD_iOS")
+    case .AD_App:
+      return .relativeToRoot("Projects/App/" + self.name)
     case .AD_Feature:
-      return .relativeToRoot("Projects/Feature/AD_Feature")
+      return .relativeToRoot("Projects/Feature/" + self.name)
     case .AD_UI:
-      return .relativeToRoot("Projects/UI/AD_UI")
+      return .relativeToRoot("Projects/UI/" + self.name)
     case .AD_MaskingImage:
-      return .relativeToRoot("Projects/UI/AD_UIHelper/AD_MaskingImage")
+      return .relativeToRoot("Projects/UI/AD_UIHelper/" + self.name)
     case .AD_CropImage:
-      return .relativeToRoot("Projects/UI/AD_UIHelper/AD_CropImage")
+      return .relativeToRoot("Projects/UI/AD_UIHelper/" + self.name)
     case .AD_ModifyJoints:
-      return .relativeToRoot("Projects/UI/AD_UIHelper/AD_ModifyJoints")
+      return .relativeToRoot("Projects/UI/AD_UIHelper/" + self.name)
     case .AD_Utils:
-      return .relativeToRoot("Projects/Share/AD_Utils")
+      return .relativeToRoot("Projects/Share/" + self.name)
     }
   }
 }

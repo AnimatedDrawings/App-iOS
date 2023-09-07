@@ -8,7 +8,7 @@
 import ProjectDescription
 
 public enum MyModule: String {
-  case AD_iOS
+  case AD_App
   
   case AD_Feature
   

@@ -4,7 +4,7 @@ import ProjectEnvironment
 let workspace = Workspace(
   name: "AnimatedDrawings",
   projects: [
-    .myModule(.AD_iOS)
+    .myModule(.AD_App)
   ],
   schemes: [],
   additionalFiles: [
