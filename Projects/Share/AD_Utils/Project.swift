@@ -1,13 +1,16 @@
 import ProjectDescription
 import ProjectEnvironment
 
-let project = Project.makeModule(
-  myModule: .AD_Utils,
-  platform: .iOS,
-  product: .framework,
-  dependencies: [
-    .ComposableArchitecture
+let myModule: MyModule = .AD_Utils
+let releaseTarget: Target = .makeTarget(
+  targetName: myModule.name,
+  product: .staticLibrary
+)
+
+let project: Project = .makeProject(
+  myModule: myModule,
+  targets: [
+    releaseTarget
   ],
-  resources: ["Resources/**"],
-  withTest: false
+  schemes: []
 )

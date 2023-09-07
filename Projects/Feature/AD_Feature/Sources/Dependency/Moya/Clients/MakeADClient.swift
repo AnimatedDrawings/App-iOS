@@ -9,7 +9,6 @@
 import SwiftUI
 import ComposableArchitecture
 import Moya
-import AD_Utils
 
 struct MakeADClient {
   var step1UploadDrawing: @Sendable (UploadADrawingRequest) async throws -> UploadADrawingResposne

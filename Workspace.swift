@@ -1,10 +1,10 @@
 import ProjectDescription
+import ProjectEnvironment
 
 let workspace = Workspace(
   name: "AnimatedDrawings",
   projects: [
-    "Projects/App/AD_iOS",
-    "Projects/UI/AD_UIDemo"
+    .myModule(.AD_App)
   ],
   schemes: [],
   additionalFiles: [

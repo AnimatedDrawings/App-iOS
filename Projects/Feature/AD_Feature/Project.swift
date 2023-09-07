@@ -1,15 +1,21 @@
 import ProjectDescription
 import ProjectEnvironment
 
-let project = Project.makeModule(
-  myModule: .AD_Feature,
-  platform: .iOS,
-//  product: .staticFramework,
-  product: .framework,
-  dependencies: [
-    .AD_Utils,
-    .ComposableArchitecture,
-    .Moya
+let myModule: MyModule = .AD_Feature
+
+let project = Project.makeProject(
+  myModule: myModule,
+  targets: [
+    .makeTarget(
+      targetName: myModule.name,
+      product: .staticLibrary,
+      resources: nil,
+      dependencies: [
+        .release(.AD_Utils),
+        .ComposableArchitecture,
+        .Moya
+      ]
+    )
   ],
-  withTest: true
+  schemes: []
 )

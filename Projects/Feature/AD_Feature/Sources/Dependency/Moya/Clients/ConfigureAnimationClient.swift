@@ -9,7 +9,6 @@
 import SwiftUI
 import ComposableArchitecture
 import Moya
-import AD_Utils
 
 struct ConfigureAnimationClient {
   var add: @Sendable (ConfigureAnimationRequest) async throws -> EmptyResponse

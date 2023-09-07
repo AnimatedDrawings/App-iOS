@@ -1,18 +1,23 @@
 import ProjectDescription
 import ProjectEnvironment
 
-let project = Project.makeModule(
-  myModule: .AD_UI,
-  platform: .iOS,
-//  product: .staticFramework,
-  product: .framework,
-  dependencies: [
-    .AD_CropImage,
-    .AD_MaskingImage,
-    .AD_ModifyJoints,
-    .AD_Feature,
-    .AD_Utils,
-    .ComposableArchitecture
+let myModule: MyModule = .AD_UI
+
+let project: Project = .makeProject(
+  myModule: myModule,
+  targets: [
+    .makeTarget(
+      targetName: myModule.name,
+      product: .staticLibrary,
+      resources: nil,
+      dependencies: [
+        .release(.AD_CropImage),
+        .release(.AD_MaskingImage),
+        .release(.AD_ModifyJoints),
+        .release(.AD_Feature)
+      ]
+    )
   ],
-  withTest: false
+  schemes: []
 )
+

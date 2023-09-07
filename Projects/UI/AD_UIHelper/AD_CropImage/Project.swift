@@ -8,14 +8,19 @@
 import ProjectDescription
 import ProjectEnvironment
 
-let project = Project.makeModule(
-  myModule: .AD_CropImage,
-  platform: .iOS,
-//  product: .staticFramework,
-  product: .framework,
+let myModule: MyModule = .AD_CropImage
+let releaseTarget: Target = .makeTarget(
+  targetName: myModule.name,
+  product: .staticLibrary,
   dependencies: [
-    .AD_Utils
+    .release(.AD_Utils)
+  ]
+)
+
+let project: Project = .makeProject(
+  myModule: myModule,
+  targets: [
+    releaseTarget
   ],
-  resources: ["Resources/**"],
-  withTest: false
+  schemes: []
 )

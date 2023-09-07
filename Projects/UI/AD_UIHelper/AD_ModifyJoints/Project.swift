@@ -8,15 +8,18 @@
 import ProjectDescription
 import ProjectEnvironment
 
-let project = Project.makeModule(
-  myModule: .AD_ModifyJoints,
-  platform: .iOS,
-//  product: .staticFramework,
-  product: .framework,
-  dependencies: [
-    .AD_Utils
-  ],
-  resources: ["Resources/**"],
-  withTest: false
-)
+let myModule: MyModule = .AD_ModifyJoints
 
+let project: Project = .makeProject(
+  myModule: myModule,
+  targets: [
+    .makeTarget(
+      targetName: myModule.name,
+      product: .staticLibrary,
+      dependencies: [
+        .release(.AD_Utils)
+      ]
+    )
+  ],
+  schemes: []
+)
