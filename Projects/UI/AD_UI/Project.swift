@@ -14,9 +14,7 @@ let project: Project = .makeProject(
         .release(.AD_CropImage),
         .release(.AD_MaskingImage),
         .release(.AD_ModifyJoints),
-        .release(.AD_Feature),
-        .release(.AD_Utils),
-        .ComposableArchitecture
+        .release(.AD_Feature)
       ]
     )
   ],

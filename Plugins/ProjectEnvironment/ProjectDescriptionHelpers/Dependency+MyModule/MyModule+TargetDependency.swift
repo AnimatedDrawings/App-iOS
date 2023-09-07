@@ -8,12 +8,18 @@
 import ProjectDescription
 
 public extension TargetDependency {
-  static func debug(_ myModule: MyModule) -> TargetDependency {
+  static func debug(_ myModule: MyModule) -> Self {
     return .project(target: myModule.debugName, path: myModule.path)
   }
   
-  static func release(_ myModule: MyModule) -> TargetDependency {
+  static func release(_ myModule: MyModule) -> Self {
     return .project(target: myModule.name, path: myModule.path)
+  }
+}
+
+public extension Path {
+  static func myModule(_ myModule: MyModule) -> Self {
+    return myModule.path
   }
 }
 

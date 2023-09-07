@@ -15,7 +15,7 @@ let project: Project = .makeProject(
   targets: [
     .makeTarget(
       targetName: myModule.name,
-      product: .staticFramework,
+      product: .staticLibrary,
       dependencies: [
         .release(.AD_Utils)
       ]

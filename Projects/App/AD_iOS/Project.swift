@@ -7,7 +7,8 @@ let infoPlist: InfoPlist = .extendingDefault(with: [
   "ENABLE_TESTS": .boolean(true),
   "NSPhotoLibraryUsageDescription": "We need access to photo library so that photos can be selected",
   "NSPhotoLibraryAddUsageDescription": "This app requires access to the photo library.",
-  "UIUserInterfaceStyle": "Light"
+  "UIUserInterfaceStyle": "Light",
+  "UISupportedInterfaceOrientations": ["UIInterfaceOrientationPortrait"]
 ])
 
 let myModule: MyModule = .AD_iOS
