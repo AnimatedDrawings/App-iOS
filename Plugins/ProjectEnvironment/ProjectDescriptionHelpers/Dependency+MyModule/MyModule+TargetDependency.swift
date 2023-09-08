@@ -7,6 +7,16 @@
 
 import ProjectDescription
 
+public extension TargetReference {
+  static func debug(_ myModule: MyModule) -> Self {
+    return .project(path: myModule.path, target: myModule.debugName)
+  }
+  
+  static func release(_ myModule: MyModule) -> Self {
+    return .project(path: myModule.path, target: myModule.name)
+  }
+}
+
 public extension TargetDependency {
   static func debug(_ myModule: MyModule) -> Self {
     return .project(target: myModule.debugName, path: myModule.path)

@@ -10,8 +10,8 @@ let infoPlist: InfoPlist = .extendingDefault(with: [
   "UIUserInterfaceStyle": "Light",
   "UISupportedInterfaceOrientations": ["UIInterfaceOrientationPortrait"]
 ])
-
 let myModule: MyModule = .AD_App
+let displayAppName = "AD"
 
 let project = Project.makeProject(
   myModule: myModule,
@@ -19,6 +19,7 @@ let project = Project.makeProject(
     .makeTarget(
       targetName: myModule.name,
       product: .app,
+      productName: displayAppName,
       infoPlist: infoPlist,
       dependencies: [.release(.AD_UI)]
     )
