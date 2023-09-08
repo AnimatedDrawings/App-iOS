@@ -18,5 +18,7 @@ public enum MyModule: String {
   case AD_CropImage
   case AD_ModifyJoints
   
+  case AD_Shared
+  case ThirdPartyLib
   case AD_Utils
 }

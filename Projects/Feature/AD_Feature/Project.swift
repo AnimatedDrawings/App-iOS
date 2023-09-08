@@ -11,9 +11,7 @@ let project = Project.makeProject(
       product: .staticLibrary,
       resources: nil,
       dependencies: [
-        .release(.AD_Utils),
-        .ComposableArchitecture,
-        .Moya
+        .release(.AD_Shared),
       ]
     )
   ],

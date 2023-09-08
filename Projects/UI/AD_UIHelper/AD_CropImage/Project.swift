@@ -13,7 +13,8 @@ let releaseTarget: Target = .makeTarget(
   targetName: myModule.name,
   product: .staticLibrary,
   dependencies: [
-    .release(.AD_Utils)
+//    .release(.AD_Utils)
+    .release(.AD_Shared)
   ]
 )
 

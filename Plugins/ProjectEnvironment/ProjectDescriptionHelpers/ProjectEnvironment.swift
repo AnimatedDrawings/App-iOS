@@ -8,7 +8,7 @@ public extension Project {
     packages: [Package] = [],
     settings: ProjectDescription.Settings? = nil,
     targets: [Target],
-    schemes: [Scheme],
+    schemes: [Scheme] = [],
     fileHeaderTemplate: ProjectDescription.FileHeaderTemplate? = nil,
     additionalFiles: [FileElement] = [],
     resourceSynthesizers: [ProjectDescription.ResourceSynthesizer] = .default

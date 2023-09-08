@@ -48,8 +48,12 @@ extension MyModule {
       return .relativeToRoot("Projects/UI/AD_UIHelper/" + self.name)
     case .AD_ModifyJoints:
       return .relativeToRoot("Projects/UI/AD_UIHelper/" + self.name)
+    case .AD_Shared:
+      return .relativeToRoot("Projects/Shared/" + self.name)
+    case .ThirdPartyLib:
+      return .relativeToRoot("Projects/Shared/AD_Shared/" + self.name)
     case .AD_Utils:
-      return .relativeToRoot("Projects/Share/" + self.name)
+      return .relativeToRoot("Projects/Shared/AD_Shared/" + self.name)
     }
   }
 }
