@@ -1,8 +1,8 @@
 import ProjectDescription
 
 public extension Project {
-  static func makeProject(
-    myModule: MyModule,
+  static func make(
+    name: String,
     organizationName: String = "chminipark",
     options: Project.Options = .options(),
     packages: [Package] = [],
@@ -14,8 +14,35 @@ public extension Project {
     resourceSynthesizers: [ProjectDescription.ResourceSynthesizer] = .default
   )
   -> Project {
-    let name: String = myModule.name
-    
+    return Project(
+      name: name,
+      organizationName: organizationName,
+      options: options,
+      packages: packages,
+      settings: settings,
+      targets: targets,
+      schemes: schemes,
+      fileHeaderTemplate: nil,
+      additionalFiles: additionalFiles,
+      resourceSynthesizers: resourceSynthesizers
+    )
+  }
+}
+
+public extension Project {
+  static func makeProject(
+    name: String,
+    organizationName: String = "chminipark",
+    options: Project.Options = .options(),
+    packages: [Package] = [],
+    settings: ProjectDescription.Settings? = nil,
+    targets: [Target],
+    schemes: [Scheme] = [],
+    fileHeaderTemplate: ProjectDescription.FileHeaderTemplate? = nil,
+    additionalFiles: [FileElement] = [],
+    resourceSynthesizers: [ProjectDescription.ResourceSynthesizer] = .default
+  )
+  -> Project {
     return Project(
       name: name,
       organizationName: organizationName,
@@ -124,6 +151,20 @@ public extension Scheme {
       profileAction: .profileAction(configuration: target),
       analyzeAction: .analyzeAction(configuration: target)
     )
+  }
+}
+
+public extension InfoPlist {
+  static var AD: Self {
+    return .extendingDefault(with: [
+      "UIMainStoryboardFile": "",
+      "UILaunchStoryboardName": "LaunchScreen",
+      "ENABLE_TESTS": .boolean(true),
+      "NSPhotoLibraryUsageDescription": "We need access to photo library so that photos can be selected",
+      "NSPhotoLibraryAddUsageDescription": "This app requires access to the photo library.",
+      "UIUserInterfaceStyle": "Light",
+      "UISupportedInterfaceOrientations": ["UIInterfaceOrientationPortrait"]
+    ])
   }
 }
 
