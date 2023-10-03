@@ -12,11 +12,13 @@ let project: Project = .makeProject(
   name: MakeAD.projectName,
   targets: [
     MakeAD.example(),
-    MakeAD.views(),
-    MakeAD.features(
+    MakeAD.view(
       dependencies: [
-        Presentation_Shared.projectDepedency
+        UploadADrawing.projectDepedency,
+        FindingTheCharacter.projectDepedency,
+        SeparatingCharacter.projectDepedency,
+        FindingCharacterJoints.projectDepedency
       ]
-    )
+    ),
   ]
 )

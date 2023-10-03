@@ -1,21 +1,22 @@
 //
-//  OnBoarding.swift
+//  Project.swift
 //  Config
 //
-//  Created by minii on 2023/09/12.
+//  Created by minii on 2023/10/03.
 //
 
 import ProjectDescription
 import ProjectEnvironment
 
 let project: Project = .makeProject(
-  name: OnBoarding.projectName,
+  name: UploadADrawing.projectName,
   targets: [
-    OnBoarding.view(
+    UploadADrawing.example(),
+    UploadADrawing.view(),
+    UploadADrawing.feature(
       dependencies: [
         Presentation_Shared.projectDepedency
       ]
-    ),
-    OnBoarding.example()
+    )
   ]
 )

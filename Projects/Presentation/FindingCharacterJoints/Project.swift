@@ -2,18 +2,18 @@
 //  Project.swift
 //  Config
 //
-//  Created by minii on 2023/09/12.
+//  Created by minii on 2023/10/03.
 //
 
 import ProjectDescription
 import ProjectEnvironment
 
 let project: Project = .makeProject(
-  name: ConfigureAnimation.projectName,
+  name: FindingCharacterJoints.projectName,
   targets: [
-    ConfigureAnimation.example(),
-    ConfigureAnimation.view(),
-    ConfigureAnimation.feature(
+    FindingCharacterJoints.example(),
+    FindingCharacterJoints.view(),
+    FindingCharacterJoints.feature(
       dependencies: [
         Presentation_Shared.projectDepedency
       ]

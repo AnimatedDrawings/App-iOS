@@ -1,5 +1,5 @@
 import SwiftUI
-import Presentation
+import RootView
 
 @main
 struct AnimatedDrawingsApp: App {

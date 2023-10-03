@@ -9,9 +9,7 @@ let project: Project = .makeProject(
       product: .staticLibrary,
       resources: nil,
       dependencies: [
-        OnBoarding.projectDepedency,
-        MakeAD.projectDepedency,
-        ConfigureAnimation.projectDepedency
+        RootView.projectDepedency
       ]
     )
   ]
