@@ -22,6 +22,12 @@ public struct CheckList<C: View>: View {
   var alertText: String {
     return isCorrectStep ? "Read & Check" : "Complete Previous Step"
   }
+  var alertColor: Color {
+    return isCorrectStep ?
+    ADUIKitAsset.Color.blue1.swiftUIColor :
+    ADUIKitAsset.Color.red1.swiftUIColor
+  }
+  
   var isDisableContent: Bool {
     return !isCorrectStep
   }
@@ -38,8 +44,8 @@ public struct CheckList<C: View>: View {
     VStack(alignment:.leading, spacing: 15) {
       HStack {
         Title()
-        FloatingAlert(alertText)
-          .reload(isCorrectStep)
+        FloatingAlert(text: alertText, color: alertColor)
+//          .reload(isCorrectStep)
       }
       CheckListContent
         .disabled(isDisableContent)

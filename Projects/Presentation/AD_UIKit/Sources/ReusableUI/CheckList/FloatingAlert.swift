@@ -10,21 +10,26 @@ import SwiftUI
 
 public struct FloatingAlert: View {
   let text: String
-  let color: Color = ADUIKitAsset.Color.blue1.swiftUIColor
+  let backgroundColor: Color
+  
+  public init(
+    text: String,
+    color: Color
+  ) {
+    self.text = text
+    self.backgroundColor = color
+  }
+  
   @State var width: CGFloat = 0
   @State var height: CGFloat = 0
   let textInset: CGFloat = 5
   
   @State var dist: CGFloat = 0
   
-  public init(_ text: String) {
-    self.text = text
-  }
-  
   public var body: some View {
     ZStack(alignment: .trailing) {
       MyBackground(inset: textInset)
-        .fill(color)
+        .fill(backgroundColor)
         .frame(width: self.width, height: self.height)
       
       Text(text)
@@ -85,7 +90,10 @@ extension FloatingAlert {
 
 struct Previews_FloatingAlert: View {
   var body: some View {
-    FloatingAlert("Tap CheckList!")
+    FloatingAlert(
+      text: "Tap CheckList!",
+      color: ADUIKitAsset.Color.blue1.swiftUIColor
+    )
   }
 }
 
