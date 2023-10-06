@@ -16,69 +16,72 @@ import SharedProvider
 
 public struct FindingTheCharacterView: ADUI {
   public typealias MyFeature = FindingTheCharacterFeature
-  public let store: StoreOf<MyFeature>
   
   public init(
-    store: StoreOf<MyFeature> = Store(
+    store: MyStore = Store(
       initialState: .init()
     ) {
       MyFeature()
     }
   ) {
     self.store = store
+    self._viewStore = StateObject(
+      wrappedValue: ViewStore(store, observe: { $0 })
+    )
   }
+  
+  let store: MyStore
+  @StateObject var viewStore: MyViewStore
   
   @SharedValue(\.shared.makeAD.originalImage) var originalImage
   @SharedValue(\.shared.makeAD.boundingBoxDTO) var boundingBoxDTO
   
   public var body: some View {
-    WithViewStore(store, observe: { $0 }) { viewStore in
-      ADScrollView {
-        VStack(alignment: .leading, spacing: 20) {
-          Title()
-          
-          CheckList(myStep: .FindingTheCharacter) {
-            CheckListContent(viewStore: viewStore)
-          }
-          
-          Spacer()
-          
-          ShowCropImageViewButton(state: viewStore.checkState) {
-            viewStore.send(.toggleCropImageView)
-          }
-          
-          Spacer().frame(height: 20)
+    ADScrollView {
+      VStack(alignment: .leading, spacing: 20) {
+        Title()
+        
+        CheckList(myStep: .FindingTheCharacter) {
+          CheckListContent(viewStore: viewStore)
         }
-        .padding()
-        .fullScreenCover(
-          isPresented: viewStore.$isShowCropImageView,
-          onDismiss: {
-            viewStore.send(.onDismissCropImageView)
-          },
-          content: {
-            if let originalImage = originalImage,
-               let boundingBoxDTO = boundingBoxDTO {
-              CropImageView(
-                originalImage: originalImage,
-                originCGRect: boundingBoxDTO.toCGRect(),
-                cropNextAction: { croppedUIImage, croppedCGRect in
-                  viewStore.send(.findTheCharacter(croppedUIImage, croppedCGRect))
-                },
-                cancelAction: {
-                  viewStore.send(.toggleCropImageView)
-                }
-              )
-              .transparentBlurBackground()
-              .addLoadingView(
-                isShow: viewStore.state.isShowLoadingView,
-                description: "Cropping Image ..."
-              )
-              .alert(store: self.store.scope(state: \.$alertShared, action: { .alertShared($0) }))
-            }
-          }
-        )
+        
+        Spacer()
+        
+        ShowCropImageViewButton(state: viewStore.checkState) {
+          viewStore.send(.toggleCropImageView)
+        }
+        
+        Spacer().frame(height: 20)
       }
+      .padding()
     }
+    .fullScreenCover(
+      isPresented: viewStore.$isShowCropImageView,
+      onDismiss: {
+        viewStore.send(.onDismissCropImageView)
+      },
+      content: {
+        if let originalImage = originalImage,
+           let boundingBoxDTO = boundingBoxDTO {
+          CropImageView(
+            originalImage: originalImage,
+            originCGRect: boundingBoxDTO.toCGRect(),
+            cropNextAction: { croppedUIImage, croppedCGRect in
+              viewStore.send(.findTheCharacter(croppedUIImage, croppedCGRect))
+            },
+            cancelAction: {
+              viewStore.send(.toggleCropImageView)
+            }
+          )
+          .transparentBlurBackground()
+          .addLoadingView(
+            isShow: viewStore.state.isShowLoadingView,
+            description: "Cropping Image ..."
+          )
+          .alert(store: self.store.scope(state: \.$alertShared, action: { .alertShared($0) }))
+        }
+      }
+    )
   }
 }
 
@@ -101,10 +104,9 @@ private extension FindingTheCharacterView {
 
 private extension FindingTheCharacterView {
   struct CheckListContent: View {
+    @ObservedObject var viewStore: MyViewStore
     let description = "Resize the box to ensure it tightly fits one character."
-    
-    let viewStore: MyViewStore
-    
+        
     var body: some View {
       VStack(alignment: .leading, spacing: 15) {
         CheckListButton(description, state: viewStore.checkState) {

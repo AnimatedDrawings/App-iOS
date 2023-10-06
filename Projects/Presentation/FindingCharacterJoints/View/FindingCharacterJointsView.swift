@@ -16,72 +16,75 @@ import SharedProvider
 
 public struct FindingCharacterJointsView: ADUI {
   public typealias MyFeature = FindingCharacterJointsFeature
-  public let store: StoreOf<MyFeature>
   
   public init(
-    store: StoreOf<MyFeature> = Store(
+    store: MyStore = Store(
       initialState: .init()
     ) {
       MyFeature()
     }
   ) {
     self.store = store
+    self._viewStore = StateObject(
+      wrappedValue: ViewStore(store, observe: { $0 })
+    )
   }
+  
+  let store: MyStore
+  @StateObject var viewStore: MyViewStore
   
   @SharedValue(\.shared.makeAD.croppedImage) var croppedImage
   @SharedValue(\.shared.makeAD.jointsDTO) var jointsDTO
   
   public var body: some View {
-    WithViewStore(store, observe: { $0 }) { viewStore in
-      ADScrollView {
-        VStack(alignment: .leading, spacing: 20) {
-          Title()
-          
-          CheckList(myStep: .FindingCharacterJoints) {
-            CheckListContent(viewStore: viewStore)
-          }
-          
-          NextStepDescription()
-          
-          ShowMaskingImageViewButton(state: viewStore.checkState) {
-            viewStore.send(.toggleModifyJointsView)
-          }
-          
-          Spacer().frame(height: 20)
+    ADScrollView {
+      VStack(alignment: .leading, spacing: 20) {
+        Title()
+        
+        CheckList(myStep: .FindingCharacterJoints) {
+          CheckListContent(viewStore: viewStore)
         }
-        .padding()
+        
+        NextStepDescription()
+        
+        ShowMaskingImageViewButton(state: viewStore.checkState) {
+          viewStore.send(.toggleModifyJointsView)
+        }
+        
+        Spacer().frame(height: 20)
       }
-      .fullScreenCover(
-        isPresented: viewStore.$isShowModifyJointsView,
-        onDismiss: { viewStore.send(.onDismissModifyJointsView) },
-        content: {
-          if let croppedImage = croppedImage,
-             let jointsDTO = jointsDTO
-          {
-            ModifyJointsView(
-              croppedImage: croppedImage,
-              jointsInfo: jointsDTO.toDomain(),
-              modifyNextAction: { modifiedJointsInfo in
-                let modifiedJointsDTO = modifiedJointsInfo.toDTO(
-                  originImageSize: .init(
-                    width: jointsDTO.width,
-                    height: jointsDTO.height
-                  )
-                )
-                viewStore.send(.findCharacterJoints(modifiedJointsDTO))
-              },
-              cancel: { viewStore.send(.toggleModifyJointsView) }
-            )
-            .transparentBlurBackground()
-            .addLoadingView(
-              isShow: viewStore.state.isShowLoadingView,
-              description: "Modify Character Joints ..."
-            )
-            .alert(store: self.store.scope(state: \.$alertShared, action: { .alertShared($0) }))
-          }
-        }
-      )
+      .padding()
     }
+    .fullScreenCover(
+      isPresented: viewStore.$isShowModifyJointsView,
+      onDismiss: { viewStore.send(.onDismissModifyJointsView) },
+      content: {
+        if let croppedImage = croppedImage,
+           let jointsDTO = jointsDTO
+        {
+          ModifyJointsView(
+            croppedImage: croppedImage,
+            jointsInfo: jointsDTO.toDomain(),
+            modifyNextAction: { modifiedJointsInfo in
+              let modifiedJointsDTO = modifiedJointsInfo.toDTO(
+                originImageSize: .init(
+                  width: jointsDTO.width,
+                  height: jointsDTO.height
+                )
+              )
+              viewStore.send(.findCharacterJoints(modifiedJointsDTO))
+            },
+            cancel: { viewStore.send(.toggleModifyJointsView) }
+          )
+          .transparentBlurBackground()
+          .addLoadingView(
+            isShow: viewStore.state.isShowLoadingView,
+            description: "Modify Character Joints ..."
+          )
+          .alert(store: self.store.scope(state: \.$alertShared, action: { .alertShared($0) }))
+        }
+      }
+    )
   }
 }
 
@@ -116,7 +119,7 @@ private extension FindingCharacterJointsView {
   struct CheckListContent: View {
     let description = "If your character doesn't have any arms, drag the elbows and wrist joints far away from the character and it can still be animated"
     
-    let viewStore: MyViewStore
+    @ObservedObject var viewStore: MyViewStore
     
     var body: some View {
       VStack(alignment: .leading, spacing: 15) {

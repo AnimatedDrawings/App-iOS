@@ -16,30 +16,29 @@ import RootView_Feature
 
 public struct RootView: ADUI {
   public typealias MyFeature = RootViewFeature
-  public let store: StoreOf<MyFeature>
+  @StateObject var viewStore: MyViewStore
   
   public init(
-    store: StoreOf<MyFeature> = Store(
-      initialState: .init()
-    ) {
-      MyFeature()
-    }
+    viewStore: MyViewStore = .init(
+      Store(initialState: .init(), reducer: {
+        MyFeature()
+      }),
+      observe: { $0 }
+    )
   ) {
-    self.store = store
+    self._viewStore = StateObject(wrappedValue: viewStore)
   }
   
   @SharedValue(\.shared.makeAD.isShowConfigureAnimationView) var isShowConfigureAnimationView
   
   public var body: some View {
-    WithViewStore(store, observe: { $0 }) { viewStore in
-      if !(viewStore.isTapStartButton) {
-        OnBoardingView(isTapStartButton: viewStore.$isTapStartButton)
+    if !(viewStore.isTapStartButton) {
+      OnBoardingView(isTapStartButton: viewStore.$isTapStartButton)
+    } else {
+      if !(isShowConfigureAnimationView) {
+        MakeADView()
       } else {
-        if !(isShowConfigureAnimationView) {
-          MakeADView()
-        } else {
-          ConfigureAnimationView()
-        }
+        ConfigureAnimationView()
       }
     }
   }

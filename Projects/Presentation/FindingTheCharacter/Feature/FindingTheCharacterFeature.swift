@@ -11,6 +11,7 @@ import MoyaProvider
 import SwiftUI
 import SharedProvider
 import Domain_Model
+import AD_UIKit
 
 public struct FindingTheCharacterFeature: Reducer {
   public init() {}
@@ -49,6 +50,9 @@ public struct FindingTheCharacterFeature: Reducer {
     
     case alertShared(PresentationAction<AlertShared>)
     case showAlertShared(AlertState<AlertShared>)
+    
+    case initCheckList
+    case isCorrectStep
   }
   
   public var body: some Reducer<State, Action> {
@@ -163,6 +167,20 @@ extension FindingTheCharacterFeature {
       case .showAlertShared(let alertState):
         state.alertShared = alertState
         return .none
+        
+        
+      case .initCheckList:
+        state.checkState = false
+        return .none
+        
+      case .isCorrectStep:
+        return .run { send in
+          let completeStep = await stepBar.completeStep.get()
+          let isCorrectStep = Step.isCorrectStep(myStep: .UploadADrawing, completeStep: completeStep)
+          if !isCorrectStep {
+            await send(.initCheckList)
+          }
+        }
       }
     }
   }

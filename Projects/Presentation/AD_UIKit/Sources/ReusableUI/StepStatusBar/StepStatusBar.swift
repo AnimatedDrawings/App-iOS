@@ -7,19 +7,25 @@
 //
 
 import SwiftUI
+import SharedProvider
 
 public struct StepStatusBar: View {
-  let currentStepIdx: Int
-  let completeStepIdx: Int
+  public init() {}
   
   @State var statusBarWidth: CGFloat = 0
   let statusBarSpacing: CGFloat = 4
   let activeColor: Color = ADUIKitAsset.Color.blue1.swiftUIColor
   let inActiveColor: Color = .gray
   let completeColor: Color = ADUIKitAsset.Color.green1.swiftUIColor
-  public init(currentStepIdx: Int, completeStepIdx: Int) {
-    self.currentStepIdx = currentStepIdx
-    self.completeStepIdx = completeStepIdx + 1
+  
+  @SharedValue(\.shared.stepBar.currentStep) var currentStep
+  @SharedValue(\.shared.stepBar.completeStep) var completeStep
+  
+  var currentStepIdx: Int {
+    currentStep.rawValue
+  }
+  var completeStepIdx: Int {
+    completeStep.rawValue
   }
   
   public var body: some View {
@@ -69,10 +75,6 @@ extension StepStatusBar {
     if idx < completeStepIdx {
       return completeColor
     }
-//    if idx == 4 && completeStepIdx == 4 {
-//      return completeColor
-//    }
-    
     return inActiveColor
   }
   

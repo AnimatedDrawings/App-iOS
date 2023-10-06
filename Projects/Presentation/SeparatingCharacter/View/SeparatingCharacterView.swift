@@ -15,70 +15,73 @@ import SeparatingCharacter_Feature
 
 public struct SeparatingCharacterView: ADUI {
   public typealias MyFeature = SeparatingCharacterFeature
-  public let store: StoreOf<MyFeature>
   
   public init(
-    store: StoreOf<MyFeature> = Store(
+    store: MyStore = Store(
       initialState: .init()
     ) {
       MyFeature()
     }
   ) {
     self.store = store
+    self._viewStore = StateObject(
+      wrappedValue: ViewStore(store, observe: { $0 })
+    )
   }
+  
+  let store: MyStore
+  @StateObject var viewStore: MyViewStore
   
   @SharedValue(\.shared.makeAD.croppedImage) var croppedImage
   @SharedValue(\.shared.makeAD.initMaskImage) var initMaskImage
   @SharedValue(\.shared.makeAD.maskedImage) var maskedImage
   
   public var body: some View {
-    WithViewStore(store, observe: { $0 }) { viewStore in
-      ADScrollView {
-        VStack(alignment: .leading, spacing: 20) {
-          Title()
-          
-          CheckList(myStep: .SeparatingCharacter) {
-            CheckListContent(viewStore: viewStore)
-          }
-          
-          ShowMaskingImageViewButton(state: viewStore.isActiveMaskingImageButton) {
-            viewStore.send(.toggleMaskingImageView)
-          }
-          
-          Spacer().frame(height: 20)
+    ADScrollView {
+      VStack(alignment: .leading, spacing: 20) {
+        Title()
+        
+        CheckList(myStep: .SeparatingCharacter) {
+          CheckListContent(viewStore: viewStore)
         }
-        .padding()
+        
+        ShowMaskingImageViewButton(state: viewStore.isActiveMaskingImageButton) {
+          viewStore.send(.toggleMaskingImageView)
+        }
+        
+        Spacer().frame(height: 20)
       }
-      .fullScreenCover(
-        isPresented: viewStore.$isShowMaskingImageView,
-        onDismiss: {
-          viewStore.send(.onDismissMakingImageView)
-        },
-        content: {
-          if let croppedImage = croppedImage,
-             let initMaskImage = initMaskImage
-          {
-            MaskingImageView(
-              croppedImage: croppedImage,
-              initMaskImage: initMaskImage,
-              maskedImage: $maskedImage,
-              maskNextAction: { maskResult in
-                viewStore.send(.maskNextAction(maskResult))
-              },
-              cancelAction: {
-                viewStore.send(.toggleMaskingImageView)
-              }
-            )
-            .transparentBlurBackground()
-            .addLoadingView(
-              isShow: viewStore.state.isShowLoadingView,
-              description: "Separating Character..."
-            )
-            .alert(store: self.store.scope(state: \.$alertShared, action: { .alertShared($0) }))
-          }
-        }
-      )
+      .padding()
     }
+    .fullScreenCover(
+      isPresented: viewStore.$isShowMaskingImageView,
+      onDismiss: {
+        viewStore.send(.onDismissMakingImageView)
+      },
+      content: {
+        if let croppedImage = croppedImage,
+           let initMaskImage = initMaskImage
+        {
+          MaskingImageView(
+            croppedImage: croppedImage,
+            initMaskImage: initMaskImage,
+            maskedImage: $maskedImage,
+            maskNextAction: { maskResult in
+              viewStore.send(.maskNextAction(maskResult))
+            },
+            cancelAction: {
+              viewStore.send(.toggleMaskingImageView)
+            }
+          )
+          .transparentBlurBackground()
+          .addLoadingView(
+            isShow: viewStore.state.isShowLoadingView,
+            description: "Separating Character..."
+          )
+          .alert(store: self.store.scope(state: \.$alertShared, action: { .alertShared($0) }))
+        }
+      }
+    )
   }
 }
 
@@ -104,7 +107,7 @@ private extension SeparatingCharacterView {
     let description1 = "If the body parts of your character are not highlighted, use the pen and eraser tools to fix it."
     let description2 = "If the arms or legs are stuck together, use the eraser tool to separate them"
     
-    let viewStore: MyViewStore
+    @ObservedObject var viewStore: MyViewStore
     
     var body: some View {
       VStack(alignment: .leading, spacing: 15) {
@@ -150,9 +153,20 @@ private extension SeparatingCharacterView {
   }
 }
 
+struct Previews_SeparatingCharacterView: View {
+  @SharedValue(\.shared.stepBar.completeStep) var completeStep
+  
+  var body: some View {
+    SeparatingCharacterView()
+      .onAppear {
+        completeStep = .FindingTheCharacter
+      }
+  }
+}
+
 // MARK: - Previews
 struct SeparatingCharacterView_Previews: PreviewProvider {
   static var previews: some View {
-    SeparatingCharacterView()
+    Previews_SeparatingCharacterView()
   }
 }

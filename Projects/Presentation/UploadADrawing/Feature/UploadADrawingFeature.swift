@@ -11,6 +11,7 @@ import MoyaProvider
 import SwiftUI
 import SharedProvider
 import AD_UIKit
+import Domain_Model
 
 public struct UploadADrawingFeature: Reducer {
   public init() {}

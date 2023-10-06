@@ -125,8 +125,8 @@ extension SeparatingCharacterFeature {
         if state.isSuccessSeparateCharacter == true {
           state.isSuccessSeparateCharacter = false
           return .run { _ in
-            await stepBar.completeStep.set(.FindingTheCharacter)
-            await stepBar.currentStep.set(.SeparatingCharacter)
+            await stepBar.completeStep.set(.SeparatingCharacter)
+            await stepBar.currentStep.set(.FindingCharacterJoints)
             await stepBar.isShowStepStatusBar.set(true)
           }
         }

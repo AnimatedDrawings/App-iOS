@@ -19,25 +19,19 @@ import FindingCharacterJoints
 public struct MakeADView: View {
   public init() {}
   
-  @SharedValue(\.shared.stepBar.currentStep) var currentStep
-  @SharedValue(\.shared.stepBar.completeStep) var completeStep
   @SharedValue(\.shared.stepBar.isShowStepStatusBar) var isShowStepStatusBar
   
   public var body: some View {
     GeometryReader { geo in
       List {
         if isShowStepStatusBar {
-          StepStatusBar(
-            currentStepIdx: currentStep.rawValue,
-            completeStepIdx: completeStep.rawValue
-          )
-          .listRowSeparator(.hidden)
-          .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-          .listRowBackground(Color.clear)
-          .padding()
+          StepStatusBar()
+            .listRowSeparator(.hidden)
+            .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+            .listRowBackground(Color.clear)
+            .padding()
         }
         
-        //        PageTabView(currentStep: $stepBarSharedState.currentStep)
         PageTabView()
           .listRowSeparator(.hidden)
           .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
@@ -52,15 +46,11 @@ public struct MakeADView: View {
   }
 }
 
-extension MakeADView {
+private extension MakeADView {
   struct PageTabView: View {
-    //    @Binding var currentStep: Step
-    //    @State var currentStep: Step = .UploadADrawing
-    
     @SharedValue(\.shared.stepBar.currentStep) var currentStep
     
     var body: some View {
-      //      TabView(selection: $currentStep) {
       TabView(selection: $currentStep) {
         UploadADrawingView()
           .tag(Step.UploadADrawing)
@@ -79,26 +69,6 @@ extension MakeADView {
     }
   }
 }
-//
-//  @ViewBuilder
-//  func PageTabView() -> some View {
-//    TabView(selection: $stepBarSharedState.currentStep) {
-//      UploadADrawingView()
-//        .tag(Step.UploadADrawing)
-//
-//      FindingTheCharacterView()
-//        .tag(Step.FindingTheCharacter)
-//
-//      SeparatingCharacterView()
-//        .tag(Step.SeparatingCharacter)
-//
-//      FindingCharacterJointsView()
-//        .tag(Step.FindingCharacterJoints)
-//    }
-//    .tabViewStyle(.page(indexDisplayMode: .never))
-//    .ignoresSafeArea()
-//  }
-//}
 
 // MARK: - Previews
 

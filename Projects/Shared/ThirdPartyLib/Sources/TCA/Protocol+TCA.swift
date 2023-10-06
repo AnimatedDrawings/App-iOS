@@ -11,8 +11,6 @@ import ComposableArchitecture
 
 public protocol ADUI: View {
   associatedtype MyFeature: Reducer
-  associatedtype MyViewStore = ViewStore<MyFeature.State, MyFeature.Action>
+  associatedtype MyViewStore = ViewStoreOf<MyFeature>
   associatedtype MyStore = StoreOf<MyFeature>
-
-  var store: MyStore { get }
 }

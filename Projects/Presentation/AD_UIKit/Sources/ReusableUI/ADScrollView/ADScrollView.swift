@@ -102,7 +102,6 @@ extension ADScrollView {
         Color.clear
           .onChange(of: tmpBottom) { newValue in
             self.curBottom = tmpBottom - self.scrollViewBottom
-            
           }
       }
       .frame(width: 0, height: 0)

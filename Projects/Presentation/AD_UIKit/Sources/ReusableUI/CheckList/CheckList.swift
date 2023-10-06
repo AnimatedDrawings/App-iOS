@@ -26,14 +26,6 @@ public struct CheckList<C: View>: View {
     return !isCorrectStep
   }
   
-//  public init(
-//    isCorrectStep: Bool,
-//    @ViewBuilder content: () -> C
-//  ) {
-//    self.isCorrectStep = isCorrectStep
-//    self.CheckListContent = content()
-//  }
-  
   public init(
     myStep: Step,
     @ViewBuilder CheckListContent: () -> C
@@ -64,3 +56,25 @@ extension CheckList {
       .foregroundColor(.black)
   }
 }
+
+//public extension Step {
+//  static func isCorrectStep(myStep: Step, completeStep: Step) -> Bool {
+//    switch (myStep.rawValue, completeStep.rawValue) {
+//    case let (x, y) where y + 1 < x:
+//      return false
+//    default:
+//      return true
+//    }
+//  }
+//
+//  static func isActiveButton(myStep: Step, completeStep: Step) -> Bool {
+//    switch (myStep.rawValue, completeStep.rawValue) {
+//    case let (x, y) where y < x:
+//      return false
+//    default:
+//      return true
+//    }
+//  }
+//}
+//
+//

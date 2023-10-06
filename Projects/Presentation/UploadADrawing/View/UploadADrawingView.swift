@@ -16,8 +16,7 @@ import SharedProvider
 
 public struct UploadADrawingView: ADUI {
   public typealias MyFeature = UploadADrawingFeature
-  public let store: StoreOf<MyFeature>
-  
+
   public init(
     store: MyStore = Store(
       initialState: .init()
@@ -26,43 +25,45 @@ public struct UploadADrawingView: ADUI {
     }
   ) {
     self.store = store
+    self._viewStore = StateObject(
+      wrappedValue: ViewStore(store, observe: { $0 })
+    )
   }
   
-  @SharedValue(\.shared.stepBar.completeStep) var completeStep
+  let store: MyStore
+  @StateObject var viewStore: MyViewStore
   
   public var body: some View {
-    WithViewStore(store, observe: { $0 }) { viewStore in
-      ADScrollView {
-        VStack(alignment: .leading, spacing: 20) {
-          Title()
-          
-          CheckList(myStep: .UploadADrawing) {
-            CheckListContent(viewStore: viewStore)
-          }
-          
-          UploadButton(viewStore.isEnableUploadButton) { imageData in
-            viewStore.send(.uploadDrawing(imageData))
-          }
-          
-          SampleDrawings { imageData in
-            viewStore.send(.uploadDrawing(imageData))
-          }
-          
-          Spacer()
+    ADScrollView {
+      VStack(alignment: .leading, spacing: 20) {
+        Title()
+        
+        CheckList(myStep: .UploadADrawing) {
+          CheckListContent(viewStore: viewStore)
         }
-        .padding()
-        .fullScreenOverlay(presentationSpace: .named("UploadADrawingView")) {
-          if viewStore.state.isShowLoadingView {
-            LoadingView(description: "Uploading Drawing...")
-              .transparentBlurBackground(
-                effect: UIBlurEffect(style: .light),
-                intensity: 0.3
-              )
-          }
+        
+        UploadButton(viewStore.isEnableUploadButton) { imageData in
+          viewStore.send(.uploadDrawing(imageData))
         }
-        .alert(store: self.store.scope(state: \.$alertShared, action: { .alertShared($0) }))
+        
+        SampleDrawings { imageData in
+          viewStore.send(.uploadDrawing(imageData))
+        }
+        
+        Spacer()
+      }
+      .padding()
+    }
+    .fullScreenOverlay(presentationSpace: .named("UploadADrawingView")) {
+      if viewStore.state.isShowLoadingView {
+        LoadingView(description: "Uploading Drawing...")
+          .transparentBlurBackground(
+            effect: UIBlurEffect(style: .light),
+            intensity: 0.3
+          )
       }
     }
+    .alert(store: self.store.scope(state: \.$alertShared, action: { .alertShared($0) }))
   }
 }
 
@@ -87,7 +88,8 @@ private extension UploadADrawingView {
 
 private extension UploadADrawingView {
   struct CheckListContent: View {
-    let viewStore: MyViewStore
+    @ObservedObject var viewStore: MyViewStore
+    
     let description1 = "Make sure the character is drawn on a white piece of paper without lines, wrinkles, or tears"
     let description2 = "Make sure the drawing is well lit. To minimize shadows, hold the camera further away and zoom in on the drawing."
     let description3 = "Don’t include any identifiable information, offensive content (see our community standards), or drawings that infringe on the copyrights of others."
@@ -105,9 +107,6 @@ private extension UploadADrawingView {
         CheckListButton(description3, state: viewStore.checkState3) {
           viewStore.send(.checkList3)
         }
-      }
-      .onChange(of: viewStore.checkState1) { newValue in
-        print(newValue)
       }
     }
   }
