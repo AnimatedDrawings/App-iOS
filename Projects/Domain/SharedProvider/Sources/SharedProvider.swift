@@ -19,7 +19,7 @@ public struct Shared {
 
 public extension Shared {
   struct StepBar {
-    public let isShowStepStatusBar = CombineNotifier<Bool>(initialValue: false)
+    public let isShowStepStatusBar = CombineNotifier<Bool>(initialValue: true)
     public let currentStep = CombineNotifier<Step>(initialValue: .UploadADrawing)
     public let completeStep = CombineNotifier<Step>(initialValue: .None)
   }

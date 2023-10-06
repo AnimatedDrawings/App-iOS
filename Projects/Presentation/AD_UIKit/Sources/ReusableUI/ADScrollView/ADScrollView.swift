@@ -10,18 +10,6 @@ import SwiftUI
 import SharedProvider
 
 public struct ADScrollView<C: View>: View {
-//  let topScrollID = "topScrollID"
-//  @Binding var isShowStepStatusBar: Bool
-//  var content: C
-//
-//  public init(
-//    _ isShowStepStatusBar: Binding<Bool>,
-//    @ViewBuilder content: () -> C
-//  ) {
-//    self._isShowStepStatusBar = isShowStepStatusBar
-//    self.content = content()
-//  }
-  
   let topScrollID = "topScrollID"
   var content: C
   

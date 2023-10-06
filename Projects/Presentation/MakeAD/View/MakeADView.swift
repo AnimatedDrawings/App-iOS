@@ -41,6 +41,7 @@ public struct MakeADView: View {
       .listStyle(.plain)
       .addBackground()
       .scrollContentBackground(.hidden)
+      .animation(.default, value: isShowStepStatusBar)
     }
     .fullScreenOverlayPresentationSpace(.named("UploadADrawingView"))
   }
