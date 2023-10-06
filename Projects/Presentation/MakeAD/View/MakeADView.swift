@@ -25,7 +25,7 @@ public struct MakeADView: View {
     GeometryReader { geo in
       List {
         if isShowStepStatusBar {
-          StepStatusBar()
+          StepBar()
             .listRowSeparator(.hidden)
             .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
             .listRowBackground(Color.clear)

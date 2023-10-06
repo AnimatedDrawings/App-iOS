@@ -1,5 +1,5 @@
 //
-//  StepStatusBar.swift
+//  StepBar.swift
 //  AD_UI
 //
 //  Created by minii on 2023/06/08.
@@ -8,10 +8,9 @@
 
 import SwiftUI
 import SharedProvider
+import AD_UIKit
 
-public struct StepStatusBar: View {
-  public init() {}
-  
+struct StepBar: View {
   @State var statusBarWidth: CGFloat = 0
   let statusBarSpacing: CGFloat = 4
   let activeColor: Color = ADUIKitAsset.Color.blue1.swiftUIColor
@@ -28,7 +27,7 @@ public struct StepStatusBar: View {
     completeStep.rawValue
   }
   
-  public var body: some View {
+  var body: some View {
     VStack(alignment: .leading) {
       Title()
       StatusBar()
@@ -36,7 +35,7 @@ public struct StepStatusBar: View {
   }
 }
 
-extension StepStatusBar {
+private extension StepBar {
   @ViewBuilder
   func Title() -> some View {
     HStack(spacing: 20) {
@@ -47,7 +46,7 @@ extension StepStatusBar {
   }
 }
 
-extension StepStatusBar {
+private extension StepBar {
   @ViewBuilder
   func StatusBar() -> some View {
     GeometryReader { geo in
@@ -72,7 +71,7 @@ extension StepStatusBar {
     if currentStepIdx == idx {
       return activeColor
     }
-    if idx < completeStepIdx {
+    if idx <= completeStepIdx {
       return completeColor
     }
     return inActiveColor
@@ -80,5 +79,22 @@ extension StepStatusBar {
   
   func capsuleWidth(_ idx: Int) -> CGFloat {
     return currentStepIdx == idx ? self.statusBarWidth / 2 : self.statusBarWidth / 6
+  }
+}
+
+struct Previews_StepBar: View {
+  @SharedValue(\.shared.stepBar.completeStep) var completeStep
+  
+  var body: some View {
+    MakeADView()
+      .onAppear {
+        completeStep = .UploadADrawing
+      }
+  }
+}
+
+struct StepBar_Previews: PreviewProvider {
+  static var previews: some View {
+    Previews_StepBar()
   }
 }
