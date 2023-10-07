@@ -13,67 +13,70 @@ import AD_UIKit
 
 public struct ConfigureAnimationView: ADUI {
   public typealias MyFeature = ConfigureAnimationFeature
-  public let store: StoreOf<MyFeature>
   
   public init(
-    store: StoreOf<MyFeature> = Store(
+    store: MyStore = Store(
       initialState: .init()
     ) {
       MyFeature()
     }
   ) {
     self.store = store
+    self._viewStore = StateObject(
+      wrappedValue: ViewStore(store, observe: { $0 })
+    )
   }
   
+  let store: MyStore
+  @StateObject var viewStore: MyViewStore
+  
   public var body: some View {
-    WithViewStore(store, observe: { $0 }) { viewStore in
-      VStack(spacing: 0) {
-        Title()
-        
-        Spacer().frame(height: 50)
-        
-        MyAnimationView(viewStore: viewStore)
-        
-        Spacer().frame(height: 50)
-        
-        TabBar(viewStore: viewStore)
-        
-        Spacer().frame(height: 20)
-      }
-      .padding()
-      .addBackground()
-      .alert(store: self.store.scope(state: \.$alertShared, action: { .alertShared($0) }))
-      .alert(store: self.store.scope(state: \.$alertTrashMakeAD, action: { .alertTrashMakeAD($0) }))
-      .confirmationDialog("", isPresented: viewStore.$isShowActionSheet) {
-        Button("Save GIF In Photos") {
-          if let gifURL = viewStore.myAnimationURL {
-            viewStore.send(.saveGIFInPhotos(gifURL))
-          }
-        }
-        Button("Share") {
-          if viewStore.myAnimationURL != nil {
-            viewStore.send(.toggleIsShowShareView)
-          }
-        }
-      }
-      .sheet(isPresented: viewStore.$isShowShareView) {
-        if let myAnimationURL = viewStore.myAnimationURL {
-          ShareView(gifURL: myAnimationURL)
-            .presentationDetents([.medium, .large])
-        }
-      }
-      .fullScreenCover(
-        isPresented: viewStore.$isShowAnimationListView,
-        onDismiss: { viewStore.send(.onDismissAnimationListView) },
-        content: {
-          AnimationListView(isShow: viewStore.$isShowAnimationListView) { selectedAnimation in
-            viewStore.send(.selectAnimation(selectedAnimation))
-          }
-          .addLoadingView(isShow: viewStore.isShowLoadingView, description: "Add Animation...")
-          .alert(store: self.store.scope(state: \.$alertShared, action: { .alertShared($0) }))
-        }
-      )
+    VStack(spacing: 0) {
+      Title()
+      
+      Spacer().frame(height: 50)
+      
+      MyAnimationView(viewStore: viewStore)
+      
+      Spacer().frame(height: 50)
+      
+      TabBar(viewStore: viewStore)
+      
+      Spacer().frame(height: 20)
     }
+    .padding()
+    .addBackground()
+    .alert(store: self.store.scope(state: \.$alertShared, action: { .alertShared($0) }))
+    .alert(store: self.store.scope(state: \.$alertTrashMakeAD, action: { .alertTrashMakeAD($0) }))
+    .confirmationDialog("", isPresented: viewStore.$isShowActionSheet) {
+      Button("Save GIF In Photos") {
+        if let gifURL = viewStore.myAnimationURL {
+          viewStore.send(.saveGIFInPhotos(gifURL))
+        }
+      }
+      Button("Share") {
+        if viewStore.myAnimationURL != nil {
+          viewStore.send(.toggleIsShowShareView)
+        }
+      }
+    }
+    .sheet(isPresented: viewStore.$isShowShareView) {
+      if let myAnimationURL = viewStore.myAnimationURL {
+        ShareView(gifURL: myAnimationURL)
+          .presentationDetents([.medium, .large])
+      }
+    }
+    .fullScreenCover(
+      isPresented: viewStore.$isShowAnimationListView,
+      onDismiss: { viewStore.send(.onDismissAnimationListView) },
+      content: {
+        AnimationListView(isShow: viewStore.$isShowAnimationListView) { selectedAnimation in
+          viewStore.send(.selectAnimation(selectedAnimation))
+        }
+        .addLoadingView(isShow: viewStore.isShowLoadingView, description: "Add Animation...")
+        .alert(store: self.store.scope(state: \.$alertShared, action: { .alertShared($0) }))
+      }
+    )
   }
 }
 
@@ -97,7 +100,7 @@ private extension ConfigureAnimationView {
 
 private extension ConfigureAnimationView {
   struct MyAnimationView: View {
-    let viewStore: MyViewStore
+    @ObservedObject var viewStore: MyViewStore
     
     var body: some View {
       RoundedRectangle(cornerRadius: 15)
@@ -120,7 +123,7 @@ private extension ConfigureAnimationView {
     let animation = "figure.dance"
     let strokeColor: Color = ADUIKitAsset.Color.blue2.swiftUIColor
     
-    let viewStore: MyViewStore
+    @ObservedObject var viewStore: MyViewStore
     
     var body: some View {
       RoundedRectangle(cornerRadius: 35)

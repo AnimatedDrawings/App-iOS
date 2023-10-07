@@ -31,14 +31,17 @@ public struct RootView: ADUI {
   
   @SharedValue(\.shared.makeAD.isShowConfigureAnimationView) var isShowConfigureAnimationView
   
+  var switchValue: ADViewCase {
+    isShowConfigureAnimationView ? .ConfigureAnimation : .MakeAD
+  }
+  
   public var body: some View {
-    if !(viewStore.isTapStartButton) {
-      OnBoardingView(isTapStartButton: viewStore.$isTapStartButton)
-    } else {
-      if !(isShowConfigureAnimationView) {
-        MakeADView()
+    Group {
+      if !(viewStore.isTapStartButton) {
+        OnBoardingView(isTapStartButton: viewStore.$isTapStartButton)
       } else {
-        ConfigureAnimationView()
+        SwitchView(switchValue: switchValue)
+          .ignoresSafeArea()
       }
     }
   }

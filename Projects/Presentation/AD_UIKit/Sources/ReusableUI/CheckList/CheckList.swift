@@ -45,7 +45,7 @@ public struct CheckList<C: View>: View {
       HStack {
         Title()
         FloatingAlert(text: alertText, color: alertColor)
-//          .reload(isCorrectStep)
+          .reload(isCorrectStep)
       }
       CheckListContent
         .disabled(isDisableContent)
