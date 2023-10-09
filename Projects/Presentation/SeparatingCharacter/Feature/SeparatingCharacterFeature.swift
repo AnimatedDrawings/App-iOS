@@ -21,9 +21,9 @@ public struct SeparatingCharacterFeature: Reducer {
   public struct State: Equatable {
     public init() {}
     
-    public var checkState1 = false
-    public var checkState2 = false
-    public var isActiveMaskingImageButton = false
+    @BindingState public var checkState1 = false
+    @BindingState public var checkState2 = false
+    @BindingState public var isActiveMaskingImageButton = false
     
     @BindingState public var isShowMaskingImageView = false
     var isSuccessSeparateCharacter = false

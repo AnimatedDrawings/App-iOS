@@ -47,7 +47,7 @@ public struct FindingCharacterJointsView: ADUI {
         
         NextStepDescription()
         
-        ShowMaskingImageViewButton(state: viewStore.checkState) {
+        ShowMaskingImageViewButton(state: viewStore.$checkState) {
           viewStore.send(.toggleModifyJointsView)
         }
         
@@ -118,12 +118,17 @@ private extension FindingCharacterJointsView {
 private extension FindingCharacterJointsView {
   struct CheckListContent: View {
     let description = "If your character doesn't have any arms, drag the elbows and wrist joints far away from the character and it can still be animated"
+    let myStep: Step = .FindingCharacterJoints
     
     @ObservedObject var viewStore: MyViewStore
     
     var body: some View {
       VStack(alignment: .leading, spacing: 15) {
-        CheckListButton(description, state: viewStore.checkState) {
+        CheckListButton(
+          description: description,
+          state: viewStore.$checkState,
+          myStep: myStep
+        ) {
           viewStore.send(.checkAction)
         }
         
@@ -150,17 +155,25 @@ private extension FindingCharacterJointsView {
     let viewFinder = "figure.yoga"
     let text = "Find Character Joints"
     
-    let state: Bool
+    @Binding var state: Bool
     let action: () -> ()
+    
+    let myStep: Step = .FindingCharacterJoints
+    @Dependency(\.shared.stepBar.completeStep) var completeStep
     
     var body: some View {
       ADButton(
-        state ? .active : .inActive,
+        state: state,
         action: action
       ) {
         HStack {
           Image(systemName: viewFinder)
           Text(text)
+        }
+      }
+      .task {
+        for await tmpStep in await completeStep.values() {
+          state = state && (myStep.rawValue <= tmpStep.rawValue)
         }
       }
     }

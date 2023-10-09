@@ -9,12 +9,12 @@
 import SwiftUI
 
 public struct ADButton<Content: View>: View {
-  var state: ADButtonState
+  var state: Bool
   let action: () -> ()
   @ViewBuilder let label: () -> ADButtonLabel<Content>
   
   public init(
-    _ state: ADButtonState = .active,
+    state: Bool = true,
     action: @escaping () -> (),
     content: @escaping () -> Content
   ) {
@@ -24,27 +24,27 @@ public struct ADButton<Content: View>: View {
   }
   
   public init(
-    _ state: ADButtonState = .active,
+    state: Bool = true,
     title: String,
     action: @escaping () -> ()
   ) where Content == AnyView {
     self.state = state
     self.action = action
-    self.label = { ADButtonLabel(state, title: title) }
+    self.label = { ADButtonLabel(state: state, title: title) }
   }
   
   public var body: some View {
     Button(action: action, label: label)
-      .disabled(state == .active ? false : true)
+      .disabled(!state)
   }
 }
 
 public struct ADButtonLabel<Content: View>: View {
-  var state: ADButtonState
+  var state: Bool
   @ViewBuilder let content: () -> Content
   
   public init(
-    _ state: ADButtonState,
+    _ state: Bool,
     content: @escaping () -> Content
   ) {
     self.state = state
@@ -52,7 +52,7 @@ public struct ADButtonLabel<Content: View>: View {
   }
   
   public init(
-    _ state: ADButtonState,
+    state: Bool,
     title: String
   ) where Content == AnyView {
     self.state = state
@@ -63,9 +63,7 @@ public struct ADButtonLabel<Content: View>: View {
     RoundedRectangle(cornerRadius: 10)
       .frame(height: 60)
       .foregroundColor(
-        state == .active ?
-        ADUIKitAsset.Color.blue1.swiftUIColor :
-            .gray
+        state ? ADUIKitAsset.Color.blue1.swiftUIColor : .gray
       )
       .shadow(radius: 10)
       .overlay {
@@ -73,9 +71,4 @@ public struct ADButtonLabel<Content: View>: View {
           .foregroundColor(.white)
       }
   }
-}
-
-public enum ADButtonState {
-  case active
-  case inActive
 }

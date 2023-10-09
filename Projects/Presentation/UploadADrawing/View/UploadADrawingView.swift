@@ -42,7 +42,7 @@ public struct UploadADrawingView: ADUI {
           CheckListContent(viewStore: viewStore)
         }
         
-        UploadButton(viewStore.isEnableUploadButton) { imageData in
+        UploadButton(viewStore.$isEnableUploadButton) { imageData in
           viewStore.send(.uploadDrawing(imageData))
         }
         
@@ -93,18 +93,31 @@ private extension UploadADrawingView {
     let description1 = "Make sure the character is drawn on a white piece of paper without lines, wrinkles, or tears"
     let description2 = "Make sure the drawing is well lit. To minimize shadows, hold the camera further away and zoom in on the drawing."
     let description3 = "Don’t include any identifiable information, offensive content (see our community standards), or drawings that infringe on the copyrights of others."
+    let myStep: Step = .UploadADrawing
     
     var body: some View {
       VStack(alignment: .leading, spacing: 15) {
-        CheckListButton(description1, state: viewStore.checkState1) {
+        CheckListButton(
+          description: description1,
+          state: viewStore.$checkState1,
+          myStep: myStep
+        ) {
           viewStore.send(.checkList1)
         }
         
-        CheckListButton(description2, state: viewStore.checkState2) {
+        CheckListButton(
+          description: description2,
+          state: viewStore.$checkState2,
+          myStep: myStep
+        ) {
           viewStore.send(.checkList2)
         }
         
-        CheckListButton(description3, state: viewStore.checkState3) {
+        CheckListButton(
+          description: description3,
+          state: viewStore.$checkState3,
+          myStep: myStep
+        ) {
           viewStore.send(.checkList3)
         }
       }
@@ -114,29 +127,29 @@ private extension UploadADrawingView {
 
 private extension UploadADrawingView {
   struct UploadButton: View {
-    @State private var selectedItem: PhotosPickerItem? = nil
-    var state: Bool
+    @Binding var state: Bool
     var uploadImageAction: (Data?) -> ()
-    let photoFill = "photo.fill"
-    let text = "Upload Photo"
     
-    var buttonState: ADButtonState {
-      self.state == true ? .active : .inActive
-    }
-    
-    init(_ state: Bool,
+    init(_ state: Binding<Bool>,
          uploadImageAction: @escaping (Data?) -> ()
     ) {
-      self.state = state
+      self._state = state
       self.uploadImageAction = uploadImageAction
     }
+    
+    let photoFill = "photo.fill"
+    let text = "Upload Photo"
+    let myStep: Step = .UploadADrawing
+    
+    @State private var selectedItem: PhotosPickerItem? = nil
+    @Dependency(\.shared.stepBar.completeStep) var completeStep
     
     var body: some View {
       PhotosPicker(
         selection: $selectedItem,
         photoLibrary: .shared(),
         label: {
-          ADButtonLabel(buttonState) {
+          ADButtonLabel(state) {
             HStack {
               Image(systemName: photoFill)
               Text(text)
@@ -144,13 +157,18 @@ private extension UploadADrawingView {
           }
         }
       )
-      .onChange(of: selectedItem) { newItem in
+      .allowsHitTesting(state)
+      .task {
+        for await tmpStep in await completeStep.values() {
+          state = state && (myStep.rawValue <= tmpStep.rawValue)
+        }
+      }
+      .onChange(of: selectedItem) { newValue in
         _Concurrency.Task {
-          let data = try? await newItem?.loadTransferable(type: Data.self)
+          let data = try? await newValue?.loadTransferable(type: Data.self)
           uploadImageAction(data)
         }
       }
-      .allowsHitTesting(self.state)
     }
   }
 }

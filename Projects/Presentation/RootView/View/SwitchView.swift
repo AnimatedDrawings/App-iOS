@@ -62,14 +62,14 @@ enum ADViewCase: Equatable {
   case ConfigureAnimation
 }
 
+let makeADViewController: UIHostingController<MakeADView> = .init(
+  rootView: MakeADView()
+)
+let configureAnimationViewController: UIHostingController<ConfigureAnimationView> = .init(
+  rootView: ConfigureAnimationView()
+)
+
 struct SwitchView: View {
-  let makeADViewController: UIHostingController<MakeADView> = .init(
-    rootView: MakeADView()
-  )
-  let configureAnimationViewController: UIHostingController<ConfigureAnimationView> = .init(
-    rootView: ConfigureAnimationView()
-  )
-  
   let switchValue: ADViewCase
   
   init(switchValue: ADViewCase) {

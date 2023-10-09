@@ -23,11 +23,11 @@ public struct UploadADrawingFeature: Reducer {
   public struct State: Equatable {
     public init() {}
     
-    public var checkState1 = false
-    public var checkState2 = false
-    public var checkState3 = false
+    @BindingState public var checkState1 = false
+    @BindingState public var checkState2 = false
+    @BindingState public var checkState3 = false
     
-    public var isEnableUploadButton = false
+    @BindingState public var isEnableUploadButton = false
     public var isShowLoadingView = false
     
     var isSuccessUploading = false

@@ -12,6 +12,7 @@ import MaskingImage
 import AD_UIKit
 import SharedProvider
 import SeparatingCharacter_Feature
+import Domain_Model
 
 public struct SeparatingCharacterView: ADUI {
   public typealias MyFeature = SeparatingCharacterFeature
@@ -45,7 +46,7 @@ public struct SeparatingCharacterView: ADUI {
           CheckListContent(viewStore: viewStore)
         }
         
-        ShowMaskingImageViewButton(state: viewStore.isActiveMaskingImageButton) {
+        ShowMaskingImageViewButton(state: viewStore.$isActiveMaskingImageButton) {
           viewStore.send(.toggleMaskingImageView)
         }
         
@@ -106,12 +107,17 @@ private extension SeparatingCharacterView {
   struct CheckListContent: View {
     let description1 = "If the body parts of your character are not highlighted, use the pen and eraser tools to fix it."
     let description2 = "If the arms or legs are stuck together, use the eraser tool to separate them"
+    let myStep: Step = .SeparatingCharacter
     
     @ObservedObject var viewStore: MyViewStore
     
     var body: some View {
       VStack(alignment: .leading, spacing: 15) {
-        CheckListButton(description1, state: viewStore.checkState1) {
+        CheckListButton(
+          description: description1,
+          state: viewStore.$checkState1,
+          myStep: myStep
+        ) {
           viewStore.send(.checkAction1)
         }
         
@@ -119,7 +125,11 @@ private extension SeparatingCharacterView {
           .frame(height: 250)
           .frame(maxWidth: .infinity, alignment: .center)
         
-        CheckListButton(description2, state: viewStore.checkState2) {
+        CheckListButton(
+          description: description2,
+          state: viewStore.$checkState2,
+          myStep: myStep
+        ) {
           viewStore.send(.checkAction2)
         }
         
@@ -136,17 +146,25 @@ private extension SeparatingCharacterView {
     let viewFinder = "hand.draw"
     let text = "Separate The Character"
     
-    let state: Bool
+    @Binding var state: Bool
     let action: () -> ()
+    
+    let myStep: Step = .SeparatingCharacter
+    @Dependency(\.shared.stepBar.completeStep) var completeStep
     
     var body: some View {
       ADButton(
-        state ? .active : .inActive,
+        state: state,
         action: action
       ) {
         HStack {
           Image(systemName: viewFinder)
           Text(text)
+        }
+      }
+      .task {
+        for await tmpStep in await completeStep.values() {
+          state = state && (myStep.rawValue <= tmpStep.rawValue)
         }
       }
     }

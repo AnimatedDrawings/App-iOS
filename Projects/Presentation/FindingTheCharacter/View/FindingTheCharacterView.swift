@@ -47,7 +47,7 @@ public struct FindingTheCharacterView: ADUI {
         
         Spacer()
         
-        ShowCropImageViewButton(state: viewStore.checkState) {
+        ShowCropImageViewButton(state: viewStore.$checkState) {
           viewStore.send(.toggleCropImageView)
         }
         
@@ -106,10 +106,15 @@ private extension FindingTheCharacterView {
   struct CheckListContent: View {
     @ObservedObject var viewStore: MyViewStore
     let description = "Resize the box to ensure it tightly fits one character."
+    let myStep: Step = .FindingTheCharacter
         
     var body: some View {
       VStack(alignment: .leading, spacing: 15) {
-        CheckListButton(description, state: viewStore.checkState) {
+        CheckListButton(
+          description: description,
+          state: viewStore.$checkState,
+          myStep: myStep
+        ) {
           viewStore.send(.checkAction)
         }
         
@@ -128,17 +133,25 @@ private extension FindingTheCharacterView {
     let viewFinder = "person.fill.viewfinder"
     let text = "Find the Character"
     
-    let state: Bool
+    @Binding var state: Bool
     let action: () -> ()
+    
+    let myStep: Step = .FindingTheCharacter
+    @Dependency(\.shared.stepBar.completeStep) var completeStep
     
     var body: some View {
       ADButton(
-        state ? .active : .inActive,
+        state: state,
         action: action
       ) {
         HStack {
           Image(systemName: viewFinder)
           Text(text)
+        }
+      }
+      .task {
+        for await tmpStep in await completeStep.values() {
+          state = state && (myStep.rawValue <= tmpStep.rawValue)
         }
       }
     }

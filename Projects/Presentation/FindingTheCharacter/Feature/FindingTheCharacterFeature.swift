@@ -23,7 +23,7 @@ public struct FindingTheCharacterFeature: Reducer {
   public struct State: Equatable {
     public init() {}
     
-    public var checkState = false
+    @BindingState public var checkState = false
     
     @BindingState public var isShowCropImageView = false
     public var isShowLoadingView = false

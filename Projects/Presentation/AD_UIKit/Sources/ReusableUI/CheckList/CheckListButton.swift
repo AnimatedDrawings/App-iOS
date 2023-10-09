@@ -7,22 +7,30 @@
 //
 
 import SwiftUI
+import Domain_Model
+import SharedProvider
+import ThirdPartyLib
 
 public struct CheckListButton: View {
   let checkmarkCircle = "checkmark.circle"
   let description: String
-  let state: Bool
+  @Binding var state: Bool
+  let myStep: Step
   let action: () -> ()
   
   public init(
-    _ description: String,
-    state: Bool,
+    description: String,
+    state: Binding<Bool>,
+    myStep: Step,
     action: @escaping () -> ()
   ) {
     self.description = description
-    self.state = state
+    self._state = state
+    self.myStep = myStep
     self.action = action
   }
+  
+  @Dependency(\.shared.stepBar.completeStep) var completeStep
   
   public var body: some View {
     Button(action: action) {
@@ -35,6 +43,11 @@ public struct CheckListButton: View {
           .foregroundColor(.black)
           .multilineTextAlignment(.leading)
           .strikethrough(state)
+      }
+    }
+    .task {
+      for await tmpStep in await completeStep.values() {
+        state = state && (myStep.rawValue <= tmpStep.rawValue)
       }
     }
   }
