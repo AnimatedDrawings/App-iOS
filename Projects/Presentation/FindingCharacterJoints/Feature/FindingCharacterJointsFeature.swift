@@ -17,6 +17,7 @@ public struct FindingCharacterJointsFeature: Reducer {
   @Dependency(\.makeADClient) var makeADClient
   @Dependency(\.shared.makeAD) var makeAD
   @Dependency(\.shared.stepBar) var stepBar
+  @Dependency(\.shared.adViewCase) var adViewCase
   
   public struct State: Equatable {
     public init() {}
@@ -110,7 +111,7 @@ extension FindingCharacterJointsFeature {
           state.isSuccessFindCharacterJoints = false
           return .run { _ in
             await stepBar.completeStep.set(.FindingCharacterJoints)
-            await makeAD.isShowConfigureAnimationView.set(true)
+            await adViewCase.set(.ConfigureAnimation)
           }
         }
         return .none

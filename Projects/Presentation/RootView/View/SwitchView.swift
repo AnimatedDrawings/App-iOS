@@ -7,8 +7,6 @@
 //
 
 import SwiftUI
-import MakeAD
-import ConfigureAnimation
 
 struct SwitchHostingUIView<H: View, S: Equatable>: UIViewControllerRepresentable {
   typealias UIViewControllerType = UIViewController
@@ -54,40 +52,5 @@ struct SwitchHostingView<H: View, S: Equatable>: View {
   var body: some View {
     SwitchHostingUIView(vc: vc, switchValue: switchValue, mySwitchValue: mySwitchValue)
       .disabled(switchValue != mySwitchValue)
-  }
-}
-
-enum ADViewCase: Equatable {
-  case MakeAD
-  case ConfigureAnimation
-}
-
-let makeADViewController: UIHostingController<MakeADView> = .init(
-  rootView: MakeADView()
-)
-let configureAnimationViewController: UIHostingController<ConfigureAnimationView> = .init(
-  rootView: ConfigureAnimationView()
-)
-
-struct SwitchView: View {
-  let switchValue: ADViewCase
-  
-  init(switchValue: ADViewCase) {
-    self.switchValue = switchValue
-  }
-  
-  var body: some View {
-    ZStack {
-      SwitchHostingView(
-        vc: makeADViewController,
-        switchValue: switchValue,
-        mySwitchValue: ADViewCase.MakeAD
-      )
-      SwitchHostingView(
-        vc: configureAnimationViewController,
-        switchValue: switchValue,
-        mySwitchValue: ADViewCase.ConfigureAnimation
-      )
-    }
   }
 }

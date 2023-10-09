@@ -5,8 +5,7 @@ let project: Project = .makeProject(
   name: RootView.projectName,
   targets: [
     RootView.example(),
-    RootView.view(),
-    RootView.feature(
+    RootView.view(
       dependencies: [
         OnBoarding.projectDepedency,
         MakeAD.projectDepedency,

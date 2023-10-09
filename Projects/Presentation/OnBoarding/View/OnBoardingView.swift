@@ -7,13 +7,12 @@
 
 import SwiftUI
 import AD_UIKit
+import SharedProvider
 
 public struct OnBoardingView: View {
-  @Binding var isTapStartButton: Bool
+  @SharedValue(\.shared.adViewCase) var adViewCase
   
-  public init(isTapStartButton: Binding<Bool>) {
-    self._isTapStartButton = isTapStartButton
-  }
+  public init() {}
   
   public var body: some View {
     VStack {
@@ -25,11 +24,7 @@ public struct OnBoardingView: View {
       
       Spacer()
       
-      StartButton {
-        if isTapStartButton == false {
-          isTapStartButton = true
-        }
-      }
+      StartButton { adViewCase = .MakeAD }
     }
     .padding()
     .padding(.vertical)
@@ -127,16 +122,8 @@ private extension OnBoardingView {
 
 // MARK: - Previews_OnBoardingView
 
-struct Previews_OnBoardingView: View {
-  @State var isTapStartButton: Bool = false
-  
-  var body: some View {
-    OnBoardingView(isTapStartButton: $isTapStartButton)
-  }
-}
-
 struct OnBoardingView_Previews: PreviewProvider {
   static var previews: some View {
-    Previews_OnBoardingView()
+    OnBoardingView()
   }
 }

@@ -15,7 +15,7 @@ public struct CheckList<C: View>: View {
   let myStep: Step
   @SharedValue(\.shared.stepBar.completeStep) var completeStep
   var isCorrectStep: Bool {
-    Step.isCorrectStep(myStep: myStep, completeStep: completeStep)
+    myStep.rawValue <= completeStep.rawValue + 1
   }
   
   let title = "C H E C K L I S T"
