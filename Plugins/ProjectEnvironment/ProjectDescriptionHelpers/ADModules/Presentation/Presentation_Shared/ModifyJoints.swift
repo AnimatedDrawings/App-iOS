@@ -10,5 +10,5 @@ import Foundation
 public struct ModifyJoints: Module {
   public static var projectName: String = "ModifyJoints"
   public static var targetName: String = "ModifyJoints"
-  public static var prefixPathString: String = Presentation.prefixPathString
+  public static var prefixPathString: String = Presentation_Shared.prefixPathString
 }

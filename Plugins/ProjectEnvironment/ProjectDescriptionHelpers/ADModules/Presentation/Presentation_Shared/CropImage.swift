@@ -10,5 +10,5 @@ import Foundation
 public struct CropImage: Module {
   public static var projectName: String = "CropImage"
   public static var targetName: String = "CropImage"
-  public static var prefixPathString: String = Presentation.prefixPathString
+  public static var prefixPathString: String = Presentation_Shared.prefixPathString
 }

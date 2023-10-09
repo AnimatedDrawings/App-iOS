@@ -10,5 +10,5 @@ import Foundation
 public struct AD_UIKit: Module {
   public static var projectName: String = "AD_UIKit"
   public static var targetName: String = "AD_UIKit"
-  public static var prefixPathString: String = Presentation.prefixPathString
+  public static var prefixPathString: String = Presentation_Shared.prefixPathString
 }

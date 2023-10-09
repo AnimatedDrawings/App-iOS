@@ -10,5 +10,5 @@ import Foundation
 public struct Presentation_Shared: Module {
   public static var projectName: String = "Presentation_Shared"
   public static var targetName: String = "Presentation_Shared"
-  public static var prefixPathString: String = Presentation.prefixPathString
+  public static var prefixPathString: String = Presentation.prefixPathString + "/Presentation_Shared"
 }

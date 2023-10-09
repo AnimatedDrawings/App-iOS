@@ -10,5 +10,5 @@ import Foundation
 public struct MaskingImage: Module {
   public static var projectName: String = "MaskingImage"
   public static var targetName: String = "MaskingImage"
-  public static var prefixPathString: String = Presentation.prefixPathString
+  public static var prefixPathString: String = Presentation_Shared.prefixPathString
 }
