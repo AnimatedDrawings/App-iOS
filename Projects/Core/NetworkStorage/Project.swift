@@ -2,23 +2,21 @@
 //  Project.swift
 //  Config
 //
-//  Created by minii on 2023/09/13.
+//  Created by minii on 2023/10/09.
 //
 
 import ProjectDescription
 import ProjectEnvironment
 
 let project: Project = .makeProject(
-  name: Core.projectName,
+  name: NetworkStorage.projectName,
   targets: [
     .makeTarget(
-      targetName: Core.targetName,
+      targetName: NetworkStorage.targetName,
       product: .staticLibrary,
       resources: nil,
       dependencies: [
-        LocalFileStorage.projectDepedency,
-        SharedStorage.projectDepedency,
-        NetworkStorage.projectDepedency
+        Shared.projectDepedency
       ]
     )
   ]

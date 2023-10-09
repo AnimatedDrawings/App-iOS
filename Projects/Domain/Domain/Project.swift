@@ -18,7 +18,8 @@ let project: Project = .makeProject(
       dependencies: [
         MoyaProvider.projectDepedency,
         LocalFileProvider.projectDepedency,
-        SharedProvider.projectDepedency
+        SharedProvider.projectDepedency,
+        NetworkProvider.projectDepedency
       ]
     )
   ]
