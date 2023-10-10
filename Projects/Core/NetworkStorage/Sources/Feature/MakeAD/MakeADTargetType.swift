@@ -22,8 +22,6 @@ enum MakeADTargetType {
 fileprivate let makeADPath: String = "/api/make_ad/"
 
 extension MakeADTargetType: TargetType {
-  var baseURL: String { "https://miniiad.duckdns.org" }
-  
   var path: String {
     switch self {
     case .uploadDrawing:

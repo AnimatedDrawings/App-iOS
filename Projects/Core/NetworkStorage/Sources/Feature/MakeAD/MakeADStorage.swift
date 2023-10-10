@@ -24,6 +24,7 @@ class MakeADStorage {
     let responseModel: EmptyResponse = try await storage.request(.findTheCharacter(requestModel))
     return responseModel
   }
+  // response 감싸기
   @Sendable
   func downloadMaskImage(requestModel: FindTheCharacterRequest) async throws -> EmptyResponse {
     let responseModel: EmptyResponse = try await storage.request(.findTheCharacter(requestModel))

@@ -18,7 +18,7 @@ protocol TargetType {
 }
 
 extension TargetType {
-  var uploadData: Data? { nil }
+  var baseURL: String { "https://miniiad.duckdns.org" }
   
   func getUrlRequest() throws -> URLRequest {
     let url = try url()
