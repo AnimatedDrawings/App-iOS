@@ -8,38 +8,38 @@
 
 import Foundation
 
-class MakeADStorage {
-  let storage = NetworkStorage<MakeADTargetType>()
+public class MakeADStorage {
+  private let storage = NetworkStorage<MakeADTargetType>()
   
-  static let shared = MakeADStorage()
+  public static let shared = MakeADStorage()
 
   @Sendable
-  func uploadDrawing(requestModel: UploadADrawingRequest) async throws -> UploadADrawingResponse {
-    let responseModel: UploadADrawingResponse = try await storage.request(.uploadDrawing(requestModel))
-    return responseModel
+  public func uploadDrawing(request: UploadADrawingRequest) async throws -> UploadADrawingResponse {
+    let response: UploadADrawingResponse = try await storage.request(.uploadDrawing(request))
+    return response
   }
   
   @Sendable
-  func findTheCharacter(requestModel: FindTheCharacterRequest) async throws -> EmptyResponse {
-    let responseModel: EmptyResponse = try await storage.request(.findTheCharacter(requestModel))
-    return responseModel
-  }
-  // response 감싸기
-  @Sendable
-  func downloadMaskImage(requestModel: FindTheCharacterRequest) async throws -> EmptyResponse {
-    let responseModel: EmptyResponse = try await storage.request(.findTheCharacter(requestModel))
-    return responseModel
+  public func findTheCharacter(request: FindTheCharacterRequest) async throws -> EmptyResponse {
+    let response: EmptyResponse = try await storage.request(.findTheCharacter(request))
+    return response
   }
   
   @Sendable
-  func separateCharacter(requestModel: SeparateCharacterRequest) async throws -> SeparateCharacterReponse {
-    let responseModel: SeparateCharacterReponse = try await storage.request(.separateCharacter(requestModel))
-    return responseModel
+  public func downloadMaskImage(request: DownloadMaskImageRequest) async throws -> Data {
+    let response: Data = try await storage.download(.downloadMaskImage(request))
+    return response
   }
   
   @Sendable
-  func findCharacterJoints(requestModel: FindCharacterJointsRequest) async throws -> EmptyResponse {
-    let responseModel: EmptyResponse = try await storage.request(.findCharacterJoints(requestModel))
-    return responseModel
+  public func separateCharacter(request: SeparateCharacterRequest) async throws -> SeparateCharacterReponse {
+    let response: SeparateCharacterReponse = try await storage.request(.separateCharacter(request))
+    return response
+  }
+  
+  @Sendable
+  public func findCharacterJoints(request: FindCharacterJointsRequest) async throws -> EmptyResponse {
+    let response: EmptyResponse = try await storage.request(.findCharacterJoints(request))
+    return response
   }
 }

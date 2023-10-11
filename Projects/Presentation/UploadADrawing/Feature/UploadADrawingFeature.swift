@@ -7,8 +7,8 @@
 //
 
 import ThirdPartyLib
-import MoyaProvider
 import SwiftUI
+import NetworkProvider
 import SharedProvider
 import AD_UIKit
 import Domain_Model
@@ -16,7 +16,7 @@ import Domain_Model
 public struct UploadADrawingFeature: Reducer {
   public init() {}
   
-  @Dependency(\.makeADClient) var makeADClient
+  @Dependency(\.makeADProvider) var makeADProvider
   @Dependency(\.shared.makeAD) var makeAD
   @Dependency(\.shared.stepBar) var stepBar
   
@@ -35,7 +35,7 @@ public struct UploadADrawingFeature: Reducer {
     @PresentationState public var alertShared: AlertState<AlertShared>? = nil
   }
   
-  public enum Action: BindableAction, Equatable {
+  public enum Action: BindableAction {
     case binding(BindingAction<State>)
     
     case checkList1
@@ -43,7 +43,7 @@ public struct UploadADrawingFeature: Reducer {
     case checkList3
     case setIsShowLoadingView(Bool)
     case uploadDrawing(Data?)
-    case uploadDrawingResponse(TaskResult<UploadADrawingResposne>)
+    case uploadDrawingResponse(TaskResult<(String, CGRect)>)
     case uploadDrawingNextAction
     
     case showAlertShared(AlertState<AlertShared>)
@@ -100,15 +100,13 @@ extension UploadADrawingFeature {
           return .none
         }
         
-        let request = UploadADrawingRequest(originalImageData: compressedData)
-        
         return .run { send in
           await makeAD.originalImage.set(tmpOriginalImage)
           await send(.setIsShowLoadingView(true))
           await send(
             .uploadDrawingResponse(
               TaskResult {
-                try await makeADClient.step1UploadDrawing(request)
+                try await makeADProvider.uploadDrawing(compressedData)
               }
             )
           )
@@ -116,16 +114,17 @@ extension UploadADrawingFeature {
           await send(.uploadDrawingNextAction)
         }
         
-      case .uploadDrawingResponse(.success(let response)):
+      case let .uploadDrawingResponse(.success(ad_id, cgRect)):
         state.isSuccessUploading = true
         return .run { _ in
-          await makeAD.ad_id.set(response.ad_id)
-          await makeAD.boundingBoxDTO.set(response.boundingBoxDTO)
+          await makeAD.ad_id.set(ad_id)
+          await makeAD.boundingBoxDTO.set(cgRect.toBoundingBoxDTO())
         }
         
       case .uploadDrawingResponse(.failure(let error)):
+        print(error)
         state.isSuccessUploading = false
-        let adMoyaError = error as? ADMoyaError ?? .connection
+//        let adMoyaError = error as? ADMoyaError ?? .connection
         return .send(.showAlertShared(initAlertNetworkError()))
         
       case .uploadDrawingNextAction:

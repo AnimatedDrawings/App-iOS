@@ -16,7 +16,6 @@ let project: Project = .makeProject(
       product: .staticLibrary,
       resources: nil,
       dependencies: [
-        MoyaProvider.projectDepedency,
         LocalFileProvider.projectDepedency,
         SharedProvider.projectDepedency,
         NetworkProvider.projectDepedency

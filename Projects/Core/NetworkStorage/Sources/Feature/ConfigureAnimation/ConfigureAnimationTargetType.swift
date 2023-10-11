@@ -9,8 +9,8 @@
 import Foundation
 
 enum ConfigureAnimationTargetType {
-  case add(ConfigureAnimationRequest)
-  case downloadVideo(ConfigureAnimationRequest)
+  case add(AddAnimationRequest)
+  case download(DownloadAnimationRequest)
 }
 
 fileprivate let configureAnimationPath: String = "/api/configure_animation/"
@@ -20,7 +20,7 @@ extension ConfigureAnimationTargetType: TargetType {
     switch self {
     case .add(let request):
       return configureAnimationPath + "add/\(request.ad_id)"
-    case .downloadVideo(let request):
+    case .download(let request):
       return configureAnimationPath + "download_video/\(request.ad_id)"
     }
   }
@@ -29,7 +29,7 @@ extension ConfigureAnimationTargetType: TargetType {
     switch self {
     case .add:
       return .post
-    case .downloadVideo:
+    case .download:
       return .post
     }
   }
@@ -37,21 +37,12 @@ extension ConfigureAnimationTargetType: TargetType {
   var queryParameters: [String : String]? {
     return nil
   }
-  
-  var headers: [String : String]? {
-    switch self {
-    case .add:
-      return ["Content-type" : "application/json"]
-    case .downloadVideo:
-      return ["Content-type" : "application/json"]
-    }
-  }
-  
+
   var task: NetworkTask {
     switch self {
     case .add(let request):
       return .requestJSONEncodable(request.adAnimationDTO)
-    case .downloadVideo(let request):
+    case .download(let request):
       return .requestJSONEncodable(request.adAnimationDTO)
     }
   }

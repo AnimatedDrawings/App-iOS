@@ -16,7 +16,6 @@ let project: Project = .makeProject(
       product: .staticLibrary,
       resources: nil,
       dependencies: [
-        .Moya,
         .ComposableArchitecture
       ]
     )

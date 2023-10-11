@@ -13,6 +13,7 @@ import ModifyJoints
 import AD_UIKit
 import Domain_Model
 import SharedProvider
+import NetworkStorage
 
 public struct FindingCharacterJointsView: ADUI {
   public typealias MyFeature = FindingCharacterJointsFeature

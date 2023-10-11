@@ -13,7 +13,6 @@ protocol TargetType {
   var path: String { get }
   var method: HttpMethod { get }
   var queryParameters: [String : String]? { get }
-  var headers: [String: String]? { get }
   var task: NetworkTask { get }
 }
 
@@ -26,19 +25,19 @@ extension TargetType {
     
     // httpBody
     var httpBody: Data?
+    let uniqString = UUID().uuidString
     switch task {
     case .requestPlain:
       httpBody = nil
     case .requestJSONEncodable(let jsonObject):
-      guard let bodyData = try? JSONSerialization.data(withJSONObject: jsonObject) else {
+      guard let body = try? JSONEncoder().encode(jsonObject) else {
         throw NetworkError.requestJSONEncodable
       }
-      httpBody = bodyData
+      httpBody = body
     case .uploadMultipart(let imageData):
       var body = Data()
-      let uniqString = UUID().uuidString
       body.append("--\(uniqString)\r\n".data(using: .utf8)!)
-      body.append("Content-Disposition: form-data; name=\"image\"; filename=\"image.png\"\r\n".data(using: .utf8)!)
+      body.append("Content-Disposition: form-data; name=\"file\"; filename=\"file\"\r\n".data(using: .utf8)!)
       body.append("Content-Type: image/png\r\n\r\n".data(using: .utf8)!)
       body.append(imageData)
       body.append("\r\n".data(using: .utf8)!)
@@ -54,7 +53,14 @@ extension TargetType {
     urlRequest.httpMethod = method.rawValue
     
     // header
-    headers?.forEach { urlRequest.setValue($1, forHTTPHeaderField: $0) }
+    switch task {
+    case .requestJSONEncodable:
+      urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+    case .uploadMultipart:
+      urlRequest.setValue("multipart/form-data; boundary=\(uniqString)", forHTTPHeaderField: "Content-Type")
+    default:
+      break
+    }
     
     return urlRequest
   }

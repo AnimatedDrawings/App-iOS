@@ -12,8 +12,6 @@ public protocol Responsable: Decodable {}
 
 public struct EmptyResponse: Responsable {}
 
-public typealias EmptyResponseType = DefaultResponse<EmptyResponse>
-
 public struct DefaultResponse<R: Responsable>: Decodable {
   public let isSuccess: Bool
   public let message: String

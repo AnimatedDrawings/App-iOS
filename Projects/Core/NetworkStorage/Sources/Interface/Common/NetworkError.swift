@@ -13,6 +13,6 @@ public enum NetworkError: Error {
   case makeURL
   case requestJSONEncodable
   case convertResponseModel
+  case emptyResponse
   case ADServerError
-//  case convertDTO
 }

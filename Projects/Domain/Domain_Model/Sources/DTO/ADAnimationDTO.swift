@@ -6,12 +6,12 @@
 //  Copyright © 2023 chminipark. All rights reserved.
 //
 
-import Foundation
-
-public struct ADAnimationDTO: Codable {
-  public let name: String
-  
-  public init(name: String) {
-    self.name = name
-  }
-}
+//import Foundation
+//
+//public struct ADAnimationDTO: Codable {
+//  public let name: String
+//
+//  public init(name: String) {
+//    self.name = name
+//  }
+//}

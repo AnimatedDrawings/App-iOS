@@ -12,13 +12,13 @@ public struct JointsDTO: Codable, Equatable {
   public var width: Int
   public var height: Int
   public var skeletonDTO: [SkeletonDTO]
-  
+
   public init(width: Int, height: Int, skeletonDTO: [SkeletonDTO]) {
     self.width = width
     self.height = height
     self.skeletonDTO = skeletonDTO
   }
-  
+
   enum CodingKeys: String, CodingKey {
     case width
     case height
@@ -30,13 +30,13 @@ public struct SkeletonDTO: Codable, Equatable {
   public var name: String
   public var location: [Int]
   public var parent: String?
-  
+
   public init(name: String, location: [Int], parent: String? = nil) {
     self.name = name
     self.location = location
     self.parent = parent
   }
-  
+
   enum CodingKeys: String, CodingKey {
     case name
     case location = "loc"
@@ -57,7 +57,7 @@ extension JointsDTO {
       return nil
     }
   }
-  
+
   private static func makeMockData() -> Data? {
     return """
     {

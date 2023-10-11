@@ -7,14 +7,15 @@
 //
 
 import ThirdPartyLib
-import MoyaProvider
 import SwiftUI
 import SharedProvider
+import NetworkProvider
+import NetworkStorage
 
 public struct SeparatingCharacterFeature: Reducer {
   public init() {}
   
-  @Dependency(\.makeADClient) var makeADClient
+  @Dependency(\.makeADProvider) var makeADProvider
   @Dependency(\.shared.makeAD) var makeAD
   @Dependency(\.shared.stepBar) var stepBar
   
@@ -32,7 +33,7 @@ public struct SeparatingCharacterFeature: Reducer {
     @PresentationState public var alertShared: AlertState<AlertShared>? = nil
   }
   
-  public enum Action: Equatable, BindableAction {
+  public enum Action: BindableAction {
     case binding(BindingAction<State>)
     
     case checkAction1
@@ -41,7 +42,7 @@ public struct SeparatingCharacterFeature: Reducer {
     
     case setLoadingView(Bool)
     case maskNextAction(Bool)
-    case separateCharacterResponse(TaskResult<SeparateCharacterReponse>)
+    case separateCharacterResponse(TaskResult<JointsDTO>)
     case onDismissMakingImageView
     
     case showAlertShared(AlertState<AlertShared>)
@@ -89,25 +90,20 @@ extension SeparatingCharacterFeature {
             return
           }
           
-          let request = SeparateCharacterRequest(
-            ad_id: ad_id,
-            maskedImageData: maskedImageData
-          )
-          
           await send(.setLoadingView(true))
           await send(
             .separateCharacterResponse(
               TaskResult {
-                try await makeADClient.step3SeparateCharacter(request)
+                try await makeADProvider.separateCharacter(ad_id, maskedImageData)
               }
             )
           )
         }
         
-      case .separateCharacterResponse(.success(let response)):
+      case .separateCharacterResponse(.success(let jointsDTO)):
         state.isSuccessSeparateCharacter = true
         return .run { send in
-          await makeAD.jointsDTO.set(response.jointsDTO)
+          await makeAD.jointsDTO.set(jointsDTO)
           await send(.setLoadingView(false))
           await send(.toggleMaskingImageView)
         }
@@ -115,7 +111,7 @@ extension SeparatingCharacterFeature {
       case .separateCharacterResponse(.failure(let error)):
         print(error)
         state.isSuccessSeparateCharacter = false
-        let adMoyaError = error as? ADMoyaError ?? .connection
+//        let adMoyaError = error as? ADMoyaError ?? .connection
         return .run { send in
           await send(.setLoadingView(false))
           await send(.showAlertShared(initAlertNetworkError()))

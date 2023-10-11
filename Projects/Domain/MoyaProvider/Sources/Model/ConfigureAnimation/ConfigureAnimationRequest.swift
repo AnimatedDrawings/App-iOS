@@ -9,12 +9,12 @@
 import Foundation
 import Domain_Model
 
-public struct ConfigureAnimationRequest {
-  public let ad_id: String
-  public let adAnimationDTO: ADAnimationDTO
-  
-  public init(ad_id: String, adAnimationDTO: ADAnimationDTO) {
-    self.ad_id = ad_id
-    self.adAnimationDTO = adAnimationDTO
-  }
-}
+//public struct ConfigureAnimationRequest {
+//  public let ad_id: String
+//  public let adAnimationDTO: ADAnimationDTO
+//  
+//  public init(ad_id: String, adAnimationDTO: ADAnimationDTO) {
+//    self.ad_id = ad_id
+//    self.adAnimationDTO = adAnimationDTO
+//  }
+//}

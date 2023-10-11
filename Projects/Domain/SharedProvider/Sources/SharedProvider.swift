@@ -11,6 +11,7 @@ import SharedStorage
 import Domain_Model
 import UIKit
 import ComposableArchitecture
+import NetworkStorage
 
 public struct Shared {
   public let makeAD = Self.MakeAD()

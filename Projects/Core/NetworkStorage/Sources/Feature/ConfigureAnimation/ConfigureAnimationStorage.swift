@@ -8,57 +8,20 @@
 
 import Foundation
 
-class ConfigureAnimationStorage {
-  let storage = NetworkStorage<ConfigureAnimationTargetType>()
+public class ConfigureAnimationStorage {
+  private let storage = NetworkStorage<ConfigureAnimationTargetType>()
   
-  static let shared = ConfigureAnimationStorage()
+  public static let shared = ConfigureAnimationStorage()
   
   @Sendable
-  func add(request: ConfigureAnimationRequest) async throws -> EmptyResponse {
+  public func add(request: AddAnimationRequest) async throws -> EmptyResponse {
     let response: EmptyResponse = try await storage.request(.add(request))
     return response
   }
   
-  // response 감싸기
   @Sendable
-  func downloadGIF(request: ConfigureAnimationRequest) async throws -> EmptyResponse {
-    let response: EmptyResponse = try await storage.request(.add(request))
+  public func download(request: DownloadAnimationRequest) async throws -> Data {
+    let response: Data = try await storage.download(.download(request))
     return response
   }
 }
-
-class _MakeADStorage {
-  let storage = NetworkStorage<MakeADTargetType>()
-  
-  static let shared = MakeADStorage()
-
-  @Sendable
-  func uploadDrawing(request: UploadADrawingRequest) async throws -> UploadADrawingResponse {
-    let response: UploadADrawingResponse = try await storage.request(.uploadDrawing(request))
-    return response
-  }
-  
-  @Sendable
-  func findTheCharacter(request: FindTheCharacterRequest) async throws -> EmptyResponse {
-    let response: EmptyResponse = try await storage.request(.findTheCharacter(request))
-    return response
-  }
-  @Sendable
-  func downloadMaskImage(request: FindTheCharacterRequest) async throws -> EmptyResponse {
-    let response: EmptyResponse = try await storage.request(.findTheCharacter(request))
-    return response
-  }
-  
-  @Sendable
-  func separateCharacter(request: SeparateCharacterRequest) async throws -> SeparateCharacterReponse {
-    let response: SeparateCharacterReponse = try await storage.request(.separateCharacter(request))
-    return response
-  }
-  
-  @Sendable
-  func findCharacterJoints(request: FindCharacterJointsRequest) async throws -> EmptyResponse {
-    let response: EmptyResponse = try await storage.request(.findCharacterJoints(request))
-    return response
-  }
-}
-

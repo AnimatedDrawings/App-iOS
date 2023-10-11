@@ -12,7 +12,7 @@ enum MakeADTargetType {
   case uploadDrawing(UploadADrawingRequest)
   
   case findTheCharacter(FindTheCharacterRequest)
-  case downloadMaskImage(ad_id: String)
+  case downloadMaskImage(DownloadMaskImageRequest)
   
   case separateCharacter(SeparateCharacterRequest)
   
@@ -29,8 +29,8 @@ extension MakeADTargetType: TargetType {
       
     case .findTheCharacter(let request):
       return makeADPath + "step2/find_the_character/\(request.ad_id)"
-    case .downloadMaskImage(let ad_id):
-      return makeADPath + "step2/download_mask_image/\(ad_id)"
+    case .downloadMaskImage(let request):
+      return makeADPath + "step2/download_mask_image/\(request.ad_id)"
       
     case .separateCharacter(let request):
       return makeADPath + "step3/separate_character/\(request.ad_id)"
@@ -60,24 +60,6 @@ extension MakeADTargetType: TargetType {
   
   var queryParameters: [String : String]? {
     return nil
-  }
-  
-  var headers: [String : String]? {
-    switch self {
-    case .uploadDrawing:
-      return ["Content-type" : "multipart/form-data"]
-      
-    case .findTheCharacter:
-      return ["Content-type" : "application/json"]
-    case .downloadMaskImage:
-      return nil
-      
-    case .separateCharacter:
-      return ["Content-type" : "multipart/form-data"]
-      
-    case .findCharacterJoints:
-      return ["Content-type" : "application/json"]
-    }
   }
   
   var task: NetworkTask {
