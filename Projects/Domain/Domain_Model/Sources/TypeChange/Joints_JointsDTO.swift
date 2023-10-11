@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import NetworkStorage
+import Core_Model
 
 public extension JointsDTO {
   func toDomain() -> Joints {

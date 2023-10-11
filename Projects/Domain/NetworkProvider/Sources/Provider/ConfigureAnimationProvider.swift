@@ -10,6 +10,7 @@ import ThirdPartyLib
 import NetworkStorage
 import UIKit
 import Domain_Model
+//import Core_Model
 
 public struct ConfigureAnimationProvider {
   public var add: @Sendable (String, ADAnimation) async throws -> ()
@@ -24,7 +25,7 @@ extension ConfigureAnimationProvider: DependencyKey {
       let response = try await storage.add(
         request: AddAnimationRequest(
           ad_id: ad_id,
-          adAnimationDTO: ADAnimationDTO.init(name: adAnimation.rawValue)
+          adAnimationDTO: adAnimation.toDTO()
         )
       )
     },
@@ -33,7 +34,7 @@ extension ConfigureAnimationProvider: DependencyKey {
       let response = try await storage.download(
         request: DownloadAnimationRequest(
           ad_id: ad_id,
-          adAnimationDTO: ADAnimationDTO.init(name: adAnimation.rawValue)
+          adAnimationDTO: adAnimation.toDTO()
         )
       )
       

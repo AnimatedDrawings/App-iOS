@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Core_Model
 
 public struct SeparateCharacterReponse: Responsable {
   public let jointsDTO: JointsDTO

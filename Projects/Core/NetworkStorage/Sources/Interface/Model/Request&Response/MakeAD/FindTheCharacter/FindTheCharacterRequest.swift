@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Core_Model
 
 public struct FindTheCharacterRequest {
   public let ad_id: String

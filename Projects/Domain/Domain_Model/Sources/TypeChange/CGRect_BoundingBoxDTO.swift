@@ -6,7 +6,7 @@
 //  Copyright © 2023 chminipark. All rights reserved.
 //
 
-import NetworkStorage
+import Core_Model
 import UIKit
 
 public extension BoundingBoxDTO {
@@ -15,7 +15,7 @@ public extension BoundingBoxDTO {
     let y: CGFloat = CGFloat(top)
     let width: CGFloat = (right - left) < 0 ? 0 : CGFloat(right - left)
     let height: CGFloat = (bottom - top) < 0 ? 0 : CGFloat(bottom - top)
-    
+
     return CGRect(x: x, y: y, width: width, height: height)
   }
 }
