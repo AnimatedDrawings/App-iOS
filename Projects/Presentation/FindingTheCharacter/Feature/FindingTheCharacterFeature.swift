@@ -7,16 +7,16 @@
 //
 
 import ThirdPartyLib
-import MoyaProvider
 import SwiftUI
 import SharedProvider
 import Domain_Model
 import AD_UIKit
+import NetworkProvider
 
 public struct FindingTheCharacterFeature: Reducer {
   public init() {}
 
-  @Dependency(\.makeADClient) var makeADClient
+  @Dependency(\.makeADProvider) var makeADProvider
   @Dependency(\.shared.makeAD) var makeAD
   @Dependency(\.shared.stepBar) var stepBar
   
@@ -28,20 +28,18 @@ public struct FindingTheCharacterFeature: Reducer {
     @BindingState public var isShowCropImageView = false
     public var isShowLoadingView = false
     
-    var tmpCroppedImage: UIImage = .init()
-    var tmpBoundingBoxDTO: BoundingBoxDTO = .init()
     var isSuccessUpload = false
    
     @PresentationState public var alertShared: AlertState<AlertShared>? = nil
   }
   
-  public enum Action: Equatable, BindableAction {
+  public enum Action: BindableAction {
     case binding(BindingAction<State>)
     
     case checkAction
     case toggleCropImageView
     case findTheCharacter(UIImage?, CGRect)
-    case findTheCharacterResponse(TaskResult<EmptyResponse>)
+    case findTheCharacterResponse(TaskResult<Void>)
     case setLoadingView(Bool)
     case onDismissCropImageView
     
@@ -86,19 +84,13 @@ extension FindingTheCharacterFeature {
             return
           }
           
-          let boundingBoxDTO = croppedCGRect.toBoundingBoxDTO
-          let findTheCharacterRequest = FindTheCharacterRequest(
-            ad_id: ad_id,
-            boundingBoxDTO: boundingBoxDTO
-          )
-          
-          await makeAD.boundingBoxDTO.set(boundingBoxDTO)
+          await makeAD.boundingBox.set(croppedCGRect)
           await makeAD.croppedImage.set(croppedUIImage)
           await send(.setLoadingView(true))
           await send(
             .findTheCharacterResponse(
               TaskResult {
-                try await makeADClient.step2FindTheCharacter(findTheCharacterRequest)
+                try await makeADProvider.findTheCharacter(ad_id, croppedCGRect)
               }
             )
           )
@@ -108,9 +100,9 @@ extension FindingTheCharacterFeature {
         return .send(.downloadMaskImage)
         
       case .findTheCharacterResponse(.failure(let error)):
-        print(error)
+        print("upload : \(error)")
         state.isSuccessUpload = false
-        let adMoyaError = error as? ADMoyaError ?? .connection
+//        let adMoyaError = error as? ADMoyaError ?? .connection
         return .run { send in
           await send(.setLoadingView(false))
           await send(.showAlertShared(initAlertNetworkError()))
@@ -125,7 +117,7 @@ extension FindingTheCharacterFeature {
           await send(
             .downloadMaskImageResponse(
               TaskResult {
-                try await makeADClient.step2DownloadMaskImage(ad_id)
+                try await makeADProvider.downloadMaskImage(ad_id)
               }
             )
           )
@@ -140,9 +132,9 @@ extension FindingTheCharacterFeature {
         }
         
       case .downloadMaskImageResponse(.failure(let error)):
-        print(error)
+        print("download : \(error)")
         state.isSuccessUpload = false
-        let adMoyaError = error as? ADMoyaError ?? .connection
+//        let adMoyaError = error as? ADMoyaError ?? .connection
         return .run { send in
           await send(.setLoadingView(false))
           await send(.showAlertShared(initAlertNetworkError()))

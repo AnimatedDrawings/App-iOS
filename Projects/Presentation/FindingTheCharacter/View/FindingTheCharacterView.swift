@@ -34,7 +34,7 @@ public struct FindingTheCharacterView: ADUI {
   @StateObject var viewStore: MyViewStore
   
   @SharedValue(\.shared.makeAD.originalImage) var originalImage
-  @SharedValue(\.shared.makeAD.boundingBoxDTO) var boundingBoxDTO
+  @SharedValue(\.shared.makeAD.boundingBox) var boundingBox
   
   public var body: some View {
     ADScrollView {
@@ -62,10 +62,10 @@ public struct FindingTheCharacterView: ADUI {
       },
       content: {
         if let originalImage = originalImage,
-           let boundingBoxDTO = boundingBoxDTO {
+           let boundingBox = boundingBox {
           CropImageView(
             originalImage: originalImage,
-            originCGRect: boundingBoxDTO.toCGRect(),
+            originCGRect: boundingBox,
             cropNextAction: { croppedUIImage, croppedCGRect in
               viewStore.send(.findTheCharacter(croppedUIImage, croppedCGRect))
             },

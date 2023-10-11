@@ -28,11 +28,11 @@ public extension Shared {
   struct MakeAD {
     public let ad_id = CombineNotifier<String?>(initialValue: nil)
     public let originalImage = CombineNotifier<UIImage?>(initialValue: nil)
-    public let boundingBoxDTO = CombineNotifier<BoundingBoxDTO?>(initialValue: nil)
+    public let boundingBox = CombineNotifier<CGRect?>(initialValue: nil)
     public let initMaskImage = CombineNotifier<UIImage?>(initialValue: nil)
     public let croppedImage = CombineNotifier<UIImage?>(initialValue: nil)
     public let maskedImage = CombineNotifier<UIImage?>(initialValue: nil)
-    public let jointsDTO = CombineNotifier<JointsDTO?>(initialValue: nil)
+    public let joints = CombineNotifier<Joints?>(initialValue: nil)
   }
 }
 

@@ -17,7 +17,8 @@ let project: Project = .makeProject(
       resources: nil,
       dependencies: [
         LocalFileStorage.projectDepedency,
-        SharedStorage.projectDepedency
+        SharedStorage.projectDepedency,
+        NetworkStorage.projectDepedency
       ]
     )
   ]

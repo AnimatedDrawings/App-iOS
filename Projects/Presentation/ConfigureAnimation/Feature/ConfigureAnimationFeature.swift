@@ -9,13 +9,13 @@
 import SwiftUI
 import ThirdPartyLib
 import Photos
-import MoyaProvider
 import LocalFileProvider
 import SharedProvider
 import Domain_Model
+import NetworkProvider
 
 public struct ConfigureAnimationFeature: Reducer {
-  @Dependency(\.configureAnimationClient) var configureAnimationClient
+  @Dependency(\.configureAnimationProvider) var configureAnimationProvider
   @Dependency(\.shared.stepBar) var stepBar
   @Dependency(\.shared.makeAD) var makeAD
   @Dependency(\.shared.adViewCase) var adViewCase
@@ -53,7 +53,7 @@ public struct ConfigureAnimationFeature: Reducer {
     case setLoadingView(Bool)
     
     case selectAnimation(ADAnimation)
-    case addAnimationResponse(TaskResult<EmptyResponse>)
+    case addAnimationResponse(TaskResult<Void>)
     
     case downloadVideo
     case downloadVideoResponse(TaskResult<Data>)
@@ -124,16 +124,11 @@ extension ConfigureAnimationFeature {
             return
           }
           
-          let request = ConfigureAnimationRequest(
-            ad_id: ad_id,
-            adAnimationDTO: .init(name: animation.rawValue)
-          )
-          
           await send(.setLoadingView(true))
           await send(
             .addAnimationResponse(
               TaskResult {
-                try await configureAnimationClient.add(request)
+                try await configureAnimationProvider.add(ad_id, animation)
               }
             )
           )
@@ -144,7 +139,7 @@ extension ConfigureAnimationFeature {
         
       case .addAnimationResponse(.failure(let error)):
         print(error)
-        let adError = error as? ADMoyaError ?? .connection
+//        let adError = error as? ADMoyaError ?? .connection
         return .run { send in
           await send(.setLoadingView(true))
           await send(.showAlertShared(initAlertNetworkError()))
@@ -160,15 +155,10 @@ extension ConfigureAnimationFeature {
             return
           }
           
-          let request = ConfigureAnimationRequest(
-            ad_id: ad_id,
-            adAnimationDTO: .init(name: selectedAnimation.rawValue)
-          )
-          
           await send(
             .downloadVideoResponse(
               TaskResult {
-                try await configureAnimationClient.downloadVideo(request)
+                try await configureAnimationProvider.download(ad_id, selectedAnimation)
               }
             )
           )
@@ -187,7 +177,7 @@ extension ConfigureAnimationFeature {
         
       case .downloadVideoResponse(.failure(let error)):
         print(error)
-        let adError = error as? ADMoyaError ?? .connection
+//        let adError = error as? ADMoyaError ?? .connection
         return .run { send in
           await send(.setLoadingView(false))
           await send(.showAlertShared(initAlertNetworkError()))
@@ -248,11 +238,11 @@ extension ConfigureAnimationFeature {
         return .run { _ in
           await makeAD.ad_id.set(nil)
           await makeAD.originalImage.set(nil)
-          await makeAD.boundingBoxDTO.set(nil)
+          await makeAD.boundingBox.set(nil)
           await makeAD.initMaskImage.set(nil)
           await makeAD.croppedImage.set(nil)
           await makeAD.maskedImage.set(nil)
-          await makeAD.jointsDTO.set(nil)
+          await makeAD.joints.set(nil)
           await adViewCase.set(.MakeAD)
           
           await stepBar.completeStep.set(.None)
