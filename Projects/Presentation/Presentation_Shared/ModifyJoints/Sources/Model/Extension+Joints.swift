@@ -6,40 +6,11 @@
 //
 
 import Foundation
+import Domain_Model
 
-public struct JointsInfo: Codable {
-  public var skeletons: [String : SkeletonInfo]
-  
-  public init(skeletons: [String : SkeletonInfo]) {
-    self.skeletons = skeletons
-  }
-}
-
-public struct SkeletonInfo: Codable {
-  public var name: String
-  public var ratioPoint: RatioPoint
-  public var parent: String?
-  
-  public init(name: String, ratioPoint: RatioPoint, parent: String? = nil) {
-    self.name = name
-    self.ratioPoint = ratioPoint
-    self.parent = parent
-  }
-}
-
-public struct RatioPoint: Codable {
-  public var x: CGFloat
-  public var y: CGFloat
-  
-  public init(x: CGFloat, y: CGFloat) {
-    self.x = x
-    self.y = y
-  }
-}
-
-extension SkeletonInfo {
-  func updatePoint(with newPoint: RatioPoint) -> SkeletonInfo {
-    return SkeletonInfo(
+extension Skeleton {
+  func updatePoint(with newPoint: RatioPoint) -> Self {
+    return Self(
       name: self.name,
       ratioPoint: newPoint,
       parent: self.parent
@@ -47,14 +18,14 @@ extension SkeletonInfo {
   }
 }
 
-public extension JointsInfo {
-  static func mockData() -> JointsInfo? {
+public extension Joints {
+  static func mockData() -> Self? {
     do {
-      guard let jsonData = JointsInfo.mockJsonData() else {
+      guard let jsonData = Self.mockJsonData() else {
         return nil
       }
-      let jointsInfo = try JSONDecoder().decode(JointsInfo.self, from: jsonData)
-      return jointsInfo
+      let joints = try JSONDecoder().decode(Self.self, from: jsonData)
+      return joints
     } catch let error {
       print("에러 : \(error)")
       return nil

@@ -6,12 +6,13 @@
 //
 
 import SwiftUI
+import Domain_Model
 
 struct JointsView: View {
   @ObservedObject var modifyJointsLink: ModifyJointsLink
   let strokeColor: Color
   let jointCircleSize: CGFloat = 15
-  var skeletonDict: [String : SkeletonInfo] {
+  var skeletonDict: [String : Skeleton] {
     return self.modifyJointsLink.skeletons
   }
   
@@ -36,7 +37,7 @@ struct JointsView: View {
             DragGesture(coordinateSpace: .local)
               .onChanged({ value in
                 updateCurrentJoint(mySkeleton)
-                dragOnChanged(value, skeletonInfo: mySkeleton)
+                dragOnChanged(value, skeleton: mySkeleton)
               })
               .onEnded(dragOnEnded(_:))
           )
@@ -59,12 +60,12 @@ extension JointsView {
 }
 
 extension JointsView {
-  func calJointOffset(_ skeletonInfo: SkeletonInfo) -> CGSize {
+  func calJointOffset(_ skeleton: Skeleton) -> CGSize {
     let widthView: CGFloat = self.modifyJointsLink.viewSize.width
     let heightView: CGFloat = self.modifyJointsLink.viewSize.height
     
-    let ratioX: CGFloat = skeletonInfo.ratioPoint.x
-    let ratioY: CGFloat = skeletonInfo.ratioPoint.y
+    let ratioX: CGFloat = skeleton.ratioPoint.x
+    let ratioY: CGFloat = skeleton.ratioPoint.y
     
     return CGSize(
       width: (widthView * ratioX) - (self.jointCircleSize / 2),
@@ -72,13 +73,13 @@ extension JointsView {
     )
   }
   
-  func updateCurrentJoint(_ skeletonInfo: SkeletonInfo) {
+  func updateCurrentJoint(_ skeleton: Skeleton) {
     if self.modifyJointsLink.currentJoint == nil {
-      self.modifyJointsLink.currentJoint = skeletonInfo.name
+      self.modifyJointsLink.currentJoint = skeleton.name
     }
   }
   
-  func dragOnChanged(_ value: DragGesture.Value, skeletonInfo: SkeletonInfo) {
+  func dragOnChanged(_ value: DragGesture.Value, skeleton: Skeleton) {
     let widthView: CGFloat = self.modifyJointsLink.viewSize.width
     let heightView: CGFloat = self.modifyJointsLink.viewSize.height
     let nexX: CGFloat = value.location.x
@@ -91,8 +92,8 @@ extension JointsView {
     }
     
     let nexRatioPoint = RatioPoint(x: nexX / widthView, y: nexY / heightView)
-    let newSkeletonInfo = skeletonInfo.updatePoint(with: nexRatioPoint)
-    self.modifyJointsLink.skeletons[newSkeletonInfo.name] = newSkeletonInfo
+    let newSkeleton = skeleton.updatePoint(with: nexRatioPoint)
+    self.modifyJointsLink.skeletons[newSkeleton.name] = newSkeleton
   }
   
   func dragOnEnded(_ value: DragGesture.Value) {

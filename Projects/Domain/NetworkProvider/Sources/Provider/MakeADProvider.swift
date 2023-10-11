@@ -15,8 +15,8 @@ public struct MakeADProvider {
   public var uploadDrawing: @Sendable (Data) async throws -> (String, CGRect)
   public var findTheCharacter: @Sendable (String, CGRect) async throws -> ()
   public var downloadMaskImage: @Sendable (String) async throws -> (UIImage)
-  public var separateCharacter: @Sendable (String, Data) async throws -> (JointsDTO)
-  public var findCharacterJoints: @Sendable (String, JointsDTO) async throws -> ()
+  public var separateCharacter: @Sendable (String, Data) async throws -> (Joints)
+  public var findCharacterJoints: @Sendable (String, Joints) async throws -> ()
 }
 
 extension MakeADProvider: DependencyKey {
@@ -64,14 +64,14 @@ extension MakeADProvider: DependencyKey {
         )
       )
       
-      return response.jointsDTO
+      return response.jointsDTO.toDomain()
     },
     
-    findCharacterJoints: { ad_id, jointsDTO in
+    findCharacterJoints: { ad_id, joints in
       let response = try await storage.findCharacterJoints(
         request: FindCharacterJointsRequest(
           ad_id: ad_id,
-          jointsDTO: jointsDTO
+          jointsDTO: joints.toDTO()
         )
       )
     }

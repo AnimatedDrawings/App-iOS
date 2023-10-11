@@ -7,16 +7,21 @@
 
 import SwiftUI
 import Combine
+import Domain_Model
 
 class ModifyJointsLink: ObservableObject {
-  @Published var skeletons: [String : SkeletonInfo]
+  @Published var skeletons: [String : Skeleton]
   @Published var viewSize: CGSize = .init()
   @Published var currentJoint: String? = nil
-  let originSkeletons: [String : SkeletonInfo]
+  let imageWidth: CGFloat
+  let imageHeight: CGFloat
+  let originSkeletons: [String : Skeleton]
   
-  init(jointsInfo: JointsInfo) {
-    self.skeletons = jointsInfo.skeletons
-    self.originSkeletons = jointsInfo.skeletons
+  init(joints: Joints) {
+    self.skeletons = joints.skeletons
+    self.originSkeletons = joints.skeletons
+    self.imageWidth = joints.imageWidth
+    self.imageHeight = joints.imageHeight
   }
 }
 

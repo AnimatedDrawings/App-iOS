@@ -6,11 +6,12 @@
 //
 
 import SwiftUI
+import Domain_Model
 
 struct BonesView: View {
   @ObservedObject var modifyJointsLink: ModifyJointsLink
   let strokeColor: Color
-  var skeletonDict: [String : SkeletonInfo] {
+  var skeletonDict: [String : Skeleton] {
     return self.modifyJointsLink.skeletons
   }
   

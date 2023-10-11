@@ -10,7 +10,6 @@ import ThirdPartyLib
 import Domain_Model
 import SharedProvider
 import NetworkProvider
-import NetworkStorage
 
 public struct FindingCharacterJointsFeature: Reducer {
   public init() {}
@@ -38,7 +37,7 @@ public struct FindingCharacterJointsFeature: Reducer {
     case toggleModifyJointsView
     
     case setLoadingView(Bool)
-    case findCharacterJoints(JointsDTO)
+    case findCharacterJoints(Joints)
     case findCharacterJointsResponse(TaskResult<Void>)
     case onDismissModifyJointsView
     
@@ -72,18 +71,18 @@ extension FindingCharacterJointsFeature {
         state.isShowLoadingView = flag
         return .none
         
-      case .findCharacterJoints(let jointsDTO):
+      case .findCharacterJoints(let joints):
         return .run { send in
           guard let ad_id = await makeAD.ad_id.get() else {
             return
           }
           
-          await makeAD.jointsDTO.set(jointsDTO)
+          await makeAD.joints.set(joints)
           await send(.setLoadingView(true))
           await send(
             .findCharacterJointsResponse(
               TaskResult {
-                try await makeADProvider.findCharacterJoints(ad_id, jointsDTO)
+                try await makeADProvider.findCharacterJoints(ad_id, joints)
               }
             )
           )

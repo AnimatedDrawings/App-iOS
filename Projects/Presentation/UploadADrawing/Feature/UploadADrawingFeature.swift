@@ -114,11 +114,11 @@ extension UploadADrawingFeature {
           await send(.uploadDrawingNextAction)
         }
         
-      case let .uploadDrawingResponse(.success(ad_id, cgRect)):
+      case let .uploadDrawingResponse(.success((ad_id, cgRect))):
         state.isSuccessUploading = true
         return .run { _ in
           await makeAD.ad_id.set(ad_id)
-          await makeAD.boundingBoxDTO.set(cgRect.toBoundingBoxDTO())
+          await makeAD.boundingBox.set(cgRect)
         }
         
       case .uploadDrawingResponse(.failure(let error)):

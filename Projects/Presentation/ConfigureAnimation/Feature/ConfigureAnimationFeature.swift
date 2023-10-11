@@ -238,11 +238,11 @@ extension ConfigureAnimationFeature {
         return .run { _ in
           await makeAD.ad_id.set(nil)
           await makeAD.originalImage.set(nil)
-          await makeAD.boundingBoxDTO.set(nil)
+          await makeAD.boundingBox.set(nil)
           await makeAD.initMaskImage.set(nil)
           await makeAD.croppedImage.set(nil)
           await makeAD.maskedImage.set(nil)
-          await makeAD.jointsDTO.set(nil)
+          await makeAD.joints.set(nil)
           await adViewCase.set(.MakeAD)
           
           await stepBar.completeStep.set(.None)

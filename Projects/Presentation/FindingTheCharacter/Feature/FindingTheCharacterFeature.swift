@@ -11,7 +11,6 @@ import SwiftUI
 import SharedProvider
 import Domain_Model
 import AD_UIKit
-import NetworkStorage
 import NetworkProvider
 
 public struct FindingTheCharacterFeature: Reducer {
@@ -29,8 +28,6 @@ public struct FindingTheCharacterFeature: Reducer {
     @BindingState public var isShowCropImageView = false
     public var isShowLoadingView = false
     
-    var tmpCroppedImage: UIImage = .init()
-    var tmpBoundingBoxDTO: BoundingBoxDTO = .init()
     var isSuccessUpload = false
    
     @PresentationState public var alertShared: AlertState<AlertShared>? = nil
@@ -87,9 +84,7 @@ extension FindingTheCharacterFeature {
             return
           }
           
-          let boundingBoxDTO = croppedCGRect.toBoundingBoxDTO()
-          
-          await makeAD.boundingBoxDTO.set(boundingBoxDTO)
+          await makeAD.boundingBox.set(croppedCGRect)
           await makeAD.croppedImage.set(croppedUIImage)
           await send(.setLoadingView(true))
           await send(

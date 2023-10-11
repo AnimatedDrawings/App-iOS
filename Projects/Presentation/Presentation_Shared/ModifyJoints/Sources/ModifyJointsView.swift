@@ -7,25 +7,26 @@
 
 import SwiftUI
 import AD_UIKit
+import Domain_Model
 
 public struct ModifyJointsView: View {
   let croppedImage: UIImage
   @StateObject var modifyJointsLink: ModifyJointsLink
-  let modifyNextAction: (JointsInfo) -> ()
+  let modifyNextAction: (Joints) -> ()
   let cancel: () -> ()
   
   let strokeColor: Color = ADUIKitAsset.Color.blue1.swiftUIColor
   
   public init(
     croppedImage: UIImage,
-    jointsInfo: JointsInfo,
-    modifyNextAction: @escaping (JointsInfo) -> Void,
+    joints: Joints,
+    modifyNextAction: @escaping (Joints) -> Void,
     cancel: @escaping () -> Void
   ) {
     self.croppedImage = croppedImage
     self._modifyJointsLink = StateObject(
       wrappedValue: ModifyJointsLink(
-        jointsInfo: jointsInfo
+        joints: joints
       )
     )
     self.modifyNextAction = modifyNextAction
@@ -62,10 +63,12 @@ public struct ModifyJointsView: View {
 
 extension ModifyJointsView {
   func save() {
-    let modifiedJointsInfo = JointsInfo(
+    let modifiedJoints = Joints(
+      imageWidth: self.modifyJointsLink.imageWidth,
+      imageHeight: self.modifyJointsLink.imageHeight,
       skeletons: self.modifyJointsLink.skeletons
     )
-    self.modifyNextAction(modifiedJointsInfo)
+    self.modifyNextAction(modifiedJoints)
   }
 }
 
@@ -127,14 +130,14 @@ extension ModifyJointsView {
 
 public struct Previews_ModifyJointsView: View {
   let croppedImage: UIImage = ModifyJointsAsset.croppedGarlic.image
-  let mockJointsInfo = JointsInfo.mockData()!
+  let mockJoints = Joints.mockData()!
   
   public init () {}
   
   public var body: some View {
     ModifyJointsView(
       croppedImage: croppedImage,
-      jointsInfo: mockJointsInfo,
+      joints: mockJoints,
       modifyNextAction: { modifiedJointsInfo in
         
       },

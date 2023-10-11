@@ -10,7 +10,7 @@ import ThirdPartyLib
 import SwiftUI
 import SharedProvider
 import NetworkProvider
-import NetworkStorage
+import Domain_Model
 
 public struct SeparatingCharacterFeature: Reducer {
   public init() {}
@@ -42,7 +42,7 @@ public struct SeparatingCharacterFeature: Reducer {
     
     case setLoadingView(Bool)
     case maskNextAction(Bool)
-    case separateCharacterResponse(TaskResult<JointsDTO>)
+    case separateCharacterResponse(TaskResult<Joints>)
     case onDismissMakingImageView
     
     case showAlertShared(AlertState<AlertShared>)
@@ -100,10 +100,10 @@ extension SeparatingCharacterFeature {
           )
         }
         
-      case .separateCharacterResponse(.success(let jointsDTO)):
+      case .separateCharacterResponse(.success(let joints)):
         state.isSuccessSeparateCharacter = true
         return .run { send in
-          await makeAD.jointsDTO.set(jointsDTO)
+          await makeAD.joints.set(joints)
           await send(.setLoadingView(false))
           await send(.toggleMaskingImageView)
         }
