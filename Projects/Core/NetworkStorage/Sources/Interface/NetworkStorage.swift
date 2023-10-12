@@ -17,8 +17,8 @@ protocol URLSessionable {
 
 extension URLSession: URLSessionable {}
 
-struct Asserter<T>{
-  func generic(_ val:Any) -> Bool{
+struct Asserter<T> {
+  func generic(_ val: Any) -> Bool {
     let type = type(of: val)
     return T.self == type
   }
