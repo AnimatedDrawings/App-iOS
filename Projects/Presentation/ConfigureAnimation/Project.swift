@@ -12,8 +12,8 @@ let project: Project = .makeProject(
   name: ConfigureAnimation.projectName,
   targets: [
     ConfigureAnimation.example(),
-    ConfigureAnimation.view(),
-    ConfigureAnimation.feature(
+    ConfigureAnimation.views(),
+    ConfigureAnimation.features(
       dependencies: [
         Presentation_Shared.projectDepedency
       ]

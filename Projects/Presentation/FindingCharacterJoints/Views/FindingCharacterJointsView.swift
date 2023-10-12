@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import FindingCharacterJoints_Feature
+import FindingCharacterJoints_Features
 import ThirdPartyLib
 import ModifyJoints
 import AD_UIKit

@@ -32,7 +32,7 @@ public extension PresentationModule {
       targetName: Self.targetName + "_Example",
       product: .app,
       infoPlist: .AD,
-      sources: ["Example/**", "View/**"],
+      sources: ["Example/**", "Views/**"],
       resources: nil,
       dependencies: [
         .target(name: Self.targetName)
@@ -40,33 +40,33 @@ public extension PresentationModule {
     )
   }
   
-  static func view(dependencies: [TargetDependency]) -> Target {
+  static func views(dependencies: [TargetDependency]) -> Target {
     .makeTarget(
       targetName: Self.targetName,
       product: .staticLibrary,
-      sources: ["View/**"],
+      sources: ["Views/**"],
       resources: nil,
       dependencies: dependencies
     )
   }
   
-  static func view() -> Target {
+  static func views() -> Target {
     .makeTarget(
       targetName: Self.targetName,
       product: .staticLibrary,
-      sources: ["View/**"],
+      sources: ["Views/**"],
       resources: nil,
       dependencies: [
-        .target(name: Self.targetName + "_Feature")
+        .target(name: Self.targetName + "_Features")
       ]
     )
   }
   
-  static func feature(dependencies: [TargetDependency]) -> Target {
+  static func features(dependencies: [TargetDependency]) -> Target {
     .makeTarget(
-      targetName: Self.targetName + "_Feature",
+      targetName: Self.targetName + "_Features",
       product: .staticLibrary,
-      sources: ["Feature/**"],
+      sources: ["Features/**"],
       resources: nil,
       dependencies: dependencies
     )

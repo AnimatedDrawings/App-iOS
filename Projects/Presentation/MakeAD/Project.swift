@@ -12,7 +12,7 @@ let project: Project = .makeProject(
   name: MakeAD.projectName,
   targets: [
     MakeAD.example(),
-    MakeAD.view(
+    MakeAD.views(
       dependencies: [
         UploadADrawing.projectDepedency,
         FindingTheCharacter.projectDepedency,

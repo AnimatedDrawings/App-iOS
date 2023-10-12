@@ -12,8 +12,8 @@ let project: Project = .makeProject(
   name: FindingTheCharacter.projectName,
   targets: [
     FindingTheCharacter.example(),
-    FindingTheCharacter.view(),
-    FindingTheCharacter.feature(
+    FindingTheCharacter.views(),
+    FindingTheCharacter.features(
       dependencies: [
         Presentation_Shared.projectDepedency
       ]

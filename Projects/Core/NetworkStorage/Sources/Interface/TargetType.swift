@@ -16,6 +16,19 @@ protocol TargetType {
   var task: NetworkTask { get }
 }
 
+extension Data {
+  func convertUploadMultiPartData(uniqString: String) -> Data {
+    var body = Data()
+    body.append("--\(uniqString)\r\n".data(using: .utf8)!)
+    body.append("Content-Disposition: form-data; name=\"file\"; filename=\"file\"\r\n".data(using: .utf8)!)
+    body.append("Content-Type: image/png\r\n\r\n".data(using: .utf8)!)
+    body.append(self)
+    body.append("\r\n".data(using: .utf8)!)
+    body.append("--\(uniqString)--\r\n".data(using: .utf8)!)
+    return body
+  }
+}
+
 extension TargetType {
   var baseURL: String { "https://miniiad.duckdns.org" }
   
@@ -35,14 +48,7 @@ extension TargetType {
       }
       httpBody = body
     case .uploadMultipart(let imageData):
-      var body = Data()
-      body.append("--\(uniqString)\r\n".data(using: .utf8)!)
-      body.append("Content-Disposition: form-data; name=\"file\"; filename=\"file\"\r\n".data(using: .utf8)!)
-      body.append("Content-Type: image/png\r\n\r\n".data(using: .utf8)!)
-      body.append(imageData)
-      body.append("\r\n".data(using: .utf8)!)
-      body.append("--\(uniqString)--\r\n".data(using: .utf8)!)
-      httpBody = body
+      httpBody = imageData.convertUploadMultiPartData(uniqString: uniqString)
     }
     
     if let httpBody = httpBody {

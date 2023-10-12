@@ -11,7 +11,7 @@ import ThirdPartyLib
 import MaskingImage
 import AD_UIKit
 import SharedProvider
-import SeparatingCharacter_Feature
+import SeparatingCharacter_Features
 import Domain_Model
 
 public struct SeparatingCharacterView: ADUI {

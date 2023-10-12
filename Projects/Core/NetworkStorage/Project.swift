@@ -10,6 +10,7 @@ import ProjectEnvironment
 
 let project: Project = .makeProject(
   name: NetworkStorage.projectName,
+  options: .enableCodeCoverage,
   targets: [
     .makeTarget(
       targetName: NetworkStorage.targetName,
@@ -18,6 +19,7 @@ let project: Project = .makeProject(
       dependencies: [
         Core_Model.projectDepedency
       ]
-    )
+    ),
+    .makeTestTarget(targetName: NetworkStorage.targetName)
   ]
 )

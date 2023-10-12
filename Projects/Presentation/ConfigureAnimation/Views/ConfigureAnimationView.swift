@@ -8,7 +8,7 @@
 
 import SwiftUI
 import ThirdPartyLib
-import ConfigureAnimation_Feature
+import ConfigureAnimation_Features
 import AD_UIKit
 
 public struct ConfigureAnimationView: ADUI {

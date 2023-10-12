@@ -12,8 +12,8 @@ let project: Project = .makeProject(
   name: FindingCharacterJoints.projectName,
   targets: [
     FindingCharacterJoints.example(),
-    FindingCharacterJoints.view(),
-    FindingCharacterJoints.feature(
+    FindingCharacterJoints.views(),
+    FindingCharacterJoints.features(
       dependencies: [
         Presentation_Shared.projectDepedency
       ]

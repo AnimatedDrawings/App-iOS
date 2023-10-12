@@ -8,7 +8,7 @@
 
 import SwiftUI
 import ThirdPartyLib
-import FindingTheCharacter_Feature
+import FindingTheCharacter_Features
 import AD_UIKit
 import CropImage
 import Domain_Model

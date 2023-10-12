@@ -11,7 +11,7 @@ import SwiftUI
 struct OnBoarding_Example: App {
   var body: some Scene {
     WindowGroup {
-      Previews_OnBoardingView()
+      OnBoardingView()
     }
   }
 }

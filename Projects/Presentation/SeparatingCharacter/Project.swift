@@ -12,8 +12,8 @@ let project: Project = .makeProject(
   name: SeparatingCharacter.projectName,
   targets: [
     SeparatingCharacter.example(),
-    SeparatingCharacter.view(),
-    SeparatingCharacter.feature(
+    SeparatingCharacter.views(),
+    SeparatingCharacter.features(
       dependencies: [
         Presentation_Shared.projectDepedency
       ]
