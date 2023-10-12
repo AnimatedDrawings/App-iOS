@@ -32,13 +32,12 @@ extension Data {
 extension TargetType {
   var baseURL: String { "https://miniiad.duckdns.org" }
   
-  func getUrlRequest() throws -> URLRequest {
+  func getUrlRequest(uniqString: String = UUID().uuidString) throws -> URLRequest {
     let url = try url()
     var urlRequest = URLRequest(url: url)
     
     // httpBody
     var httpBody: Data?
-    let uniqString = UUID().uuidString
     switch task {
     case .requestPlain:
       httpBody = nil
