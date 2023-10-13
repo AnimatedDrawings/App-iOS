@@ -42,9 +42,15 @@ final class CombineNotifierTests: XCTestCase {
     XCTAssertEqual(expectNums, nums)
   }
   
-  func testCancel() async {
-    let mockStorage = CombineNotifier<Int>(initialValue: 1)
-    
-    
-  }
+  /*
+   cancellables id 잡아서 cancel 호출할때 nil인지 판별
+   */
+//  func testCancel() async {
+//    let mockStorage = CombineNotifier<Int>(initialValue: 1)
+//
+//    await mockStorage.set(2)
+//
+//  }
 }
+
+

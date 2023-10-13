@@ -49,4 +49,36 @@ public actor CombineNotifier<Output: Equatable> {
   private func cancel(_ id: UUID) {
     cancellables[id] = nil
   }
+  
+//  var cancel: (UUID) -> ()
+}
+
+
+protocol CombineNotifierProtocol: NSObject {
+  associatedtype Output: Equatable
+  
+  var subject: CurrentValueSubject<Output, Never> { get set }
+  var cancellables: [UUID: AnyCancellable] { get set }
+  
+  func cancel(_ id: UUID) async
+}
+
+extension CombineNotifierProtocol {
+  func values() -> AsyncStream<Output> {
+    AsyncStream { continuation in
+      let id = UUID()
+
+      cancellables[id] = subject
+        .removeDuplicates()
+        .sink { _ in
+        continuation.finish()
+      } receiveValue: { value in
+        continuation.yield(value)
+      }
+
+      continuation.onTermination = { _ in
+        Task { await self.cancel(id) }
+      }
+    }
+  }
 }
