@@ -10,19 +10,27 @@ import XCTest
 @testable import NetworkStorage
 
 final class NetworkStorageTests: XCTestCase {
-  func testNetworkStorageRequestEmptyResponse() async throws {
-    let mockNetworkStorage = NetworkStorage<MockTargetType>(
-      session: MockURLSesson(responseData: mockEmptyResponseData)
+  private var mockURLSession: MockURLSesson!
+  private var mockNetworkStorage: NetworkStorage<MockTargetType>!
+  
+  override func setUp() {
+    super.setUp()
+    
+    mockURLSession = MockURLSesson(responseData: Data())
+    mockNetworkStorage = NetworkStorage<MockTargetType>(
+      session: mockURLSession
     )
+  }
+  
+  func testNetworkStorageRequestEmptyResponse() async throws {
+    mockURLSession.responseData = .mockEmptyResponseData
     
     let emptyResponse: EmptyResponse = try await mockNetworkStorage.request(.requestEmptyResponse)
     XCTAssertNoThrow(emptyResponse)
   }
   
   func testNetworkStorageRequestDefaultResponse() async throws {
-    let mockNetworkStorage = NetworkStorage<MockTargetType>(
-      session: MockURLSesson(responseData: mockDefaultResponseData)
-    )
+    mockURLSession.responseData = .mockDefaultResponseData
     
     let mockResponse: MockResponse = try await mockNetworkStorage.request(.requestDefaultResponse)
     XCTAssertNoThrow(mockResponse)
@@ -31,9 +39,8 @@ final class NetworkStorageTests: XCTestCase {
   
   func testNetworkStorageDownload() async throws {
     let emptyData = Data()
-    let mockNetworkStorage = NetworkStorage<MockTargetType>(
-      session: MockURLSesson(responseData: emptyData)
-    )
+    
+    mockURLSession.responseData = emptyData
     
     let responseData = try await mockNetworkStorage.download(.download)
     XCTAssertEqual(emptyData, responseData)
@@ -50,18 +57,19 @@ fileprivate struct MockResponse: Responsable {
 
 // MARK: - ResponseData
 
-fileprivate var mockEmptyResponseData: Data {
-  return """
+fileprivate extension Data {
+  static var mockEmptyResponseData: Self {
+    return """
 {
 "is_success" : true,
 "message" : "test",
 "response" : {}
 }
 """.data(using: .utf8)!
-}
-
-fileprivate var mockDefaultResponseData: Data {
-  return """
+  }
+  
+  static var mockDefaultResponseData: Self {
+    return """
 {
 "is_success" : true,
 "message" : "test",
@@ -70,13 +78,14 @@ fileprivate var mockDefaultResponseData: Data {
 }
 }
 """.data(using: .utf8)!
+  }
 }
 
 
 // MARK: - MockURLSesson
 
 fileprivate class MockURLSesson: URLSessionable {
-  let responseData: Data
+  var responseData: Data
   var result: Result<Data, Error> {
     return Result<Data, Error>.success(responseData)
   }

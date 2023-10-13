@@ -10,26 +10,19 @@ import XCTest
 @testable import NetworkStorage
 
 final class TargetTypeTests: XCTestCase {
-  var jsonObject: Encodable!
-  var uploadData: Data!
-  var uniqString: String!
-  
-  override func setUp() {
-    super.setUp()
-    
-    jsonObject = MockJsonObject()
-    uploadData = Data()
-    uniqString = UUID().uuidString
-  }
-  
   func testMakeURL() throws {
+    let jsonObject = MockJsonObject()
     let mockTargetType: MockTargetType = .requestJSONEncodable(jsonObject)
+    
     let url = try mockTargetType.url()
+    
     XCTAssertEqual(url.absoluteString, "baseURLpath?requestJSONEncodable=requestJSONEncodable")
   }
   
   func testNetworkTaskRequestJSONEncodable() throws {
+    let jsonObject = MockJsonObject()
     let mockTargetType: MockTargetType = .requestJSONEncodable(jsonObject)
+    
     let urlRequest = try mockTargetType.getUrlRequest()
     
     XCTAssertEqual(urlRequest.httpBody, try mockTargetType.mockHttpBody)
@@ -38,7 +31,10 @@ final class TargetTypeTests: XCTestCase {
   }
   
   func testNetworkTestUploadMultipart() throws {
+    let uniqString = UUID().uuidString
+    let uploadData = Data()
     let mockTargetType: MockTargetType = .uploadMultipart(uniqString, uploadData)
+    
     let urlRequest = try mockTargetType.getUrlRequest(uniqString: uniqString)
     
     XCTAssertEqual(urlRequest.httpBody, try mockTargetType.mockHttpBody)
