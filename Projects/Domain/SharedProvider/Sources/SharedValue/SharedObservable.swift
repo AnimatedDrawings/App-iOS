@@ -1,15 +1,16 @@
 //
-//  SharedStorage.swift
-//  SharedStorage
+//  SharedObservable.swift
+//  SharedProvider
 //
-//  Created by minii on 2023/10/01.
+//  Created by minii on 2023/10/13.
 //  Copyright © 2023 chminipark. All rights reserved.
 //
 
 import Foundation
+import SharedStorage
 
-public class SharedStorage<Output: Equatable>: ObservableObject {
-  public var value: Output {
+class SharedObservable<Output: Equatable>: ObservableObject {
+  var value: Output {
     get {
       return myValue
     }
@@ -30,7 +31,7 @@ public class SharedStorage<Output: Equatable>: ObservableObject {
   
   let notifier: CombineNotifier<Output>
   
-  public init(notifier: CombineNotifier<Output>) {
+  init(notifier: CombineNotifier<Output>) {
     self.notifier = notifier
     self.myValue = notifier.initialValue
     Task {

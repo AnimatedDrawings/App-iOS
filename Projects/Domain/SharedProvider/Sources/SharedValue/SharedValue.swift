@@ -22,7 +22,7 @@ public struct SharedValue<Output: Equatable>: DynamicProperty {
     }
   }
   
-  @StateObject private var storage: SharedStorage<Output>
+  @StateObject private var storage: SharedObservable<Output>
   
   public var projectedValue: Binding<Output> {
     Binding<Output>(
@@ -36,7 +36,7 @@ public struct SharedValue<Output: Equatable>: DynamicProperty {
   ) {
     let notifier = DependencyValues._current[keyPath: keyPath]
     self._storage = StateObject(
-      wrappedValue: SharedStorage(notifier: notifier)
+      wrappedValue: SharedObservable(notifier: notifier)
     )
   }
 }

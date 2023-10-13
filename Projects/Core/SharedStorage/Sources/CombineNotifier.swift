@@ -13,7 +13,7 @@ public actor CombineNotifier<Output: Equatable> {
   private let subject: CurrentValueSubject<Output, Never>
   private var cancellables: [UUID: AnyCancellable] = [:]
   
-  nonisolated let initialValue: Output
+  public nonisolated let initialValue: Output
   
   public init(initialValue: Output) {
     self.subject = CurrentValueSubject<Output, Never>(initialValue)
