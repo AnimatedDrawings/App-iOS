@@ -11,7 +11,7 @@ import OnBoarding
 import MakeAD
 import ConfigureAnimation
 import SharedProvider
-import Domain_Model
+import DomainModel
 
 let onBoardingViewController: UIHostingController<OnBoardingView> = .init(
   rootView: OnBoardingView()

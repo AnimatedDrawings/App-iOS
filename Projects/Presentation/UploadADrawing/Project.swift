@@ -15,7 +15,7 @@ let project: Project = .makeProject(
     UploadADrawing.views(),
     UploadADrawing.features(
       dependencies: [
-        Presentation_Shared.projectDepedency
+        PresentationShared.projectDepedency
       ]
     )
   ]

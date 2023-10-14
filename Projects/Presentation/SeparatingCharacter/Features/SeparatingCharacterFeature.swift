@@ -10,7 +10,7 @@ import ThirdPartyLib
 import SwiftUI
 import SharedProvider
 import NetworkProvider
-import Domain_Model
+import DomainModel
 
 public struct SeparatingCharacterFeature: Reducer {
   public init() {}

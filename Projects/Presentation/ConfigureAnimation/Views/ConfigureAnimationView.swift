@@ -8,8 +8,8 @@
 
 import SwiftUI
 import ThirdPartyLib
-import ConfigureAnimation_Features
-import AD_UIKit
+import ConfigureAnimationFeatures
+import ADUIKit
 
 public struct ConfigureAnimationView: ADUI {
   public typealias MyFeature = ConfigureAnimationFeature

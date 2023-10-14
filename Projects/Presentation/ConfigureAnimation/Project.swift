@@ -15,8 +15,9 @@ let project: Project = .makeProject(
     ConfigureAnimation.views(),
     ConfigureAnimation.features(
       dependencies: [
-        Presentation_Shared.projectDepedency
+        PresentationShared.projectDepedency
       ]
-    )
+    ),
+    ConfigureAnimation.tests()
   ]
 )

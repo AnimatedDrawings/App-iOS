@@ -7,7 +7,7 @@
 //
 
 import ThirdPartyLib
-import Domain_Model
+import DomainModel
 import SharedProvider
 import NetworkProvider
 

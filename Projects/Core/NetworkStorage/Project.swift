@@ -17,7 +17,7 @@ let project: Project = .makeProject(
       product: .staticLibrary,
       resources: nil,
       dependencies: [
-        Core_Model.projectDepedency
+        CoreModel.projectDepedency
       ]
     ),
     .makeTestTarget(targetName: NetworkStorage.targetName)

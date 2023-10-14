@@ -9,10 +9,10 @@
 import SwiftUI
 import ThirdPartyLib
 import MaskingImage
-import AD_UIKit
+import ADUIKit
 import SharedProvider
-import SeparatingCharacter_Features
-import Domain_Model
+import SeparatingCharacterFeatures
+import DomainModel
 
 public struct SeparatingCharacterView: ADUI {
   public typealias MyFeature = SeparatingCharacterFeature

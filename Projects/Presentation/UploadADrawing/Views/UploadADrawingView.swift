@@ -7,11 +7,11 @@
 //
 
 import SwiftUI
-import AD_UIKit
+import ADUIKit
 import ThirdPartyLib
-import UploadADrawing_Features
+import UploadADrawingFeatures
 import PhotosUI
-import Domain_Model
+import DomainModel
 import SharedProvider
 
 public struct UploadADrawingView: ADUI {

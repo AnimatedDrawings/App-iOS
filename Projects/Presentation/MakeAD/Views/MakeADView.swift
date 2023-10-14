@@ -7,9 +7,9 @@
 //
 
 import SwiftUI
-import AD_UIKit
+import ADUIKit
 import SharedProvider
-import Domain_Model
+import DomainModel
 
 import UploadADrawing
 import FindingTheCharacter

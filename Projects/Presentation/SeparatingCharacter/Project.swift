@@ -15,7 +15,7 @@ let project: Project = .makeProject(
     SeparatingCharacter.views(),
     SeparatingCharacter.features(
       dependencies: [
-        Presentation_Shared.projectDepedency
+        PresentationShared.projectDepedency
       ]
     )
   ]

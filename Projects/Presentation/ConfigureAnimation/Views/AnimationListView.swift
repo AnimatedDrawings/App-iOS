@@ -7,8 +7,8 @@
 //
 
 import SwiftUI
-import AD_UIKit
-import Domain_Model
+import ADUIKit
+import DomainModel
 
 struct AnimationListView: View {
   @Binding var isShowMyView: Bool

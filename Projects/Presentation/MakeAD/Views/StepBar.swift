@@ -8,7 +8,7 @@
 
 import SwiftUI
 import SharedProvider
-import AD_UIKit
+import ADUIKit
 
 struct StepBar: View {
   @State var statusBarWidth: CGFloat = 0

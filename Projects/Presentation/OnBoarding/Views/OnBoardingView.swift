@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import AD_UIKit
+import ADUIKit
 import SharedProvider
 
 public struct OnBoardingView: View {

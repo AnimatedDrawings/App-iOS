@@ -8,10 +8,10 @@
 
 import SwiftUI
 import ThirdPartyLib
-import FindingTheCharacter_Features
-import AD_UIKit
+import FindingTheCharacterFeatures
+import ADUIKit
 import CropImage
-import Domain_Model
+import DomainModel
 import SharedProvider
 
 public struct FindingTheCharacterView: ADUI {

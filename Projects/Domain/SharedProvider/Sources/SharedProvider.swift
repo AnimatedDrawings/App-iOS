@@ -8,7 +8,7 @@
 
 import Foundation
 import SharedStorage
-import Domain_Model
+import DomainModel
 import UIKit
 import ComposableArchitecture
 

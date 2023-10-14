@@ -29,7 +29,7 @@ public protocol PresentationModule: Module {}
 public extension PresentationModule {
   static func example() -> Target {
     .makeTarget(
-      targetName: Self.targetName + "_Example",
+      targetName: Self.targetName + "Example",
       product: .app,
       infoPlist: .AD,
       sources: ["Example/**", "Views/**"],
@@ -57,18 +57,31 @@ public extension PresentationModule {
       sources: ["Views/**"],
       resources: nil,
       dependencies: [
-        .target(name: Self.targetName + "_Features")
+        .target(name: Self.targetName + "Features")
       ]
     )
   }
   
   static func features(dependencies: [TargetDependency]) -> Target {
     .makeTarget(
-      targetName: Self.targetName + "_Features",
+      targetName: Self.targetName + "Features",
       product: .staticLibrary,
       sources: ["Features/**"],
       resources: nil,
       dependencies: dependencies
+    )
+  }
+  
+  static func tests() -> Target {
+    return Target(
+      name: Self.targetName + "Tests",
+      platform: .iOS,
+      product: .unitTests,
+      bundleId: "chminipark.\(Self.targetName)".replaceBar,
+      deploymentTarget: .iOS(targetVersion: "16.0", devices: [.iphone]),
+      infoPlist: .default,
+      sources: ["Tests/**"],
+      dependencies: [ .target(name: Self.targetName + "Features") ]
     )
   }
 }

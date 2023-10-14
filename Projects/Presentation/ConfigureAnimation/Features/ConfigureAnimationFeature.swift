@@ -11,7 +11,7 @@ import ThirdPartyLib
 import Photos
 import LocalFileProvider
 import SharedProvider
-import Domain_Model
+import DomainModel
 import NetworkProvider
 
 public struct ConfigureAnimationFeature: Reducer {

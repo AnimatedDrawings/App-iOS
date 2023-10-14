@@ -7,11 +7,11 @@
 //
 
 import SwiftUI
-import FindingCharacterJoints_Features
+import FindingCharacterJointsFeatures
 import ThirdPartyLib
 import ModifyJoints
-import AD_UIKit
-import Domain_Model
+import ADUIKit
+import DomainModel
 import SharedProvider
 
 public struct FindingCharacterJointsView: ADUI {

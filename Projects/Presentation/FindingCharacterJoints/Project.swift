@@ -15,7 +15,7 @@ let project: Project = .makeProject(
     FindingCharacterJoints.views(),
     FindingCharacterJoints.features(
       dependencies: [
-        Presentation_Shared.projectDepedency
+        PresentationShared.projectDepedency
       ]
     )
   ]

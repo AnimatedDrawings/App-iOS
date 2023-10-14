@@ -9,8 +9,7 @@
 import ThirdPartyLib
 import NetworkStorage
 import UIKit
-import Domain_Model
-//import Core_Model
+import DomainModel
 
 public struct ConfigureAnimationProvider {
   public var add: @Sendable (String, ADAnimation) async throws -> ()

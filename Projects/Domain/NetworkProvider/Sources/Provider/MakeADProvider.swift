@@ -9,7 +9,7 @@
 import ThirdPartyLib
 import NetworkStorage
 import UIKit
-import Domain_Model
+import DomainModel
 
 public struct MakeADProvider {
   public var uploadDrawing: @Sendable (Data) async throws -> (String, CGRect)
