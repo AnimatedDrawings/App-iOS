@@ -10,6 +10,7 @@ import ProjectEnvironment
 
 let project: Project = .makeProject(
   name: ConfigureAnimation.projectName,
+  options: .enableCodeCoverage,
   targets: [
     ConfigureAnimation.example(),
     ConfigureAnimation.views(),

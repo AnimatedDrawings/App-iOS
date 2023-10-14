@@ -23,8 +23,6 @@ public struct ConfigureAnimationFeature: Reducer {
   public init() {}
   
   public struct State: Equatable {
-    public init() {}
-    
     @BindingState public var isShowAnimationListView = false
     public var isShowLoadingView = false
     @BindingState public var isShowShareView = false
@@ -39,9 +37,35 @@ public struct ConfigureAnimationFeature: Reducer {
     
     @PresentationState public var alertShared: AlertState<AlertShared>? = nil
     @PresentationState public var alertTrashMakeAD: AlertState<AlertTrashMakeAD>? = nil
+    
+    public init(
+      isShowAnimationListView: Bool = false,
+      isShowLoadingView: Bool = false,
+      isShowShareView: Bool = false,
+      isShowActionSheet: Bool = false,
+      selectedAnimation: ADAnimation? = nil,
+      myAnimationData: Data? = nil,
+      myAnimationURL: URL? = nil,
+      cache: [ADAnimation : URL?] = initCache(),
+      isSuccessAddAnimation: Bool = false,
+      alertShared: AlertState<AlertShared>? = nil,
+      alertTrashMakeAD: AlertState<AlertTrashMakeAD>? = nil
+    ) {
+      self.isShowAnimationListView = isShowAnimationListView
+      self.isShowLoadingView = isShowLoadingView
+      self.isShowShareView = isShowShareView
+      self.isShowActionSheet = isShowActionSheet
+      self.selectedAnimation = selectedAnimation
+      self.myAnimationData = myAnimationData
+      self.myAnimationURL = myAnimationURL
+      self.cache = cache
+      self.isSuccessAddAnimation = isSuccessAddAnimation
+      self.alertShared = alertShared
+      self.alertTrashMakeAD = alertTrashMakeAD
+    }
   }
   
-  public enum Action: BindableAction {
+  public enum Action: BindableAction, Equatable {
     case binding(BindingAction<State>)
     
     case fixMakeAD
@@ -53,7 +77,7 @@ public struct ConfigureAnimationFeature: Reducer {
     case setLoadingView(Bool)
     
     case selectAnimation(ADAnimation)
-    case addAnimationResponse(TaskResult<Void>)
+    case addAnimationResponse(TaskEmptyResult)
     
     case downloadVideo
     case downloadVideoResponse(TaskResult<Data>)
@@ -127,7 +151,7 @@ extension ConfigureAnimationFeature {
           await send(.setLoadingView(true))
           await send(
             .addAnimationResponse(
-              TaskResult {
+              TaskResult.empty {
                 try await configureAnimationProvider.add(ad_id, animation)
               }
             )
@@ -335,7 +359,7 @@ extension ConfigureAnimationFeature {
   }
 }
 
-extension ConfigureAnimationFeature.State {
+public extension ConfigureAnimationFeature.State {
   static func initCache() -> [ADAnimation : URL?] {
     return ADAnimation.allCases
       .reduce(into: [ADAnimation : URL?]()) { dict, key in

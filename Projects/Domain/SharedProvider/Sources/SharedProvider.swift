@@ -15,7 +15,7 @@ import ComposableArchitecture
 public struct Shared {
   public let makeAD = Self.MakeAD()
   public let stepBar = Self.StepBar()
-  public let adViewCase = CombineNotifier<ADViewCase>(initialValue: .OnBoarding)
+  public var adViewCase = CombineNotifier<ADViewCase>(initialValue: .OnBoarding)
 }
 
 public extension Shared {

@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum ADAnimation: String, CaseIterable {
+public enum ADAnimation: String, CaseIterable, Equatable {
   case dab
   case zombie
 }

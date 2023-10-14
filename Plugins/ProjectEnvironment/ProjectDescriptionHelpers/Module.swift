@@ -81,7 +81,7 @@ public extension PresentationModule {
       deploymentTarget: .iOS(targetVersion: "16.0", devices: [.iphone]),
       infoPlist: .default,
       sources: ["Tests/**"],
-      dependencies: [ .target(name: Self.targetName + "Features") ]
+      dependencies: [ .target(name: Self.targetName) ]
     )
   }
 }
