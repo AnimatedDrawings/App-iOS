@@ -19,6 +19,7 @@ public struct ConfigureAnimationFeature: Reducer {
   @Dependency(\.shared.stepBar) var stepBar
   @Dependency(\.shared.makeAD) var makeAD
   @Dependency(\.shared.adViewCase) var adViewCase
+  @Dependency(\.localFileProvider) var localFileProvider
   
   public init() {}
   
@@ -125,7 +126,7 @@ extension ConfigureAnimationFeature {
         
       case .toggleIsShowShareActionSheet:
         if state.myAnimationURL == nil {
-          return .send(.showAlertShared(initAlertShareAction()))
+          return .send(.showAlertShared(Self.initAlertShareAction()))
         }
         state.isShowActionSheet.toggle()
         return .none
@@ -166,7 +167,7 @@ extension ConfigureAnimationFeature {
 //        let adError = error as? ADMoyaError ?? .connection
         return .run { send in
           await send(.setLoadingView(false))
-          await send(.showAlertShared(initAlertNetworkError()))
+          await send(.showAlertShared(Self.initAlertNetworkError()))
         }
         
       case .downloadVideo:
@@ -189,7 +190,7 @@ extension ConfigureAnimationFeature {
         }
         
       case .downloadVideoResponse(.success(let response)):
-        guard let gifURL = try? LF.save(with: response) else {
+        guard let gifURL = try? localFileProvider.save(response, "gif") else {
           return .none
         }
         
@@ -204,7 +205,7 @@ extension ConfigureAnimationFeature {
 //        let adError = error as? ADMoyaError ?? .connection
         return .run { send in
           await send(.setLoadingView(false))
-          await send(.showAlertShared(initAlertNetworkError()))
+          await send(.showAlertShared(Self.initAlertNetworkError()))
         }
         
       case .onDismissAnimationListView:
@@ -212,7 +213,7 @@ extension ConfigureAnimationFeature {
           guard let selectedAnimation = state.selectedAnimation,
                 let tmpGifURLInCache = state.cache[selectedAnimation],
                 let gifURLInCache = tmpGifURLInCache,
-                let dataFromURL: Data = try? LF.read(with: gifURLInCache)
+                let dataFromURL: Data = try? localFileProvider.read(gifURLInCache)
           else {
             return .none
           }
@@ -239,10 +240,10 @@ extension ConfigureAnimationFeature {
               let request = PHAssetCreationRequest.forAsset()
               request.addResource(with: .photo, fileURL: gifURL, options: nil)
             }
-            await send(.showAlertShared(initAlertSaveGIFInPhotosResult(isSuccess: true)))
+            await send(.showAlertShared(Self.initAlertSaveGIFInPhotosResult(isSuccess: true)))
           },
           catch: { error, send in
-            await send(.showAlertShared(initAlertSaveGIFInPhotosResult(isSuccess: false)))
+            await send(.showAlertShared(Self.initAlertSaveGIFInPhotosResult(isSuccess: false)))
           }
         )
         
@@ -250,7 +251,7 @@ extension ConfigureAnimationFeature {
         state.alertShared = alertState
         return .none
       case .showAlertTrashMakeAD:
-        state.alertTrashMakeAD = initAlertTrashMakeAD()
+        state.alertTrashMakeAD = Self.initAlertTrashMakeAD()
         return .none
       case .alertShared:
         return .none
@@ -281,13 +282,13 @@ extension ConfigureAnimationFeature {
   }
 }
 
-extension ConfigureAnimationFeature {
-  public enum AlertShared: Equatable {}
-  public enum AlertTrashMakeAD: Equatable {
+public extension ConfigureAnimationFeature {
+  enum AlertShared: Equatable {}
+  enum AlertTrashMakeAD: Equatable {
     case trash
   }
   
-  func initAlertNetworkError() -> AlertState<AlertShared> {
+  static func initAlertNetworkError() -> AlertState<AlertShared> {
     return AlertState(
       title: {
         TextState("Connection Error")
@@ -303,7 +304,7 @@ extension ConfigureAnimationFeature {
     )
   }
   
-  func initAlertSaveGIFInPhotosResult(isSuccess: Bool) -> AlertState<AlertShared> {
+  static func initAlertSaveGIFInPhotosResult(isSuccess: Bool) -> AlertState<AlertShared> {
     let title = isSuccess ? "Save Success!" : "Save GIF Error"
     let description = isSuccess ? "" : "Cannot Save GIF.."
 
@@ -322,7 +323,7 @@ extension ConfigureAnimationFeature {
     )
   }
   
-  func initAlertShareAction() -> AlertState<AlertShared> {
+  static func initAlertShareAction() -> AlertState<AlertShared> {
     return AlertState(
       title: {
         TextState("No Animated Drawings File")
@@ -338,7 +339,7 @@ extension ConfigureAnimationFeature {
     )
   }
   
-  func initAlertTrashMakeAD() -> AlertState<AlertTrashMakeAD> {
+  static func initAlertTrashMakeAD() -> AlertState<AlertTrashMakeAD> {
     return AlertState<AlertTrashMakeAD>(
       title: {
         TextState("Reset Animated Drawing")
