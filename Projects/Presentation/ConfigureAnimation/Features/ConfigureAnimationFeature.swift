@@ -165,7 +165,7 @@ extension ConfigureAnimationFeature {
         print(error)
 //        let adError = error as? ADMoyaError ?? .connection
         return .run { send in
-          await send(.setLoadingView(true))
+          await send(.setLoadingView(false))
           await send(.showAlertShared(initAlertNetworkError()))
         }
         

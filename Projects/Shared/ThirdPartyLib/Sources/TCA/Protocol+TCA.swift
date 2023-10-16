@@ -17,7 +17,9 @@ public protocol ADUI: View {
 
 public typealias TaskEmptyResult = TaskResult<TaskEmptyResultValue>
 
-public struct TaskEmptyResultValue: Equatable, Sendable {}
+public struct TaskEmptyResultValue: Equatable, Sendable {
+  public init() {}
+}
 
 public extension TaskResult {
   static func empty(

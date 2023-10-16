@@ -42,8 +42,8 @@ extension ConfigureAnimationProvider: DependencyKey {
   )
   
   public static let testValue = Self(
-    add: unimplemented("\(Self.self) testValue of search"),
-    download: unimplemented("\(Self.self) testValue of search")
+    add: { _, _ in },
+    download: { _, _ in Data() }
   )
 }
 

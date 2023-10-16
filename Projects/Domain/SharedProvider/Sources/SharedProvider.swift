@@ -13,8 +13,8 @@ import UIKit
 import ComposableArchitecture
 
 public struct Shared {
-  public let makeAD = Self.MakeAD()
-  public let stepBar = Self.StepBar()
+  public var makeAD = Self.MakeAD()
+  public var stepBar = Self.StepBar()
   public var adViewCase = CombineNotifier<ADViewCase>(initialValue: .OnBoarding)
 }
 
@@ -26,7 +26,7 @@ public extension Shared {
   }
   
   struct MakeAD {
-    public let ad_id = CombineNotifier<String?>(initialValue: nil)
+    public var ad_id = CombineNotifier<String?>(initialValue: nil)
     public let originalImage = CombineNotifier<UIImage?>(initialValue: nil)
     public let boundingBox = CombineNotifier<CGRect?>(initialValue: nil)
     public let initMaskImage = CombineNotifier<UIImage?>(initialValue: nil)
@@ -38,6 +38,8 @@ public extension Shared {
 
 extension Shared: DependencyKey {
   public static var liveValue = Shared()
+  
+  public static var testValue = Shared()
 }
 
 public extension DependencyValues {
