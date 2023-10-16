@@ -20,22 +20,48 @@ public struct UploadADrawingFeature: Reducer {
   @Dependency(\.shared.makeAD) var makeAD
   @Dependency(\.shared.stepBar) var stepBar
   
-  public struct State: Equatable {
-    public init() {}
-    
-    @BindingState public var checkState1 = false
-    @BindingState public var checkState2 = false
-    @BindingState public var checkState3 = false
-    
-    @BindingState public var isEnableUploadButton = false
-    public var isShowLoadingView = false
-    
-    var isSuccessUploading = false
-    
-    @PresentationState public var alertShared: AlertState<AlertShared>? = nil
+  public var body: some Reducer<State, Action> {
+    BindingReducer()
+    MainReducer()
+      .ifLet(\.$alertShared, action: /Action.alertShared)
   }
-  
-  public enum Action: BindableAction {
+}
+
+public extension UploadADrawingFeature {
+  struct State: Equatable {
+    @BindingState public var checkState1: Bool
+    @BindingState public var checkState2: Bool
+    @BindingState public var checkState3: Bool
+    
+    @BindingState public var isEnableUploadButton: Bool
+    public var isShowLoadingView: Bool
+    
+    var isSuccessUploading: Bool
+    
+    @PresentationState public var alertShared: AlertState<AlertShared>?
+    
+    public init(
+      checkState1: Bool = false,
+      checkState2: Bool = false,
+      checkState3: Bool = false,
+      isEnableUploadButton: Bool = false,
+      isShowLoadingView: Bool = false,
+      isSuccessUploading: Bool = false,
+      alertShared: AlertState<AlertShared>? = nil
+    ) {
+      self.checkState1 = checkState1
+      self.checkState2 = checkState2
+      self.checkState3 = checkState3
+      self.isEnableUploadButton = isEnableUploadButton
+      self.isShowLoadingView = isShowLoadingView
+      self.isSuccessUploading = isSuccessUploading
+      self.alertShared = alertShared
+    }
+  }
+}
+
+public extension UploadADrawingFeature {
+  enum Action: BindableAction, Equatable {
     case binding(BindingAction<State>)
     
     case checkList1
@@ -43,17 +69,11 @@ public struct UploadADrawingFeature: Reducer {
     case checkList3
     case setIsShowLoadingView(Bool)
     case uploadDrawing(Data?)
-    case uploadDrawingResponse(TaskResult<(String, CGRect)>)
+    case uploadDrawingResponse(TaskResult<UploadDrawingResult>)
     case uploadDrawingNextAction
     
     case showAlertShared(AlertState<AlertShared>)
     case alertShared(PresentationAction<AlertShared>)
-  }
-  
-  public var body: some Reducer<State, Action> {
-    BindingReducer()
-    MainReducer()
-      .ifLet(\.$alertShared, action: /Action.alertShared)
   }
 }
 
@@ -114,18 +134,18 @@ extension UploadADrawingFeature {
           await send(.uploadDrawingNextAction)
         }
         
-      case let .uploadDrawingResponse(.success((ad_id, cgRect))):
+      case .uploadDrawingResponse(.success(let result)):
         state.isSuccessUploading = true
         return .run { _ in
-          await makeAD.ad_id.set(ad_id)
-          await makeAD.boundingBox.set(cgRect)
+          await makeAD.ad_id.set(result.ad_id)
+          await makeAD.boundingBox.set(result.boundingBox)
         }
         
       case .uploadDrawingResponse(.failure(let error)):
         print(error)
         state.isSuccessUploading = false
 //        let adMoyaError = error as? ADMoyaError ?? .connection
-        return .send(.showAlertShared(initAlertNetworkError()))
+        return .send(.showAlertShared(Self.initAlertNetworkError()))
         
       case .uploadDrawingNextAction:
         if state.isSuccessUploading {
@@ -148,10 +168,10 @@ extension UploadADrawingFeature {
   }
 }
 
-extension UploadADrawingFeature {
-  public enum AlertShared: Equatable {}
+public extension UploadADrawingFeature {
+  enum AlertShared: Equatable {}
   
-  func initAlertNetworkError() -> AlertState<AlertShared> {
+  static func initAlertNetworkError() -> AlertState<AlertShared> {
     return AlertState(
       title: {
         TextState("Connection Error")

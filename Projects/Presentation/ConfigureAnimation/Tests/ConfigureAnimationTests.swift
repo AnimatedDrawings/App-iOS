@@ -312,7 +312,4 @@ final class ConfigureAnimationTests: XCTestCase {
       $0.alertTrashMakeAD = nil
     }
   }
-  
-  
-  
 }
