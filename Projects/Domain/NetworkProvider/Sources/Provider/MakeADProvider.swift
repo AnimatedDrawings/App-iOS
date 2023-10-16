@@ -81,10 +81,14 @@ extension MakeADProvider: DependencyKey {
     uploadDrawing: { _ in
       return UploadDrawingResult(ad_id: "test", boundingBox: CGRect())
     },
-    findTheCharacter: unimplemented("\(Self.self) testValue of search"),
-    downloadMaskImage: unimplemented("\(Self.self) testValue of search"),
-    separateCharacter: unimplemented("\(Self.self) testValue of search"),
-    findCharacterJoints: unimplemented("\(Self.self) testValue of search")
+    findTheCharacter: { _, _ in },
+    downloadMaskImage: { _ in
+      return UIImage()
+    },
+    separateCharacter: { _, _ in
+      Joints.mockData()!
+    },
+    findCharacterJoints: { _, _ in }
   )
 }
 

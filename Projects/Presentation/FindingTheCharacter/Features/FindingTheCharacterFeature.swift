@@ -20,26 +20,48 @@ public struct FindingTheCharacterFeature: Reducer {
   @Dependency(\.shared.makeAD) var makeAD
   @Dependency(\.shared.stepBar) var stepBar
   
-  public struct State: Equatable {
-    public init() {}
-    
-    @BindingState public var checkState = false
-    
-    @BindingState public var isShowCropImageView = false
-    public var isShowLoadingView = false
-    
-    var isSuccessUpload = false
-   
-    @PresentationState public var alertShared: AlertState<AlertShared>? = nil
+  public var body: some Reducer<State, Action> {
+    BindingReducer()
+    MainReducer()
+      .ifLet(\.$alertShared, action: /Action.alertShared)
   }
-  
-  public enum Action: BindableAction {
+}
+
+public extension FindingTheCharacterFeature {
+  struct State: Equatable {
+    @BindingState public var checkState: Bool
+
+    @BindingState public var isShowCropImageView: Bool
+    public var isShowLoadingView: Bool
+    
+    var isSuccessUpload: Bool
+   
+    @PresentationState public var alertShared: AlertState<AlertShared>?
+    
+    public init(
+      checkState: Bool = false,
+      isShowCropImageView: Bool = false,
+      isShowLoadingView: Bool = false,
+      isSuccessUpload: Bool = false,
+      alertShared: AlertState<AlertShared>? = nil
+    ) {
+      self.checkState = checkState
+      self.isShowCropImageView = isShowCropImageView
+      self.isShowLoadingView = isShowLoadingView
+      self.isSuccessUpload = isSuccessUpload
+      self.alertShared = alertShared
+    }
+  }
+}
+
+public extension FindingTheCharacterFeature {
+  enum Action: BindableAction, Equatable {
     case binding(BindingAction<State>)
     
     case checkAction
     case toggleCropImageView
     case findTheCharacter(UIImage?, CGRect)
-    case findTheCharacterResponse(TaskResult<Void>)
+    case findTheCharacterResponse(TaskEmptyResult)
     case setLoadingView(Bool)
     case onDismissCropImageView
     
@@ -48,12 +70,6 @@ public struct FindingTheCharacterFeature: Reducer {
     
     case alertShared(PresentationAction<AlertShared>)
     case showAlertShared(AlertState<AlertShared>)
-  }
-  
-  public var body: some Reducer<State, Action> {
-    BindingReducer()
-    MainReducer()
-      .ifLet(\.$alertShared, action: /Action.alertShared)
   }
 }
 
@@ -89,7 +105,7 @@ extension FindingTheCharacterFeature {
           await send(.setLoadingView(true))
           await send(
             .findTheCharacterResponse(
-              TaskResult {
+              TaskResult.empty {
                 try await makeADProvider.findTheCharacter(ad_id, croppedCGRect)
               }
             )
@@ -100,12 +116,11 @@ extension FindingTheCharacterFeature {
         return .send(.downloadMaskImage)
         
       case .findTheCharacterResponse(.failure(let error)):
-        print("upload : \(error)")
         state.isSuccessUpload = false
 //        let adMoyaError = error as? ADMoyaError ?? .connection
         return .run { send in
           await send(.setLoadingView(false))
-          await send(.showAlertShared(initAlertNetworkError()))
+          await send(.showAlertShared(Self.initAlertNetworkError()))
         }
         
       case .downloadMaskImage:
@@ -132,12 +147,11 @@ extension FindingTheCharacterFeature {
         }
         
       case .downloadMaskImageResponse(.failure(let error)):
-        print("download : \(error)")
         state.isSuccessUpload = false
 //        let adMoyaError = error as? ADMoyaError ?? .connection
         return .run { send in
           await send(.setLoadingView(false))
-          await send(.showAlertShared(initAlertNetworkError()))
+          await send(.showAlertShared(Self.initAlertNetworkError()))
         }
         
       case .onDismissCropImageView:
@@ -161,10 +175,10 @@ extension FindingTheCharacterFeature {
   }
 }
 
-extension FindingTheCharacterFeature {
-  public enum AlertShared: Equatable {}
+public extension FindingTheCharacterFeature {
+  enum AlertShared: Equatable {}
   
-  func initAlertNetworkError() -> AlertState<AlertShared> {
+  static func initAlertNetworkError() -> AlertState<AlertShared> {
     return AlertState(
       title: {
         TextState("Connection Error")
