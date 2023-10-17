@@ -19,21 +19,47 @@ public struct SeparatingCharacterFeature: Reducer {
   @Dependency(\.shared.makeAD) var makeAD
   @Dependency(\.shared.stepBar) var stepBar
   
-  public struct State: Equatable {
-    public init() {}
-    
-    @BindingState public var checkState1 = false
-    @BindingState public var checkState2 = false
-    @BindingState public var isActiveMaskingImageButton = false
-    
-    @BindingState public var isShowMaskingImageView = false
-    var isSuccessSeparateCharacter = false
-    public var isShowLoadingView = false
-    
-    @PresentationState public var alertShared: AlertState<AlertShared>? = nil
+  public var body: some Reducer<State, Action> {
+    BindingReducer()
+    MainReducer()
+      .ifLet(\.$alertShared, action: /Action.alertShared)
   }
-  
-  public enum Action: BindableAction {
+}
+
+public extension SeparatingCharacterFeature {
+  struct State: Equatable {
+    @BindingState public var checkState1: Bool
+    @BindingState public var checkState2: Bool
+    @BindingState public var isActiveMaskingImageButton: Bool
+    
+    @BindingState public var isShowMaskingImageView: Bool
+    var isSuccessSeparateCharacter: Bool
+    public var isShowLoadingView: Bool
+    
+    @PresentationState public var alertShared: AlertState<AlertShared>?
+    
+    public init(
+      checkState1: Bool = false,
+      checkState2: Bool = false,
+      isActiveMaskingImageButton: Bool = false,
+      isShowMaskingImageView: Bool = false,
+      isSuccessSeparateCharacter: Bool = false,
+      isShowLoadingView: Bool = false,
+      alertShared: AlertState<AlertShared>? = nil
+    ) {
+      self.checkState1 = checkState1
+      self.checkState2 = checkState2
+      self.isActiveMaskingImageButton = isActiveMaskingImageButton
+      self.isShowMaskingImageView = isShowMaskingImageView
+      self.isSuccessSeparateCharacter = isSuccessSeparateCharacter
+      self.isShowLoadingView = isShowLoadingView
+      self.alertShared = alertShared
+    }
+  }
+}
+
+public extension SeparatingCharacterFeature {
+  enum Action: BindableAction, Equatable {
     case binding(BindingAction<State>)
     
     case checkAction1
@@ -47,12 +73,6 @@ public struct SeparatingCharacterFeature: Reducer {
     
     case showAlertShared(AlertState<AlertShared>)
     case alertShared(PresentationAction<AlertShared>)
-  }
-  
-  public var body: some Reducer<State, Action> {
-    BindingReducer()
-    MainReducer()
-      .ifLet(\.$alertShared, action: /Action.alertShared)
   }
 }
 
@@ -114,7 +134,7 @@ extension SeparatingCharacterFeature {
 //        let adMoyaError = error as? ADMoyaError ?? .connection
         return .run { send in
           await send(.setLoadingView(false))
-          await send(.showAlertShared(initAlertNetworkError()))
+          await send(.showAlertShared(Self.initAlertNetworkError()))
         }
           
       case .onDismissMakingImageView:
@@ -138,10 +158,10 @@ extension SeparatingCharacterFeature {
   }
 }
 
-extension SeparatingCharacterFeature {
-  public enum AlertShared: Equatable {}
+public extension SeparatingCharacterFeature {
+  enum AlertShared: Equatable {}
   
-  func initAlertNetworkError() -> AlertState<AlertShared> {
+  static func initAlertNetworkError() -> AlertState<AlertShared> {
     return AlertState(
       title: {
         TextState("Connection Error")

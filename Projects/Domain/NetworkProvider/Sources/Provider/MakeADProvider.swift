@@ -86,7 +86,7 @@ extension MakeADProvider: DependencyKey {
       return UIImage()
     },
     separateCharacter: { _, _ in
-      Joints.mockData()!
+      return Joints.mockData()!
     },
     findCharacterJoints: { _, _ in }
   )

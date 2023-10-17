@@ -62,6 +62,8 @@ public extension Joints {
   private static func mockJsonData() -> Data? {
     return """
 {
+  "imageWidth" : 1000,
+  "imageHeight" : 1000,
   "skeletons": {
     "right_hip": {
       "name": "right_hip",
