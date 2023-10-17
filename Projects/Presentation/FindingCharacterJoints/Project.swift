@@ -10,13 +10,15 @@ import ProjectEnvironment
 
 let project: Project = .makeProject(
   name: FindingCharacterJoints.projectName,
+  options: .enableCodeCoverage,
   targets: [
     FindingCharacterJoints.example(),
-    FindingCharacterJoints.view(),
-    FindingCharacterJoints.feature(
+    FindingCharacterJoints.views(),
+    FindingCharacterJoints.features(
       dependencies: [
-        Presentation_Shared.projectDepedency
+        PresentationShared.projectDepedency
       ]
-    )
+    ),
+    FindingCharacterJoints.tests()
   ]
 )

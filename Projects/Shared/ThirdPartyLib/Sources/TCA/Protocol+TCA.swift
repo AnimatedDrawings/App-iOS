@@ -14,3 +14,22 @@ public protocol ADUI: View {
   associatedtype MyViewStore = ViewStoreOf<MyFeature>
   associatedtype MyStore = StoreOf<MyFeature>
 }
+
+public typealias TaskEmptyResult = TaskResult<TaskEmptyResultValue>
+
+public struct TaskEmptyResultValue: Equatable, Sendable {
+  public init() {}
+}
+
+public extension TaskResult {
+  static func empty(
+    _ body: @Sendable () async throws -> ()
+  ) async -> TaskResult<TaskEmptyResultValue> where Success == TaskEmptyResultValue {
+    do {
+      try await body()
+      return .success(TaskEmptyResultValue())
+    } catch {
+      return .failure(error)
+    }
+  }
+}

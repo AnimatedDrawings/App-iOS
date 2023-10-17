@@ -10,13 +10,15 @@ import ProjectEnvironment
 
 let project: Project = .makeProject(
   name: ConfigureAnimation.projectName,
+  options: .enableCodeCoverage,
   targets: [
     ConfigureAnimation.example(),
-    ConfigureAnimation.view(),
-    ConfigureAnimation.feature(
+    ConfigureAnimation.views(),
+    ConfigureAnimation.features(
       dependencies: [
-        Presentation_Shared.projectDepedency
+        PresentationShared.projectDepedency
       ]
-    )
+    ),
+    ConfigureAnimation.tests()
   ]
 )

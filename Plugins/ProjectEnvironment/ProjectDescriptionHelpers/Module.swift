@@ -29,10 +29,10 @@ public protocol PresentationModule: Module {}
 public extension PresentationModule {
   static func example() -> Target {
     .makeTarget(
-      targetName: Self.targetName + "_Example",
+      targetName: Self.targetName + "Example",
       product: .app,
       infoPlist: .AD,
-      sources: ["Example/**", "View/**"],
+      sources: ["Example/**", "Views/**"],
       resources: nil,
       dependencies: [
         .target(name: Self.targetName)
@@ -40,35 +40,48 @@ public extension PresentationModule {
     )
   }
   
-  static func view(dependencies: [TargetDependency]) -> Target {
+  static func views(dependencies: [TargetDependency]) -> Target {
     .makeTarget(
       targetName: Self.targetName,
       product: .staticLibrary,
-      sources: ["View/**"],
+      sources: ["Views/**"],
       resources: nil,
       dependencies: dependencies
     )
   }
   
-  static func view() -> Target {
+  static func views() -> Target {
     .makeTarget(
       targetName: Self.targetName,
       product: .staticLibrary,
-      sources: ["View/**"],
+      sources: ["Views/**"],
       resources: nil,
       dependencies: [
-        .target(name: Self.targetName + "_Feature")
+        .target(name: Self.targetName + "Features")
       ]
     )
   }
   
-  static func feature(dependencies: [TargetDependency]) -> Target {
+  static func features(dependencies: [TargetDependency]) -> Target {
     .makeTarget(
-      targetName: Self.targetName + "_Feature",
+      targetName: Self.targetName + "Features",
       product: .staticLibrary,
-      sources: ["Feature/**"],
+      sources: ["Features/**"],
       resources: nil,
       dependencies: dependencies
+    )
+  }
+  
+  static func tests() -> Target {
+    return Target(
+      name: Self.targetName + "Tests",
+      platform: .iOS,
+      product: .unitTests,
+      bundleId: "chminipark.\(Self.targetName)".replaceBar,
+      deploymentTarget: .iOS(targetVersion: "16.0", devices: [.iphone]),
+      infoPlist: .default,
+      sources: ["Tests/**"],
+      dependencies: [ .target(name: Self.targetName) ]
     )
   }
 }

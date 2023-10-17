@@ -1,7 +1,7 @@
 import ProjectDescription
 import ProjectEnvironment
 
-let project: Project = .make(
+let project: Project = .makeProject(
   name: App.projectName,
   targets: [
     .makeTarget(

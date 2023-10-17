@@ -9,8 +9,7 @@
 import ThirdPartyLib
 import NetworkStorage
 import UIKit
-import Domain_Model
-//import Core_Model
+import DomainModel
 
 public struct ConfigureAnimationProvider {
   public var add: @Sendable (String, ADAnimation) async throws -> ()
@@ -43,8 +42,8 @@ extension ConfigureAnimationProvider: DependencyKey {
   )
   
   public static let testValue = Self(
-    add: unimplemented("\(Self.self) testValue of search"),
-    download: unimplemented("\(Self.self) testValue of search")
+    add: { _, _ in },
+    download: { _, _ in Data() }
   )
 }
 

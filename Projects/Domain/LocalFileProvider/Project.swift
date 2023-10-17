@@ -16,7 +16,7 @@ let project: Project = .makeProject(
       product: .staticLibrary,
       resources: nil,
       dependencies: [
-        Domain_Model.projectDepedency
+        DomainModel.projectDepedency
       ]
     )
   ]

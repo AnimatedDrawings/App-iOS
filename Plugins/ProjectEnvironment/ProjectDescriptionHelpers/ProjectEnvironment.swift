@@ -1,35 +1,6 @@
 import ProjectDescription
 
 public extension Project {
-  static func make(
-    name: String,
-    organizationName: String = "chminipark",
-    options: Project.Options = .options(),
-    packages: [Package] = [],
-    settings: ProjectDescription.Settings? = nil,
-    targets: [Target],
-    schemes: [Scheme] = [],
-    fileHeaderTemplate: ProjectDescription.FileHeaderTemplate? = nil,
-    additionalFiles: [FileElement] = [],
-    resourceSynthesizers: [ProjectDescription.ResourceSynthesizer] = .default
-  )
-  -> Project {
-    return Project(
-      name: name,
-      organizationName: organizationName,
-      options: options,
-      packages: packages,
-      settings: settings,
-      targets: targets,
-      schemes: schemes,
-      fileHeaderTemplate: nil,
-      additionalFiles: additionalFiles,
-      resourceSynthesizers: resourceSynthesizers
-    )
-  }
-}
-
-public extension Project {
   static func makeProject(
     name: String,
     organizationName: String = "chminipark",
@@ -67,11 +38,13 @@ public extension Target {
     sources: SourceFilesList = ["Tests/**"]
   ) -> Target
   {
+    let name = "\(targetName)Tests"
+    
     return Target(
-      name: "\(targetName)Tests",
+      name: name,
       platform: platform,
       product: .unitTests,
-      bundleId: "\(organizationName).\(targetName)Tests".replaceBar,
+      bundleId: "\(organizationName).\(name)".replaceBar,
       deploymentTarget: deploymentTarget,
       infoPlist: .default,
       sources: sources,
@@ -128,19 +101,16 @@ public extension Target {
 }
 
 public extension Scheme {
-  static func makeScheme(
+  static func makeTestScheme(
     targetName: String,
-    target: ConfigurationName,
-    withTest: Bool
+    target: ConfigurationName
   ) -> Scheme {
-    let testAction: TestAction? = withTest ?
-      .targets(
-        ["\(targetName)Tests"],
-        configuration: target,
-        options: .options(coverage: true, codeCoverageTargets: ["\(targetName)"])
-      ) :
-    nil
-    
+    let testAction: TestAction = .targets(
+      ["\(targetName)Tests"],
+      configuration: target,
+      options: .options(coverage: true, codeCoverageTargets: ["\(targetName)"])
+    )
+
     return Scheme(
       name: targetName,
       shared: true,
@@ -165,6 +135,16 @@ public extension InfoPlist {
       "UIUserInterfaceStyle": "Light",
       "UISupportedInterfaceOrientations": ["UIInterfaceOrientationPortrait"]
     ])
+  }
+}
+
+public extension Project.Options {
+  static var enableCodeCoverage: Self {
+    return .options(
+      automaticSchemesOptions: .enabled(
+        codeCoverageEnabled: true
+      )
+    )
   }
 }
 

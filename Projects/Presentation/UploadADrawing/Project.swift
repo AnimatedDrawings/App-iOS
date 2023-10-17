@@ -10,13 +10,15 @@ import ProjectEnvironment
 
 let project: Project = .makeProject(
   name: UploadADrawing.projectName,
+  options: .enableCodeCoverage,
   targets: [
     UploadADrawing.example(),
-    UploadADrawing.view(),
-    UploadADrawing.feature(
+    UploadADrawing.views(),
+    UploadADrawing.features(
       dependencies: [
-        Presentation_Shared.projectDepedency
+        PresentationShared.projectDepedency
       ]
-    )
+    ),
+    UploadADrawing.tests()
   ]
 )

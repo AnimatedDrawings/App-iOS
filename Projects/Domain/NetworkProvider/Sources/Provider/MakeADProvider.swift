@@ -9,10 +9,10 @@
 import ThirdPartyLib
 import NetworkStorage
 import UIKit
-import Domain_Model
+import DomainModel
 
 public struct MakeADProvider {
-  public var uploadDrawing: @Sendable (Data) async throws -> (String, CGRect)
+  public var uploadDrawing: @Sendable (Data) async throws -> UploadDrawingResult
   public var findTheCharacter: @Sendable (String, CGRect) async throws -> ()
   public var downloadMaskImage: @Sendable (String) async throws -> (UIImage)
   public var separateCharacter: @Sendable (String, Data) async throws -> (Joints)
@@ -32,7 +32,7 @@ extension MakeADProvider: DependencyKey {
       let ad_id = response.ad_id
       let cgRect = response.boundingBoxDTO.toCGRect()
       
-      return (ad_id, cgRect)
+      return UploadDrawingResult(ad_id: ad_id, boundingBox: cgRect)
     },
     
     findTheCharacter: { ad_id, cgRect in
@@ -78,11 +78,17 @@ extension MakeADProvider: DependencyKey {
   )
   
   public static let testValue = Self(
-    uploadDrawing: unimplemented("\(Self.self) testValue of search"),
-    findTheCharacter: unimplemented("\(Self.self) testValue of search"),
-    downloadMaskImage: unimplemented("\(Self.self) testValue of search"),
-    separateCharacter: unimplemented("\(Self.self) testValue of search"),
-    findCharacterJoints: unimplemented("\(Self.self) testValue of search")
+    uploadDrawing: { _ in
+      return UploadDrawingResult(ad_id: "test", boundingBox: CGRect())
+    },
+    findTheCharacter: { _, _ in },
+    downloadMaskImage: { _ in
+      return UIImage()
+    },
+    separateCharacter: { _, _ in
+      return Joints.mockData()!
+    },
+    findCharacterJoints: { _, _ in }
   )
 }
 

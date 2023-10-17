@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Core_Model
+import CoreModel
 
 public struct UploadADrawingResponse: Responsable {
   public let ad_id: String
