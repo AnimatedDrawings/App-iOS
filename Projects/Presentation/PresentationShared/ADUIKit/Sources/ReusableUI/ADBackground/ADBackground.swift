@@ -16,6 +16,8 @@ public extension View {
 }
 
 struct ADBackground: View {
+  @State var randomCurvePoint: RandomCurvePoint = .init(rect: .zero)
+  
   var body: some View {
     GeometryReader { geo in
       let rect: CGRect = geo.frame(in: .global)
@@ -25,39 +27,13 @@ struct ADBackground: View {
           DoodleLines(rect: rect)
         }
         .mask {
-          RandomCurveShape().path(in: rect)
-            .if(.random()) {
-              $0
-            } else: {
-              $0.rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
-            }
+          RandomCurveShape(randomCurvePoint: randomCurvePoint)
+        }
+        .receiveShared(\.shared.stepBar.currentStep) { receivedValue in
+          self.randomCurvePoint = RandomCurvePoint(rect: rect)
         }
     }
     .ignoresSafeArea()
-       
-  }
-}
-
-struct PreviewsADBackground: View {
-  var body: some View {
-    GeometryReader { geo in
-      ScrollView {
-        VStack(spacing: 50) {
-          ForEach(1...30, id: \.self) { index in
-            Rectangle()
-              .frame(width: 200, height: 200)
-              .foregroundColor(.red)
-          }
-        }
-        .frame(maxWidth: .infinity)
-      }
-      .background(ADBackground())
-    }
-  }
-}
-
-struct ADBackground_Previews: PreviewProvider {
-  static var previews: some View {
-    PreviewsADBackground()
+    .animation(.spring(), value: randomCurvePoint)
   }
 }

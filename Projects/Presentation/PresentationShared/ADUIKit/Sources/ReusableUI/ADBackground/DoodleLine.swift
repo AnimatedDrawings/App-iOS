@@ -221,9 +221,3 @@ extension ADBackground.DoodleLines {
     }
   }
 }
-
-struct DoodleLine_Previews: PreviewProvider {
-  static var previews: some View {
-    ADBackground()
-  }
-}
