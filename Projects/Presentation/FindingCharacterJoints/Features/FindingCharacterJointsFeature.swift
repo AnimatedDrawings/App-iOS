@@ -19,18 +19,40 @@ public struct FindingCharacterJointsFeature: Reducer {
   @Dependency(\.shared.stepBar) var stepBar
   @Dependency(\.shared.adViewCase) var adViewCase
   
-  public struct State: Equatable {
-    public init() {}
-    
-    @BindingState public var checkState = false
-    @BindingState public var isShowModifyJointsView = false
-    public var isShowLoadingView = false
-    var isSuccessFindCharacterJoints = false
-    
-    @PresentationState public var alertShared: AlertState<AlertShared>? = nil
+  public var body: some Reducer<State, Action> {
+    BindingReducer()
+    MainReducer()
+      .ifLet(\.$alertShared, action: /Action.alertShared)
   }
-  
-  public enum Action: BindableAction {
+}
+
+public extension FindingCharacterJointsFeature {
+  struct State: Equatable {
+    @BindingState public var checkState: Bool
+    @BindingState public var isShowModifyJointsView: Bool
+    public var isShowLoadingView: Bool
+    var isSuccessFindCharacterJoints: Bool
+    
+    @PresentationState public var alertShared: AlertState<AlertShared>?
+    
+    public init(
+      checkState: Bool = false,
+      isShowModifyJointsView: Bool = false,
+      isShowLoadingView: Bool = false,
+      isSuccessFindCharacterJoints: Bool = false,
+      alertShared: AlertState<AlertShared>? = nil
+    ) {
+      self.checkState = checkState
+      self.isShowModifyJointsView = isShowModifyJointsView
+      self.isShowLoadingView = isShowLoadingView
+      self.isSuccessFindCharacterJoints = isSuccessFindCharacterJoints
+      self.alertShared = alertShared
+    }
+  }
+}
+
+public extension FindingCharacterJointsFeature {
+  enum Action: BindableAction, Equatable {
     case binding(BindingAction<State>)
     
     case checkAction
@@ -38,17 +60,11 @@ public struct FindingCharacterJointsFeature: Reducer {
     
     case setLoadingView(Bool)
     case findCharacterJoints(Joints)
-    case findCharacterJointsResponse(TaskResult<Void>)
+    case findCharacterJointsResponse(TaskEmptyResult)
     case onDismissModifyJointsView
     
     case showAlertShared(AlertState<AlertShared>)
     case alertShared(PresentationAction<AlertShared>)
-  }
-  
-  public var body: some Reducer<State, Action> {
-    BindingReducer()
-    MainReducer()
-      .ifLet(\.$alertShared, action: /Action.alertShared)
   }
 }
 
@@ -81,7 +97,7 @@ extension FindingCharacterJointsFeature {
           await send(.setLoadingView(true))
           await send(
             .findCharacterJointsResponse(
-              TaskResult {
+              TaskResult.empty {
                 try await makeADProvider.findCharacterJoints(ad_id, joints)
               }
             )
@@ -101,7 +117,7 @@ extension FindingCharacterJointsFeature {
 //        let adMoyaError = error as? ADMoyaError ?? .connection
         return .run { send in
           await send(.setLoadingView(false))
-          await send(.showAlertShared(initAlertNetworkError()))
+          await send(.showAlertShared(Self.initAlertNetworkError()))
         }
         
       case .onDismissModifyJointsView:
@@ -124,10 +140,10 @@ extension FindingCharacterJointsFeature {
   }
 }
 
-extension FindingCharacterJointsFeature {
-  public enum AlertShared: Equatable {}
+public extension FindingCharacterJointsFeature {
+  enum AlertShared: Equatable {}
   
-  func initAlertNetworkError() -> AlertState<AlertShared> {
+  static func initAlertNetworkError() -> AlertState<AlertShared> {
     return AlertState(
       title: {
         TextState("Connection Error")
