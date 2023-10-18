@@ -123,7 +123,7 @@ private extension SeparatingCharacterView {
           viewStore.send(.checkAction1)
         }
         
-        GIFImage(sample: ADUIKitAsset.Gifs.step2Gif1)
+        GIFImage(sample: ADUIKitAsset.Gifs.step3Gif1)
           .frame(height: 250)
           .frame(maxWidth: .infinity, alignment: .center)
         
