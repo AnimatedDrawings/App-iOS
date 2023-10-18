@@ -64,7 +64,7 @@ public struct UploadADrawingView: ADUI {
       }
     }
     .alert(store: self.store.scope(state: \.$alertShared, action: { .alertShared($0) }))
-    .receiveShared(\.shared.trashMode) { trash in
+    .resetMakeADView(.UploadADrawing) {
       viewStore.send(.initState)
     }
   }
@@ -102,24 +102,21 @@ private extension UploadADrawingView {
       VStack(alignment: .leading, spacing: 15) {
         CheckListButton(
           description: description1,
-          state: viewStore.$checkState1,
-          myStep: myStep
+          state: viewStore.checkState1
         ) {
           viewStore.send(.checkList1)
         }
         
         CheckListButton(
           description: description2,
-          state: viewStore.$checkState2,
-          myStep: myStep
+          state: viewStore.checkState2
         ) {
           viewStore.send(.checkList2)
         }
         
         CheckListButton(
           description: description3,
-          state: viewStore.$checkState3,
-          myStep: myStep
+          state: viewStore.checkState3
         ) {
           viewStore.send(.checkList3)
         }

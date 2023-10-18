@@ -53,7 +53,7 @@ extension JointsDTO {
       let jointsModel = try JSONDecoder().decode(JointsDTO.self, from: jsonData)
       return jointsModel
     } catch let error {
-      print("에러 : \(error)")
+      print("JointsDTO.mockJointsDTO Error : \(error)")
       return nil
     }
   }

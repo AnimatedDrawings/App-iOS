@@ -20,7 +20,6 @@ public struct ConfigureAnimationFeature: Reducer {
   @Dependency(\.shared.makeAD) var makeAD
   @Dependency(\.shared.adViewCase) var adViewCase
   @Dependency(\.localFileProvider) var localFileProvider
-  @Dependency(\.shared.trashMode) var trashMode
   
   public init() {}
   
@@ -274,9 +273,6 @@ extension ConfigureAnimationFeature {
           await stepBar.completeStep.set(.None)
           await stepBar.currentStep.set(.UploadADrawing)
           await stepBar.isShowStepStatusBar.set(true)
-          
-          let trash = await trashMode.get()
-          await trashMode.set(!trash)
         }
         
       case .alertTrashMakeAD:

@@ -163,4 +163,18 @@ final class SeparatingCharacterTests: XCTestCase {
       $0.alertShared = mockAlertState
     }
   }
+  
+  func testInitState() async {
+    let state = SeparatingCharacterFeature.State(
+      checkState1: true,
+      checkState2: true
+    )
+    let store = TestStore(initialState: state) {
+      SeparatingCharacterFeature()
+    }
+    
+    await store.send(.initState) {
+      $0 = SeparatingCharacterFeature.State()
+    }
+  }
 }

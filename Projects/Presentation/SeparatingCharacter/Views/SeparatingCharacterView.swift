@@ -46,7 +46,7 @@ public struct SeparatingCharacterView: ADUI {
           CheckListContent(viewStore: viewStore)
         }
         
-        ShowMaskingImageViewButton(state: viewStore.$isActiveMaskingImageButton) {
+        ShowMaskingImageViewButton(viewStore.isActiveMaskingImageButton) {
           viewStore.send(.toggleMaskingImageView)
         }
         
@@ -83,6 +83,9 @@ public struct SeparatingCharacterView: ADUI {
         }
       }
     )
+    .resetMakeADView(.SeparatingCharacter) {
+      viewStore.send(.initState)
+    }
   }
 }
 
@@ -115,8 +118,7 @@ private extension SeparatingCharacterView {
       VStack(alignment: .leading, spacing: 15) {
         CheckListButton(
           description: description1,
-          state: viewStore.$checkState1,
-          myStep: myStep
+          state: viewStore.checkState1
         ) {
           viewStore.send(.checkAction1)
         }
@@ -127,8 +129,7 @@ private extension SeparatingCharacterView {
         
         CheckListButton(
           description: description2,
-          state: viewStore.$checkState2,
-          myStep: myStep
+          state: viewStore.checkState2
         ) {
           viewStore.send(.checkAction2)
         }
@@ -146,13 +147,17 @@ private extension SeparatingCharacterView {
     let handDraw = "hand.draw"
     let text = "Separate The Character"
     
-    @Binding var state: Bool
+    let state: Bool
     let action: () -> ()
     
+    init(_ state: Bool, action: @escaping () -> Void) {
+      self.state = state
+      self.action = action
+    }
+    
     var body: some View {
-      MakeADButton(
-        state: $state,
-        myStep: .SeparatingCharacter,
+      ADButton(
+        state: state,
         action: action,
         content: {
           HStack {

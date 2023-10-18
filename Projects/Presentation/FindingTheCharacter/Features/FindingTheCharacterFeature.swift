@@ -70,6 +70,8 @@ public extension FindingTheCharacterFeature {
     
     case alertShared(PresentationAction<AlertShared>)
     case showAlertShared(AlertState<AlertShared>)
+    
+    case initState
   }
 }
 
@@ -169,6 +171,10 @@ extension FindingTheCharacterFeature {
         return .none
       case .showAlertShared(let alertState):
         state.alertShared = alertState
+        return .none
+        
+      case .initState:
+        state = State()
         return .none
       }
     }

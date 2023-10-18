@@ -47,7 +47,7 @@ public struct FindingCharacterJointsView: ADUI {
         
         NextStepDescription()
         
-        ShowMaskingImageViewButton(state: viewStore.$checkState) {
+        ShowMaskingImageViewButton(viewStore.checkState) {
           viewStore.send(.toggleModifyJointsView)
         }
         
@@ -79,6 +79,9 @@ public struct FindingCharacterJointsView: ADUI {
         }
       }
     )
+    .resetMakeADView(.FindingCharacterJoints) {
+      viewStore.send(.initState)
+    }
   }
 }
 
@@ -120,8 +123,7 @@ private extension FindingCharacterJointsView {
       VStack(alignment: .leading, spacing: 15) {
         CheckListButton(
           description: description,
-          state: viewStore.$checkState,
-          myStep: myStep
+          state: viewStore.checkState
         ) {
           viewStore.send(.checkAction)
         }
@@ -149,13 +151,17 @@ private extension FindingCharacterJointsView {
     let figureYoga = "figure.yoga"
     let text = "Find Character Joints"
     
-    @Binding var state: Bool
+    let state: Bool
     let action: () -> ()
     
+    init(_ state: Bool, action: @escaping () -> Void) {
+      self.state = state
+      self.action = action
+    }
+    
     var body: some View {
-      MakeADButton(
-        state: $state,
-        myStep: .FindingCharacterJoints,
+      ADButton(
+        state: state,
         action: action,
         content: {
           HStack {

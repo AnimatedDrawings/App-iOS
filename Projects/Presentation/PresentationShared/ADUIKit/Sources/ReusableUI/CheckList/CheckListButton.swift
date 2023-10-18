@@ -14,19 +14,16 @@ import ThirdPartyLib
 public struct CheckListButton: View {
   let checkmarkCircle = "checkmark.circle"
   let description: String
-  @Binding var state: Bool
-  let myStep: Step
+  let state: Bool
   let action: () -> ()
   
   public init(
     description: String,
-    state: Binding<Bool>,
-    myStep: Step,
+    state: Bool,
     action: @escaping () -> ()
   ) {
     self.description = description
-    self._state = state
-    self.myStep = myStep
+    self.state = state
     self.action = action
   }
   
@@ -41,15 +38,6 @@ public struct CheckListButton: View {
           .foregroundColor(.black)
           .multilineTextAlignment(.leading)
           .strikethrough(state)
-      }
-    }
-    .if(myStep == .UploadADrawing) {
-      $0
-    } else: {
-      $0.receiveShared(\.shared.stepBar.completeStep) { completeStep in
-        DispatchQueue.main.async {
-          state = state && myStep.rawValue <= completeStep.rawValue + 1
-        }
       }
     }
   }

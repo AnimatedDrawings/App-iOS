@@ -73,6 +73,8 @@ public extension SeparatingCharacterFeature {
     
     case showAlertShared(AlertState<AlertShared>)
     case alertShared(PresentationAction<AlertShared>)
+    
+    case initState
   }
 }
 
@@ -152,6 +154,10 @@ extension SeparatingCharacterFeature {
         return .none
       case .showAlertShared(let alertState):
         state.alertShared = alertState
+        return .none
+        
+      case .initState:
+        state = State()
         return .none
       }
     }
