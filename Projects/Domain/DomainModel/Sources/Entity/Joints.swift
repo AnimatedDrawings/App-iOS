@@ -54,7 +54,7 @@ public extension Joints {
       let joints = try JSONDecoder().decode(Self.self, from: jsonData)
       return joints
     } catch let error {
-      print("에러 : \(error)")
+      print("Joints.mockData Error : \(error)")
       return nil
     }
   }

@@ -46,7 +46,7 @@ public struct SeparatingCharacterView: ADUI {
           CheckListContent(viewStore: viewStore)
         }
         
-        ShowMaskingImageViewButton(state: viewStore.$isActiveMaskingImageButton) {
+        ShowMaskingImageViewButton(viewStore.isActiveMaskingImageButton) {
           viewStore.send(.toggleMaskingImageView)
         }
         
@@ -83,6 +83,9 @@ public struct SeparatingCharacterView: ADUI {
         }
       }
     )
+    .resetMakeADView(.SeparatingCharacter) {
+      viewStore.send(.initState)
+    }
   }
 }
 
@@ -115,8 +118,7 @@ private extension SeparatingCharacterView {
       VStack(alignment: .leading, spacing: 15) {
         CheckListButton(
           description: description1,
-          state: viewStore.$checkState1,
-          myStep: myStep
+          state: viewStore.checkState1
         ) {
           viewStore.send(.checkAction1)
         }
@@ -127,8 +129,7 @@ private extension SeparatingCharacterView {
         
         CheckListButton(
           description: description2,
-          state: viewStore.$checkState2,
-          myStep: myStep
+          state: viewStore.checkState2
         ) {
           viewStore.send(.checkAction2)
         }
@@ -143,30 +144,28 @@ private extension SeparatingCharacterView {
 
 private extension SeparatingCharacterView {
   struct ShowMaskingImageViewButton: View {
-    let viewFinder = "hand.draw"
+    let handDraw = "hand.draw"
     let text = "Separate The Character"
     
-    @Binding var state: Bool
+    let state: Bool
     let action: () -> ()
     
-    let myStep: Step = .SeparatingCharacter
-    @Dependency(\.shared.stepBar.completeStep) var completeStep
+    init(_ state: Bool, action: @escaping () -> Void) {
+      self.state = state
+      self.action = action
+    }
     
     var body: some View {
       ADButton(
         state: state,
-        action: action
-      ) {
-        HStack {
-          Image(systemName: viewFinder)
-          Text(text)
+        action: action,
+        content: {
+          HStack {
+            Image(systemName: handDraw)
+            Text(text)
+          }
         }
-      }
-      .task {
-        for await tmpStep in await completeStep.values() {
-          state = state && (myStep.rawValue <= tmpStep.rawValue)
-        }
-      }
+      )
     }
   }
 }

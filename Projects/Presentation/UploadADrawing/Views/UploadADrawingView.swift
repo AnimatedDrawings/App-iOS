@@ -42,7 +42,7 @@ public struct UploadADrawingView: ADUI {
           CheckListContent(viewStore: viewStore)
         }
         
-        UploadButton(viewStore.$isEnableUploadButton) { imageData in
+        UploadButton(state: viewStore.$isEnableUploadButton) { imageData in
           viewStore.send(.uploadDrawing(imageData))
         }
         
@@ -64,6 +64,9 @@ public struct UploadADrawingView: ADUI {
       }
     }
     .alert(store: self.store.scope(state: \.$alertShared, action: { .alertShared($0) }))
+    .resetMakeADView(.UploadADrawing) {
+      viewStore.send(.initState)
+    }
   }
 }
 
@@ -99,24 +102,21 @@ private extension UploadADrawingView {
       VStack(alignment: .leading, spacing: 15) {
         CheckListButton(
           description: description1,
-          state: viewStore.$checkState1,
-          myStep: myStep
+          state: viewStore.checkState1
         ) {
           viewStore.send(.checkList1)
         }
         
         CheckListButton(
           description: description2,
-          state: viewStore.$checkState2,
-          myStep: myStep
+          state: viewStore.checkState2
         ) {
           viewStore.send(.checkList2)
         }
         
         CheckListButton(
           description: description3,
-          state: viewStore.$checkState3,
-          myStep: myStep
+          state: viewStore.checkState3
         ) {
           viewStore.send(.checkList3)
         }
@@ -128,10 +128,11 @@ private extension UploadADrawingView {
 private extension UploadADrawingView {
   struct UploadButton: View {
     @Binding var state: Bool
-    var uploadImageAction: (Data?) -> ()
+    let uploadImageAction: (Data?) -> ()
     
-    init(_ state: Binding<Bool>,
-         uploadImageAction: @escaping (Data?) -> ()
+    init(
+      state: Binding<Bool>,
+      uploadImageAction: @escaping (Data?) -> ()
     ) {
       self._state = state
       self.uploadImageAction = uploadImageAction
@@ -139,11 +140,9 @@ private extension UploadADrawingView {
     
     let photoFill = "photo.fill"
     let text = "Upload Photo"
-    let myStep: Step = .UploadADrawing
     
     @State private var selectedItem: PhotosPickerItem? = nil
-    @Dependency(\.shared.stepBar.completeStep) var completeStep
-    
+
     var body: some View {
       PhotosPicker(
         selection: $selectedItem,
@@ -158,11 +157,6 @@ private extension UploadADrawingView {
         }
       )
       .allowsHitTesting(state)
-      .task {
-        for await tmpStep in await completeStep.values() {
-          state = state && (myStep.rawValue <= tmpStep.rawValue)
-        }
-      }
       .onChange(of: selectedItem) { newValue in
         _Concurrency.Task {
           let data = try? await newValue?.loadTransferable(type: Data.self)

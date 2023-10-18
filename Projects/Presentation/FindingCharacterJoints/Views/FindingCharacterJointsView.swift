@@ -47,7 +47,7 @@ public struct FindingCharacterJointsView: ADUI {
         
         NextStepDescription()
         
-        ShowMaskingImageViewButton(state: viewStore.$checkState) {
+        ShowMaskingImageViewButton(viewStore.checkState) {
           viewStore.send(.toggleModifyJointsView)
         }
         
@@ -79,6 +79,9 @@ public struct FindingCharacterJointsView: ADUI {
         }
       }
     )
+    .resetMakeADView(.FindingCharacterJoints) {
+      viewStore.send(.initState)
+    }
   }
 }
 
@@ -120,8 +123,7 @@ private extension FindingCharacterJointsView {
       VStack(alignment: .leading, spacing: 15) {
         CheckListButton(
           description: description,
-          state: viewStore.$checkState,
-          myStep: myStep
+          state: viewStore.checkState
         ) {
           viewStore.send(.checkAction)
         }
@@ -146,30 +148,28 @@ private extension FindingCharacterJointsView {
 
 private extension FindingCharacterJointsView {
   struct ShowMaskingImageViewButton: View {
-    let viewFinder = "figure.yoga"
+    let figureYoga = "figure.yoga"
     let text = "Find Character Joints"
     
-    @Binding var state: Bool
+    let state: Bool
     let action: () -> ()
     
-    let myStep: Step = .FindingCharacterJoints
-    @Dependency(\.shared.stepBar.completeStep) var completeStep
+    init(_ state: Bool, action: @escaping () -> Void) {
+      self.state = state
+      self.action = action
+    }
     
     var body: some View {
       ADButton(
         state: state,
-        action: action
-      ) {
-        HStack {
-          Image(systemName: viewFinder)
-          Text(text)
+        action: action,
+        content: {
+          HStack {
+            Image(systemName: figureYoga)
+            Text(text)
+          }
         }
-      }
-      .task {
-        for await tmpStep in await completeStep.values() {
-          state = state && (myStep.rawValue <= tmpStep.rawValue)
-        }
-      }
+      )
     }
   }
 }

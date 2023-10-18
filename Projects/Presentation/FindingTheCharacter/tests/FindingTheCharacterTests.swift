@@ -213,4 +213,17 @@ final class FindingTheCharacterTests: XCTestCase {
       $0.alertShared = mockAlertState
     }
   }
+  
+  func testInitState() async {
+    let state = FindingTheCharacterFeature.State(
+      checkState: true
+    )
+    let store = TestStore(initialState: state) {
+      FindingTheCharacterFeature()
+    }
+    
+    await store.send(.initState) {
+      $0 = FindingTheCharacterFeature.State()
+    }
+  }
 }

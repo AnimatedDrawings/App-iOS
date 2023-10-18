@@ -147,4 +147,17 @@ final class FindingCharacterJointsTests: XCTestCase {
       $0.alertShared = mockAlertState
     } 
   }
+  
+  func testInitState() async {
+    let state = FindingCharacterJointsFeature.State(
+      checkState: true
+    )
+    let store = TestStore(initialState: state) {
+      FindingCharacterJointsFeature()
+    }
+    
+    await store.send(.initState) {
+      $0 = FindingCharacterJointsFeature.State()
+    }
+  }
 }

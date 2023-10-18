@@ -14,23 +14,18 @@ import ThirdPartyLib
 public struct CheckListButton: View {
   let checkmarkCircle = "checkmark.circle"
   let description: String
-  @Binding var state: Bool
-  let myStep: Step
+  let state: Bool
   let action: () -> ()
   
   public init(
     description: String,
-    state: Binding<Bool>,
-    myStep: Step,
+    state: Bool,
     action: @escaping () -> ()
   ) {
     self.description = description
-    self._state = state
-    self.myStep = myStep
+    self.state = state
     self.action = action
   }
-  
-  @Dependency(\.shared.stepBar.completeStep) var completeStep
   
   public var body: some View {
     Button(action: action) {
@@ -43,11 +38,6 @@ public struct CheckListButton: View {
           .foregroundColor(.black)
           .multilineTextAlignment(.leading)
           .strikethrough(state)
-      }
-    }
-    .task {
-      for await tmpStep in await completeStep.values() {
-        state = state && (myStep.rawValue <= tmpStep.rawValue)
       }
     }
   }

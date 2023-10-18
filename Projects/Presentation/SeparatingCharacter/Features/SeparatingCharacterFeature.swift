@@ -73,6 +73,8 @@ public extension SeparatingCharacterFeature {
     
     case showAlertShared(AlertState<AlertShared>)
     case alertShared(PresentationAction<AlertShared>)
+    
+    case initState
   }
 }
 
@@ -141,9 +143,9 @@ extension SeparatingCharacterFeature {
         if state.isSuccessSeparateCharacter == true {
           state.isSuccessSeparateCharacter = false
           return .run { _ in
-            await stepBar.completeStep.set(.SeparatingCharacter)
             await stepBar.currentStep.set(.FindingCharacterJoints)
             await stepBar.isShowStepStatusBar.set(true)
+            await stepBar.completeStep.set(.SeparatingCharacter)
           }
         }
         return .none
@@ -152,6 +154,10 @@ extension SeparatingCharacterFeature {
         return .none
       case .showAlertShared(let alertState):
         state.alertShared = alertState
+        return .none
+        
+      case .initState:
+        state = State()
         return .none
       }
     }

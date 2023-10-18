@@ -49,8 +49,6 @@ public actor CombineNotifier<Output: Equatable> {
   private func cancel(_ id: UUID) {
     cancellables[id] = nil
   }
-  
-//  var cancel: (UUID) -> ()
 }
 
 

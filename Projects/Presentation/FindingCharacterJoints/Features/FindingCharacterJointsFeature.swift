@@ -65,6 +65,8 @@ public extension FindingCharacterJointsFeature {
     
     case showAlertShared(AlertState<AlertShared>)
     case alertShared(PresentationAction<AlertShared>)
+    
+    case initState
   }
 }
 
@@ -124,8 +126,8 @@ extension FindingCharacterJointsFeature {
         if state.isSuccessFindCharacterJoints == true {
           state.isSuccessFindCharacterJoints = false
           return .run { _ in
-            await stepBar.completeStep.set(.FindingCharacterJoints)
             await adViewCase.set(.ConfigureAnimation)
+            await stepBar.completeStep.set(.FindingCharacterJoints)
           }
         }
         return .none
@@ -134,6 +136,10 @@ extension FindingCharacterJointsFeature {
         return .none
       case .showAlertShared(let alertState):
         state.alertShared = alertState
+        return .none
+        
+      case .initState:
+        state = State()
         return .none
       }
     }
