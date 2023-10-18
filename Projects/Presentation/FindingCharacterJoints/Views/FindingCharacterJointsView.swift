@@ -146,30 +146,24 @@ private extension FindingCharacterJointsView {
 
 private extension FindingCharacterJointsView {
   struct ShowMaskingImageViewButton: View {
-    let viewFinder = "figure.yoga"
+    let figureYoga = "figure.yoga"
     let text = "Find Character Joints"
     
     @Binding var state: Bool
     let action: () -> ()
     
-    let myStep: Step = .FindingCharacterJoints
-    @Dependency(\.shared.stepBar.completeStep) var completeStep
-    
     var body: some View {
-      ADButton(
-        state: state,
-        action: action
-      ) {
-        HStack {
-          Image(systemName: viewFinder)
-          Text(text)
+      MakeADButton(
+        state: $state,
+        myStep: .FindingCharacterJoints,
+        action: action,
+        content: {
+          HStack {
+            Image(systemName: figureYoga)
+            Text(text)
+          }
         }
-      }
-      .task {
-        for await tmpStep in await completeStep.values() {
-          state = state && (myStep.rawValue <= tmpStep.rawValue)
-        }
-      }
+      )
     }
   }
 }

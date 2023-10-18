@@ -13,7 +13,9 @@ public struct ADScrollView<C: View>: View {
   let topScrollID = "topScrollID"
   var content: C
   
-  public init(@ViewBuilder content: () -> C) {
+  public init(
+    @ViewBuilder content: () -> C
+  ) {
     self.content = content()
   }
   

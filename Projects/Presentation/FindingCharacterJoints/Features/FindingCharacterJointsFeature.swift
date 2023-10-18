@@ -124,8 +124,8 @@ extension FindingCharacterJointsFeature {
         if state.isSuccessFindCharacterJoints == true {
           state.isSuccessFindCharacterJoints = false
           return .run { _ in
-            await stepBar.completeStep.set(.FindingCharacterJoints)
             await adViewCase.set(.ConfigureAnimation)
+            await stepBar.completeStep.set(.FindingCharacterJoints)
           }
         }
         return .none

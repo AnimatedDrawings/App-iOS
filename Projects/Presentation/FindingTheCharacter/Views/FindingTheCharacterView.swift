@@ -136,24 +136,18 @@ private extension FindingTheCharacterView {
     @Binding var state: Bool
     let action: () -> ()
     
-    let myStep: Step = .FindingTheCharacter
-    @Dependency(\.shared.stepBar.completeStep) var completeStep
-    
     var body: some View {
-      ADButton(
-        state: state,
-        action: action
-      ) {
-        HStack {
-          Image(systemName: viewFinder)
-          Text(text)
+      MakeADButton(
+        state: $state,
+        myStep: .FindingTheCharacter,
+        action: action,
+        content: {
+          HStack {
+            Image(systemName: viewFinder)
+            Text(text)
+          }
         }
-      }
-      .task {
-        for await tmpStep in await completeStep.values() {
-          state = state && (myStep.rawValue <= tmpStep.rawValue)
-        }
-      }
+      )
     }
   }
 }

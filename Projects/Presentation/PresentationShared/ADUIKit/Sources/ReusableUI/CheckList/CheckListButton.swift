@@ -30,8 +30,6 @@ public struct CheckListButton: View {
     self.action = action
   }
   
-  @Dependency(\.shared.stepBar.completeStep) var completeStep
-  
   public var body: some View {
     Button(action: action) {
       HStack(alignment: .top) {
@@ -45,9 +43,13 @@ public struct CheckListButton: View {
           .strikethrough(state)
       }
     }
-    .task {
-      for await tmpStep in await completeStep.values() {
-        state = state && (myStep.rawValue <= tmpStep.rawValue)
+    .if(myStep == .UploadADrawing) {
+      $0
+    } else: {
+      $0.receiveShared(\.shared.stepBar.completeStep) { completeStep in
+        DispatchQueue.main.async {
+          state = state && myStep.rawValue <= completeStep.rawValue + 1
+        }
       }
     }
   }

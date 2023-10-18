@@ -16,15 +16,18 @@ public struct Shared {
   public var makeAD: Self.MakeAD
   public var stepBar: Self.StepBar
   public var adViewCase: CombineNotifier<ADViewCase>
+  public var trashMode: CombineNotifier<Bool>
   
   public init(
     makeAD: Self.MakeAD = Self.MakeAD(),
     stepBar: Self.StepBar = Self.StepBar(),
-    adViewCase: ADViewCase = .OnBoarding
+    adViewCase: ADViewCase = .OnBoarding,
+    trashMode: Bool = .random()
   ) {
     self.makeAD = makeAD
     self.stepBar = stepBar
     self.adViewCase = .init(initialValue: adViewCase)
+    self.trashMode = .init(initialValue: trashMode)
   }
 }
 

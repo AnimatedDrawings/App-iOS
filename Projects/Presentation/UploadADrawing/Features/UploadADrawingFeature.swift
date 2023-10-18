@@ -74,6 +74,8 @@ public extension UploadADrawingFeature {
     
     case showAlertShared(AlertState<AlertShared>)
     case alertShared(PresentationAction<AlertShared>)
+    
+    case initState
   }
 }
 
@@ -151,9 +153,9 @@ extension UploadADrawingFeature {
         if state.isSuccessUploading {
           state.isSuccessUploading = false
           return .run { _ in
-            await stepBar.completeStep.set(.UploadADrawing)
             await stepBar.currentStep.set(.FindingTheCharacter)
             await stepBar.isShowStepStatusBar.set(true)
+            await stepBar.completeStep.set(.UploadADrawing)
           }
         }
         return .none
@@ -162,6 +164,10 @@ extension UploadADrawingFeature {
         return .none
       case .showAlertShared(let alertState):
         state.alertShared = alertState
+        return .none
+        
+      case .initState:
+        state = State()
         return .none
       }
     }

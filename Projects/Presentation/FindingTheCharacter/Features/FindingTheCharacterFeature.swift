@@ -158,9 +158,9 @@ extension FindingTheCharacterFeature {
         if state.isSuccessUpload {
           state.isSuccessUpload = false
           return .run { _ in
-            await stepBar.completeStep.set(.FindingTheCharacter)
             await stepBar.currentStep.set(.SeparatingCharacter)
             await stepBar.isShowStepStatusBar.set(true)
+            await stepBar.completeStep.set(.FindingTheCharacter)
           }
         }
         return .none
