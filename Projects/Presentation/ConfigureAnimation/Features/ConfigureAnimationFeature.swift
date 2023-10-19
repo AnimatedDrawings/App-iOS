@@ -36,8 +36,11 @@ public struct ConfigureAnimationFeature: Reducer {
     
     var isSuccessAddAnimation = false
     
-    @PresentationState public var alertShared: AlertState<AlertShared>? = nil
-    @PresentationState public var alertTrashMakeAD: AlertState<AlertTrashMakeAD>? = nil
+    @BindingState public var isShowNetworkErrorAlert: Bool
+    @BindingState public var isShowNoAnimationFileAlert: Bool
+    @BindingState public var isShowSaveGIFInPhotosResultAlert: Bool
+    public var saveGIFInPhotosResult: Bool
+    @BindingState public var isShowTrashMakeADAlert: Bool
     
     public init(
       isShowAnimationListView: Bool = false,
@@ -49,8 +52,11 @@ public struct ConfigureAnimationFeature: Reducer {
       myAnimationURL: URL? = nil,
       cache: [ADAnimation : URL?] = initCache(),
       isSuccessAddAnimation: Bool = false,
-      alertShared: AlertState<AlertShared>? = nil,
-      alertTrashMakeAD: AlertState<AlertTrashMakeAD>? = nil
+      isShowNetworkErrorAlert: Bool = false,
+      isShowNoAnimationFileAlert: Bool = false,
+      isShowSaveGIFInPhotosResultAlert: Bool = false,
+      saveGIFInPhotosResult: Bool = false,
+      isShowTrashMakeADAlert: Bool = false
     ) {
       self.isShowAnimationListView = isShowAnimationListView
       self.isShowLoadingView = isShowLoadingView
@@ -61,8 +67,11 @@ public struct ConfigureAnimationFeature: Reducer {
       self.myAnimationURL = myAnimationURL
       self.cache = cache
       self.isSuccessAddAnimation = isSuccessAddAnimation
-      self.alertShared = alertShared
-      self.alertTrashMakeAD = alertTrashMakeAD
+      self.isShowNetworkErrorAlert = isShowNetworkErrorAlert
+      self.isShowNoAnimationFileAlert = isShowNoAnimationFileAlert
+      self.isShowSaveGIFInPhotosResultAlert = isShowSaveGIFInPhotosResultAlert
+      self.saveGIFInPhotosResult = saveGIFInPhotosResult
+      self.isShowTrashMakeADAlert = isShowTrashMakeADAlert
     }
   }
   
@@ -89,18 +98,22 @@ public struct ConfigureAnimationFeature: Reducer {
     
     case addToCache(URL)
     
-    case showAlertShared(AlertState<AlertShared>)
-    case showAlertTrashMakeAD
+//    case showAlertShared(AlertState<AlertShared>)
+//    case showAlertTrashMakeAD
     
-    case alertShared(PresentationAction<AlertShared>)
-    case alertTrashMakeAD(PresentationAction<AlertTrashMakeAD>)
+//    case alertTrashMakeAD(PresentationAction<AlertTrashMakeAD>)
+    
+    case resetMakeADData
+    
+    case showNetworkErrorAlert
+    case showNoAnimationFileAlert
+    case showSaveGIFInPhotosResultAlert(Bool)
+    case showTrashMakeADAlert
   }
   
   public var body: some Reducer<State, Action> {
     BindingReducer()
     MainReducer()
-      .ifLet(\.$alertShared, action: /Action.alertShared)
-      .ifLet(\.$alertTrashMakeAD, action: /Action.alertTrashMakeAD)
   }
 }
 
@@ -126,7 +139,8 @@ extension ConfigureAnimationFeature {
         
       case .toggleIsShowShareActionSheet:
         if state.myAnimationURL == nil {
-          return .send(.showAlertShared(Self.initAlertShareAction()))
+//          return .send(.showAlertShared(Self.initAlertShareAction()))
+          return .send(.showNoAnimationFileAlert)
         }
         state.isShowActionSheet.toggle()
         return .none
@@ -167,7 +181,7 @@ extension ConfigureAnimationFeature {
 //        let adError = error as? ADMoyaError ?? .connection
         return .run { send in
           await send(.setLoadingView(false))
-          await send(.showAlertShared(Self.initAlertNetworkError()))
+          await send(.showNetworkErrorAlert)
         }
         
       case .downloadVideo:
@@ -205,7 +219,7 @@ extension ConfigureAnimationFeature {
 //        let adError = error as? ADMoyaError ?? .connection
         return .run { send in
           await send(.setLoadingView(false))
-          await send(.showAlertShared(Self.initAlertNetworkError()))
+          await send(.showNetworkErrorAlert)
         }
         
       case .onDismissAnimationListView:
@@ -240,22 +254,32 @@ extension ConfigureAnimationFeature {
               let request = PHAssetCreationRequest.forAsset()
               request.addResource(with: .photo, fileURL: gifURL, options: nil)
             }
-            await send(.showAlertShared(Self.initAlertSaveGIFInPhotosResult(isSuccess: true)))
+//            await send(.showAlertShared(Self.initAlertSaveGIFInPhotosResult(isSuccess: true)))
+            await send(.showSaveGIFInPhotosResultAlert(true))
           },
           catch: { error, send in
-            await send(.showAlertShared(Self.initAlertSaveGIFInPhotosResult(isSuccess: false)))
+            await send(.showSaveGIFInPhotosResultAlert(false))
           }
         )
         
-      case .showAlertShared(let alertState):
-        state.alertShared = alertState
+      case .showNetworkErrorAlert:
+        state.isShowNetworkErrorAlert.toggle()
         return .none
-      case .showAlertTrashMakeAD:
-        state.alertTrashMakeAD = Self.initAlertTrashMakeAD()
+        
+      case .showNoAnimationFileAlert:
+        state.isShowNoAnimationFileAlert.toggle()
         return .none
-      case .alertShared:
+        
+      case .showSaveGIFInPhotosResultAlert(let result):
+        state.saveGIFInPhotosResult = result
+        state.isShowSaveGIFInPhotosResultAlert.toggle()
         return .none
-      case .alertTrashMakeAD(.presented(.trash)):
+        
+      case .showTrashMakeADAlert:
+        state.isShowTrashMakeADAlert.toggle()
+        return .none
+        
+      case .resetMakeADData:
         state.selectedAnimation = nil
         state.myAnimationData = nil
         state.myAnimationURL = nil
@@ -274,91 +298,88 @@ extension ConfigureAnimationFeature {
           await stepBar.currentStep.set(.UploadADrawing)
           await stepBar.isShowStepStatusBar.set(true)
         }
-        
-      case .alertTrashMakeAD:
-        return .none
       }
     }
   }
 }
 
-public extension ConfigureAnimationFeature {
-  enum AlertShared: Equatable {}
-  enum AlertTrashMakeAD: Equatable {
-    case trash
-  }
-  
-  static func initAlertNetworkError() -> AlertState<AlertShared> {
-    return AlertState(
-      title: {
-        TextState("Connection Error")
-      },
-      actions: {
-        ButtonState(role: .cancel) {
-          TextState("Cancel")
-        }
-      },
-      message: {
-        TextState("Please check device network condition.")
-      }
-    )
-  }
-  
-  static func initAlertSaveGIFInPhotosResult(isSuccess: Bool) -> AlertState<AlertShared> {
-    let title = isSuccess ? "Save Success!" : "Save GIF Error"
-    let description = isSuccess ? "" : "Cannot Save GIF.."
-
-    return AlertState(
-      title: {
-        TextState(title)
-      },
-      actions: {
-        ButtonState(role: .cancel) {
-          TextState("Cancel")
-        }
-      },
-      message: {
-        TextState(description)
-      }
-    )
-  }
-  
-  static func initAlertShareAction() -> AlertState<AlertShared> {
-    return AlertState(
-      title: {
-        TextState("No Animated Drawings File")
-      },
-      actions: {
-        ButtonState(role: .cancel) {
-          TextState("Cancel")
-        }
-      },
-      message: {
-        TextState("The file does not exist. Make a Animation First")
-      }
-    )
-  }
-  
-  static func initAlertTrashMakeAD() -> AlertState<AlertTrashMakeAD> {
-    return AlertState<AlertTrashMakeAD>(
-      title: {
-        TextState("Reset Animated Drawing")
-      },
-      actions: {
-        ButtonState(role: .cancel) {
-          TextState("Cancel")
-        }
-        ButtonState(action: .trash) {
-          TextState("Reset")
-            .foregroundColor(.red)
-        }
-      },
-      message: {
-        TextState("Are you sure to reset making animation all step?")
-      }
-    )
-  }
-}
+//public extension ConfigureAnimationFeature {
+//  enum AlertShared: Equatable {}
+//  enum AlertTrashMakeAD: Equatable {
+//    case trash
+//  }
+//
+//  static func initAlertNetworkError() -> AlertState<AlertShared> {
+//    return AlertState(
+//      title: {
+//        TextState("Connection Error")
+//      },
+//      actions: {
+//        ButtonState(role: .cancel) {
+//          TextState("Cancel")
+//        }
+//      },
+//      message: {
+//        TextState("Please check device network condition.")
+//      }
+//    )
+//  }
+//
+//  static func initAlertSaveGIFInPhotosResult(isSuccess: Bool) -> AlertState<AlertShared> {
+//    let title = isSuccess ? "Save Success!" : "Save GIF Error"
+//    let description = isSuccess ? "" : "Cannot Save GIF.."
+//
+//    return AlertState(
+//      title: {
+//        TextState(title)
+//      },
+//      actions: {
+//        ButtonState(role: .cancel) {
+//          TextState("Cancel")
+//        }
+//      },
+//      message: {
+//        TextState(description)
+//      }
+//    )
+//  }
+//
+//  static func initAlertShareAction() -> AlertState<AlertShared> {
+//    return AlertState(
+//      title: {
+//        TextState("No Animated Drawings File")
+//      },
+//      actions: {
+//        ButtonState(role: .cancel) {
+//          TextState("Cancel")
+//        }
+//      },
+//      message: {
+//        TextState("The file does not exist. Make a Animation First")
+//      }
+//    )
+//  }
+//
+//  static func initAlertTrashMakeAD() -> AlertState<AlertTrashMakeAD> {
+//    return AlertState<AlertTrashMakeAD>(
+//      title: {
+//        TextState("Reset Animated Drawing")
+//      },
+//      actions: {
+//        ButtonState(role: .cancel) {
+//          TextState("Cancel")
+//        }
+//        ButtonState(action: .trash) {
+//          TextState("Reset")
+//            .foregroundColor(.red)
+//        }
+//      },
+//      message: {
+//        TextState("Are you sure to reset making animation all step?")
+//      }
+//    )
+//  }
+//}
 
 public extension ConfigureAnimationFeature.State {
   static func initCache() -> [ADAnimation : URL?] {

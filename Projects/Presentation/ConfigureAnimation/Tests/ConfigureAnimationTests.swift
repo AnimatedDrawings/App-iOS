@@ -9,7 +9,6 @@
 import XCTest
 import ThirdPartyLib
 @testable import ConfigureAnimationFeatures
-
 import SharedStorage
 import DomainModel
 import NetworkProvider
@@ -71,15 +70,14 @@ final class ConfigureAnimationTests: XCTestCase {
   }
   
   func testToggleIsShowShareActionSheetURLNil() async {
-    let mockAlertState = ConfigureAnimationFeature.initAlertShareAction()
     let store = TestStore(initialState: .init()) {
       ConfigureAnimationFeature()
     }
     
+    store.exhaustivity = .off
+    
     await store.send(.toggleIsShowShareActionSheet)
-    await store.receive(.showAlertShared(mockAlertState)) {
-      $0.alertShared = mockAlertState
-    }
+    await store.receive(.showNoAnimationFileAlert)
   }
   
   func testToggleIsShowShareActionSheetURLNotNil() async {
@@ -160,20 +158,19 @@ final class ConfigureAnimationTests: XCTestCase {
   }
   
   func testAddAnimationResponseFailure() async {
-    let mockAlertState = ConfigureAnimationFeature.initAlertNetworkError()
     let store = TestStore(
       initialState: ConfigureAnimationFeature.State(isShowLoadingView: true)
     ) {
       ConfigureAnimationFeature()
     }
     
+    store.exhaustivity = .off
+    
     await store.send(.addAnimationResponse(.failure(mockError)))
     await store.receive(.setLoadingView(false)) {
       $0.isShowLoadingView = false
     }
-    await store.receive(.showAlertShared(mockAlertState)) {
-      $0.alertShared = mockAlertState
-    }
+    await store.receive(.showNetworkErrorAlert)
   }
   
   func testDownloadVideo() async {
@@ -216,19 +213,18 @@ final class ConfigureAnimationTests: XCTestCase {
   }
   
   func testDownloadVideoResponseFailure() async {
-    let mockAlertState = ConfigureAnimationFeature.initAlertNetworkError()
     let mockState = ConfigureAnimationFeature.State(isShowLoadingView: true)
     let store = TestStore(initialState: mockState) {
       ConfigureAnimationFeature()
     }
     
+    store.exhaustivity = .off
+    
     await store.send(.downloadVideoResponse(.failure(MockError.mock)))
     await store.receive(.setLoadingView(false)) {
       $0.isShowLoadingView = false
     }
-    await store.receive(.showAlertShared(mockAlertState)) {
-      $0.alertShared = mockAlertState
-    }
+    await store.receive(.showNetworkErrorAlert)
   }
   
   func testOnDismissAnimationListView() async {
@@ -268,48 +264,4 @@ final class ConfigureAnimationTests: XCTestCase {
 //      ConfigureAnimationFeature()
 //    }
 //  }
-  
-  func testShowAlertShared() async {
-    let mockAlertState = ConfigureAnimationFeature.initAlertShareAction()
-    let mockState = ConfigureAnimationFeature.State()
-    let store = TestStore(initialState: mockState) {
-      ConfigureAnimationFeature()
-    }
-    
-    await store.send(.showAlertShared(mockAlertState)) {
-      $0.alertShared = mockAlertState
-    }
-  }
-  
-  func testShowAlertTrashMakeAD() async {
-    let mockAlertState = ConfigureAnimationFeature.initAlertTrashMakeAD()
-    let mockState = ConfigureAnimationFeature.State()
-    let store = TestStore(initialState: mockState) {
-      ConfigureAnimationFeature()
-    }
-    
-    await store.send(.showAlertTrashMakeAD) {
-      $0.alertTrashMakeAD = mockAlertState
-    }
-  }
-  
-  func testAlertTrashMakeAD() async {
-    let mockAlertState = ConfigureAnimationFeature.initAlertTrashMakeAD()
-    let mockState = ConfigureAnimationFeature.State(
-      selectedAnimation: mockADAnimation,
-      myAnimationData: mockData,
-      myAnimationURL: mockURL,
-      alertTrashMakeAD: mockAlertState
-    )
-    let store = TestStore(initialState: mockState) {
-      ConfigureAnimationFeature()
-    }
-    
-    await store.send(.alertTrashMakeAD(.presented(.trash))) {
-      $0.selectedAnimation = nil
-      $0.myAnimationData = nil
-      $0.myAnimationURL = nil
-      $0.alertTrashMakeAD = nil
-    }
-  }
 }

@@ -54,6 +54,8 @@ public struct UploadADrawingView: ADUI {
       }
       .padding()
     }
+    .alertNetworkError(isPresented: viewStore.$isShowNetworkErrorAlert)
+    .alertFindCharacterError(isPresented: viewStore.$isShowFindCharacterErrorAlert)
     .fullScreenOverlay(presentationSpace: .named("UploadADrawingView")) {
       if viewStore.state.isShowLoadingView {
         LoadingView(description: "Uploading Drawing...")
@@ -63,10 +65,26 @@ public struct UploadADrawingView: ADUI {
           )
       }
     }
-    .alert(store: self.store.scope(state: \.$alertShared, action: { .alertShared($0) }))
     .resetMakeADView(.UploadADrawing) {
       viewStore.send(.initState)
     }
+  }
+}
+
+extension View {
+  func alertFindCharacterError(
+    isPresented: Binding<Bool>
+  ) -> some View {
+    self.alert(
+      "Cannot Find Character",
+      isPresented: isPresented,
+      actions: {
+        Button("Cancel", action: {})
+      },
+      message: {
+        Text("Please check the image you uploaded confirming the checklist content or Please use a different picture with a clear character")
+      }
+    )
   }
 }
 

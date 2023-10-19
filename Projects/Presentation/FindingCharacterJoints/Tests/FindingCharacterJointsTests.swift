@@ -102,7 +102,6 @@ final class FindingCharacterJointsTests: XCTestCase {
   }
   
   func testFindCharacterJointsResponseFailure() async {
-    let mockAlertState = FindingCharacterJointsFeature.initAlertNetworkError()
     let state = FindingCharacterJointsFeature.State()
     let store = TestStore(initialState: state) {
       FindingCharacterJointsFeature()
@@ -114,7 +113,7 @@ final class FindingCharacterJointsTests: XCTestCase {
       $0.isSuccessFindCharacterJoints = false
     }
     await store.receive(.setLoadingView(false))
-    await store.receive(.showAlertShared(mockAlertState))
+    await store.receive(.showNetworkErrorAlert)
   }
   
   func testOnDismissModifyJointsView() async {
@@ -136,15 +135,14 @@ final class FindingCharacterJointsTests: XCTestCase {
     XCTAssertEqual(testADViewCase, .ConfigureAnimation)
   }
   
-  func testShowAlertShared() async {
-    let mockAlertState = FindingCharacterJointsFeature.initAlertNetworkError()
+  func testShowNetworkErrorAlert() async {
     let state = FindingCharacterJointsFeature.State()
     let store = TestStore(initialState: state) {
       FindingCharacterJointsFeature()
     }
     
-    await store.send(.showAlertShared(mockAlertState)) {
-      $0.alertShared = mockAlertState
+    await store.send(.showNetworkErrorAlert) {
+      $0.isShowNetworkErrorAlert = !$0.isShowNetworkErrorAlert
     } 
   }
   

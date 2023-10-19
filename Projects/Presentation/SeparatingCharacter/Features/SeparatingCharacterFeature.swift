@@ -22,7 +22,6 @@ public struct SeparatingCharacterFeature: Reducer {
   public var body: some Reducer<State, Action> {
     BindingReducer()
     MainReducer()
-      .ifLet(\.$alertShared, action: /Action.alertShared)
   }
 }
 
@@ -36,7 +35,7 @@ public extension SeparatingCharacterFeature {
     var isSuccessSeparateCharacter: Bool
     public var isShowLoadingView: Bool
     
-    @PresentationState public var alertShared: AlertState<AlertShared>?
+    @BindingState public var isShowNetworkErrorAlert: Bool
     
     public init(
       checkState1: Bool = false,
@@ -45,7 +44,7 @@ public extension SeparatingCharacterFeature {
       isShowMaskingImageView: Bool = false,
       isSuccessSeparateCharacter: Bool = false,
       isShowLoadingView: Bool = false,
-      alertShared: AlertState<AlertShared>? = nil
+      isShowNetworkErrorAlert: Bool = false
     ) {
       self.checkState1 = checkState1
       self.checkState2 = checkState2
@@ -53,7 +52,7 @@ public extension SeparatingCharacterFeature {
       self.isShowMaskingImageView = isShowMaskingImageView
       self.isSuccessSeparateCharacter = isSuccessSeparateCharacter
       self.isShowLoadingView = isShowLoadingView
-      self.alertShared = alertShared
+      self.isShowNetworkErrorAlert = isShowNetworkErrorAlert
     }
   }
 }
@@ -71,8 +70,7 @@ public extension SeparatingCharacterFeature {
     case separateCharacterResponse(TaskResult<Joints>)
     case onDismissMakingImageView
     
-    case showAlertShared(AlertState<AlertShared>)
-    case alertShared(PresentationAction<AlertShared>)
+    case showNetworkErrorAlert
     
     case initState
   }
@@ -136,7 +134,7 @@ extension SeparatingCharacterFeature {
 //        let adMoyaError = error as? ADMoyaError ?? .connection
         return .run { send in
           await send(.setLoadingView(false))
-          await send(.showAlertShared(Self.initAlertNetworkError()))
+          await send(.showNetworkErrorAlert)
         }
           
       case .onDismissMakingImageView:
@@ -150,10 +148,8 @@ extension SeparatingCharacterFeature {
         }
         return .none
         
-      case .alertShared:
-        return .none
-      case .showAlertShared(let alertState):
-        state.alertShared = alertState
+      case .showNetworkErrorAlert:
+        state.isShowNetworkErrorAlert.toggle()
         return .none
         
       case .initState:

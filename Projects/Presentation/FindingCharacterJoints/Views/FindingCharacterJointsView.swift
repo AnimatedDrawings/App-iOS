@@ -75,7 +75,7 @@ public struct FindingCharacterJointsView: ADUI {
             isShow: viewStore.state.isShowLoadingView,
             description: "Modify Character Joints ..."
           )
-          .alert(store: self.store.scope(state: \.$alertShared, action: { .alertShared($0) }))
+          .alertNetworkError(isPresented: viewStore.$isShowNetworkErrorAlert)
         }
       }
     )

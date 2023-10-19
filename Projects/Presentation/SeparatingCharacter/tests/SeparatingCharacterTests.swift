@@ -117,7 +117,6 @@ final class SeparatingCharacterTests: XCTestCase {
   }
   
   func testSeparateCharacterResponseFailure() async {
-    let mockAlertState = SeparatingCharacterFeature.initAlertNetworkError()
     let state = SeparatingCharacterFeature.State()
     let store = TestStore(initialState: state) {
       SeparatingCharacterFeature()
@@ -129,7 +128,7 @@ final class SeparatingCharacterTests: XCTestCase {
       $0.isSuccessSeparateCharacter = false
     }
     await store.receive(.setLoadingView(false))
-    await store.receive(.showAlertShared(mockAlertState))
+    await store.receive(.showNetworkErrorAlert)
   }
   
   func testOnDismissMakingImageView() async {
@@ -152,15 +151,14 @@ final class SeparatingCharacterTests: XCTestCase {
     XCTAssertEqual(testIsShowStepStatusBar, true)
   }
   
-  func testShowAlertShared() async {
-    let mockAlertState = SeparatingCharacterFeature.initAlertNetworkError()
+  func testShowNetworkErrorAlert() async {
     let state = SeparatingCharacterFeature.State()
     let store = TestStore(initialState: state) {
       SeparatingCharacterFeature()
     }
     
-    await store.send(.showAlertShared(mockAlertState)) {
-      $0.alertShared = mockAlertState
+    await store.send(.showNetworkErrorAlert) {
+      $0.isShowNetworkErrorAlert = !$0.isShowNetworkErrorAlert
     }
   }
   

@@ -22,7 +22,6 @@ public struct FindingCharacterJointsFeature: Reducer {
   public var body: some Reducer<State, Action> {
     BindingReducer()
     MainReducer()
-      .ifLet(\.$alertShared, action: /Action.alertShared)
   }
 }
 
@@ -33,20 +32,20 @@ public extension FindingCharacterJointsFeature {
     public var isShowLoadingView: Bool
     var isSuccessFindCharacterJoints: Bool
     
-    @PresentationState public var alertShared: AlertState<AlertShared>?
+    @BindingState public var isShowNetworkErrorAlert: Bool
     
     public init(
       checkState: Bool = false,
       isShowModifyJointsView: Bool = false,
       isShowLoadingView: Bool = false,
       isSuccessFindCharacterJoints: Bool = false,
-      alertShared: AlertState<AlertShared>? = nil
+      isShowNetworkErrorAlert: Bool = false
     ) {
       self.checkState = checkState
       self.isShowModifyJointsView = isShowModifyJointsView
       self.isShowLoadingView = isShowLoadingView
       self.isSuccessFindCharacterJoints = isSuccessFindCharacterJoints
-      self.alertShared = alertShared
+      self.isShowNetworkErrorAlert = isShowNetworkErrorAlert
     }
   }
 }
@@ -63,8 +62,7 @@ public extension FindingCharacterJointsFeature {
     case findCharacterJointsResponse(TaskEmptyResult)
     case onDismissModifyJointsView
     
-    case showAlertShared(AlertState<AlertShared>)
-    case alertShared(PresentationAction<AlertShared>)
+    case showNetworkErrorAlert
     
     case initState
   }
@@ -119,7 +117,7 @@ extension FindingCharacterJointsFeature {
 //        let adMoyaError = error as? ADMoyaError ?? .connection
         return .run { send in
           await send(.setLoadingView(false))
-          await send(.showAlertShared(Self.initAlertNetworkError()))
+          await send(.showNetworkErrorAlert)
         }
         
       case .onDismissModifyJointsView:
@@ -132,10 +130,8 @@ extension FindingCharacterJointsFeature {
         }
         return .none
         
-      case .alertShared:
-        return .none
-      case .showAlertShared(let alertState):
-        state.alertShared = alertState
+      case .showNetworkErrorAlert:
+        state.isShowNetworkErrorAlert.toggle()
         return .none
         
       case .initState:

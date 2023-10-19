@@ -78,7 +78,7 @@ public struct FindingTheCharacterView: ADUI {
             isShow: viewStore.state.isShowLoadingView,
             description: "Cropping Image ..."
           )
-          .alert(store: self.store.scope(state: \.$alertShared, action: { .alertShared($0) }))
+          .alertNetworkError(isPresented: viewStore.$isShowNetworkErrorAlert)
         }
       }
     )

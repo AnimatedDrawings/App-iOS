@@ -100,7 +100,6 @@ final class FindingTheCharacterTests: XCTestCase {
   }
   
   func testFindTheCharacterResponseFailure() async {
-    let mockAlertState = FindingTheCharacterFeature.initAlertNetworkError()
     let state = FindingTheCharacterFeature.State(
       isSuccessUpload: true
     )
@@ -114,7 +113,7 @@ final class FindingTheCharacterTests: XCTestCase {
       $0.isSuccessUpload = false
     }
     await store.receive(.setLoadingView(false))
-    await store.receive(.showAlertShared(mockAlertState))
+    await store.receive(.showNetworkErrorAlert)
   }
   
   func testDownloadMaskImage() async {
@@ -167,7 +166,6 @@ final class FindingTheCharacterTests: XCTestCase {
   }
   
   func testDownloadMaskImageResponseFailure() async {
-    let mockAlertState = FindingTheCharacterFeature.initAlertNetworkError()
     let state = FindingTheCharacterFeature.State()
     let store = TestStore(initialState: state) {
       FindingTheCharacterFeature()
@@ -179,7 +177,7 @@ final class FindingTheCharacterTests: XCTestCase {
       $0.isSuccessUpload = false
     }
     await store.receive(.setLoadingView(false))
-    await store.receive(.showAlertShared(mockAlertState))
+    await store.receive(.showNetworkErrorAlert)
   }
   
   func testOnDismissCropImageView() async {
@@ -202,15 +200,14 @@ final class FindingTheCharacterTests: XCTestCase {
     XCTAssertEqual(testIsShowStepStatusBar, true)
   }
   
-  func testShowAlertShared() async {
-    let mockAlertState = FindingTheCharacterFeature.initAlertNetworkError()
+  func testShowNetworkErrorAlert() async {
     let state = FindingTheCharacterFeature.State()
     let store = TestStore(initialState: state) {
       FindingTheCharacterFeature()
     }
     
-    await store.send(.showAlertShared(mockAlertState)) {
-      $0.alertShared = mockAlertState
+    await store.send(.showNetworkErrorAlert) {
+      $0.isShowNetworkErrorAlert = !$0.isShowNetworkErrorAlert
     }
   }
   

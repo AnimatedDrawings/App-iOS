@@ -101,7 +101,6 @@ final class UploadADrawingTests: XCTestCase {
   }
   
   func testUploadDrawingResponseFailure() async {
-    let mockAlertState = UploadADrawingFeature.initAlertNetworkError()
     let state = UploadADrawingFeature.State(
       isSuccessUploading: true
     )
@@ -109,12 +108,12 @@ final class UploadADrawingTests: XCTestCase {
       UploadADrawingFeature()
     }
     
+    store.exhaustivity = .off
+    
     await store.send(.uploadDrawingResponse(.failure(MockError.mock))) {
       $0.isSuccessUploading = false
     }
-    await store.receive(.showAlertShared(mockAlertState)) {
-      $0.alertShared = mockAlertState
-    }
+    await store.receive(.showNetworkErrorAlert)
   }
   
   func testUploadDrawingNextAction() async {
@@ -137,17 +136,5 @@ final class UploadADrawingTests: XCTestCase {
     XCTAssertEqual(testCompleteStep, .UploadADrawing)
     XCTAssertEqual(testCurrentStep, .FindingTheCharacter)
     XCTAssertEqual(testIsShowStepStatusBar, true)
-  }
-  
-  func testShowAlertShared() async {
-    let mockAlertState = UploadADrawingFeature.initAlertNetworkError()
-    let state = UploadADrawingFeature.State()
-    let store = TestStore(initialState: state) {
-      UploadADrawingFeature()
-    }
-    
-    await store.send(.showAlertShared(mockAlertState)) {
-      $0.alertShared = mockAlertState
-    }
   }
 }

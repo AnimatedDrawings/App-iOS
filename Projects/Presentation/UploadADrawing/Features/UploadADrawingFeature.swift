@@ -12,6 +12,7 @@ import NetworkProvider
 import SharedProvider
 import ADUIKit
 import DomainModel
+import NetworkStorage
 
 public struct UploadADrawingFeature: Reducer {
   public init() {}
@@ -23,7 +24,6 @@ public struct UploadADrawingFeature: Reducer {
   public var body: some Reducer<State, Action> {
     BindingReducer()
     MainReducer()
-      .ifLet(\.$alertShared, action: /Action.alertShared)
   }
 }
 
@@ -38,7 +38,8 @@ public extension UploadADrawingFeature {
     
     var isSuccessUploading: Bool
     
-    @PresentationState public var alertShared: AlertState<AlertShared>?
+    @BindingState public var isShowNetworkErrorAlert: Bool
+    @BindingState public var isShowFindCharacterErrorAlert: Bool
     
     public init(
       checkState1: Bool = false,
@@ -47,7 +48,8 @@ public extension UploadADrawingFeature {
       isEnableUploadButton: Bool = false,
       isShowLoadingView: Bool = false,
       isSuccessUploading: Bool = false,
-      alertShared: AlertState<AlertShared>? = nil
+      isShowNetworkErrorAlert: Bool = false,
+      isShowFindCharacterErrorAlert: Bool = false
     ) {
       self.checkState1 = checkState1
       self.checkState2 = checkState2
@@ -55,7 +57,8 @@ public extension UploadADrawingFeature {
       self.isEnableUploadButton = isEnableUploadButton
       self.isShowLoadingView = isShowLoadingView
       self.isSuccessUploading = isSuccessUploading
-      self.alertShared = alertShared
+      self.isShowNetworkErrorAlert = isShowNetworkErrorAlert
+      self.isShowFindCharacterErrorAlert = isShowFindCharacterErrorAlert
     }
   }
 }
@@ -72,8 +75,8 @@ public extension UploadADrawingFeature {
     case uploadDrawingResponse(TaskResult<UploadDrawingResult>)
     case uploadDrawingNextAction
     
-    case showAlertShared(AlertState<AlertShared>)
-    case alertShared(PresentationAction<AlertShared>)
+    case showNetworkErrorAlert
+    case showFindCharacterErrorAlert
     
     case initState
   }
@@ -144,10 +147,11 @@ extension UploadADrawingFeature {
         }
         
       case .uploadDrawingResponse(.failure(let error)):
-        print(error)
         state.isSuccessUploading = false
-//        let adMoyaError = error as? ADMoyaError ?? .connection
-        return .send(.showAlertShared(Self.initAlertNetworkError()))
+        if error as! NetworkError == .ADServerError {
+          return .send(.showFindCharacterErrorAlert)
+        }
+        return .send(.showNetworkErrorAlert)
         
       case .uploadDrawingNextAction:
         if state.isSuccessUploading {
@@ -160,10 +164,12 @@ extension UploadADrawingFeature {
         }
         return .none
         
-      case .alertShared:
+      case .showNetworkErrorAlert:
+        state.isShowNetworkErrorAlert.toggle()
         return .none
-      case .showAlertShared(let alertState):
-        state.alertShared = alertState
+        
+      case .showFindCharacterErrorAlert:
+        state.isShowFindCharacterErrorAlert.toggle()
         return .none
         
       case .initState:
@@ -171,26 +177,6 @@ extension UploadADrawingFeature {
         return .none
       }
     }
-  }
-}
-
-public extension UploadADrawingFeature {
-  enum AlertShared: Equatable {}
-  
-  static func initAlertNetworkError() -> AlertState<AlertShared> {
-    return AlertState(
-      title: {
-        TextState("Connection Error")
-      },
-      actions: {
-        ButtonState(role: .cancel) {
-          TextState("Cancel")
-        }
-      },
-      message: {
-        TextState("Please check device network condition.")
-      }
-    )
   }
 }
 

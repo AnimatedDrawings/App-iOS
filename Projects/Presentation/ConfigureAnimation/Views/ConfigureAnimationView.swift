@@ -44,10 +44,20 @@ public struct ConfigureAnimationView: ADUI {
       
       Spacer().frame(height: 20)
     }
+    
     .padding()
     .addBackground()
-    .alert(store: self.store.scope(state: \.$alertShared, action: { .alertShared($0) }))
-    .alert(store: self.store.scope(state: \.$alertTrashMakeAD, action: { .alertTrashMakeAD($0) }))
+    .alertSaveGIFInPhotosResult(
+      isPresented: viewStore.$isShowSaveGIFInPhotosResultAlert,
+      isSuccess: viewStore.saveGIFInPhotosResult
+    )
+    .alertTrashMakeAD(
+      isPresented: viewStore.$isShowTrashMakeADAlert,
+      resetAction: {
+        viewStore.send(.resetMakeADData)
+      }
+    )
+    .alertNoAnimationFile(isPresented: viewStore.$isShowNoAnimationFileAlert)
     .confirmationDialog("", isPresented: viewStore.$isShowActionSheet) {
       Button("Save GIF In Photos") {
         if let gifURL = viewStore.myAnimationURL {
@@ -74,7 +84,63 @@ public struct ConfigureAnimationView: ADUI {
           viewStore.send(.selectAnimation(selectedAnimation))
         }
         .addLoadingView(isShow: viewStore.isShowLoadingView, description: "Add Animation...")
-        .alert(store: self.store.scope(state: \.$alertShared, action: { .alertShared($0) }))
+        .alertNetworkError(isPresented: viewStore.$isShowNetworkErrorAlert)
+      }
+    )
+  }
+}
+
+extension View {
+  func alertSaveGIFInPhotosResult(
+    isPresented: Binding<Bool>,
+    isSuccess: Bool
+  ) -> some View {
+    let title = isSuccess ? "Save Success!" : "Save GIF Error"
+    let description = isSuccess ? "" : "Cannot Save GIF.."
+    
+    return self.alert(
+      title,
+      isPresented: isPresented,
+      actions: {
+        Button("Cancel", action: {})
+      },
+      message: {
+        Text(description)
+      }
+    )
+  }
+  
+  func alertTrashMakeAD(
+    isPresented: Binding<Bool>,
+    resetAction: @escaping () -> ()
+  ) -> some View {
+    return self.alert(
+      "Reset Animated Drawing",
+      isPresented: isPresented,
+      actions: {
+        Button("Cancel", action: {})
+        Button(action: resetAction) {
+          Text("Reset")
+            .foregroundColor(.red)
+        }
+      },
+      message: {
+        Text("Are you sure to reset making animation all step?")
+      }
+    )
+  }
+  
+  func alertNoAnimationFile(
+    isPresented: Binding<Bool>
+  ) -> some View {
+    self.alert(
+      "No Animated Drawings File",
+      isPresented: isPresented,
+      actions: {
+        Button("Cancel", action: {})
+      },
+      message: {
+        Text("The file does not exist. Make a Animation First")
       }
     )
   }
@@ -141,7 +207,7 @@ private extension ConfigureAnimationView {
               viewStore.send(.fixMakeAD)
             }
             TabBarButton(imageName: trash) {
-              viewStore.send(.showAlertTrashMakeAD)
+              viewStore.send(.showTrashMakeADAlert)
             }
             TabBarButton(imageName: share) {
               viewStore.send(.toggleIsShowShareActionSheet)
