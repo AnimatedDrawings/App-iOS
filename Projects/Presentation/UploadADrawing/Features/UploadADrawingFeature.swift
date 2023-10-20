@@ -29,9 +29,10 @@ public struct UploadADrawingFeature: Reducer {
 
 public extension UploadADrawingFeature {
   struct State: Equatable {
-    @BindingState public var checkState1: Bool
-    @BindingState public var checkState2: Bool
-    @BindingState public var checkState3: Bool
+    public var checkState1: Bool
+    public var checkState2: Bool
+    public var checkState3: Bool
+    public var checkState4: Bool
     
     @BindingState public var isEnableUploadButton: Bool
     public var isShowLoadingView: Bool
@@ -40,25 +41,30 @@ public extension UploadADrawingFeature {
     
     @BindingState public var isShowNetworkErrorAlert: Bool
     @BindingState public var isShowFindCharacterErrorAlert: Bool
+    @BindingState public var isShowImageSizeErrorAlert: Bool
     
     public init(
       checkState1: Bool = false,
       checkState2: Bool = false,
       checkState3: Bool = false,
+      checkState4: Bool = false,
       isEnableUploadButton: Bool = false,
       isShowLoadingView: Bool = false,
       isSuccessUploading: Bool = false,
       isShowNetworkErrorAlert: Bool = false,
-      isShowFindCharacterErrorAlert: Bool = false
+      isShowFindCharacterErrorAlert: Bool = false,
+      isShowImageSizeErrorAlert: Bool = false
     ) {
       self.checkState1 = checkState1
       self.checkState2 = checkState2
       self.checkState3 = checkState3
+      self.checkState4 = checkState4
       self.isEnableUploadButton = isEnableUploadButton
       self.isShowLoadingView = isShowLoadingView
       self.isSuccessUploading = isSuccessUploading
       self.isShowNetworkErrorAlert = isShowNetworkErrorAlert
       self.isShowFindCharacterErrorAlert = isShowFindCharacterErrorAlert
+      self.isShowImageSizeErrorAlert = isShowImageSizeErrorAlert
     }
   }
 }
@@ -70,6 +76,7 @@ public extension UploadADrawingFeature {
     case checkList1
     case checkList2
     case checkList3
+    case checkList4
     case setIsShowLoadingView(Bool)
     case uploadDrawing(Data?)
     case uploadDrawingResponse(TaskResult<UploadDrawingResult>)
@@ -77,6 +84,7 @@ public extension UploadADrawingFeature {
     
     case showNetworkErrorAlert
     case showFindCharacterErrorAlert
+    case showImageSizeErrorAlert
     
     case initState
   }
@@ -104,6 +112,11 @@ extension UploadADrawingFeature {
         activeUploadButton(state: &state)
         return .none
         
+      case .checkList4:
+        state.checkState4.toggle()
+        activeUploadButton(state: &state)
+        return .none
+        
       case .setIsShowLoadingView(let flag):
         state.isShowLoadingView = flag
         return .none
@@ -117,6 +130,10 @@ extension UploadADrawingFeature {
         
         let maxKB: Double = 3000
         let originalSize = imageData.getSize(.kilobyte)
+        if originalSize > 15000 {
+          return .send(.showImageSizeErrorAlert)
+        }
+          
         guard let compressedData: Data = originalSize < maxKB ?
                 imageData :
                   originalImage.reduceFileSize(maxKB: maxKB),
@@ -172,6 +189,10 @@ extension UploadADrawingFeature {
         state.isShowFindCharacterErrorAlert.toggle()
         return .none
         
+      case .showImageSizeErrorAlert:
+        state.isShowImageSizeErrorAlert.toggle()
+        return .none
+        
       case .initState:
         state = State()
         return .none
@@ -182,7 +203,7 @@ extension UploadADrawingFeature {
 
 extension UploadADrawingFeature {
   func activeUploadButton(state: inout UploadADrawingFeature.State) {
-    if state.checkState1 && state.checkState2 && state.checkState3 {
+    if state.checkState1 && state.checkState2 && state.checkState3 && state.checkState4 {
       state.isEnableUploadButton = true
     } else {
       state.isEnableUploadButton = false

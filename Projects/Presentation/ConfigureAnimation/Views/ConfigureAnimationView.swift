@@ -96,13 +96,13 @@ extension View {
     isSuccess: Bool
   ) -> some View {
     let title = isSuccess ? "Save Success!" : "Save GIF Error"
-    let description = isSuccess ? "" : "Cannot Save GIF.."
+    let description = isSuccess ? "" : "Cannot Save GIF.. Try again"
     
     return self.alert(
       title,
       isPresented: isPresented,
       actions: {
-        Button("Cancel", action: {})
+        Button("OK", action: {})
       },
       message: {
         Text(description)

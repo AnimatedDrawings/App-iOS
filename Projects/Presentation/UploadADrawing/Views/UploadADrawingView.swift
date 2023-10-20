@@ -56,6 +56,7 @@ public struct UploadADrawingView: ADUI {
     }
     .alertNetworkError(isPresented: viewStore.$isShowNetworkErrorAlert)
     .alertFindCharacterError(isPresented: viewStore.$isShowFindCharacterErrorAlert)
+    .alertimageSizeError(isPresented: viewStore.$isShowImageSizeErrorAlert)
     .fullScreenOverlay(presentationSpace: .named("UploadADrawingView")) {
       if viewStore.state.isShowLoadingView {
         LoadingView(description: "Uploading Drawing...")
@@ -79,10 +80,25 @@ extension View {
       "Cannot Find Character",
       isPresented: isPresented,
       actions: {
-        Button("Cancel", action: {})
+        Button("OK", action: {})
       },
       message: {
         Text("Please check the image you uploaded confirming the checklist content or Please use a different picture with a clear character")
+      }
+    )
+  }
+  
+  func alertimageSizeError(
+    isPresented: Binding<Bool>
+  ) -> some View {
+    self.alert(
+      "The image size is too big",
+      isPresented: isPresented,
+      actions: {
+        Button("OK", action: {})
+      },
+      message: {
+        Text("Please use image of size 15MB or less")
       }
     )
   }
@@ -114,7 +130,7 @@ private extension UploadADrawingView {
     let description1 = "Make sure the character is drawn on a white piece of paper without lines, wrinkles, or tears"
     let description2 = "Make sure the drawing is well lit. To minimize shadows, hold the camera further away and zoom in on the drawing."
     let description3 = "Don’t include any identifiable information, offensive content (see our community standards), or drawings that infringe on the copyrights of others."
-    let myStep: Step = .UploadADrawing
+    let description4 = "Please use image of size 15MB or less"
     
     var body: some View {
       VStack(alignment: .leading, spacing: 15) {
@@ -137,6 +153,13 @@ private extension UploadADrawingView {
           state: viewStore.checkState3
         ) {
           viewStore.send(.checkList3)
+        }
+        
+        CheckListButton(
+          description: description4,
+          state: viewStore.checkState4
+        ) {
+          viewStore.send(.checkList4)
         }
       }
     }

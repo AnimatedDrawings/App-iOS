@@ -51,7 +51,11 @@ public struct FindingTheCharacterView: ADUI {
           viewStore.send(.toggleCropImageView)
         }
         
-        Spacer().frame(height: 20)
+        if UIDevice.current.model.range(of: "iPad") != nil {
+          Spacer().frame(height: 40)
+        } else {
+          Spacer().frame(height: 1)
+        }
       }
       .padding()
     }
