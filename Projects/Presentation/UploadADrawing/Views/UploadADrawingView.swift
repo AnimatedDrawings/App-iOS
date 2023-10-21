@@ -199,9 +199,12 @@ private extension UploadADrawingView {
       )
       .allowsHitTesting(state)
       .onChange(of: selectedItem) { newValue in
-        _Concurrency.Task {
-          let data = try? await newValue?.loadTransferable(type: Data.self)
-          uploadImageAction(data)
+        if let newValue = newValue {
+          _Concurrency.Task {
+            let data = try? await newValue.loadTransferable(type: Data.self)
+            uploadImageAction(data)
+            self.selectedItem = nil
+          }
         }
       }
     }
