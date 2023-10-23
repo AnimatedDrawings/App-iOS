@@ -11,8 +11,8 @@ import SwiftUI
 public struct GIFImage: View {
   private let gifData: Data
   private let gifPresentationController: GIFPresentationController
-  @MainActor @State var currentFrame: CGImage?
-  @MainActor var convertUIImage: UIImage {
+  @State var currentFrame: CGImage?
+  var convertUIImage: UIImage {
     if let currentFrame = self.currentFrame {
       return UIImage(cgImage: currentFrame)
     }

@@ -98,7 +98,7 @@ extension View {
         Button("OK", action: {})
       },
       message: {
-        Text("Please use image of size 15MB or less")
+        Text("Please use file type of image and size 10MB or less")
       }
     )
   }
@@ -130,7 +130,7 @@ private extension UploadADrawingView {
     let description1 = "Make sure the character is drawn on a white piece of paper without lines, wrinkles, or tears"
     let description2 = "Make sure the drawing is well lit. To minimize shadows, hold the camera further away and zoom in on the drawing."
     let description3 = "Don’t include any identifiable information, offensive content (see our community standards), or drawings that infringe on the copyrights of others."
-    let description4 = "Please use image of size 15MB or less"
+    let description4 = "Please use file type of image and size 10MB or less"
     
     var body: some View {
       VStack(alignment: .leading, spacing: 15) {
@@ -167,27 +167,54 @@ private extension UploadADrawingView {
 }
 
 private extension UploadADrawingView {
+  @MainActor
+  class UploadButtonViewModel: ObservableObject {
+    let uploadImageAction: (Data?) -> ()
+    
+    init(uploadImageAction: @escaping (Data?) -> Void) {
+      self.uploadImageAction = uploadImageAction
+    }
+    
+    @Published var selectedItem: PhotosPickerItem? = nil {
+      didSet {
+        setImage(from: selectedItem)
+      }
+    }
+    
+    private func setImage(from selectedItem: PhotosPickerItem?) {
+      if let selectedItem = selectedItem {
+        Task {
+          let data = try? await selectedItem.loadTransferable(type: Data.self)
+          uploadImageAction(data)
+          self.selectedItem = nil
+        }
+      }
+    }
+  }
+  
   struct UploadButton: View {
     @Binding var state: Bool
-    let uploadImageAction: (Data?) -> ()
+    @StateObject var vm: UploadButtonViewModel
     
     init(
       state: Binding<Bool>,
       uploadImageAction: @escaping (Data?) -> ()
     ) {
       self._state = state
-      self.uploadImageAction = uploadImageAction
+      self._vm = StateObject(
+        wrappedValue: UploadButtonViewModel(
+          uploadImageAction: uploadImageAction
+        )
+      )
     }
     
     let photoFill = "photo.fill"
     let text = "Upload Photo"
-    
-    @State private var selectedItem: PhotosPickerItem? = nil
 
     var body: some View {
       PhotosPicker(
-        selection: $selectedItem,
-        photoLibrary: .shared(),
+        selection: $vm.selectedItem,
+        matching: .images,
         label: {
           ADButtonLabel(state) {
             HStack {
@@ -198,15 +225,6 @@ private extension UploadADrawingView {
         }
       )
       .allowsHitTesting(state)
-      .onChange(of: selectedItem) { newValue in
-        if let newValue = newValue {
-          _Concurrency.Task {
-            let data = try? await newValue.loadTransferable(type: Data.self)
-            uploadImageAction(data)
-            self.selectedItem = nil
-          }
-        }
-      }
     }
   }
 }

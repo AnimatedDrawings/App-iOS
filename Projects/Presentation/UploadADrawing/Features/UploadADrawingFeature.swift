@@ -125,12 +125,12 @@ extension UploadADrawingFeature {
         guard let imageData = imageData,
               let originalImage = UIImage(data: imageData)
         else {
-          return .none
+          return .send(.showImageSizeErrorAlert)
         }
         
         let maxKB: Double = 3000
         let originalSize = imageData.getSize(.kilobyte)
-        if originalSize > 15000 {
+        if originalSize > 10000 {
           return .send(.showImageSizeErrorAlert)
         }
           
@@ -139,7 +139,7 @@ extension UploadADrawingFeature {
                   originalImage.reduceFileSize(maxKB: maxKB),
               let tmpOriginalImage = UIImage(data: compressedData)
         else {
-          return .none
+          return .send(.showImageSizeErrorAlert)
         }
         
         return .run { send in

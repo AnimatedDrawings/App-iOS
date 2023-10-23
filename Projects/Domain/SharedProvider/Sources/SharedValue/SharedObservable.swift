@@ -22,7 +22,7 @@ class SharedObservable<Output: Equatable>: ObservableObject {
   }
   
   private var myValue: Output {
-    willSet {
+    didSet {
       DispatchQueue.main.async { [weak self] in
         self?.objectWillChange.send()
       }
