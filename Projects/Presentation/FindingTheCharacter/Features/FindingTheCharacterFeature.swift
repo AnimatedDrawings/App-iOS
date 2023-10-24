@@ -117,7 +117,6 @@ extension FindingTheCharacterFeature {
         
       case .findTheCharacterResponse(.failure(let error)):
         state.isSuccessUpload = false
-//        let adMoyaError = error as? ADMoyaError ?? .connection
         return .run { send in
           await send(.setLoadingView(false))
           await send(.showNetworkErrorAlert)
@@ -148,7 +147,6 @@ extension FindingTheCharacterFeature {
         
       case .downloadMaskImageResponse(.failure(let error)):
         state.isSuccessUpload = false
-//        let adMoyaError = error as? ADMoyaError ?? .connection
         return .run { send in
           await send(.setLoadingView(false))
           await send(.showNetworkErrorAlert)

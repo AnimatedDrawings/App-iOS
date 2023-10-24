@@ -131,7 +131,6 @@ extension SeparatingCharacterFeature {
       case .separateCharacterResponse(.failure(let error)):
         print(error)
         state.isSuccessSeparateCharacter = false
-//        let adMoyaError = error as? ADMoyaError ?? .connection
         return .run { send in
           await send(.setLoadingView(false))
           await send(.showNetworkErrorAlert)

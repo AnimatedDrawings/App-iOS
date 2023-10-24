@@ -114,7 +114,6 @@ extension FindingCharacterJointsFeature {
       case .findCharacterJointsResponse(.failure(let error)):
         print(error)
         state.isSuccessFindCharacterJoints = false
-//        let adMoyaError = error as? ADMoyaError ?? .connection
         return .run { send in
           await send(.setLoadingView(false))
           await send(.showNetworkErrorAlert)

@@ -165,7 +165,9 @@ extension UploadADrawingFeature {
         
       case .uploadDrawingResponse(.failure(let error)):
         state.isSuccessUploading = false
-        if error as! NetworkError == .ADServerError {
+        if let error = error as? NetworkError,
+           error == .ADServerError
+        {
           return .send(.showFindCharacterErrorAlert)
         }
         return .send(.showNetworkErrorAlert)
