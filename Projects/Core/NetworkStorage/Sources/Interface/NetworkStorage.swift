@@ -36,7 +36,8 @@ class NetworkStorage<T: TargetType> {
     let (data, urlResponse) = try await session.data(for: urlRequest, delegate: nil)
     
     guard let decoded = try? JSONDecoder().decode(DefaultResponse<R>.self, from: data) else {
-      throw NetworkError.convertResponseModel
+//      throw NetworkError.convertResponseModel
+      throw NetworkError.ADServerError
     }
     
     guard decoded.isSuccess else {
@@ -48,7 +49,8 @@ class NetworkStorage<T: TargetType> {
     }
     
     guard let responseModel = decoded.response else {
-      throw NetworkError.emptyResponse
+//      throw NetworkError.emptyResponse
+      throw NetworkError.ADServerError
     }
     return responseModel
   }
