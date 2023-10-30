@@ -34,6 +34,9 @@ final class UploadADrawingTests: XCTestCase {
     }
     await store.send(.checkList3) {
       $0.checkState3 = !$0.checkState3
+    }
+    await store.send(.checkList4) {
+      $0.checkState4 = !$0.checkState4
       $0.isEnableUploadButton = true
     }
   }
@@ -61,8 +64,6 @@ final class UploadADrawingTests: XCTestCase {
     store.exhaustivity = .off
     
     await store.send(.uploadDrawing(mockImageData))
-//    let savedOriginalImage = await testOriginalImageStorage.get()
-//    XCTAssertEqual(savedOriginalImage, mockOriginalImage)
     await store.receive(.setIsShowLoadingView(true))
     await store.receive(
       .uploadDrawingResponse(

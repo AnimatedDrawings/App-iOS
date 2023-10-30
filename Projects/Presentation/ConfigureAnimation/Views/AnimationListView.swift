@@ -100,7 +100,10 @@ private extension AnimationListView {
     var body: some View {
       HStack {
         ForEach(AnimationCategory.allCases, id: \.rawValue) { item in
-          Category(myCategory: item, selectedCategory: $selectedCategory)
+          AnimationListView.Category(
+            myCategory: item,
+            selectedCategory: $selectedCategory
+          )
         }
         Spacer()
       }
@@ -148,7 +151,7 @@ private extension AnimationListView {
   struct AnimationGridView: View {
     let strokeColor: Color = ADUIKitAsset.Color.blue1.swiftUIColor
     let columns: [GridItem] = .init(repeating: .init(.flexible()), count: 3)
-    @State var gridItemHeight: CGFloat = 0
+    @State var gridItemSize: CGFloat = 1
     
     @Binding var selectedCategory: AnimationCategory
     let tapAnimationItemAction: (ADAnimation) -> ()
@@ -160,7 +163,7 @@ private extension AnimationListView {
       return Array(selectedCategory.animations.dropFirst())
     }
     var gifViewSize: CGFloat {
-      max(0, self.gridItemHeight - 10)
+      max(0, self.gridItemSize - 10)
     }
     
     @ViewBuilder
@@ -171,10 +174,10 @@ private extension AnimationListView {
         RoundedRectangle(cornerRadius: 15)
           .stroke(strokeColor, lineWidth: 3)
           .cornerRadius(15)
-          .frame(height: self.gridItemHeight)
+          .frame(height: self.gridItemSize)
           .overlay {
             GIFImage(gifData: adAnimation.gifData)
-              .frame(width: gifViewSize, height: gifViewSize)
+              .frame(width: gifViewSize)
           }
       }
     }
@@ -187,7 +190,7 @@ private extension AnimationListView {
               GeometryReader { geo in
                 Color.clear
                   .onAppear {
-                    self.gridItemHeight = geo.size.width
+                    self.gridItemSize = geo.size.width
                   }
               }
             )
@@ -222,7 +225,8 @@ struct Previews_AnimationListView: View {
   @State var isShow = true
   
   var body: some View {
-    AnimationListView(isShow: $isShow) { _ in
+    AnimationListView(isShow: $isShow) { selectedAnimation in
+      print(selectedAnimation)
     }
   }
 }
