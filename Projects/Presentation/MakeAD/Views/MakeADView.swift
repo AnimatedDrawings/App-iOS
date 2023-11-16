@@ -24,6 +24,7 @@ public struct MakeADView: View {
   public var body: some View {
     GeometryReader { geo in
       List {
+        // if -> ishidden 사용
         if isShowStepStatusBar {
           StepBar()
             .listRowSeparator(.hidden)
