@@ -23,7 +23,8 @@ let project: Project = .makeProject(
       targetName: ADUIKit.targetName + "Example",
       product: .app,
       infoPlist: .AD,
-      sources: ["Example/**", "Sources/**", "Derived/Sources/**"],
+      // sources: ["Example/**", "Sources/**", "Derived/Sources/**"],
+      sources: ["Example/**", "Sources/**"],
       resources: nil,
       dependencies: [
         .target(name: ADUIKit.targetName)

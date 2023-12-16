@@ -64,7 +64,7 @@ public extension Target {
     resources: ResourceFileElements? = ["Resources/**"],
     copyFiles: [ProjectDescription.CopyFilesAction]? = nil,
     headers: ProjectDescription.Headers? = nil,
-    entitlements: ProjectDescription.Path? = nil,
+    entitlements: Entitlements? = nil,
     scripts: [ProjectDescription.TargetScript] = [],
     dependencies: [TargetDependency] = [],
     settings: ProjectDescription.Settings? = nil,

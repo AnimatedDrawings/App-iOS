@@ -1,9 +1,8 @@
 //
 //  tmp.swift
-//  Presentation_Shared
+//  Config
 //
-//  Created by minii on 2023/10/02.
-//  Copyright © 2023 chminipark. All rights reserved.
+//  Created by chminii on 12/16/23.
 //
 
 import Foundation
