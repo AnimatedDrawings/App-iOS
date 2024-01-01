@@ -8,8 +8,9 @@
 
 import SwiftUI
 import ThirdPartyLib
+import ADUIKitSources
+import ADUIKitResources
 import FindingTheCharacterFeatures
-import ADUIKit
 import CropImage
 import DomainModel
 import SharedProvider
@@ -97,7 +98,7 @@ private extension FindingTheCharacterView {
       VStack(alignment: .leading, spacing: 20) {
         Text(title)
           .font(.system(.title, weight: .semibold))
-          .foregroundColor(ADUIKitAsset.Color.blue2.swiftUIColor)
+          .foregroundColor(ADUIKitResourcesAsset.Color.blue2.swiftUIColor)
         
         Text(description)
       }
@@ -121,8 +122,8 @@ private extension FindingTheCharacterView {
         }
         
         HStack {
-          GIFImage(sample: ADUIKitAsset.Gifs.step2Gif1)
-          GIFImage(sample: ADUIKitAsset.Gifs.step2Gif2)
+          GIFImage(sample: ADUIKitResourcesAsset.Gifs.step2Gif1)
+          GIFImage(sample: ADUIKitResourcesAsset.Gifs.step2Gif2)
         }
         .frame(height: 250)
       }

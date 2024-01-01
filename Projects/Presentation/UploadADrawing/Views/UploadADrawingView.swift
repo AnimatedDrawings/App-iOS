@@ -7,7 +7,8 @@
 //
 
 import SwiftUI
-import ADUIKit
+import ADUIKitSources
+import ADUIKitResources
 import ThirdPartyLib
 import UploadADrawingFeatures
 import PhotosUI
@@ -115,7 +116,7 @@ private extension UploadADrawingView {
       VStack(alignment: .leading, spacing: 20) {
         Text(title)
           .font(.system(.title, weight: .semibold))
-          .foregroundColor(ADUIKitAsset.Color.blue2.swiftUIColor)
+          .foregroundColor(ADUIKitResourcesAsset.Color.blue2.swiftUIColor)
         
         Text(left) + Text(one).fontWeight(.bold) + Text(right)
       }
@@ -260,11 +261,11 @@ private extension UploadADrawingView {
     struct Samples: View {
       let tapCardAction: (Data?) -> ()
       
-      typealias sample = ADUIKitAsset.SampleDrawing
-      let example1: ADUIKitImages = sample.step1Example1
-      let example2: ADUIKitImages = sample.step1Example2
-      let example3: ADUIKitImages = sample.step1Example3
-      let example4: ADUIKitImages = sample.step1Example4
+      typealias sample = ADUIKitResourcesAsset.SampleDrawing
+      let example1: ADUIKitResourcesImages = sample.step1Example1
+      let example2: ADUIKitResourcesImages = sample.step1Example2
+      let example3: ADUIKitResourcesImages = sample.step1Example3
+      let example4: ADUIKitResourcesImages = sample.step1Example4
       
       var body: some View {
         VStack(spacing: 20) {
@@ -281,7 +282,7 @@ private extension UploadADrawingView {
       }
       
       @ViewBuilder
-      func ImageCardButton(image sample: ADUIKitImages) -> some View {
+      func ImageCardButton(image sample: ADUIKitResourcesImages) -> some View {
         Button {
           tapCardAction(sample.image.pngData())
         } label: {

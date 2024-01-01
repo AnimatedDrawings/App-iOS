@@ -8,6 +8,7 @@
 
 import SwiftUI
 import AVFoundation
+import ADUIKitResources
 
 public struct LoopingVideoPlayer: UIViewRepresentable {
   let name: String
@@ -39,7 +40,7 @@ class QueuePlayerUIView: UIView {
     super.init(frame: frame)
     
     // Load Video
-    let fileUrl = ADUIKitResources.bundle.url(forResource: name, withExtension: withExtension)!
+    let fileUrl = ADUIKitResourcesResources.bundle.url(forResource: name, withExtension: withExtension)!
     let playerItem = AVPlayerItem(url: fileUrl)
     
     // Setup Player

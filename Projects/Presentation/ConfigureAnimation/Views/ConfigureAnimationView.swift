@@ -9,7 +9,8 @@
 import SwiftUI
 import ThirdPartyLib
 import ConfigureAnimationFeatures
-import ADUIKit
+import ADUIKitSources
+import ADUIKitResources
 
 public struct ConfigureAnimationView: ADUI {
   public typealias MyFeature = ConfigureAnimationFeature
@@ -155,7 +156,7 @@ private extension ConfigureAnimationView {
       VStack(alignment: .leading, spacing: 20) {
         Text(title)
           .font(.system(.title, weight: .semibold))
-          .foregroundColor(ADUIKitAsset.Color.blue2.swiftUIColor)
+          .foregroundColor(ADUIKitResourcesAsset.Color.blue2.swiftUIColor)
         
         Text(description)
           .frame(maxWidth: .infinity)
@@ -187,7 +188,7 @@ private extension ConfigureAnimationView {
     let fix = "arrowshape.turn.up.backward"
     let share = "square.and.arrow.up"
     let animation = "figure.dance"
-    let strokeColor: Color = ADUIKitAsset.Color.blue2.swiftUIColor
+    let strokeColor: Color = ADUIKitResourcesAsset.Color.blue2.swiftUIColor
     
     @ObservedObject var viewStore: MyViewStore
     

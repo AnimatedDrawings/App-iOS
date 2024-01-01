@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import ADUIKitResources
 
 public struct ADButton<Content: View>: View {
   var state: Bool
@@ -63,7 +64,7 @@ public struct ADButtonLabel<Content: View>: View {
     RoundedRectangle(cornerRadius: 10)
       .frame(height: 60)
       .foregroundColor(
-        state ? ADUIKitAsset.Color.blue1.swiftUIColor : .gray
+        state ? ADUIKitResourcesAsset.Color.blue1.swiftUIColor : .gray
       )
       .shadow(radius: 10)
       .overlay {

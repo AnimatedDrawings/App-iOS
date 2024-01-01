@@ -8,10 +8,11 @@
 
 import DomainModel
 import Foundation
+import ADUIKitResources
 
 public extension ADAnimation {
   var gifData: Data {
-    typealias myAsset = ADUIKitAsset.ADAnimation
+    typealias myAsset = ADUIKitResourcesAsset.ADAnimation
 
     switch self {
     case .dab:

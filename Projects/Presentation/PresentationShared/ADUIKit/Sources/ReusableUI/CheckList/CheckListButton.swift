@@ -10,6 +10,7 @@ import SwiftUI
 import DomainModel
 import SharedProvider
 import ThirdPartyLib
+import ADUIKitResources
 
 public struct CheckListButton: View {
   let checkmarkCircle = "checkmark.circle"
@@ -32,7 +33,7 @@ public struct CheckListButton: View {
       HStack(alignment: .top) {
         Image(systemName: checkmarkCircle)
           .foregroundColor(
-            state ? ADUIKitAsset.Color.blue2.swiftUIColor : .black.opacity(0.4)
+            state ? ADUIKitResourcesAsset.Color.blue2.swiftUIColor : .black.opacity(0.4)
           )
         Text(description)
           .foregroundColor(.black)

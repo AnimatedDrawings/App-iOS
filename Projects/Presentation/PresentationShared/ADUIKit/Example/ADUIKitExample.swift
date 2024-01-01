@@ -12,8 +12,17 @@ import SwiftUI
 struct ADUIKitExample: App {
   var body: some Scene {
     WindowGroup {
-//      PreviewsADBackground()
-      Text("")
+      Preview_ADUIKitExample()
     }
+  }
+}
+
+struct Preview_ADUIKitExample: View {
+  var body: some View {
+    VStack {
+      Text("ADUIKitExample")
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+    .addBackground()
   }
 }

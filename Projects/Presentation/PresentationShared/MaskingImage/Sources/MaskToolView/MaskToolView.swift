@@ -6,10 +6,10 @@
 //
 
 import SwiftUI
-import ADUIKit
+import ADUIKitResources
 
 struct MaskToolView: View {
-  let strokeColor: Color = ADUIKitAsset.Color.blue1.swiftUIColor
+  let strokeColor: Color = ADUIKitResourcesAsset.Color.blue1.swiftUIColor
   @ObservedObject var maskToolState: MaskToolState
   let heightPanel: CGFloat = 65
   

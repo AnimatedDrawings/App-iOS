@@ -6,7 +6,8 @@
 //
 
 import SwiftUI
-import ADUIKit
+import ADUIKitSources
+import ADUIKitResources
 import DomainModel
 
 public struct ModifyJointsView: View {
@@ -15,7 +16,7 @@ public struct ModifyJointsView: View {
   let modifyNextAction: (Joints) -> ()
   let cancel: () -> ()
   
-  let strokeColor: Color = ADUIKitAsset.Color.blue1.swiftUIColor
+  let strokeColor: Color = ADUIKitResourcesAsset.Color.blue1.swiftUIColor
   
   public init(
     croppedImage: UIImage,
@@ -75,7 +76,7 @@ extension ModifyJointsView {
 extension ModifyJointsView {
   @ViewBuilder
   func JointName() -> some View {
-    let jointNameColor: Color = ADUIKitAsset.Color.jointName.swiftUIColor
+    let jointNameColor: Color = ADUIKitResourcesAsset.Color.jointName.swiftUIColor
     let textInset: CGFloat = 5
     
     RoundedRectangle(cornerRadius: 10)

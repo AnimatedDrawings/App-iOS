@@ -7,7 +7,8 @@
 
 import SwiftUI
 import Combine
-import ADUIKit
+import ADUIKitSources
+import ADUIKitResources
 
 public struct MaskingImageView: View {
   let croppedImage: UIImage
@@ -16,7 +17,7 @@ public struct MaskingImageView: View {
   @StateObject private var maskToolState = MaskToolState()
   @StateObject private var maskableViewLink: MaskableViewLink
   
-  let backgroundImage: UIImage = ADUIKitAsset.SampleDrawing.checkerboard.image
+  let backgroundImage: UIImage = ADUIKitResourcesAsset.SampleDrawing.checkerboard.image
   @State var imageFrame: CGRect = .init()
   @State var toolSizerButtonOffset: CGFloat = 0
   

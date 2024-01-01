@@ -10,7 +10,6 @@ import ThirdPartyLib
 import SwiftUI
 import SharedProvider
 import DomainModel
-import ADUIKit
 import NetworkProvider
 
 public struct FindingTheCharacterFeature: Reducer {

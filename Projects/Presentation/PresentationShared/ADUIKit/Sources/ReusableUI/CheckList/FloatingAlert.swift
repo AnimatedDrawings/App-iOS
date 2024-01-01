@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import ADUIKitResources
 
 public struct FloatingAlert: View {
   let text: String
@@ -92,7 +93,7 @@ struct Previews_FloatingAlert: View {
   var body: some View {
     FloatingAlert(
       text: "Tap CheckList!",
-      color: ADUIKitAsset.Color.blue1.swiftUIColor
+      color: ADUIKitResourcesAsset.Color.blue1.swiftUIColor
     )
   }
 }
