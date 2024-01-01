@@ -1,18 +1,20 @@
 import ProjectDescription
 
-extension SwiftPackageManagerDependencies {
-  public static var packages: Self {
-    [
+public extension SwiftPackageManagerDependencies {
+  static var packages: Self {
+    .init([
       .ComposableArchitecture
-    ]
+    ])
   }
 }
 
 extension Package {
-  static let ComposableArchitecture = Package.remote(
-    url: "https://github.com/pointfreeco/swift-composable-architecture.git",
-    requirement: .exact("1.2.0")
-  )
+  static var ComposableArchitecture: Self {
+    .remote(
+      url: "https://github.com/pointfreeco/swift-composable-architecture.git",
+      requirement: .exact("1.2.0")
+    )
+  }
 }
 
 extension TargetDependency {

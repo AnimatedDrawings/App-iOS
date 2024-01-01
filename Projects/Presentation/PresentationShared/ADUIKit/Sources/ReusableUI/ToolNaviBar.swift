@@ -7,12 +7,13 @@
 //
 
 import SwiftUI
+import ADUIKitResources
 
 public struct ToolNaviBar: View {
   let cancelAction: () -> ()
   let saveAction: () -> ()
   
-  let strokeColor: Color = ADUIKitAsset.Color.blue1.swiftUIColor
+  let strokeColor: Color = ADUIKitResourcesAsset.Color.blue1.swiftUIColor
   let height: CGFloat = 40
   
   public init(

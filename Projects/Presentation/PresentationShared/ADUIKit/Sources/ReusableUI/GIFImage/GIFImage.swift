@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import ADUIKitResources
 
 public struct GIFImage: View {
   private let gifData: Data
@@ -20,14 +21,14 @@ public struct GIFImage: View {
   }
   @State private var presentationTask: Task<(), Never>?
   
-  private let errorImage: CGImage = ADUIKitAsset.SampleDrawing.checkerboard.image.cgImage!
+  private let errorImage: CGImage = ADUIKitResourcesAsset.SampleDrawing.checkerboard.image.cgImage!
   
   public init(gifData: Data) {
     self.gifData = gifData
     self.gifPresentationController = GIFPresentationController(gifData: gifData)
   }
   
-  public init(sample: ADUIKitData) {
+  public init(sample: ADUIKitResourcesData) {
     self.gifData = sample.data.data
     self.gifPresentationController = GIFPresentationController(gifData: gifData)
   }
@@ -56,7 +57,7 @@ extension GIFImage {
 
 // MARK: - Previews_GIFImage
 struct Previews_GIFImage: View {
-  let sampleGIFData: Data = ADUIKitAsset.Gifs.step2Gif1.data.data
+  let sampleGIFData: Data = ADUIKitResourcesAsset.Gifs.step2Gif1.data.data
   
   var body: some View {
     GIFImage(gifData: sampleGIFData)

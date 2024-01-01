@@ -10,9 +10,9 @@ import ThirdPartyLib
 import SwiftUI
 import NetworkProvider
 import SharedProvider
-import ADUIKit
 import DomainModel
 import NetworkStorage
+import ADUIKitSources
 
 public struct UploadADrawingFeature: Reducer {
   public init() {}

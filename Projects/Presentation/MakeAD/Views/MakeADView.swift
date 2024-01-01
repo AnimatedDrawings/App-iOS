@@ -7,10 +7,9 @@
 //
 
 import SwiftUI
-import ADUIKit
+import ADUIKitSources
 import SharedProvider
 import DomainModel
-
 import UploadADrawing
 import FindingTheCharacter
 import SeparatingCharacter

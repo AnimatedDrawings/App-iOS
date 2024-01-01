@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import ADUIKitResources
 
 /// Use
 public extension View {
@@ -22,7 +23,7 @@ struct ADBackground: View {
     GeometryReader { geo in
       let rect: CGRect = geo.frame(in: .global)
 
-      ADUIKitAsset.Color.blue4.swiftUIColor
+      ADUIKitResourcesAsset.Color.blue4.swiftUIColor
         .overlay {
           DoodleLines(rect: rect)
         }
@@ -37,3 +38,18 @@ struct ADBackground: View {
     .animation(.spring(), value: randomCurvePoint)
   }
 }
+
+#Preview {
+  Preview_ADBackground()
+}
+
+struct Preview_ADBackground: View {
+  var body: some View {
+    VStack {
+      Text("ADBackground")
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+    .addBackground()
+  }
+}
+

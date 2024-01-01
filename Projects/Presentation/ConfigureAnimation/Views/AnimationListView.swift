@@ -7,7 +7,8 @@
 //
 
 import SwiftUI
-import ADUIKit
+import ADUIKitSources
+import ADUIKitResources
 import DomainModel
 
 struct AnimationListView: View {
@@ -57,7 +58,7 @@ struct AnimationListView: View {
 private extension AnimationListView {
   struct CancelButton: View {
     let imageName = "x.circle"
-    let strokeColor: Color = ADUIKitAsset.Color.blue1.swiftUIColor
+    let strokeColor: Color = ADUIKitResourcesAsset.Color.blue1.swiftUIColor
     
     let action: () -> ()
     
@@ -78,7 +79,7 @@ private extension AnimationListView {
   struct Title: View {
     let title = "ADD ANIMATION"
     let description = "Choose one of the motions by tapping human button to see your character perform it!"
-    let strokeColor: Color = ADUIKitAsset.Color.blue1.swiftUIColor
+    let strokeColor: Color = ADUIKitResourcesAsset.Color.blue1.swiftUIColor
     
     var body: some View {
       VStack(alignment: .leading, spacing: 20) {
@@ -115,7 +116,7 @@ private extension AnimationListView {
     @Binding var selectedCategory: AnimationCategory
     
     @State var myWidth: CGFloat = 0
-    let strokeColor: Color = ADUIKitAsset.Color.blue1.swiftUIColor
+    let strokeColor: Color = ADUIKitResourcesAsset.Color.blue1.swiftUIColor
     
     var body: some View {
       Button {
@@ -149,7 +150,7 @@ private extension AnimationListView {
 
 private extension AnimationListView {
   struct AnimationGridView: View {
-    let strokeColor: Color = ADUIKitAsset.Color.blue1.swiftUIColor
+    let strokeColor: Color = ADUIKitResourcesAsset.Color.blue1.swiftUIColor
     let columns: [GridItem] = .init(repeating: .init(.flexible()), count: 3)
     @State var gridItemSize: CGFloat = 1
     

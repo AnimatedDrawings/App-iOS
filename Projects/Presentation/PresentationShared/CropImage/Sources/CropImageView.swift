@@ -7,7 +7,8 @@
 //
 
 import SwiftUI
-import ADUIKit
+import ADUIKitSources
+import ADUIKitResources
 
 public struct CropImageView: View {
   let originalImage: UIImage
@@ -109,7 +110,7 @@ extension CropImageView {
   func ResetButton() -> some View {
     let size: CGFloat = 60
     let imageName = "arrow.uturn.backward"
-    let strokeColor = ADUIKitAsset.Color.blue1.swiftUIColor
+    let strokeColor = ADUIKitResourcesAsset.Color.blue1.swiftUIColor
     
     Button(action: resetAction) {
       Circle()

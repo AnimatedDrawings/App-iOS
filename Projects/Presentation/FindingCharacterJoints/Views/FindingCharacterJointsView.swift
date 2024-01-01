@@ -10,7 +10,8 @@ import SwiftUI
 import FindingCharacterJointsFeatures
 import ThirdPartyLib
 import ModifyJoints
-import ADUIKit
+import ADUIKitSources
+import ADUIKitResources
 import DomainModel
 import SharedProvider
 
@@ -89,13 +90,13 @@ private extension FindingCharacterJointsView {
   struct Title: View {
     let title = "FINDING CHARACTER JOINTS"
     let description = "Here are your character's joints! Here's an example of what it should look like"
-    let descriptionImage: UIImage = ADUIKitAsset.SampleDrawing.step4Description.image
+    let descriptionImage: UIImage = ADUIKitResourcesAsset.SampleDrawing.step4Description.image
     
     var body: some View {
       VStack(alignment: .leading, spacing: 20) {
         Text(title)
           .font(.system(.title, weight: .semibold))
-          .foregroundColor(ADUIKitAsset.Color.blue2.swiftUIColor)
+          .foregroundColor(ADUIKitResourcesAsset.Color.blue2.swiftUIColor)
         
         Text(description)
         
@@ -128,7 +129,7 @@ private extension FindingCharacterJointsView {
           viewStore.send(.checkAction)
         }
         
-        GIFImage(sample: ADUIKitAsset.Gifs.step4Gif)
+        GIFImage(sample: ADUIKitResourcesAsset.Gifs.step4Gif)
           .frame(height: 250)
           .frame(maxWidth: .infinity, alignment: .center)
       }

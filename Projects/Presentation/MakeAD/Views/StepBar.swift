@@ -8,14 +8,14 @@
 
 import SwiftUI
 import SharedProvider
-import ADUIKit
+import ADUIKitResources
 
 struct StepBar: View {
   @State var statusBarWidth: CGFloat = 0
   let statusBarSpacing: CGFloat = 4
-  let activeColor: Color = ADUIKitAsset.Color.blue1.swiftUIColor
+  let activeColor: Color = ADUIKitResourcesAsset.Color.blue1.swiftUIColor
   let inActiveColor: Color = .gray
-  let completeColor: Color = ADUIKitAsset.Color.green1.swiftUIColor
+  let completeColor: Color = ADUIKitResourcesAsset.Color.green1.swiftUIColor
   
   @SharedValue(\.shared.stepBar.currentStep) var currentStep
   @SharedValue(\.shared.stepBar.completeStep) var completeStep

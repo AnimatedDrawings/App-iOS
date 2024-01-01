@@ -9,7 +9,8 @@
 import SwiftUI
 import ThirdPartyLib
 import MaskingImage
-import ADUIKit
+import ADUIKitSources
+import ADUIKitResources
 import SharedProvider
 import SeparatingCharacterFeatures
 import DomainModel
@@ -98,7 +99,7 @@ private extension SeparatingCharacterView {
       VStack(alignment: .leading, spacing: 20) {
         Text(title)
           .font(.system(.title, weight: .semibold))
-          .foregroundColor(ADUIKitAsset.Color.blue2.swiftUIColor)
+          .foregroundColor(ADUIKitResourcesAsset.Color.blue2.swiftUIColor)
         
         Text(description)
       }
@@ -123,7 +124,7 @@ private extension SeparatingCharacterView {
           viewStore.send(.checkAction1)
         }
         
-        GIFImage(sample: ADUIKitAsset.Gifs.step3Gif1)
+        GIFImage(sample: ADUIKitResourcesAsset.Gifs.step3Gif1)
           .frame(height: 250)
           .frame(maxWidth: .infinity, alignment: .center)
         
@@ -134,7 +135,7 @@ private extension SeparatingCharacterView {
           viewStore.send(.checkAction2)
         }
         
-        GIFImage(sample: ADUIKitAsset.Gifs.step3Gif2)
+        GIFImage(sample: ADUIKitResourcesAsset.Gifs.step3Gif2)
           .frame(height: 250, alignment: .center)
           .frame(maxWidth: .infinity, alignment: .center)
       }

@@ -9,6 +9,7 @@
 import SwiftUI
 import SharedProvider
 import DomainModel
+import ADUIKitResources
 
 public struct CheckList<C: View>: View {
   let CheckListContent: C
@@ -24,8 +25,8 @@ public struct CheckList<C: View>: View {
   }
   var alertColor: Color {
     return isCorrectStep ?
-    ADUIKitAsset.Color.blue1.swiftUIColor :
-    ADUIKitAsset.Color.red1.swiftUIColor
+    ADUIKitResourcesAsset.Color.blue1.swiftUIColor :
+    ADUIKitResourcesAsset.Color.red1.swiftUIColor
   }
   
   var isDisableContent: Bool {
@@ -62,25 +63,3 @@ extension CheckList {
       .foregroundColor(.black)
   }
 }
-
-//public extension Step {
-//  static func isCorrectStep(myStep: Step, completeStep: Step) -> Bool {
-//    switch (myStep.rawValue, completeStep.rawValue) {
-//    case let (x, y) where y + 1 < x:
-//      return false
-//    default:
-//      return true
-//    }
-//  }
-//
-//  static func isActiveButton(myStep: Step, completeStep: Step) -> Bool {
-//    switch (myStep.rawValue, completeStep.rawValue) {
-//    case let (x, y) where y < x:
-//      return false
-//    default:
-//      return true
-//    }
-//  }
-//}
-//
-//

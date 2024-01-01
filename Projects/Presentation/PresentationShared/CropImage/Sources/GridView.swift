@@ -7,10 +7,10 @@
 //
 
 import SwiftUI
-import ADUIKit
+import ADUIKitResources
 
 struct GridView: View {
-  let strokeColor: Color = ADUIKitAsset.Color.blue3.swiftUIColor
+  let strokeColor: Color = ADUIKitResourcesAsset.Color.blue3.swiftUIColor
   let lineWidth: CGFloat = 3
   /// (lineWidth * lineCount) + (minimumSpace * spaceCount)
   let minSize: CGFloat = (3 * 4) + (2 * 3)
