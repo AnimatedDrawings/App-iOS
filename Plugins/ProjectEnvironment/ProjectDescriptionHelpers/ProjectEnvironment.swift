@@ -60,7 +60,7 @@ public extension Target {
     organizationName: String = "chminipark",
     deploymentTarget: DeploymentTarget? = .iOS(targetVersion: "16.0", devices: [.iphone]),
     infoPlist: InfoPlist = .default,
-    sources: SourceFilesList = ["Sources/**"],
+    sources: SourceFilesList? = ["Sources/**"],
     resources: ResourceFileElements? = ["Resources/**"],
     copyFiles: [ProjectDescription.CopyFilesAction]? = nil,
     headers: ProjectDescription.Headers? = nil,

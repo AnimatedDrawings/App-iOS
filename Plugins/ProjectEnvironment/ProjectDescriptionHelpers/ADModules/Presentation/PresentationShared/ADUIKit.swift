@@ -9,6 +9,6 @@ import Foundation
 
 public struct ADUIKit: Module {
   public static var projectName: String = "ADUIKit"
-  public static var targetName: String = "ADUIKit"
+  public static var targetName: String = "ADUIKitSources"
   public static var prefixPathString: String = PresentationShared.prefixPathString
 }
