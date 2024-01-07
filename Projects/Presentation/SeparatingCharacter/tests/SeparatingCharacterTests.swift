@@ -10,9 +10,9 @@ import XCTest
 @testable import SeparatingCharacterFeatures
 import ThirdPartyLib
 import SharedProvider
-import ADUIKit
 import NetworkProvider
 import DomainModel
+import ADUIKitResources
 
 @MainActor
 final class SeparatingCharacterTests: XCTestCase {
@@ -61,7 +61,7 @@ final class SeparatingCharacterTests: XCTestCase {
     let testMakeADStorage = Shared.testValue.makeAD
     let mockADID = "testMaskNextAction"
     await testMakeADStorage.ad_id.set(mockADID)
-    let mockMaskedImage: UIImage = ADUIKitAsset.SampleDrawing.step1Example1.image
+    let mockMaskedImage: UIImage = ADUIKitResourcesAsset.SampleDrawing.step1Example1.image
     await testMakeADStorage.maskedImage.set(mockMaskedImage)
     
     let testSeparateCharacter = MakeADProvider.testValue.separateCharacter
