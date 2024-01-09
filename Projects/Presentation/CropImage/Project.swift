@@ -10,13 +10,10 @@ import ProjectEnvironment
 
 let project: Project = .makeProject(
   name: CropImage.projectName,
-  targets: [
-    .makeTarget(
-      targetName: CropImage.targetName,
-      product: .staticLibrary,
-      dependencies: [
-        ADUIKit.projectDepedency
-      ]
+  options: .enableCodeCoverage,
+  targets: CropImage
+    .uPresentationTargets(
+      resource: true,
+      dependency: PresentationShared.projectDepedency
     )
-  ]
 )

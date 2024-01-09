@@ -11,6 +11,7 @@ import SwiftUI
 import SharedProvider
 import DomainModel
 import NetworkProvider
+import CropImageFeatures
 
 public struct FindingTheCharacterFeature: Reducer {
   public init() {}
@@ -21,6 +22,9 @@ public struct FindingTheCharacterFeature: Reducer {
   
   public var body: some Reducer<State, Action> {
     BindingReducer()
+    Scope(state: \.cropImage, action: /Action.cropImage) {
+      CropImageFeature()
+    }
     MainReducer()
   }
 }
@@ -35,6 +39,8 @@ public extension FindingTheCharacterFeature {
     var isSuccessUpload: Bool
    
     @BindingState public var isShowNetworkErrorAlert: Bool
+    
+    public var cropImage: CropImageFeature.State = .init()
     
     public init(
       checkState: Bool = false,
@@ -69,6 +75,8 @@ public extension FindingTheCharacterFeature {
     case showNetworkErrorAlert
     
     case initState
+    
+    case cropImage(CropImageFeature.Action)
   }
 }
 
@@ -169,7 +177,14 @@ extension FindingTheCharacterFeature {
       case .initState:
         state = State()
         return .none
+        
+      case .cropImage(.cancelAction):
+        return .send(.toggleCropImageView)
+        
+      case .cropImage(.saveAction):
+        return .none
       }
     }
   }
 }
+

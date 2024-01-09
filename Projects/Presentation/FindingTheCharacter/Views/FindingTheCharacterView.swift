@@ -70,9 +70,10 @@ public struct FindingTheCharacterView: ADUI {
             cropNextAction: { croppedUIImage, croppedCGRect in
               viewStore.send(.findTheCharacter(croppedUIImage, croppedCGRect))
             },
-            cancelAction: {
-              viewStore.send(.toggleCropImageView)
-            }
+            store: self.store.scope(
+              state: \.cropImage,
+              action: FindingTheCharacterFeature.Action.cropImage
+            )
           )
           .transparentBlurBackground()
           .addLoadingView(
@@ -161,8 +162,32 @@ private extension FindingTheCharacterView {
 
 // MARK: - Previews
 
-struct FindingTheCharacterView_Previews: PreviewProvider {
-  static var previews: some View {
-    FindingTheCharacterView()
+struct Preview_FindingTheCharacter: View {
+  @SharedValue(\.shared.stepBar.completeStep) var completeStep
+  
+  @SharedValue(\.shared.makeAD.originalImage) var originalImage
+  @SharedValue(\.shared.makeAD.boundingBox) var boundingBox
+  
+  let store: StoreOf<FindingTheCharacterFeature>
+  
+  init(
+    store: StoreOf<FindingTheCharacterFeature> = Store(
+      initialState: FindingTheCharacterFeature.State(checkState: true)
+    ) {
+      FindingTheCharacterFeature()
+    }
+  ) {
+    self.store = store
+    self.completeStep = .UploadADrawing
+    self.originalImage = ADUIKitResourcesAsset.SampleDrawing.garlic.image
+    self.boundingBox = CGRect(x: 100, y: 100, width: 500, height: 800)
   }
+  
+  var body: some View {
+    FindingTheCharacterView(store: store)
+  }
+}
+
+#Preview {
+  Preview_FindingTheCharacter()
 }

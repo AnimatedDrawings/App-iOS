@@ -7,8 +7,8 @@
 
 import Foundation
 
-public struct CropImage: Module {
+public struct CropImage: uFeatureModule {
   public static var projectName: String = "CropImage"
   public static var targetName: String = "CropImage"
-  public static var prefixPathString: String = PresentationShared.prefixPathString
+  public static var prefixPathString: String = Presentation.prefixPathString
 }

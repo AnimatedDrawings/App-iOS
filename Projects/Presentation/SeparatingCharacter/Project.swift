@@ -13,6 +13,7 @@ let project: Project = .makeProject(
   options: .enableCodeCoverage,
   targets: SeparatingCharacter
     .uPresentationTargets(
+      resource: false,
       dependency: PresentationShared.projectDepedency
     )
 )

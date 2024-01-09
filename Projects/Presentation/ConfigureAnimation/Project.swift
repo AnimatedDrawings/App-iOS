@@ -11,7 +11,9 @@ import ProjectEnvironment
 let project: Project = .makeProject(
   name: ConfigureAnimation.projectName,
   options: .enableCodeCoverage,
-  targets: ConfigureAnimation.uPresentationTargets(
-    dependency: PresentationShared.projectDepedency
-  )
+  targets: ConfigureAnimation
+    .uPresentationTargets(
+      resource: false,
+      dependency: PresentationShared.projectDepedency
+    )
 )

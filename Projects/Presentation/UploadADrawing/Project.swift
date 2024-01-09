@@ -11,7 +11,9 @@ import ProjectEnvironment
 let project: Project = .makeProject(
   name: UploadADrawing.projectName,
   options: .enableCodeCoverage,
-  targets: UploadADrawing.uPresentationTargets(
-    dependency: PresentationShared.projectDepedency
-  )
+  targets: UploadADrawing
+    .uPresentationTargets(
+      resource: false,
+      dependency: PresentationShared.projectDepedency
+    )
 )

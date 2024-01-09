@@ -11,7 +11,9 @@ import ProjectEnvironment
 let project: Project = .makeProject(
   name: FindingCharacterJoints.projectName,
   options: .enableCodeCoverage,
-  targets: FindingCharacterJoints.uPresentationTargets(
-    dependency: PresentationShared.projectDepedency
-  )
+  targets: FindingCharacterJoints
+    .uPresentationTargets(
+      resource: false,
+      dependency: PresentationShared.projectDepedency
+    )
 )

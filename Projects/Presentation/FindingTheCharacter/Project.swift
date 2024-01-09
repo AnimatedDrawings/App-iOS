@@ -11,7 +11,9 @@ import ProjectEnvironment
 let project: Project = .makeProject(
   name: FindingTheCharacter.projectName,
   options: .enableCodeCoverage,
-  targets: FindingTheCharacter.uPresentationTargets(
-    dependency: PresentationShared.projectDepedency
-  )
+  targets: FindingTheCharacter
+    .uPresentationTargets(
+      resource: false,
+      dependency: CropImage.projectDepedency
+    )
 )

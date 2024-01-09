@@ -10,8 +10,21 @@ import ProjectDescription
 public protocol uFeatureModule: Module {}
 
 public extension uFeatureModule {
-  static func uPresentationTargets(dependency: TargetDependency) -> [Target] {
-    return [
+  static func uPresentationTargets(
+    resource: Bool,
+    dependency: TargetDependency
+  ) -> [Target] {
+    return resource ?
+    [
+      exampleTarget(),
+      viewsWithResourceTarget(),
+      resourcesTarget(),
+      featuresTarget(name: featuresUPresentationName),
+      testsTarget(dependencyName: featuresUPresentationName),
+      testingsTarget(),
+      interfacesTarget(dependencies: [dependency])
+    ] :
+    [
       exampleTarget(),
       viewsTarget(),
       featuresTarget(name: featuresUPresentationName),
@@ -21,8 +34,21 @@ public extension uFeatureModule {
     ]
   }
   
-  static func uPresentationTargets(dependencies: [TargetDependency]) -> [Target] {
-    return [
+  static func uPresentationTargets(
+    resource: Bool,
+    dependencies: [TargetDependency]
+  ) -> [Target] {
+    return resource ?
+    [
+      exampleTarget(),
+      viewsWithResourceTarget(),
+      resourcesTarget(),
+      featuresTarget(name: featuresUPresentationName),
+      testsTarget(dependencyName: featuresUPresentationName),
+      testingsTarget(),
+      interfacesTarget(dependencies: dependencies)
+    ] :
+    [
       exampleTarget(),
       viewsTarget(),
       featuresTarget(name: featuresUPresentationName),
@@ -58,6 +84,10 @@ public extension uFeatureModule {
   
   static var viewsName: String {
     Self.targetName
+  }
+  
+  static var resourcesName: String {
+    Self.targetName + "Resources"
   }
   
   static var featuresUPresentationName: String {
@@ -107,6 +137,26 @@ public extension uFeatureModule {
     )
   }
   
+  static func viewsWithResourceTarget() -> Target {
+    .makeTarget(
+      targetName: viewsName,
+      product: .staticLibrary,
+      sources: ["Views/**"],
+      dependencies: [
+        .target(name: featuresUPresentationName),
+        .target(name: resourcesName)
+      ]
+    )
+  }
+  
+  static func resourcesTarget() -> Target {
+    .makeTarget(
+      targetName: resourcesName,
+      product: .staticLibrary,
+      sources: nil
+    )
+  }
+  
   static func featuresTarget(name: String) -> Target {
     .makeTarget(
       targetName: name,
@@ -133,7 +183,6 @@ public extension uFeatureModule {
     )
   }
   
-  // product?
   static func testingsTarget() -> Target {
     .makeTarget(
       targetName: testingsName,
