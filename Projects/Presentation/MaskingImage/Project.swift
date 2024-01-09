@@ -10,14 +10,10 @@ import ProjectEnvironment
 
 let project: Project = .makeProject(
   name: MaskingImage.projectName,
-  targets: [
-    .makeTarget(
-      targetName: MaskingImage.targetName,
-      product: .staticLibrary,
-      dependencies: [
-        ADUIKit.projectDepedency
-      ]
+  options: .enableCodeCoverage,
+  targets: MaskingImage
+    .uPresentationTargets(
+      resource: true,
+      dependency: PresentationShared.projectDepedency
     )
-  ]
 )
-

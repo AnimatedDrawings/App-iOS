@@ -14,6 +14,6 @@ let project: Project = .makeProject(
   targets: SeparatingCharacter
     .uPresentationTargets(
       resource: false,
-      dependency: PresentationShared.projectDepedency
+      dependency: MaskingImage.projectDepedency
     )
 )

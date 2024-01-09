@@ -16,8 +16,6 @@ let project: Project = .makeProject(
       product: .staticLibrary,
       resources: nil,
       dependencies: [
-//        CropImage.projectDepedency,
-        MaskingImage.projectDepedency,
         ModifyJoints.projectDepedency
       ]
     )
