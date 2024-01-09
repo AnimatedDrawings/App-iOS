@@ -9,6 +9,9 @@
 import SwiftUI
 import ADUIKitResources
 
+import ThirdPartyLib
+import CropImageFeatures
+
 struct GridView: View {
   let strokeColor: Color = ADUIKitResourcesAsset.Color.blue3.swiftUIColor
   let lineWidth: CGFloat = 3
@@ -24,14 +27,15 @@ struct GridView: View {
   let maxWidth: CGFloat
   let maxHeight: CGFloat
   
-  init(boundingBoxInfo: ObservedObject<BoundingBoxInfo>) {
-    self._croppedRect = boundingBoxInfo.projectedValue.croppedRect
-    self._curX = boundingBoxInfo.projectedValue.curRect.origin.x
-    self._curY = boundingBoxInfo.projectedValue.curRect.origin.y
-    self._curWidth = boundingBoxInfo.projectedValue.curRect.size.width
-    self._curHeight = boundingBoxInfo.projectedValue.curRect.size.height
-    self.maxWidth = boundingBoxInfo.wrappedValue.viewSize.width
-    self.maxHeight = boundingBoxInfo.wrappedValue.viewSize.height
+  @MainActor
+  init(cropImageViewStore: ViewStoreOf<CropImageFeature>) {
+    self._croppedRect = cropImageViewStore.$boundingBoxInfo.croppedRect
+    self._curX = cropImageViewStore.$boundingBoxInfo.curRect.origin.x
+    self._curY = cropImageViewStore.$boundingBoxInfo.curRect.origin.y
+    self._curWidth = cropImageViewStore.$boundingBoxInfo.curRect.size.width
+    self._curHeight = cropImageViewStore.$boundingBoxInfo.curRect.size.height
+    self.maxWidth = cropImageViewStore.boundingBoxInfo.viewSize.width
+    self.maxHeight = cropImageViewStore.boundingBoxInfo.viewSize.height
   }
 
   var body: some View {

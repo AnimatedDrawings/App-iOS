@@ -19,17 +19,15 @@ public struct FindingTheCharacterView: ADUI {
   public typealias MyFeature = FindingTheCharacterFeature
   
   public init(
-    store: MyStore = Store(
-      initialState: .init()
-    ) {
+    store: MyStore = Store(initialState: .init()) {
       MyFeature()
     }
   ) {
-    self.store = store
-    self._viewStore = StateObject(
-      wrappedValue: ViewStore(store, observe: { $0 })
-    )
-  }
+  self.store = store
+  self._viewStore = StateObject(
+    wrappedValue: ViewStore(store, observe: { $0 })
+  )
+}
   
   let store: MyStore
   @StateObject var viewStore: MyViewStore
@@ -62,26 +60,21 @@ public struct FindingTheCharacterView: ADUI {
         viewStore.send(.onDismissCropImageView)
       },
       content: {
-        if let originalImage = originalImage,
-           let boundingBox = boundingBox {
-          CropImageView(
-            originalImage: originalImage,
-            originCGRect: boundingBox,
-            cropNextAction: { croppedUIImage, croppedCGRect in
-              viewStore.send(.findTheCharacter(croppedUIImage, croppedCGRect))
-            },
-            store: self.store.scope(
-              state: \.cropImage,
-              action: FindingTheCharacterFeature.Action.cropImage
-            )
+        CropImageView(
+          cropNextAction: { croppedUIImage, croppedCGRect in
+            viewStore.send(.findTheCharacter(croppedUIImage, croppedCGRect))
+          },
+          store: self.store.scope(
+            state: \.cropImage,
+            action: FindingTheCharacterFeature.Action.cropImage
           )
-          .transparentBlurBackground()
-          .addLoadingView(
-            isShow: viewStore.state.isShowLoadingView,
-            description: "Cropping Image ..."
-          )
-          .alertNetworkError(isPresented: viewStore.$isShowNetworkErrorAlert)
-        }
+        )
+        .transparentBlurBackground()
+        .addLoadingView(
+          isShow: viewStore.state.isShowLoadingView,
+          description: "Cropping Image ..."
+        )
+        .alertNetworkError(isPresented: viewStore.$isShowNetworkErrorAlert)
       }
     )
     .resetMakeADView(.FindingTheCharacter) {
@@ -112,7 +105,7 @@ private extension FindingTheCharacterView {
     @ObservedObject var viewStore: MyViewStore
     let description = "Resize the box to ensure it tightly fits one character."
     let myStep: Step = .FindingTheCharacter
-        
+    
     var body: some View {
       VStack(alignment: .leading, spacing: 15) {
         CheckListButton(
@@ -164,7 +157,6 @@ private extension FindingTheCharacterView {
 
 struct Preview_FindingTheCharacter: View {
   @SharedValue(\.shared.stepBar.completeStep) var completeStep
-  
   @SharedValue(\.shared.makeAD.originalImage) var originalImage
   @SharedValue(\.shared.makeAD.boundingBox) var boundingBox
   

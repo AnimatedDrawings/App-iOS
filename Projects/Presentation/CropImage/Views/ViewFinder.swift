@@ -7,17 +7,21 @@
 //
 
 import SwiftUI
+import ThirdPartyLib
+import CropImageFeatures
+import SharedProvider
 
 struct ViewFinder: View {
-  let originalImage: UIImage
-  @ObservedObject var boundingBoxInfo: BoundingBoxInfo
+  @ObservedObject var cropImageViewStore: ViewStoreOf<CropImageFeature>
+  @SharedValue(\.shared.makeAD.originalImage) var originalImage
   
-  init(originalImage: UIImage, boundingBoxInfo: BoundingBoxInfo) {
-    self.originalImage = originalImage
-    self.boundingBoxInfo = boundingBoxInfo
+  init(cropImageViewStore: ViewStoreOf<CropImageFeature>) {
+    self.cropImageViewStore = cropImageViewStore
   }
   
   var body: some View {
+    let originalImage: UIImage = self.originalImage ?? UIImage()
+    
     Image(uiImage: originalImage)
       .resizable()
       .aspectRatio(contentMode: .fit)
@@ -26,15 +30,16 @@ struct ViewFinder: View {
           Color.clear
             .onAppear {
               let cgRect: CGRect = geo.frame(in: .local)
-              self.boundingBoxInfo.viewSize = cgRect
-              self.boundingBoxInfo.imageScale = self.originalImage.size.width != 0 ?
-              cgRect.size.width / self.originalImage.size.width :
+              cropImageViewStore.send(.initViewSize(cgRect))
+              let imageScale = originalImage.size.width != 0 ?
+              cgRect.size.width / originalImage.size.width :
               0
+              cropImageViewStore.send(.initImageScale(imageScale))
             }
         }
       )
       .overlay {
-        GridView(boundingBoxInfo: _boundingBoxInfo)
+        GridView(cropImageViewStore: cropImageViewStore)
       }
   }
 }

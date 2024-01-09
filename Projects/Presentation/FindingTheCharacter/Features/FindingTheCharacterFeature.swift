@@ -32,28 +32,26 @@ public struct FindingTheCharacterFeature: Reducer {
 public extension FindingTheCharacterFeature {
   struct State: Equatable {
     @BindingState public var checkState: Bool
-
     @BindingState public var isShowCropImageView: Bool
     public var isShowLoadingView: Bool
-    
     var isSuccessUpload: Bool
-   
     @BindingState public var isShowNetworkErrorAlert: Bool
-    
-    public var cropImage: CropImageFeature.State = .init()
+    public var cropImage: CropImageFeature.State
     
     public init(
       checkState: Bool = false,
       isShowCropImageView: Bool = false,
       isShowLoadingView: Bool = false,
       isSuccessUpload: Bool = false,
-      isShowNetworkErrorAlert: Bool = false
+      isShowNetworkErrorAlert: Bool = false,
+      cropImage: CropImageFeature.State = .init()
     ) {
       self.checkState = checkState
       self.isShowCropImageView = isShowCropImageView
       self.isShowLoadingView = isShowLoadingView
       self.isSuccessUpload = isSuccessUpload
       self.isShowNetworkErrorAlert = isShowNetworkErrorAlert
+      self.cropImage = cropImage
     }
   }
 }
@@ -178,10 +176,13 @@ extension FindingTheCharacterFeature {
         state = State()
         return .none
         
-      case .cropImage(.cancelAction):
+      case .cropImage(.cancel):
         return .send(.toggleCropImageView)
         
-      case .cropImage(.saveAction):
+      case .cropImage(.save):
+        return .none
+        
+      default:
         return .none
       }
     }
