@@ -171,20 +171,24 @@ private extension SeparatingCharacterView {
   }
 }
 
-struct Previews_SeparatingCharacterView: View {
+
+// MARK: - Preview
+
+struct Preview_SeparatingCharacterView: View {
   @SharedValue(\.shared.stepBar.completeStep) var completeStep
+  @SharedValue(\.shared.makeAD.croppedImage) var croppedImage
+  @SharedValue(\.shared.makeAD.initMaskImage) var initMaskImage
   
   var body: some View {
     SeparatingCharacterView()
       .onAppear {
         completeStep = .FindingTheCharacter
+        croppedImage = ADUIKitResourcesAsset.TestImages.croppedImage.image
+        initMaskImage = ADUIKitResourcesAsset.TestImages.maskedImg.image
       }
   }
 }
 
-// MARK: - Previews
-struct SeparatingCharacterView_Previews: PreviewProvider {
-  static var previews: some View {
-    Previews_SeparatingCharacterView()
-  }
+#Preview {
+  Preview_SeparatingCharacterView()
 }

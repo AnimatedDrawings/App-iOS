@@ -10,8 +10,15 @@ import Combine
 import ADUIKitSources
 import ADUIKitResources
 import MaskingImageResources
+import ThirdPartyLib
+import MaskingImageFeatures
 
-public struct MaskingImageView: View {
+public struct MaskingImageView: ADUI {
+  public typealias MyFeature = MaskingImageFeature
+  
+  let store: MyStore
+  let viewStore: MyViewStore
+  
   let croppedImage: UIImage
   let initMaskImage: UIImage
   
@@ -23,12 +30,15 @@ public struct MaskingImageView: View {
   @State var toolSizerButtonOffset: CGFloat = 0
   
   public init(
+    store: MyStore = Store(initialState: .init()) { MyFeature() },
     croppedImage: UIImage,
     initMaskImage: UIImage,
     maskedImage: Binding<UIImage?>,
     maskNextAction: @escaping (Bool) -> (),
     cancelAction: @escaping () -> ()
   ) {
+    self.store = store
+    self.viewStore = ViewStore(store, observe: { $0 })
     self.croppedImage = croppedImage
     self.initMaskImage = initMaskImage
     self._maskableViewLink = StateObject(

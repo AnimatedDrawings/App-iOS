@@ -12,7 +12,7 @@ import SwiftUI
 struct SeparatingCharacterExample: App {
   var body: some Scene {
     WindowGroup {
-      Previews_SeparatingCharacterView()
+      Preview_SeparatingCharacterView()
     }
   }
 }
