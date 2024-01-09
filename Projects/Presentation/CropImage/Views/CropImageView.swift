@@ -9,7 +9,6 @@
 import SwiftUI
 import ADUIKitSources
 import ADUIKitResources
-import CropImageResources
 import CropImageFeatures
 import ThirdPartyLib
 
@@ -144,7 +143,7 @@ extension CropImageView {
 // MARK: - Previews_CropImageView
 
 struct Previews_CropImageView: View {
-  let originalImage: UIImage = CropImageResourcesAsset.garlic.image
+  let originalImage: UIImage = ADUIKitResourcesAsset.SampleDrawing.garlic.image
   let originCGRect: CGRect = .init(origin: .init(x: 100, y: 100), size: .init(width: 200, height: 200))
   
   @State var isPresentedCropResultView = false

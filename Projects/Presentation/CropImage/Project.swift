@@ -13,7 +13,7 @@ let project: Project = .makeProject(
   options: .enableCodeCoverage,
   targets: CropImage
     .uPresentationTargets(
-      resource: true,
+      resource: false,
       dependency: PresentationShared.projectDepedency
     )
 )
