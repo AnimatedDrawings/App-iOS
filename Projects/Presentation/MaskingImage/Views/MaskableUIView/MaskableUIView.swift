@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import MaskingImageFeatures
 
 class MaskableUIView: UIView {
   // MARK: - Private Property
@@ -27,7 +28,7 @@ class MaskableUIView: UIView {
   private var cache: [CacheContent] = []
   
   // MARK: - Public Property
-  var curDrawingAction: DrawingAction
+  var curDrawingState: DrawingTool
   var curCircleRadius: CGFloat
   var maskedImage: UIImage? {
     guard let renderer = renderer else { return nil}
@@ -43,12 +44,12 @@ class MaskableUIView: UIView {
     myFrame: CGRect,
     croppedImage: UIImage,
     initMaskImage: UIImage,
-    curDrawingAction: DrawingAction,
+    curDrawingState: DrawingTool,
     curCircleRadius: CGFloat
   ) {
     self.croppedImageView.image = croppedImage
     self.initMaskImage = initMaskImage
-    self.curDrawingAction = curDrawingAction
+    self.curDrawingState = curDrawingState
     self.curCircleRadius = curCircleRadius
     super.init(frame: CGRect(origin: .zero, size: myFrame.size))
     addMaskGesture()
@@ -127,7 +128,7 @@ extension MaskableUIView {
         let blendMode: CGBlendMode
         let alpha: CGFloat
         
-        if curDrawingAction == .erase {
+        if curDrawingState == .erase {
           blendMode = .sourceIn
           alpha = 0
         } else {

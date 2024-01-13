@@ -11,6 +11,7 @@ import SwiftUI
 import SharedProvider
 import NetworkProvider
 import DomainModel
+import MaskingImageFeatures
 
 public struct SeparatingCharacterFeature: Reducer {
   public init() {}
@@ -21,6 +22,9 @@ public struct SeparatingCharacterFeature: Reducer {
   
   public var body: some Reducer<State, Action> {
     BindingReducer()
+    Scope(state: \.maskingImage, action: /Action.maskingImage) {
+      MaskingImageFeature()
+    }
     MainReducer()
   }
 }
@@ -37,6 +41,8 @@ public extension SeparatingCharacterFeature {
     
     @BindingState public var isShowNetworkErrorAlert: Bool
     
+    public var maskingImage: MaskingImageFeature.State
+    
     public init(
       checkState1: Bool = false,
       checkState2: Bool = false,
@@ -44,7 +50,8 @@ public extension SeparatingCharacterFeature {
       isShowMaskingImageView: Bool = false,
       isSuccessSeparateCharacter: Bool = false,
       isShowLoadingView: Bool = false,
-      isShowNetworkErrorAlert: Bool = false
+      isShowNetworkErrorAlert: Bool = false,
+      maskingImage: MaskingImageFeature.State = .init()
     ) {
       self.checkState1 = checkState1
       self.checkState2 = checkState2
@@ -53,6 +60,7 @@ public extension SeparatingCharacterFeature {
       self.isSuccessSeparateCharacter = isSuccessSeparateCharacter
       self.isShowLoadingView = isShowLoadingView
       self.isShowNetworkErrorAlert = isShowNetworkErrorAlert
+      self.maskingImage = maskingImage
     }
   }
 }
@@ -66,13 +74,15 @@ public extension SeparatingCharacterFeature {
     case toggleMaskingImageView
     
     case setLoadingView(Bool)
-    case maskNextAction(Bool)
+    case maskNextAction
     case separateCharacterResponse(TaskResult<Joints>)
     case onDismissMakingImageView
     
     case showNetworkErrorAlert
     
     case initState
+    
+    case maskingImage(MaskingImageFeature.Action)
   }
 }
 
@@ -101,10 +111,9 @@ extension SeparatingCharacterFeature {
         state.isShowLoadingView = flag
         return .none
         
-      case .maskNextAction(let maskResult):
+      case .maskNextAction:
         return .run { send in
-          guard maskResult,
-                let ad_id = await makeAD.ad_id.get(),
+          guard let ad_id = await makeAD.ad_id.get(),
                 let maskedImageData = await makeAD.maskedImage.get()?.pngData()
           else {
             return
@@ -127,7 +136,7 @@ extension SeparatingCharacterFeature {
           await send(.setLoadingView(false))
           await send(.toggleMaskingImageView)
         }
-      
+        
       case .separateCharacterResponse(.failure(let error)):
         print(error)
         state.isSuccessSeparateCharacter = false
@@ -135,7 +144,7 @@ extension SeparatingCharacterFeature {
           await send(.setLoadingView(false))
           await send(.showNetworkErrorAlert)
         }
-          
+        
       case .onDismissMakingImageView:
         if state.isSuccessSeparateCharacter == true {
           state.isSuccessSeparateCharacter = false
@@ -153,6 +162,15 @@ extension SeparatingCharacterFeature {
         
       case .initState:
         state = State()
+        return .none
+        
+      case .maskingImage(.cancel):
+        return .send(.toggleMaskingImageView)
+        
+      case .maskingImage(.save):
+        return .send(.maskNextAction)
+        
+      default:
         return .none
       }
     }

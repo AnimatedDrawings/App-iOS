@@ -10,36 +10,23 @@ import ADUIKitResources
 import ThirdPartyLib
 import MaskingImageFeatures
 
-struct MaskToolView: ADUI {
-  typealias MyFeature = MaskToolFeature
-  let store: MyStore
-  let viewStore: MyViewStore
+struct MaskToolView: View {
+  @State private var toolSizerSize: CGFloat = 0
+  @State private var toolSizerPadding: CGFloat = 0
+  @State private var toolSizerButtonOffset: CGFloat = 0
+  private let heightPanel: CGFloat = 65
+  private let strokeColor: Color = ADUIKitResourcesAsset.Color.blue1.swiftUIColor
   
-  let strokeColor: Color = ADUIKitResourcesAsset.Color.blue1.swiftUIColor
-  @ObservedObject var maskToolState: MaskToolState
-  let heightPanel: CGFloat = 65
-  
-  @State var toolSizerSize: CGFloat = 0
-  @State var toolSizerPadding: CGFloat = 0
-  
-  @Binding var toolSizerButtonOffset: CGFloat
+  @ObservedObject var viewStore: ViewStoreOf<MaskingImageFeature>
   
   init(
-    store: MyStore = Store(initialState: .init()) {
-      MyFeature()
-    },
-    maskToolState: MaskToolState,
-    toolSizerButtonOffset: Binding<CGFloat>
+    viewStore: ViewStoreOf<MaskingImageFeature>
   ) {
-    self.store = store
-    self.viewStore = ViewStore(store, observe: { $0 })
-    self.maskToolState = maskToolState
-    self._toolSizerButtonOffset = toolSizerButtonOffset
+    self.viewStore = viewStore
   }
   
   var body: some View {
     ZStack {
-      
       MaskToolPanel(toolSizerSize: $toolSizerSize, height: heightPanel)
         .background(
           GeometryReader { geo in
@@ -66,7 +53,7 @@ struct MaskToolView: ADUI {
       
       ToolSizerButton(
         buttonSize: toolSizerSize,
-        curCircleRadius: $maskToolState.circleRadius
+        curCircleRadius: self.viewStore.$circleRadius
       )
       .offset(y: -((toolSizerSize / 2) + toolSizerPadding))
     }
@@ -90,55 +77,60 @@ extension MaskToolView {
   @ViewBuilder
   func MarkerButton() -> some View {
     MaskToolButton(
-      imageName: self.maskToolState.drawingAction == .draw ?
+      imageName: self.viewStore.drawingState == .draw ?
       "pencil.circle.fill" :
         "pencil.circle"
     ) {
-//      self.maskToolState.drawingAction = .draw
-      viewStore.send(.draw)
+      viewStore.send(.selectTool(.drawingTool(.draw)))
     }
   }
   
   @ViewBuilder
   func EraserButton() -> some View {
     MaskToolButton(
-      imageName: self.maskToolState.drawingAction == .erase ?
+      imageName: self.viewStore.drawingState == .erase ?
       "eraser.fill" :
         "eraser"
     ) {
-//      self.maskToolState.drawingAction = .erase
-      viewStore.send(.erase)
+      viewStore.send(.selectTool(.drawingTool(.erase)))
     }
   }
   
   @ViewBuilder
   func UndoButton() -> some View {
     MaskToolButton(imageName: "arrow.uturn.backward") {
-//      self.maskToolState.resetAction = .undo
-      viewStore.send(.undo)
+      viewStore.send(.selectTool(.undo))
     }
   }
   
   @ViewBuilder
   func ResetButton() -> some View {
     MaskToolButton(imageName: "trash") {
-//      self.maskToolState.resetAction = .reset
-      viewStore.send(.reset)
+      viewStore.send(.selectTool(.reset))
     }
   }
 }
+
 
 //MARK: - Preview
 
 struct Preview_MaskToolView: View {
   @StateObject var maskToolState: MaskToolState = .init()
-  @State var toolSizerButtonOffset: CGFloat = 20
+  @State var toolSizerButtonOffset: CGFloat = 0
+  
+  @StateObject var viewStore: ViewStoreOf<MaskingImageFeature>
+  
+  init() {
+    let store: StoreOf<MaskingImageFeature> = Store(
+      initialState: .init()
+    ) {
+      MaskingImageFeature()
+    }
+    self._viewStore = StateObject(wrappedValue: ViewStore(store, observe: { $0 }))
+  }
   
   var body: some View {
-    MaskToolView(
-      maskToolState: maskToolState,
-      toolSizerButtonOffset: $toolSizerButtonOffset
-    )
+    MaskToolView(viewStore: viewStore)
   }
 }
 

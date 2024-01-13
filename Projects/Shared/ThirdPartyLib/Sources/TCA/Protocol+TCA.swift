@@ -33,3 +33,9 @@ public extension TaskResult {
     }
   }
 }
+
+public extension ViewStore {
+  func action(_ action: ViewAction) -> (() -> Void) {
+    return { self.send(action) }
+  }
+}

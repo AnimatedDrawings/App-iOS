@@ -12,8 +12,7 @@ import SwiftUI
 struct MaskingImageExample: App {
   var body: some Scene {
     WindowGroup {
-//      Previews_MaskingImageView()
-      Text("")
+      Previews_MaskingImageView()
     }
   }
 }

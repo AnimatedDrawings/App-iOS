@@ -48,6 +48,9 @@ struct ToolSizerButton: View {
             .animation(.default, value: selectedCircle)
         }
     }
+    .onAppear {
+      curCircleRadius = toolSizes[0]
+    }
   }
   
   func action() {
