@@ -70,14 +70,7 @@ public struct SeparatingCharacterView: ADUI {
               action: MyFeature.Action.maskingImage
             ),
             croppedImage: croppedImage,
-            initMaskImage: initMaskImage,
-            maskedImage: $maskedImage
-//            maskNextAction: { maskResult in
-//              viewStore.send(.maskNextAction)
-//            },
-//            cancelAction: {
-//              viewStore.send(.toggleMaskingImageView)
-//            }
+            initMaskImage: initMaskImage
           )
           .transparentBlurBackground()
           .addLoadingView(

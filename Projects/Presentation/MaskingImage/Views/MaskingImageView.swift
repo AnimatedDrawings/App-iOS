@@ -27,8 +27,7 @@ public struct MaskingImageView: ADUI {
   public init(
     store: MyStore,
     croppedImage: UIImage,
-    initMaskImage: UIImage,
-    maskedImage: Binding<UIImage?>
+    initMaskImage: UIImage
   ) {
     self.store = store
     self.viewStore = ViewStore(store, observe: { $0 })
@@ -54,7 +53,7 @@ public struct MaskingImageView: ADUI {
       
       Spacer()
       
-      MaskToolView(viewStore: self.viewStore)
+      MaskToolView(viewStore: viewStore)
     }
   }
 }
@@ -70,8 +69,8 @@ struct Previews_MaskingImageView: View {
   let croppedImage: UIImage = ADUIKitResourcesAsset.TestImages.croppedImage.image
   let initMaskImage: UIImage = ADUIKitResourcesAsset.TestImages.maskedImage.image
   
-  @State var maskedImage: UIImage? = nil
   @State var isPresentedMaskResultView: Bool = false
+  @State var maskedImage: UIImage? = nil
   
   let store: StoreOf<MaskingImageFeature>
   
@@ -80,40 +79,23 @@ struct Previews_MaskingImageView: View {
   }
   
   var body: some View {
-    //    NavigationStack {
-    //      VStack {
-    //        MaskingImageView(
-    //          store: store,
-    //          croppedImage: croppedImage,
-    //          initMaskImage: initMaskImage,
-    //          maskedImage: $maskedImage,
-    //          maskNextAction: { isFinishMaskingImage in
-    //            if isFinishMaskingImage {
-    //              if let tmpImageData = self.maskedImage?.pngData() {
-    //                self.maskedImage = UIImage(data: tmpImageData)
-    //                self.isPresentedMaskResultView.toggle()
-    //              }
-    //            }
-    //          },
-    //          cancelAction: {}
-    //        )
-    //      }
-    //      .navigationDestination(isPresented: $isPresentedMaskResultView) {
-    //        Previews_MaskResultView(maskedImage: $maskedImage)
-    //      }
-    //    }
-    
     MaskingImageView(
       store: store,
       croppedImage: croppedImage,
-      initMaskImage: initMaskImage,
-      maskedImage: $maskedImage
+      initMaskImage: initMaskImage
     )
+    .receiveShared(\.shared.makeAD.maskedImage) { maskedImage in
+      self.maskedImage = maskedImage
+      self.isPresentedMaskResultView.toggle()
+    }
+    .sheet(isPresented: $isPresentedMaskResultView) {
+      Previews_MaskResultView(maskedImage: maskedImage)
+    }
   }
 }
 
 struct Previews_MaskResultView: View {
-  @Binding var maskedImage: UIImage?
+  let maskedImage: UIImage?
   
   var body: some View {
     if let maskedImage = maskedImage {

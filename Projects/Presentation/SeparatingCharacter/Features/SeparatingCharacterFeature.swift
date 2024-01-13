@@ -164,10 +164,10 @@ extension SeparatingCharacterFeature {
         state = State()
         return .none
         
-      case .maskingImage(.cancel):
+      case .maskingImage(.cancelAction):
         return .send(.toggleMaskingImageView)
         
-      case .maskingImage(.save):
+      case .maskingImage(.saveAction):
         return .send(.maskNextAction)
         
       default:

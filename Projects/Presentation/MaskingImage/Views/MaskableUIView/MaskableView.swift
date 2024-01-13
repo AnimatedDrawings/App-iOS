@@ -74,8 +74,7 @@ struct Preview_MaskableView: View {
     let store: StoreOf<MaskingImageFeature> = Store(
       initialState: MaskingImageFeature.State(
         drawingState: .erase,
-        circleRadius: 20,
-        maskedImage: nil
+        circleRadius: 20
       )
     ) {
       MaskingImageFeature()

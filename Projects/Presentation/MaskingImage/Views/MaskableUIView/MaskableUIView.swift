@@ -193,20 +193,3 @@ extension MaskableUIView {
     maskLayer.contents = maskImage?.cgImage
   }
 }
-
-
-// MARK: - Preview
-
-
-
-
-//struct Preview_MaskableUIView: View {
-//  var body: some View {
-//    MaskableUIViewRepresentable(
-//      myFrame: <#T##CGRect#>, croppedImage: <#T##UIImage#>, initMaskImage: <#T##UIImage#>, maskToolState: <#T##MaskToolState#>, maskableViewLink: <#T##MaskableViewLink#>)
-//  }
-//}
-//
-//#Preview {
-//  
-//}

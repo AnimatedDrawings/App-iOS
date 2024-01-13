@@ -115,7 +115,6 @@ extension MaskToolView {
 //MARK: - Preview
 
 struct Preview_MaskToolView: View {
-  @StateObject var maskToolState: MaskToolState = .init()
   @State var toolSizerButtonOffset: CGFloat = 0
   
   @StateObject var viewStore: ViewStoreOf<MaskingImageFeature>

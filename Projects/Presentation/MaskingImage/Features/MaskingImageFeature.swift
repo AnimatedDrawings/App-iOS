@@ -8,8 +8,11 @@
 
 import ThirdPartyLib
 import UIKit
+import SharedProvider
 
 public struct MaskingImageFeature: Reducer {
+  @Dependency(\.shared.makeAD.maskedImage) var maskedImage
+  
   public init() {}
   
   public var body: some Reducer<State, Action> {
@@ -22,15 +25,14 @@ public extension MaskingImageFeature {
   struct State: Equatable {
     public var drawingState: DrawingTool
     @BindingState public var circleRadius: CGFloat
-    public var maskedImage: UIImage?
     
     public var undoTrigger = false
     public var resetTrigger = false
+    public var saveTrigger = false
     
     public init(
       drawingState: DrawingTool = .erase,
-      circleRadius: CGFloat = 0,
-      maskedImage: UIImage? = nil
+      circleRadius: CGFloat = 0
     ) {
       self.drawingState = drawingState
       self.circleRadius = circleRadius
@@ -45,7 +47,7 @@ public extension MaskingImageFeature {
     case selectTool(MaskTool)
     
     case saveAction
-    case cropImage
+    case saveMaskedImage(UIImage?)
     
     case cancelAction
     case undoAction
@@ -72,12 +74,12 @@ extension MaskingImageFeature {
         }
         
       case .saveAction:
-        return .run { send in
-          await send(.cropImage)
-        }
-        
-      case .cropImage:
+        state.saveTrigger.toggle()
         return .none
+      case .saveMaskedImage(let image):
+        return .run { _ in
+          await maskedImage.set(image)
+        }
         
       case .cancelAction:
         return .none
