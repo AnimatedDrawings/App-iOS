@@ -8,20 +8,30 @@
 import SwiftUI
 import DomainModel
 import ADUIKitResources
+import ThirdPartyLib
+import ModifyJointsFeatures
 
 struct BonesView: View {
-  @ObservedObject var modifyJointsLink: ModifyJointsLink
-  let color: Color = ADUIKitResourcesAsset.Color.blue1.swiftUIColor
-  var skeletonDict: [String : Skeleton] {
-    return self.modifyJointsLink.skeletons
+  let viewSize: CGSize
+  @ObservedObject var viewStore: ViewStoreOf<ModifyJointsFeature>
+  
+  func calPoint(_ ratioPoint: RatioPoint) -> CGPoint {
+    let x = (viewSize.width * ratioPoint.x)
+    let y = (viewSize.height * ratioPoint.y)
+    
+    return CGPoint(x: x, y: y)
   }
   
   var body: some View {
-    ForEach(Array(self.skeletonDict.keys), id: \.self) { myName in
-      if let mySkeleton = self.skeletonDict[myName] {
+    ForEach(Array(viewStore.skeletons.keys), id: \.self) { myName in
+      if let mySkeleton = viewStore.skeletons[myName] {
         if let parentName = mySkeleton.parent,
-            let parentSkeleton = self.skeletonDict[parentName] {
-          BoneLine(me: mySkeleton.ratioPoint, parent: parentSkeleton.ratioPoint)
+           let parentSkeleton = viewStore.skeletons[parentName] {
+          BoneLine(
+            myPoint: calPoint(mySkeleton.ratioPoint),
+            parentPoint: calPoint(parentSkeleton.ratioPoint),
+            viewSize: viewSize
+          )
         }
       }
     }
@@ -29,21 +39,31 @@ struct BonesView: View {
 }
 
 extension BonesView {
-  var viewRect: CGRect {
-    return CGRect(
-      origin: .init(),
-      size: self.modifyJointsLink.viewSize
-    )
-  }
-  
-  @ViewBuilder
-  func BoneLine(me: RatioPoint, parent: RatioPoint) -> some View {
-    let myPoint: CGPoint = calPoint(me)
-    let parentPoint: CGPoint = calPoint(parent)
-    LineShape(myPoint: myPoint, parentPoint: parentPoint)
-      .path(in: self.viewRect)
-      .stroke(lineWidth: 5)
-      .foregroundColor(color)
+  struct BoneLine: View {
+    let myPoint: CGPoint
+    let parentPoint: CGPoint
+    let viewSize: CGSize
+    let color: Color = ADUIKitResourcesAsset.Color.blue1.swiftUIColor
+    
+    init(myPoint: CGPoint, parentPoint: CGPoint, viewSize: CGSize) {
+      self.myPoint = myPoint
+      self.parentPoint = parentPoint
+      self.viewSize = viewSize
+    }
+    
+    var viewRect: CGRect {
+      return CGRect(
+        origin: .init(),
+        size: self.viewSize
+      )
+    }
+    
+    var body: some View {
+      LineShape(myPoint: myPoint, parentPoint: parentPoint)
+        .path(in: self.viewRect)
+        .stroke(lineWidth: 5)
+        .foregroundColor(color)
+    }
   }
   
   struct LineShape: Shape {
@@ -58,12 +78,5 @@ extension BonesView {
       
       return path
     }
-  }
-  
-  func calPoint(_ ratioPoint: RatioPoint) -> CGPoint {
-    let x = (self.viewRect.width * ratioPoint.x)
-    let y = (self.viewRect.height * ratioPoint.y)
-    
-    return CGPoint(x: x, y: y)
   }
 }

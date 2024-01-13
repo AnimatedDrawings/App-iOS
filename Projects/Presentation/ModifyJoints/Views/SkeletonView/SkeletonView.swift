@@ -6,10 +6,14 @@
 //
 
 import SwiftUI
+import ThirdPartyLib
+import ModifyJointsFeatures
 
 struct SkeletonView: View {
   let croppedImage: UIImage
-  @ObservedObject var modifyJointsLink: ModifyJointsLink
+  @ObservedObject var viewStore: ViewStoreOf<ModifyJointsFeature>
+  
+  @State var viewSize: CGSize = .init()
   
   var body: some View {
     VStack {
@@ -25,12 +29,16 @@ struct SkeletonView: View {
                   Color.clear
                     .onAppear {
                       let viewSize = geo.frame(in: .local).size
-                      self.modifyJointsLink.viewSize = viewSize
+                      self.viewSize = viewSize
                     }
                   
-                  BonesView(modifyJointsLink: self.modifyJointsLink)
+                  BonesView(
+                    viewSize: viewSize,
+                    viewStore: viewStore
+                  )
                   JointsView(
-                    modifyJointsLink: self.modifyJointsLink
+                    viewSize: viewSize,
+                    viewStore: viewStore
                   )
                 }
               }

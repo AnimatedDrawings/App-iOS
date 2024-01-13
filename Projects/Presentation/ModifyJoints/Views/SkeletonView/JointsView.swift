@@ -8,24 +8,18 @@
 import SwiftUI
 import DomainModel
 import ADUIKitResources
+import ThirdPartyLib
+import ModifyJointsFeatures
 
 struct JointsView: View {
-  @ObservedObject var modifyJointsLink: ModifyJointsLink
+  let viewSize: CGSize
   let color: Color = ADUIKitResourcesAsset.Color.blue1.swiftUIColor
   let jointCircleSize: CGFloat = 15
-  var skeletonDict: [String : Skeleton] {
-    return self.modifyJointsLink.skeletons
-  }
-  
-  init(
-    modifyJointsLink: ModifyJointsLink
-  ) {
-    self.modifyJointsLink = modifyJointsLink
-  }
+  @ObservedObject var viewStore: ViewStoreOf<ModifyJointsFeature>
   
   var body: some View {
-    ForEach(Array(skeletonDict.keys), id: \.self) { name in
-      if let mySkeleton = skeletonDict[name] {
+    ForEach(Array(viewStore.skeletons.keys), id: \.self) { name in
+      if let mySkeleton = viewStore.skeletons[name] {
         JointCircle()
           .offset(calJointOffset(mySkeleton))
           .gesture(
@@ -56,27 +50,25 @@ extension JointsView {
 
 extension JointsView {
   func calJointOffset(_ skeleton: Skeleton) -> CGSize {
-    let widthView: CGFloat = self.modifyJointsLink.viewSize.width
-    let heightView: CGFloat = self.modifyJointsLink.viewSize.height
+    let widthView: CGFloat = self.viewSize.width
+    let heightView: CGFloat = self.viewSize.height
     
     let ratioX: CGFloat = skeleton.ratioPoint.x
     let ratioY: CGFloat = skeleton.ratioPoint.y
     
     return CGSize(
-      width: (widthView * ratioX) - (self.jointCircleSize / 2),
-      height: (heightView * ratioY) - (self.jointCircleSize / 2)
+      width: (widthView * ratioX) - (jointCircleSize / 2),
+      height: (heightView * ratioY) - (jointCircleSize / 2)
     )
   }
   
   func updateCurrentJoint(_ skeleton: Skeleton) {
-    if self.modifyJointsLink.currentJoint == nil {
-      self.modifyJointsLink.currentJoint = skeleton.name
-    }
+    viewStore.send(.updateCurrentJoint(skeleton.name))
   }
   
   func dragOnChanged(_ value: DragGesture.Value, skeleton: Skeleton) {
-    let widthView: CGFloat = self.modifyJointsLink.viewSize.width
-    let heightView: CGFloat = self.modifyJointsLink.viewSize.height
+    let widthView: CGFloat = viewSize.width
+    let heightView: CGFloat = viewSize.height
     let nexX: CGFloat = value.location.x
     let nexY: CGFloat = value.location.y
     
@@ -88,16 +80,20 @@ extension JointsView {
     
     let nexRatioPoint = RatioPoint(x: nexX / widthView, y: nexY / heightView)
     let newSkeleton = skeleton.updatePoint(with: nexRatioPoint)
-    self.modifyJointsLink.skeletons[newSkeleton.name] = newSkeleton
+    viewStore.send(.updateSkeleton(newSkeleton))
   }
   
   func dragOnEnded(_ value: DragGesture.Value) {
-    self.modifyJointsLink.currentJoint = nil
+    viewStore.send(.updateCurrentJoint(nil))
   }
 }
 
-struct JointsView_Previews: PreviewProvider {
-  static var previews: some View {
-    Previews_ModifyJointsView()
+extension Skeleton {
+  func updatePoint(with newPoint: RatioPoint) -> Self {
+    return Self(
+      name: self.name,
+      ratioPoint: newPoint,
+      parent: self.parent
+    )
   }
 }

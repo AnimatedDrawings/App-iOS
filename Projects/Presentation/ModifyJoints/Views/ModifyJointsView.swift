@@ -14,29 +14,24 @@ import ModifyJointsFeatures
 
 public struct ModifyJointsView: ADUI {
   public typealias MyFeature = ModifyJointsFeature
+  @StateObject var viewStore: MyViewStore
   
   let croppedImage: UIImage
-  @StateObject var modifyJointsLink: ModifyJointsLink
-  let modifyNextAction: (Joints) -> ()
+  let save: (Joints) -> ()
   let cancel: () -> ()
-  
-  @StateObject var viewStore: MyViewStore
   
   public init(
     croppedImage: UIImage,
     joints: Joints,
-    modifyNextAction: @escaping (Joints) -> Void,
-    cancel: @escaping () -> Void,
-    store: MyStore
+    save: @escaping (Joints) -> (),
+    cancel: @escaping () -> ()
   ) {
     self.croppedImage = croppedImage
-    self._modifyJointsLink = StateObject(
-      wrappedValue: ModifyJointsLink(
-        joints: joints
-      )
-    )
-    self.modifyNextAction = modifyNextAction
+    self.save = save
     self.cancel = cancel
+    let store: MyStore = Store(initialState: .init(joints: joints)) {
+      ModifyJointsFeature()
+    }
     self._viewStore = StateObject(
       wrappedValue: ViewStore(store, observe: { $0 })
     )
@@ -45,8 +40,8 @@ public struct ModifyJointsView: ADUI {
   public var body: some View {
     VStack(spacing: 40) {
       ToolNaviBar(
-        cancelAction: viewStore.action(.cancelAction),
-        saveAction: viewStore.action(.saveAction)
+        cancelAction: cancelAction,
+        saveAction: saveAction
       )
       
       Spacer()
@@ -57,7 +52,7 @@ public struct ModifyJointsView: ADUI {
         
         SkeletonView(
           croppedImage: croppedImage,
-          modifyJointsLink: self.modifyJointsLink
+          viewStore: viewStore
         )
       }
       
@@ -73,43 +68,21 @@ public struct ModifyJointsView: ADUI {
 }
 
 extension ModifyJointsView {
-  func save() {
+  func saveAction() {
     let modifiedJoints = Joints(
-      imageWidth: self.modifyJointsLink.imageWidth,
-      imageHeight: self.modifyJointsLink.imageHeight,
-      skeletons: self.modifyJointsLink.skeletons
+      imageWidth: viewStore.imageWidth,
+      imageHeight: viewStore.imageHeight,
+      skeletons: viewStore.skeletons
     )
-    self.modifyNextAction(modifiedJoints)
+    self.save(modifiedJoints)
+  }
+  
+  func cancelAction() {
+    self.cancel()
   }
 }
 
 extension ModifyJointsView {
-//  @ViewBuilder
-//  func JointName() -> some View {
-//    let jointNameColor: Color = ADUIKitResourcesAsset.Color.jointName.swiftUIColor
-//    let textInset: CGFloat = 5
-//    
-//    RoundedRectangle(cornerRadius: 10)
-//      .foregroundColor(jointNameColor)
-//      .padding(.vertical, textInset)
-//      .overlay {
-//        Text(jointNameDescription)
-//          .frame(maxWidth: .infinity, maxHeight: .infinity)
-//          .lineLimit(1)
-//          .font(.system(size: 100))
-//          .minimumScaleFactor(0.001)
-//          .foregroundColor(.white)
-//          .padding(.horizontal, textInset)
-//      }
-//  }
-  
-//  var jointNameDescription: String {
-//    if let name = self.modifyJointsLink.currentJoint {
-//      return name
-//    }
-//    return "Adjust by dragging the points"
-//  }
-  
   struct JointName: View {
     let jointNameColor: Color = ADUIKitResourcesAsset.Color.jointName.swiftUIColor
     let textInset: CGFloat = 5
@@ -159,30 +132,6 @@ extension ModifyJointsView {
       }
     }
   }
-  
-//  @ViewBuilder
-//  func ResetButton() -> some View {
-//    let size: CGFloat = 60
-//    let imageName = "arrow.uturn.backward"
-//    
-//    Button(action: resetAction) {
-//      Circle()
-//        .frame(width: size, height: size)
-//        .foregroundColor(.white)
-//        .shadow(radius: 10)
-//        .overlay {
-//          Image(systemName: imageName)
-//            .resizable()
-//            .foregroundColor(strokeColor)
-//            .fontWeight(.semibold)
-//            .padding()
-//        }
-//    }
-//  }
-//  
-//  func resetAction() {
-//    self.modifyJointsLink.resetSkeletons()
-//  }
 }
 
 
@@ -191,7 +140,6 @@ extension ModifyJointsView {
 #Preview {
   Previews_ModifyJointsView()
 }
-
 
 public struct Previews_ModifyJointsView: View {
   let croppedImage: UIImage = ADUIKitResourcesAsset.TestImages.croppedImage.image
@@ -203,11 +151,8 @@ public struct Previews_ModifyJointsView: View {
     ModifyJointsView(
       croppedImage: croppedImage,
       joints: mockJoints,
-      modifyNextAction: { modifiedJointsInfo in
-        
-      },
-      cancel: {},
-      store: Store(initialState: .init(), reducer: { ModifyJointsFeature() })
+      save: { _ in },
+      cancel: {}
     )
   }
 }
