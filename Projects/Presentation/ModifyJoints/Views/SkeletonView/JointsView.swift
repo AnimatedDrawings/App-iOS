@@ -7,25 +7,20 @@
 
 import SwiftUI
 import DomainModel
+import ADUIKitResources
 
 struct JointsView: View {
   @ObservedObject var modifyJointsLink: ModifyJointsLink
-  let strokeColor: Color
+  let color: Color = ADUIKitResourcesAsset.Color.blue1.swiftUIColor
   let jointCircleSize: CGFloat = 15
   var skeletonDict: [String : Skeleton] {
     return self.modifyJointsLink.skeletons
   }
   
-  let enableDragGesture: Bool
-  
   init(
-    modifyJointsLink: ModifyJointsLink,
-    strokeColor: Color,
-    enableDragGesture: Bool = true
+    modifyJointsLink: ModifyJointsLink
   ) {
     self.modifyJointsLink = modifyJointsLink
-    self.strokeColor = strokeColor
-    self.enableDragGesture = enableDragGesture
   }
   
   var body: some View {
@@ -51,7 +46,7 @@ extension JointsView {
   func JointCircle() -> some View {
     Circle()
       .frame(width: jointCircleSize, height: jointCircleSize)
-      .foregroundColor(strokeColor)
+      .foregroundColor(color)
       .overlay {
         Circle()
           .strokeBorder(.white, lineWidth: 2)

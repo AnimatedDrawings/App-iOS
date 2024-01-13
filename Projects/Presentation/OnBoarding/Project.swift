@@ -13,7 +13,7 @@ let project: Project = .makeProject(
   targets: [
     OnBoarding.views(
       dependencies: [
-        PresentationShared.projectDepedency
+        ADUIKit.projectDepedency
       ]
     ),
     OnBoarding.example()

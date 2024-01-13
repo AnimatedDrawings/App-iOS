@@ -7,8 +7,8 @@
 
 import Foundation
 
-public struct ModifyJoints: Module {
+public struct ModifyJoints: uFeatureModule {
   public static var projectName: String = "ModifyJoints"
   public static var targetName: String = "ModifyJoints"
-  public static var prefixPathString: String = PresentationShared.prefixPathString
+  public static var prefixPathString: String = Presentation.prefixPathString
 }

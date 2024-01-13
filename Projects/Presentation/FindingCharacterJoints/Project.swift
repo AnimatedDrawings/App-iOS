@@ -14,6 +14,6 @@ let project: Project = .makeProject(
   targets: FindingCharacterJoints
     .uPresentationTargets(
       resource: false,
-      dependency: PresentationShared.projectDepedency
+      dependency: ModifyJoints.projectDepedency
     )
 )

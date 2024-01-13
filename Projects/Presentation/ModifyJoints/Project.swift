@@ -10,13 +10,10 @@ import ProjectEnvironment
 
 let project: Project = .makeProject(
   name: ModifyJoints.projectName,
-  targets: [
-    .makeTarget(
-      targetName: ModifyJoints.targetName,
-      product: .staticLibrary,
-      dependencies: [
-        ADUIKit.projectDepedency
-      ]
+  options: .enableCodeCoverage,
+  targets: ModifyJoints
+    .uPresentationTargets(
+      resource: false,
+      dependency: ADUIKit.projectDepedency
     )
-  ]
 )

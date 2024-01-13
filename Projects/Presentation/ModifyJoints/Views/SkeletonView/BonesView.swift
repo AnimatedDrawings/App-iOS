@@ -7,10 +7,11 @@
 
 import SwiftUI
 import DomainModel
+import ADUIKitResources
 
 struct BonesView: View {
   @ObservedObject var modifyJointsLink: ModifyJointsLink
-  let strokeColor: Color
+  let color: Color = ADUIKitResourcesAsset.Color.blue1.swiftUIColor
   var skeletonDict: [String : Skeleton] {
     return self.modifyJointsLink.skeletons
   }
@@ -42,7 +43,7 @@ extension BonesView {
     LineShape(myPoint: myPoint, parentPoint: parentPoint)
       .path(in: self.viewRect)
       .stroke(lineWidth: 5)
-      .foregroundColor(strokeColor)
+      .foregroundColor(color)
   }
   
   struct LineShape: Shape {

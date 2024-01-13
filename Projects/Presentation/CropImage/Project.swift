@@ -14,6 +14,6 @@ let project: Project = .makeProject(
   targets: CropImage
     .uPresentationTargets(
       resource: false,
-      dependency: PresentationShared.projectDepedency
+      dependency: ADUIKit.projectDepedency
     )
 )

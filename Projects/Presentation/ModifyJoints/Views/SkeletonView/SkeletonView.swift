@@ -10,7 +10,6 @@ import SwiftUI
 struct SkeletonView: View {
   let croppedImage: UIImage
   @ObservedObject var modifyJointsLink: ModifyJointsLink
-  let strokeColor: Color
   
   var body: some View {
     VStack {
@@ -29,13 +28,9 @@ struct SkeletonView: View {
                       self.modifyJointsLink.viewSize = viewSize
                     }
                   
-                  BonesView(
-                    modifyJointsLink: self.modifyJointsLink,
-                    strokeColor: self.strokeColor
-                  )
+                  BonesView(modifyJointsLink: self.modifyJointsLink)
                   JointsView(
-                    modifyJointsLink: self.modifyJointsLink,
-                    strokeColor: self.strokeColor
+                    modifyJointsLink: self.modifyJointsLink
                   )
                 }
               }
