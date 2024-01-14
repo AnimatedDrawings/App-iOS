@@ -47,7 +47,7 @@ public struct ConfigureAnimationView: ADUI {
     }
     
     .padding()
-    .addBackground()
+    .addADBackgroundWithStepBar()
     .alertSaveGIFInPhotosResult(
       isPresented: viewStore.$isShowSaveGIFInPhotosResultAlert,
       isSuccess: viewStore.saveGIFInPhotosResult

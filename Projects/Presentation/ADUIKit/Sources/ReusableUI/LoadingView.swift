@@ -82,7 +82,7 @@ public struct LoadingView: View {
 struct LoadingView_Previews: PreviewProvider {
   static var previews: some View {
     ZStack {
-      ADBackground()
+//      ADBackground()
       
       LoadingView(description: "TestLoadingView...")
 //        .transparentBlurBackground(

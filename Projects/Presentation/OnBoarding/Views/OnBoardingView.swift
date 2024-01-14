@@ -30,7 +30,7 @@ public struct OnBoardingView: View {
     .padding()
     .padding(.vertical)
     .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .addBackground()
+    .addADBackgroundWithStepBar()
   }
 }
 
