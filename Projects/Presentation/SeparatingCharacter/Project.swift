@@ -11,14 +11,9 @@ import ProjectEnvironment
 let project: Project = .makeProject(
   name: SeparatingCharacter.projectName,
   options: .enableCodeCoverage,
-  targets: [
-    SeparatingCharacter.example(),
-    SeparatingCharacter.views(),
-    SeparatingCharacter.features(
-      dependencies: [
-        PresentationShared.projectDepedency
-      ]
-    ),
-    SeparatingCharacter.tests()
-  ]
+  targets: SeparatingCharacter
+    .uPresentationTargets(
+      resource: false,
+      dependency: MaskingImage.projectDepedency
+    )
 )

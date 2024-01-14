@@ -66,10 +66,12 @@ public struct FindingCharacterJointsView: ADUI {
           ModifyJointsView(
             croppedImage: croppedImage,
             joints: joints,
-            modifyNextAction: { modifiedJoints in
+            save: { modifiedJoints in
               viewStore.send(.findCharacterJoints(modifiedJoints))
             },
-            cancel: { viewStore.send(.toggleModifyJointsView) }
+            cancel: {
+              viewStore.send(.toggleModifyJointsView)
+            }
           )
           .transparentBlurBackground()
           .addLoadingView(

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct FindingCharacterJoints: PresentationModule {
+public struct FindingCharacterJoints: uFeatureModule {
   public static var projectName: String = "FindingCharacterJoints"
   public static var targetName: String = "FindingCharacterJoints"
   public static var prefixPathString: String = Presentation.prefixPathString

@@ -11,8 +11,8 @@ import XCTest
 import ThirdPartyLib
 import SharedProvider
 import NetworkProvider
-import ADUIKit
 import DomainModel
+import ADUIKitResources
 
 @MainActor
 final class UploadADrawingTests: XCTestCase {
@@ -53,7 +53,7 @@ final class UploadADrawingTests: XCTestCase {
   }
   
   func testUploadDrawing() async {
-    let mockImageData: Data = ADUIKitAsset.SampleDrawing.step1Example1.image.pngData()!
+    let mockImageData: Data = ADUIKitResourcesAsset.SampleDrawing.step1Example1.image.pngData()!
     let testOriginalImageStorage = Shared.testValue.makeAD.originalImage
     let testUploadDrawing = MakeADProvider.testValue.uploadDrawing
     let state = UploadADrawingFeature.State()

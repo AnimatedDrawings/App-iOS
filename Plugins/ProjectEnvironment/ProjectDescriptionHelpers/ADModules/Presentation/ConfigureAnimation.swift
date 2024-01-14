@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct ConfigureAnimation: PresentationModule {
+public struct ConfigureAnimation: uFeatureModule {
   public static var projectName: String = "ConfigureAnimation"
   public static var targetName: String = "ConfigureAnimation"
   public static var prefixPathString: String = Presentation.prefixPathString

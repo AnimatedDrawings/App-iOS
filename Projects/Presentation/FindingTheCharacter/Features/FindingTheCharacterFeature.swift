@@ -11,6 +11,7 @@ import SwiftUI
 import SharedProvider
 import DomainModel
 import NetworkProvider
+import CropImageFeatures
 
 public struct FindingTheCharacterFeature: Reducer {
   public init() {}
@@ -21,6 +22,9 @@ public struct FindingTheCharacterFeature: Reducer {
   
   public var body: some Reducer<State, Action> {
     BindingReducer()
+    Scope(state: \.cropImage, action: /Action.cropImage) {
+      CropImageFeature()
+    }
     MainReducer()
   }
 }
@@ -28,26 +32,26 @@ public struct FindingTheCharacterFeature: Reducer {
 public extension FindingTheCharacterFeature {
   struct State: Equatable {
     @BindingState public var checkState: Bool
-
     @BindingState public var isShowCropImageView: Bool
     public var isShowLoadingView: Bool
-    
     var isSuccessUpload: Bool
-   
     @BindingState public var isShowNetworkErrorAlert: Bool
+    public var cropImage: CropImageFeature.State
     
     public init(
       checkState: Bool = false,
       isShowCropImageView: Bool = false,
       isShowLoadingView: Bool = false,
       isSuccessUpload: Bool = false,
-      isShowNetworkErrorAlert: Bool = false
+      isShowNetworkErrorAlert: Bool = false,
+      cropImage: CropImageFeature.State = .init()
     ) {
       self.checkState = checkState
       self.isShowCropImageView = isShowCropImageView
       self.isShowLoadingView = isShowLoadingView
       self.isSuccessUpload = isSuccessUpload
       self.isShowNetworkErrorAlert = isShowNetworkErrorAlert
+      self.cropImage = cropImage
     }
   }
 }
@@ -69,6 +73,8 @@ public extension FindingTheCharacterFeature {
     case showNetworkErrorAlert
     
     case initState
+    
+    case cropImage(CropImageFeature.Action)
   }
 }
 
@@ -169,7 +175,17 @@ extension FindingTheCharacterFeature {
       case .initState:
         state = State()
         return .none
+        
+      case .cropImage(.cancel):
+        return .send(.toggleCropImageView)
+        
+      case .cropImage(.save):
+        return .none
+        
+      default:
+        return .none
       }
     }
   }
 }
+

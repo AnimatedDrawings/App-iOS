@@ -65,15 +65,12 @@ public struct SeparatingCharacterView: ADUI {
            let initMaskImage = initMaskImage
         {
           MaskingImageView(
+            store: self.store.scope(
+              state: \.maskingImage,
+              action: MyFeature.Action.maskingImage
+            ),
             croppedImage: croppedImage,
-            initMaskImage: initMaskImage,
-            maskedImage: $maskedImage,
-            maskNextAction: { maskResult in
-              viewStore.send(.maskNextAction(maskResult))
-            },
-            cancelAction: {
-              viewStore.send(.toggleMaskingImageView)
-            }
+            initMaskImage: initMaskImage
           )
           .transparentBlurBackground()
           .addLoadingView(
@@ -171,20 +168,24 @@ private extension SeparatingCharacterView {
   }
 }
 
-struct Previews_SeparatingCharacterView: View {
+
+// MARK: - Preview
+
+struct Preview_SeparatingCharacterView: View {
   @SharedValue(\.shared.stepBar.completeStep) var completeStep
+  @SharedValue(\.shared.makeAD.croppedImage) var croppedImage
+  @SharedValue(\.shared.makeAD.initMaskImage) var initMaskImage
   
   var body: some View {
     SeparatingCharacterView()
       .onAppear {
         completeStep = .FindingTheCharacter
+        croppedImage = ADUIKitResourcesAsset.TestImages.croppedImage.image
+        initMaskImage = ADUIKitResourcesAsset.TestImages.maskedImage.image
       }
   }
 }
 
-// MARK: - Previews
-struct SeparatingCharacterView_Previews: PreviewProvider {
-  static var previews: some View {
-    Previews_SeparatingCharacterView()
-  }
+#Preview {
+  Preview_SeparatingCharacterView()
 }

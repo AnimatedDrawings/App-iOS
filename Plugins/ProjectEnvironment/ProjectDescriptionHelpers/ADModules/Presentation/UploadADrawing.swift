@@ -2,12 +2,12 @@
 //  UploadADrawing.swift
 //  ProjectEnvironment
 //
-//  Created by minii on 2023/10/03.
+//  Created by chminii on 1/7/24.
 //
 
 import Foundation
 
-public struct UploadADrawing: PresentationModule {
+public struct UploadADrawing: uFeatureModule {
   public static var projectName: String = "UploadADrawing"
   public static var targetName: String = "UploadADrawing"
   public static var prefixPathString: String = Presentation.prefixPathString

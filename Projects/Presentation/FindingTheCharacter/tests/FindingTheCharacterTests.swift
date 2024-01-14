@@ -9,10 +9,10 @@
 import XCTest
 @testable import FindingTheCharacterFeatures
 import ThirdPartyLib
-import ADUIKit
 import SharedProvider
 import NetworkProvider
 import DomainModel
+import ADUIKitResources
 
 @MainActor
 final class FindingTheCharacterTests: XCTestCase {
@@ -54,7 +54,7 @@ final class FindingTheCharacterTests: XCTestCase {
   }
   
   func testFindTheCharacter() async {
-    let mockCroppedUIImage: UIImage = ADUIKitAsset.SampleDrawing.step1Example1.image
+    let mockCroppedUIImage: UIImage = ADUIKitResourcesAsset.SampleDrawing.step1Example1.image
     let mockBoundingBox = CGRect(x: 1, y: 1, width: 1, height: 1)
     let testCroppedImageStorage = Shared.testValue.makeAD.croppedImage
     let testBoundingBoxStorage = Shared.testValue.makeAD.boundingBox

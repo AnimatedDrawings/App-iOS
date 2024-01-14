@@ -7,13 +7,14 @@
 //
 
 import SwiftUI
+import ThirdPartyLib
+import FindingTheCharacterFeatures
 
 @main
 struct FindingTheCharacterExample: App {
   var body: some Scene {
     WindowGroup {
-      FindingTheCharacterView()
+      Preview_FindingTheCharacter()
     }
   }
 }
-
