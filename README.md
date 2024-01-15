@@ -10,7 +10,7 @@ https://sketch.metademolab.com/ 웹을 클론코딩 했습니다.
 
 
 # Micro Feature Architecture
-[Tuist 공식문서](https://docs.tuist.io/building-at-scale/microfeatures/)에서 µFeatures Architecture라 불리우는 Micro Feature Architecture를 적용했습니다. 프로젝트의 모듈 분리는 아래 그래프 그림과 같습니다.
+[Tuist 공식문서](https://docs.tuist.io/building-at-scale/microfeatures/)에서 µFeatures Architecture라 불리는 Micro Feature Architecture를 적용했습니다. 프로젝트의 모듈 분리는 아래 그래프 그림과 같습니다.
 
 ## Dependencies Graph
 <img src="graph.png"/>
@@ -18,19 +18,9 @@ https://sketch.metademolab.com/ 웹을 클론코딩 했습니다.
 ### 5 Layer
 - App : 프로젝트 앱
 - Presentation : 뷰와 뷰로직 관련 코드
-- Domain : 데이터를 Presentation 영역에 사용할 수 있게 가공
+- Domain : 데이터를 Presentation 영역에 사용할 수 있게 가공, Presentation, Core 사이의 다리역할
 - Core : 데이터 CRUD 작업을 할 수 있는 Storage
-- Shared : ThirdPartyLibrary와 같은 공용 모듈
-
-### Presentation ADFeature
-<img src="docs/ADFeature.png"/>
-
-- 왼쪽이 Tuist의 µFeature, 오른쪽이 제 프로젝트의 ADFeature
-- 하나의 모듈에 다섯개 target을 만든 µFeature 구조를 착안해 Presentation영역에 적용했습니다.
-    - ViewExample : 데모 앱
-    - ViewTest : View, Feature 테스트코드
-    - View : UI 관련 코드, Feature를 의존
-    - Feature : 로직 관련 코드
+- Shared : 외부 라이브러리를 포함한 공용 모듈
 
 # Library
 - [TCA](https://github.com/pointfreeco/swift-composable-architecture)
