@@ -26,16 +26,14 @@ public extension View {
 
 struct ADBackgroundWithStepBarViewModifier: ViewModifier {
   @State var randomCurvePoint: ADBackground.RandomCurvePoint = .init(rect: .zero)
-  @State var rect: CGRect = .init()
   
   func body(content: Content) -> some View {
     ZStack {
       GeometryReader { geo in
         let rect: CGRect = geo.frame(in: .global)
         
-        ADBackground(rect: $rect, randomCurvePoint: $randomCurvePoint)
+        ADBackground(randomCurvePoint: $randomCurvePoint)
           .onAppear {
-            self.rect = rect
             self.randomCurvePoint = ADBackground.RandomCurvePoint(rect: rect)
           }
           .receiveShared(\.shared.stepBar.currentStep) { receivedValue in
@@ -51,16 +49,14 @@ struct ADBackgroundWithStepBarViewModifier: ViewModifier {
 struct ADBackgroundViewModifier: ViewModifier {
   @Binding var randomCurveTrigger: Bool
   @State var randomCurvePoint: ADBackground.RandomCurvePoint = .init(rect: .zero)
-  @State var rect: CGRect = .init()
   
   func body(content: Content) -> some View {
     ZStack {
       GeometryReader { geo in
         let rect: CGRect = geo.frame(in: .global)
         
-        ADBackground(rect: $rect, randomCurvePoint: $randomCurvePoint)
+        ADBackground(randomCurvePoint: $randomCurvePoint)
           .onAppear {
-            self.rect = rect
             self.randomCurvePoint = ADBackground.RandomCurvePoint(rect: rect)
           }
           .onChange(of: randomCurveTrigger, perform: { _ in
@@ -75,19 +71,17 @@ struct ADBackgroundViewModifier: ViewModifier {
 
 
 struct ADBackground: View {
-  @Binding var rect: CGRect
   @Binding var randomCurvePoint: ADBackground.RandomCurvePoint
   
   var body: some View {
     ADUIKitResourcesAsset.Color.blue4.swiftUIColor
       .overlay {
-        ADBackground.DoodleLines(rect: rect)
+        WaveView()
       }
       .mask {
         ADBackground.RandomCurveShape(randomCurvePoint: randomCurvePoint)
       }
       .animation(.spring(), value: randomCurvePoint)
-      .frame(maxWidth: .infinity, maxHeight: .infinity)
       .ignoresSafeArea()
   }
 }

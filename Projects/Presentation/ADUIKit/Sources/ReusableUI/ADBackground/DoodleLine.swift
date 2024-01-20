@@ -13,16 +13,19 @@ extension ADBackground {
     let rect: CGRect
     let verticalCount: Int = 3
     let horizontalCount: Int = 6
+    let squareLength: CGFloat = 50
     
     var body: some View {
       ZStack {
         VerticalLines(
-          separated: calLenSeparated(totalLen: rect.maxY, count: verticalCount)
+          separated: calLenSeparated(totalLen: rect.maxY, count: verticalCount),
+          squareLength: squareLength
         )
         .stroke(lineWidth: 2)
         
         HorizontalLines(
-          separated: calLenSeparated(totalLen: rect.maxX, count: horizontalCount)
+          separated: calLenSeparated(totalLen: rect.maxX, count: horizontalCount),
+          squareLength: squareLength
         )
         .stroke(lineWidth: 2)
       }
@@ -41,25 +44,26 @@ extension ADBackground {
 extension ADBackground.DoodleLines {
   struct VerticalLines: Shape {
     let separated: CGFloat
-
+    let squareLength: CGFloat
+    
     func path(in rect: CGRect) -> Path {
       var path = Path()
       let padding: CGFloat = 5
-
-      for fixX in stride(from: -padding, through: rect.maxX + padding, by: 30) {
+      
+      for fixX in stride(from: -padding, through: rect.maxX + padding, by: squareLength) {
         drawVerticalLine(path: &path, fixX: fixX, maxY: rect.maxY)
       }
-
+      
       return path
     }
-
+    
     func drawVerticalLine(path: inout Path, fixX: CGFloat, maxY: CGFloat) {
       let verticalInset: CGFloat = separated / 5
       let horizontalMinInset: CGFloat = 5
       let horizontalMaxInset: CGFloat = 10
       var isLeft: Bool = .random()
       var start: CGPoint = .init(x: fixX, y: 0)
-
+      
       for y in stride(from: separated, through: maxY, by: separated) {
         let curY = maxY < y + separated ? maxY : y
         let end = CGPoint(x: fixX, y: curY)
@@ -71,17 +75,17 @@ extension ADBackground.DoodleLines {
           verticalInset: verticalInset,
           isLeft: isLeft
         )
-
+        
         path.move(to: start)
         path.addQuadCurve(to: end, control: randomControlPoint)
-
-//        path.addEllipse(in: .init(origin: randomControlPoint, size: .init(width: 10, height: 10)))
-
+        
+        //        path.addEllipse(in: .init(origin: randomControlPoint, size: .init(width: 10, height: 10)))
+        
         isLeft.toggle()
         start.y = end.y
       }
     }
-
+    
     func randomControlPoint(
       start: CGPoint,
       end: CGPoint,
@@ -101,10 +105,10 @@ extension ADBackground.DoodleLines {
         endY: end.y,
         verticalInset: verticalInset
       )
-
+      
       return CGPoint(x: randomX, y: randomY)
     }
-
+    
     func randomHorizontalRange(
       fixX: CGFloat,
       isLeft: Bool,
@@ -114,10 +118,10 @@ extension ADBackground.DoodleLines {
       let startRange: CGFloat = isLeft ? fixX - horizontalMaxInset : fixX + horizontalMaxInset
       let endRange: CGFloat = isLeft ? fixX - horizontalMinInset : fixX + horizontalMinInset
       let randomX: CGFloat = isLeft ? CGFloat.random(in: startRange...endRange) : CGFloat.random(in: endRange...startRange)
-
+      
       return randomX
     }
-
+    
     func randomVerticalRange(
       startY: CGFloat,
       endY: CGFloat,
@@ -125,19 +129,20 @@ extension ADBackground.DoodleLines {
     ) -> CGFloat {
       let startRange: CGFloat = startY + verticalInset
       let endRange: CGFloat = endY - verticalInset
-
+      
       return CGFloat.random(in: startRange...endRange)
     }
   }
   
   struct HorizontalLines: Shape {
     let separated: CGFloat
+    let squareLength: CGFloat
     
     func path(in rect: CGRect) -> Path {
       var path = Path()
       let padding: CGFloat = 5
       
-      for fixY in stride(from: -padding, through: rect.maxY + padding, by: 30) {
+      for fixY in stride(from: -padding, through: rect.maxY + padding, by: squareLength) {
         drawHorizontalLine(path: &path, fixY: fixY, maxX: rect.maxX)
       }
       
