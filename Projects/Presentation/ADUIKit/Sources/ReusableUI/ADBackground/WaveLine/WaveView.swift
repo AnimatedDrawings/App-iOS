@@ -13,11 +13,10 @@ struct WaveView: View {
   @State var isTap = false
   @State private var horizontalSize: CGFloat = 0
   @State private var horizontalCount: Int = 0
-  
   @State private var verticalSize: CGFloat = 0
   @State private var verticalCount: Int = 0
-  
   let duration: TimeInterval = 4
+  let timer = Timer.publish(every: 15, on: .main, in: .common).autoconnect()
   
   var body: some View {
     ZStack {
@@ -50,6 +49,9 @@ struct WaveView: View {
       
       verticalSize = horizontalSize
       verticalCount = verticalSize == 0 ? 0 : Int(fullWidth / verticalSize)
+    }
+    .onReceive(timer) { _ in
+      isTap.toggle()
     }
   }
 }

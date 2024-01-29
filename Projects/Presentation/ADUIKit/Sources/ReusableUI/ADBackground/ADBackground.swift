@@ -67,7 +67,6 @@ struct ADBackgroundViewModifier: ViewModifier {
   }
 }
 
-
 struct ADBackground: View {
   @Binding var randomCurvePoint: ADBackground.RandomCurvePoint
   
@@ -83,7 +82,6 @@ struct ADBackground: View {
       .ignoresSafeArea()
   }
 }
-
 
 // MARK: - Preview
 
