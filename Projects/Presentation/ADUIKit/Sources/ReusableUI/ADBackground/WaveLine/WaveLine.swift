@@ -7,94 +7,113 @@
 //
 
 import SwiftUI
+import Combine
 
 struct WaveVerticalLine: View {
-  let width: CGFloat
   @Binding var waveTrigger: Bool
   
-  private let duration: Double = 1
-  @State var phase: Double = 0
-  @State var strength: Double = 3
-  @State var frequency: Double = 10
+  let duration: TimeInterval
+  let frequency: Double
   
-  @State var timer = Timer.publish(every: 1, on: .main, in: .common)
-  @State private var animationSet = true
+  @State var phase: Double
+  let minPhase: Double
+  let maxPhase: Double
+  
+  @State var strength: Double
+  let minStrength: Double
+  let maxStrength: Double
+  
+  init(
+    duration: Double,
+    waveTrigger: Binding<Bool>
+  ) {
+    self._waveTrigger = waveTrigger
+    
+    self.duration = duration
+    self.frequency = Double.random(in: 10...20)
+    
+    self.minPhase = 0
+    self.maxPhase = (2 * .pi) * Double(Int.random(in: 3...7))
+    self._phase = State(initialValue: 0)
+    
+    self.minStrength = 10
+    self.maxStrength = 25
+    self._strength = State(initialValue: minStrength)
+  }
   
   var body: some View {
     WaveVerticalShape(phase: phase, strength: strength, frequency: frequency)
       .stroke(lineWidth: 5)
-      .onReceive(timer) { _ in
-        if animationSet {
-          withAnimation(
-            Animation.linear(duration: duration)
-          ) {
-            phase = .pi * 4
-            strength = 10
-            frequency = 20
-          }
-        } else {
-          withAnimation(
-            Animation.linear(duration: duration)
-          ) {
-            phase = .pi * 8
-            strength = 3
-            frequency = 10
-          }
-        }
-        phase = 0
-        animationSet.toggle()
-      }
       .onChange(of: waveTrigger) { _ in
-        let cancellable = timer.connect()
-        DispatchQueue.main.asyncAfter(deadline: .now() + (duration * 4)) {
-          cancellable.cancel()
-          timer = Timer.publish(every: 1, on: .main, in: .common)
+        DispatchQueue.main.asyncAfter(deadline: .now() + duration / 2) {
+          phase = minPhase
+        }
+        
+        withAnimation(.linear(duration: duration / 2)) {
+          strength = maxStrength
+        }
+        
+        withAnimation(.linear(duration: duration)) {
+          phase = maxPhase
+        }
+        
+        withAnimation(.linear(duration: duration / 2)) {
+          strength = minStrength
         }
       }
   }
 }
 
 struct WaveHorizontalLine: View {
-  let height: CGFloat
   @Binding var waveTrigger: Bool
   
-  private let duration: Double = 1
-  @State var phase: Double = 0
-  @State var strength: Double = 3
-  @State var frequency: Double = 10
+  let duration: Double
+  let frequency: Double
   
-  @State var timer = Timer.publish(every: 1, on: .main, in: .common)
-  @State private var animationSet = true
+  @State var phase: Double
+  let minPhase: Double
+  let maxPhase: Double
+  
+  @State var strength: Double
+  let minStrength: Double
+  let maxStrength: Double
+  
+  init(
+    duration: Double,
+    waveTrigger: Binding<Bool>
+  ) {
+    self.duration = duration
+    self.frequency = Double.random(in: 10...20)
+    
+    self._waveTrigger = waveTrigger
+    
+    self.minPhase = 0
+    self.maxPhase = (2 * .pi) * Double(Int.random(in: 3...7))
+    self._phase = State(initialValue: 0)
+    
+    self.minStrength = 4
+    self.maxStrength = 14
+    self._strength = State(initialValue: minStrength)
+  }
   
   var body: some View {
     WaveHorizontalShape(phase: phase, strength: strength, frequency: frequency)
       .stroke(lineWidth: 5)
-      .onReceive(timer) { _ in
-        if animationSet {
-          withAnimation(
-            Animation.linear(duration: duration)
-          ) {
-            phase = .pi * 4
-            strength = 5
-            frequency = 20
-          }
-        } else {
-          withAnimation(
-            Animation.linear(duration: duration)
-          ) {
-            phase = .pi * 8
-            strength = 3
-            frequency = 10
-          }
-        }
-        phase = 0
-        animationSet.toggle()
-      }
       .onChange(of: waveTrigger) { _ in
-        let cancellable = timer.connect()
-        DispatchQueue.main.asyncAfter(deadline: .now() + (duration * 4)) {
-          cancellable.cancel()
-          timer = Timer.publish(every: 1, on: .main, in: .common)
+        DispatchQueue.main.asyncAfter(deadline: .now() + duration / 2) {
+          phase = minPhase
+        }
+        
+        withAnimation(.linear(duration: duration / 2)) {
+          strength = maxStrength
+        }
+        
+        withAnimation(.linear(duration: duration)) {
+          phase = maxPhase
+        }
+        
+        withAnimation(.linear(duration: duration / 2)) {
+          strength = minStrength
         }
       }
   }
@@ -110,19 +129,20 @@ struct WaveHorizontalLine: View {
 struct Preview_WaveLine: View {
   @State private var waveTrigger = true
   private let size: CGFloat = 100
+  let duration: TimeInterval = 4
   
   var body: some View {
     VStack {
-//      WaveHorizontalLine(height: size, waveTrigger: $waveTrigger)
-      WaveVerticalLine(width: size, waveTrigger: $waveTrigger)
+      ZStack {
+        WaveHorizontalLine(duration: duration, waveTrigger: $waveTrigger)
+        WaveVerticalLine(duration: duration, waveTrigger: $waveTrigger)
+      }
       
       Button {
         waveTrigger.toggle()
       } label: {
         Text("Wave")
       }
-      
-      Spacer().frame(height: 100)
     }
   }
 }

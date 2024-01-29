@@ -9,18 +9,13 @@
 import SwiftUI
 
 struct WaveHorizontalShape: Shape {
-  var animatableData: WaveAnimatableData {
+  var animatableData: AnimatablePair<Double, Double> {
     get {
-      .init(
-        phase: phase,
-        strength: strength,
-        frequency: frequency
-      )
+      AnimatablePair(phase, strength)
     }
     set {
-      phase = newValue.phase
-      strength = newValue.strength
-      frequency = newValue.frequency
+      phase = newValue.first
+      strength = newValue.second
     }
   }
   
@@ -61,18 +56,13 @@ struct WaveHorizontalShape: Shape {
 }
 
 struct WaveVerticalShape: Shape {
-  var animatableData: WaveAnimatableData {
+  var animatableData: AnimatablePair<Double, Double> {
     get {
-      .init(
-        phase: phase,
-        strength: strength,
-        frequency: frequency
-      )
+      AnimatablePair(phase, strength)
     }
     set {
-      phase = newValue.phase
-      strength = newValue.strength
-      frequency = newValue.frequency
+      phase = newValue.first
+      strength = newValue.second
     }
   }
   
@@ -96,6 +86,7 @@ struct WaveVerticalShape: Shape {
     
     for y in stride(from: 0, through: height, by: 1) {
       let relativeY = y / waveLength
+      
       let distanceFromMidHeight = y - midHeight
       // bring that into the range of -1 to 1
       let normalDistance = oneOverMidHeight * distanceFromMidHeight
@@ -115,13 +106,36 @@ struct WaveVerticalShape: Shape {
 // MARK: - Preview
 
 struct Preview_WaveShape: View {
-  let phase: Double = .pi * 4
+  @State var phase: Double = 0
   let strength: Double = 10
   let frequency: Double = 20
   
+  @State var height: Double = 0
+  
   var body: some View {
-    WaveVerticalShape(phase: phase, strength: strength, frequency: frequency)
-      .stroke(lineWidth: 5)
+    VStack {
+      WaveVerticalShape(phase: phase, strength: strength, frequency: frequency)
+        .stroke(lineWidth: 5)
+        .background(
+          GeometryReader { geo in
+            Color.clear
+              .onAppear {
+                height = geo.size.height
+              }
+          }
+        )
+      
+      Button {
+        withAnimation(.linear(duration: 1)) {
+          phase = 2 * .pi
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+          phase = 0
+        }
+      } label: {
+        Text("Toggle Phase")
+      }
+    }
   }
 }
 

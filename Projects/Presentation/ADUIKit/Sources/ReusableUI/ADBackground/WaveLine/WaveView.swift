@@ -17,17 +17,19 @@ struct WaveView: View {
   @State private var verticalSize: CGFloat = 0
   @State private var verticalCount: Int = 0
   
+  let duration: TimeInterval = 4
+  
   var body: some View {
     ZStack {
       VStack(spacing: 0) {
         ForEach(0..<horizontalCount, id: \.self) { _ in
-          WaveHorizontalLine(height: horizontalSize, waveTrigger: $isTap)
+          WaveHorizontalLine(duration: duration, waveTrigger: $isTap)
         }
       }
       
       HStack(spacing: 0) {
         ForEach(0..<verticalCount, id: \.self) { _ in
-          WaveVerticalLine(width: verticalSize, waveTrigger: $isTap)
+          WaveVerticalLine(duration: duration, waveTrigger: $isTap)
         }
       }
     }

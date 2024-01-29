@@ -97,7 +97,9 @@ struct Preview_ADBackground: View {
   @State var randomCurveTrigger = false
   
   var body: some View {
-    VStack {
+    ZStack {
+      Color.clear.ignoresSafeArea()
+      
       Button {
         self.randomCurveTrigger.toggle()
       } label: {
