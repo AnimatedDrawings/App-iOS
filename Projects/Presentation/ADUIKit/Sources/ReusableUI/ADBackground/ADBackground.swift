@@ -17,10 +17,8 @@ public extension View {
 }
 
 public extension View {
-  func addADBackground(
-    randomCurveTrigger: Binding<Bool>
-  ) -> some View {
-    self.modifier(ADBackgroundViewModifier(randomCurveTrigger: randomCurveTrigger))
+  func addADBackground() -> some View {
+    self.modifier(ADBackgroundViewModifier())
   }
 }
 
@@ -47,7 +45,7 @@ struct ADBackgroundWithStepBarViewModifier: ViewModifier {
 }
 
 struct ADBackgroundViewModifier: ViewModifier {
-  @Binding var randomCurveTrigger: Bool
+  @State var randomCurveTrigger = true
   @State var randomCurvePoint: ADBackground.RandomCurvePoint = .init(rect: .zero)
   
   func body(content: Content) -> some View {
@@ -108,7 +106,7 @@ struct Preview_ADBackground: View {
           .background(Color.green)
       }
     }
-    .addADBackground(randomCurveTrigger: $randomCurveTrigger)
+    .addADBackground()
   }
 }
 
