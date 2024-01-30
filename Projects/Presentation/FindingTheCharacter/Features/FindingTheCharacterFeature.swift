@@ -121,6 +121,7 @@ extension FindingTheCharacterFeature {
         return .send(.downloadMaskImage)
         
       case .findTheCharacterResponse(.failure(let error)):
+        print(error)
         state.isSuccessUpload = false
         return .run { send in
           await send(.setLoadingView(false))
@@ -151,6 +152,7 @@ extension FindingTheCharacterFeature {
         }
         
       case .downloadMaskImageResponse(.failure(let error)):
+        print(error)
         state.isSuccessUpload = false
         return .run { send in
           await send(.setLoadingView(false))

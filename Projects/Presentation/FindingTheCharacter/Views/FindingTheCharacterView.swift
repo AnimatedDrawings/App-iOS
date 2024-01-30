@@ -61,13 +61,13 @@ public struct FindingTheCharacterView: ADUI {
       },
       content: {
         CropImageView(
-          cropNextAction: { croppedUIImage, croppedCGRect in
-            viewStore.send(.findTheCharacter(croppedUIImage, croppedCGRect))
-          },
           store: self.store.scope(
             state: \.cropImage,
             action: FindingTheCharacterFeature.Action.cropImage
-          )
+          ),
+          cropNextAction: { croppedUIImage, croppedCGRect in
+            viewStore.send(.findTheCharacter(croppedUIImage, croppedCGRect))
+          }
         )
         .transparentBlurBackground()
         .addLoadingView(

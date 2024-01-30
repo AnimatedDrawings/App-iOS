@@ -22,20 +22,20 @@ public struct CropImageView: ADUI {
   @State var resetTrigger = false
   
   public init(
-    cropNextAction: @escaping (UIImage?, CGRect) -> Void,
-    store: MyStore
+    store: MyStore,
+    cropNextAction: @escaping (UIImage?, CGRect) -> Void
   ) {
-    self.cropNextAction = cropNextAction
     self.store = store
     self._viewStore = StateObject(
       wrappedValue: ViewStore(store, observe: { $0 })
     )
+    self.cropNextAction = cropNextAction
   }
   
   public var body: some View {
     VStack(spacing: 40) {
       ToolNaviBar(
-        cancelAction: { viewStore.send(.cancel) },
+        cancelAction: { cancel() },
         saveAction: { save() }
       )
       
@@ -64,6 +64,10 @@ public struct CropImageView: ADUI {
 }
 
 extension CropImageView {
+  func cancel() {
+    self.viewStore.send(.cancel)
+  }
+  
   func save() {
     viewStore.send(.save)
     cropNextAction(viewStore.croppedImage, viewStore.croppedCGRect)
@@ -110,17 +114,18 @@ struct Previews_CropImageView: View {
     NavigationStack {
       VStack {
         CropImageView(
-          cropNextAction: { croppedUIImage, croppedCGRect in
-            if let croppedUIImage = croppedUIImage {
-              self.croppedUIImage = croppedUIImage
-              self.croppedCGRect = croppedCGRect
-              self.isPresentedCropResultView.toggle()
-            }
-          },
           store: Store(
             initialState: CropImageFeature.State(),
             reducer: { CropImageFeature() }
-          )
+          ),
+          cropNextAction: { croppedUIImage, croppedCGRect in
+            guard let croppedUIImage = croppedUIImage else {
+              return
+            }
+            self.croppedUIImage = croppedUIImage
+            self.croppedCGRect = croppedCGRect
+            self.isPresentedCropResultView.toggle()
+          }
         )
       }
       .navigationDestination(isPresented: $isPresentedCropResultView) {
