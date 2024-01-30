@@ -15,8 +15,11 @@ struct WaveView: View {
   @State private var horizontalCount: Int = 0
   @State private var verticalSize: CGFloat = 0
   @State private var verticalCount: Int = 0
+  
   let duration: TimeInterval = 4
-  let timer = Timer.publish(every: 15, on: .main, in: .common).autoconnect()
+  private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+  let reloadSecond = 15
+  @State private var second = 0
   
   var body: some View {
     ZStack {
@@ -34,9 +37,6 @@ struct WaveView: View {
     }
     .foregroundStyle(.gray.opacity(0.3))
     .ignoresSafeArea()
-    .onTapGesture {
-      isTap.toggle()
-    }
     .onAppear {
       guard let fullHeight = UIScreen.current?.bounds.size.height,
             let fullWidth = UIScreen.current?.bounds.size.width
@@ -50,8 +50,16 @@ struct WaveView: View {
       verticalSize = horizontalSize
       verticalCount = verticalSize == 0 ? 0 : Int(fullWidth / verticalSize)
     }
-    .onReceive(timer) { _ in
+    .onTapGesture {
       isTap.toggle()
+      second = 0
+    }
+    .onReceive(timer) { _ in
+      second += 1
+      if second == reloadSecond {
+        isTap.toggle()
+        second = 0
+      }
     }
   }
 }
