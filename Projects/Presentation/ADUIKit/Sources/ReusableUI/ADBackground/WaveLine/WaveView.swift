@@ -56,7 +56,6 @@ struct WaveView: View {
   }
 }
 
-
 // MARK: - Preview
 
 struct Preview_WaveView: View {

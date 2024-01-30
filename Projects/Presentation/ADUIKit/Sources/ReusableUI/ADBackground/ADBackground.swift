@@ -11,64 +11,24 @@ import ADUIKitResources
 
 /// Use
 public extension View {
-  func addADBackgroundWithStepBar() -> some View {
-    self.modifier(ADBackgroundWithStepBarViewModifier())
-  }
-}
-
-public extension View {
-  func addADBackground() -> some View {
-    self.modifier(ADBackgroundViewModifier())
-  }
-}
-
-struct ADBackgroundWithStepBarViewModifier: ViewModifier {
-  @State var randomCurvePoint: ADBackground.RandomCurvePoint = .init(rect: .zero)
-  
-  func body(content: Content) -> some View {
-    ZStack {
-      GeometryReader { geo in
-        let rect: CGRect = geo.frame(in: .global)
-        
-        ADBackground(randomCurvePoint: $randomCurvePoint)
-          .onAppear {
-            self.randomCurvePoint = ADBackground.RandomCurvePoint(rect: rect)
-          }
-          .receiveShared(\.shared.stepBar.currentStep) { receivedValue in
-            self.randomCurvePoint = ADBackground.RandomCurvePoint(rect: rect)
-          }
-      }
-      
-      content
-    }
+  func addADBackground(withStepBar: Bool) -> some View {
+    self.modifier(ADBackgroundViewModifier(withStepBar: withStepBar))
   }
 }
 
 struct ADBackgroundViewModifier: ViewModifier {
-  @State var randomCurveTrigger = true
-  @State var randomCurvePoint: ADBackground.RandomCurvePoint = .init(rect: .zero)
+  let withStepBar: Bool
   
   func body(content: Content) -> some View {
     ZStack {
-      GeometryReader { geo in
-        let rect: CGRect = geo.frame(in: .global)
-        
-        ADBackground(randomCurvePoint: $randomCurvePoint)
-          .onAppear {
-            self.randomCurvePoint = ADBackground.RandomCurvePoint(rect: rect)
-          }
-          .onChange(of: randomCurveTrigger, perform: { _ in
-            self.randomCurvePoint = ADBackground.RandomCurvePoint(rect: rect)
-          })
-      }
-      
+      ADBackground(withStepBar: withStepBar)
       content
     }
   }
 }
 
 struct ADBackground: View {
-  @Binding var randomCurvePoint: ADBackground.RandomCurvePoint
+  let withStepBar: Bool
   
   var body: some View {
     ADUIKitResourcesAsset.Color.blue4.swiftUIColor
@@ -76,35 +36,62 @@ struct ADBackground: View {
         WaveView()
       }
       .mask {
-        ADBackground.RandomCurveShape(randomCurvePoint: randomCurvePoint)
+        RandomCurveView(withStepBar: withStepBar)
       }
-      .animation(.spring(), value: randomCurvePoint)
       .ignoresSafeArea()
   }
 }
 
+extension ADBackground {
+  struct RandomCurveView: View {
+    let withStepBar: Bool
+    @State var randomCurvePoint: ADBackground.RandomCurvePoint = .init(rect: .zero)
+    
+    var body: some View {
+      GeometryReader { geo in
+        let rect: CGRect = geo.frame(in: .global)
+        
+        ADBackground.RandomCurveShape(randomCurvePoint: randomCurvePoint)
+          .onAppear {
+            self.randomCurvePoint = ADBackground.RandomCurvePoint(rect: rect)
+          }
+          .if(withStepBar) {
+            $0.receiveShared(\.shared.stepBar.currentStep) { receivedValue in
+                self.randomCurvePoint = ADBackground.RandomCurvePoint(rect: rect)
+              }
+          } else: {
+            $0
+          }
+          .animation(.spring(), value: randomCurvePoint)
+      }
+    }
+  }
+}
+
 // MARK: - Preview
+
+import SharedProvider
 
 #Preview {
   Preview_ADBackground()
 }
 
 struct Preview_ADBackground: View {
-  @State var randomCurveTrigger = false
+  @SharedValue(\.shared.stepBar.currentStep) var currentStep
   
   var body: some View {
     ZStack {
       Color.clear.ignoresSafeArea()
       
       Button {
-        self.randomCurveTrigger.toggle()
+        currentStep = currentStep == .UploadADrawing ? .FindingTheCharacter : .UploadADrawing
       } label: {
         Text("ADBackground")
           .frame(width: 300, height: 300)
           .background(Color.green)
       }
     }
-    .addADBackground()
+    .addADBackground(withStepBar: true)
   }
 }
 
