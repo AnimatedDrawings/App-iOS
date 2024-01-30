@@ -23,6 +23,5 @@ struct Preview_ADUIKitExample: View {
       Text("ADUIKitExample")
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
-    .addBackground()
   }
 }
