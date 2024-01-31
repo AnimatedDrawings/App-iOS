@@ -76,7 +76,6 @@ public extension Shared {
 
 extension Shared: DependencyKey {
   public static var liveValue = Shared()
-  
   public static var testValue = Shared(
     makeAD: MakeAD(
       ad_id: "test",

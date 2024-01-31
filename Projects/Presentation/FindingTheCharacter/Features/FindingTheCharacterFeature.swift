@@ -62,7 +62,7 @@ public extension FindingTheCharacterFeature {
     
     case checkAction
     case toggleCropImageView
-    case findTheCharacter(UIImage?, CGRect)
+    case findTheCharacter
     case findTheCharacterResponse(TaskEmptyResult)
     case setLoadingView(Bool)
     case onDismissCropImageView
@@ -97,16 +97,14 @@ extension FindingTheCharacterFeature {
         state.isShowLoadingView = flag
         return .none
         
-      case let .findTheCharacter(croppedUIImage, croppedCGRect):
+      case .findTheCharacter:
+        guard state.cropImage.croppedImage != nil else {
+          return .none
+        }
+        let croppedCGRect = state.cropImage.croppedCGRect
+        
         return .run { send in
-          guard let ad_id = await makeAD.ad_id.get(),
-                let croppedUIImage = croppedUIImage
-          else {
-            return
-          }
-          
-          await makeAD.boundingBox.set(croppedCGRect)
-          await makeAD.croppedImage.set(croppedUIImage)
+          guard let ad_id = await makeAD.ad_id.get() else { return }
           await send(.setLoadingView(true))
           await send(
             .findTheCharacterResponse(
@@ -130,10 +128,7 @@ extension FindingTheCharacterFeature {
         
       case .downloadMaskImage:
         return .run { send in
-          guard let ad_id = await makeAD.ad_id.get() else {
-            return
-          }
-          
+          guard let ad_id = await makeAD.ad_id.get() else { return }
           await send(
             .downloadMaskImageResponse(
               TaskResult {
@@ -182,7 +177,7 @@ extension FindingTheCharacterFeature {
         return .send(.toggleCropImageView)
         
       case .cropImage(.save):
-        return .none
+        return .send(.findTheCharacter)
         
       default:
         return .none
@@ -190,4 +185,3 @@ extension FindingTheCharacterFeature {
     }
   }
 }
-

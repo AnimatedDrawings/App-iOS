@@ -135,8 +135,9 @@ extension CropImageFeature {
         
       case let .setImageScale(imageScale, boundingBox):
         state.boundingBoxInfo.imageScale = imageScale
-        state.boundingBoxInfo.curRect = boundingBox.scale(imageScale)
-        state.boundingBoxInfo.croppedRect = boundingBox.scale(imageScale)
+        let imageArea = boundingBox.scale(imageScale)
+        state.boundingBoxInfo.curRect = imageArea
+        state.boundingBoxInfo.croppedRect = imageArea
         return .none
       }
     }

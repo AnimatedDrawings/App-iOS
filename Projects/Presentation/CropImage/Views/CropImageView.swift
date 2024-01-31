@@ -17,19 +17,15 @@ public struct CropImageView: ADUI {
   
   let store: MyStore
   @StateObject var viewStore: MyViewStore
-  let cropNextAction: (UIImage?, CGRect) -> ()
+//  let cropNextAction: (UIImage?, CGRect) -> ()
   
   @State var resetTrigger = false
   
-  public init(
-    store: MyStore,
-    cropNextAction: @escaping (UIImage?, CGRect) -> Void
-  ) {
+  public init(store: MyStore) {
     self.store = store
     self._viewStore = StateObject(
       wrappedValue: ViewStore(store, observe: { $0 })
     )
-    self.cropNextAction = cropNextAction
   }
   
   public var body: some View {
@@ -65,12 +61,12 @@ public struct CropImageView: ADUI {
 
 extension CropImageView {
   func cancel() {
-    self.viewStore.send(.cancel)
+    viewStore.send(.cancel)
   }
   
   func save() {
     viewStore.send(.save)
-    cropNextAction(viewStore.croppedImage, viewStore.croppedCGRect)
+//    cropNextAction(viewStore.croppedImage, viewStore.croppedCGRect)
   }
 }
 
@@ -117,15 +113,7 @@ struct Previews_CropImageView: View {
           store: Store(
             initialState: CropImageFeature.State(),
             reducer: { CropImageFeature() }
-          ),
-          cropNextAction: { croppedUIImage, croppedCGRect in
-            guard let croppedUIImage = croppedUIImage else {
-              return
-            }
-            self.croppedUIImage = croppedUIImage
-            self.croppedCGRect = croppedCGRect
-            self.isPresentedCropResultView.toggle()
-          }
+          )
         )
       }
       .navigationDestination(isPresented: $isPresentedCropResultView) {

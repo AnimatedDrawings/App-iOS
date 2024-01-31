@@ -23,11 +23,11 @@ public struct FindingTheCharacterView: ADUI {
       MyFeature()
     }
   ) {
-  self.store = store
-  self._viewStore = StateObject(
-    wrappedValue: ViewStore(store, observe: { $0 })
-  )
-}
+    self.store = store
+    self._viewStore = StateObject(
+      wrappedValue: ViewStore(store, observe: { $0 })
+    )
+  }
   
   let store: MyStore
   @StateObject var viewStore: MyViewStore
@@ -64,10 +64,7 @@ public struct FindingTheCharacterView: ADUI {
           store: self.store.scope(
             state: \.cropImage,
             action: FindingTheCharacterFeature.Action.cropImage
-          ),
-          cropNextAction: { croppedUIImage, croppedCGRect in
-            viewStore.send(.findTheCharacter(croppedUIImage, croppedCGRect))
-          }
+          )
         )
         .transparentBlurBackground()
         .addLoadingView(
@@ -151,35 +148,4 @@ private extension FindingTheCharacterView {
       )
     }
   }
-}
-
-// MARK: - Previews
-
-struct Preview_FindingTheCharacter: View {
-  @SharedValue(\.shared.stepBar.completeStep) var completeStep
-  @SharedValue(\.shared.makeAD.originalImage) var originalImage
-  @SharedValue(\.shared.makeAD.boundingBox) var boundingBox
-  
-  let store: StoreOf<FindingTheCharacterFeature>
-  
-  init(
-    store: StoreOf<FindingTheCharacterFeature> = Store(
-      initialState: FindingTheCharacterFeature.State(checkState: true)
-    ) {
-      FindingTheCharacterFeature()
-    }
-  ) {
-    self.store = store
-    self.completeStep = .UploadADrawing
-    self.originalImage = ADUIKitResourcesAsset.SampleDrawing.garlic.image
-    self.boundingBox = CGRect(x: 100, y: 100, width: 500, height: 800)
-  }
-  
-  var body: some View {
-    FindingTheCharacterView(store: store)
-  }
-}
-
-#Preview {
-  Preview_FindingTheCharacter()
 }

@@ -20,3 +20,17 @@ public struct UploadDrawingResult: Equatable {
     self.boundingBox = boundingBox
   }
 }
+
+public extension UploadDrawingResult {
+  static func example1Mock() -> Self {
+    UploadDrawingResult(
+      ad_id: "ad_id",
+      boundingBox: CGRect(
+        x: 88.0,
+        y: 118.0,
+        width: 176.0,
+        height: 284.0
+      )
+    )
+  }
+}
