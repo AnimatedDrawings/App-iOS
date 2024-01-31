@@ -10,6 +10,7 @@ import ThirdPartyLib
 import NetworkStorage
 import UIKit
 import DomainModel
+import Shared
 
 public struct MakeADProvider {
   public var uploadDrawing: @Sendable (Data) async throws -> UploadDrawingResult
@@ -89,6 +90,27 @@ extension MakeADProvider: DependencyKey {
       return Joints.mockData()!
     },
     findCharacterJoints: { _, _ in }
+  )
+  
+  public static var previewValue = Self(
+    uploadDrawing: { _ in
+      logPrint()
+      return UploadDrawingResult(ad_id: "test", boundingBox: CGRect())
+    },
+    findTheCharacter: { _, _ in
+      logPrint()
+    },
+    downloadMaskImage: { _ in
+      logPrint()
+      return UIImage()
+    },
+    separateCharacter: { _, _ in
+      logPrint()
+      return Joints.mockData()!
+    },
+    findCharacterJoints: { _, _ in
+      logPrint()
+    }
   )
 }
 

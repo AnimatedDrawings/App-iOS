@@ -13,33 +13,38 @@ import SharedProvider
 
 struct ViewFinder: View {
   @ObservedObject var cropImageViewStore: ViewStoreOf<CropImageFeature>
-  @SharedValue(\.shared.makeAD.originalImage) var originalImage
+  @State var originalImage = UIImage()
   
   init(cropImageViewStore: ViewStoreOf<CropImageFeature>) {
     self.cropImageViewStore = cropImageViewStore
   }
   
+  @State var test = false
+  
   var body: some View {
-    let originalImage: UIImage = self.originalImage ?? UIImage()
-    
-    Image(uiImage: originalImage)
-      .resizable()
-      .aspectRatio(contentMode: .fit)
-      .background(
-        GeometryReader { geo in
-          Color.clear
-            .onAppear {
-              let cgRect: CGRect = geo.frame(in: .local)
-              cropImageViewStore.send(.initViewSize(cgRect))
-              let imageScale = originalImage.size.width != 0 ?
-              cgRect.size.width / originalImage.size.width :
-              0
-              cropImageViewStore.send(.initImageScale(imageScale))
-            }
+    GeometryReader { geo in
+      let viewArea: CGRect = geo.frame(in: .local)
+      
+      Image(uiImage: originalImage)
+        .resizable()
+        .aspectRatio(contentMode: .fit)
+        .receiveShared(\.shared.makeAD.originalImage) { image in
+          guard let image = image else { return }
+          self.originalImage = image
+          
+          cropImageViewStore.send(.initViewSize(viewArea))
+          let imageScale = getImageScale(imageSize: originalImage.size, viewSize: viewArea.size)
+          cropImageViewStore.send(.initImageScale(imageScale))
         }
-      )
-      .overlay {
-        GridView(cropImageViewStore: cropImageViewStore)
-      }
+        .overlay {
+          GridView(cropImageViewStore: cropImageViewStore)
+        }
+    }
+  }
+}
+
+extension ViewFinder {
+  func getImageScale(imageSize: CGSize, viewSize: CGSize) -> CGFloat {
+    return imageSize.width != 0 ? viewSize.width / imageSize.width : 0
   }
 }

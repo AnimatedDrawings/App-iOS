@@ -8,7 +8,6 @@
 
 import SwiftUI
 import ADUIKitResources
-
 import ThirdPartyLib
 import CropImageFeatures
 
@@ -39,7 +38,9 @@ struct GridView: View {
   }
 
   var body: some View {
-    CropView()
+//    Self._printChanges()
+    
+    return CropView()
   }
 }
 

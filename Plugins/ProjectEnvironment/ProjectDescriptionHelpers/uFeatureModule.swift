@@ -120,7 +120,8 @@ public extension uFeatureModule {
       sources: ["Example/**", "Views/**"],
       resources: nil,
       dependencies: [
-        .target(name: viewsName)
+        .target(name: viewsName),
+        .target(name: testingsName)
       ]
     )
   }
