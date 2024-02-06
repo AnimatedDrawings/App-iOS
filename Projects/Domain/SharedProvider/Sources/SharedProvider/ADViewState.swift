@@ -12,25 +12,25 @@ import DomainModel
 import ThirdPartyLib
 
 public struct ADViewState {
-  public var current: CombineNotifier<ADViewCase>
+  public var currentView: CombineNotifier<ADViewCase>
   
-  public init(current: ADViewCase = .OnBoarding) {
-    self.current = CombineNotifier(initialValue: current)
+  public init(currentView: ADViewCase = .OnBoarding) {
+    self.currentView = CombineNotifier(initialValue: currentView)
   }
 }
 
 extension ADViewState: DependencyKey {
   public static var liveValue = ADViewState()
-  public static func testValue(current: ADViewCase) -> ADViewState {
-    ADViewState(current: current)
+  public static func testValue(currentView: ADViewCase) -> ADViewState {
+    ADViewState(currentView: currentView)
   }
-  public static func previewValue(current: ADViewCase) -> ADViewState {
-    ADViewState(current: current)
+  public static func previewValue(currentView: ADViewCase) -> ADViewState {
+    ADViewState(currentView: currentView)
   }
 }
 
 public extension DependencyValues {
-  var adView: ADViewState {
+  var adViewState: ADViewState {
     get { self[ADViewState.self] }
     set { self[ADViewState.self] = newValue }
   }

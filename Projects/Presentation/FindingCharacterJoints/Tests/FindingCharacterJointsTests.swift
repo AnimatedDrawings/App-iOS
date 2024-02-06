@@ -118,21 +118,23 @@ final class FindingCharacterJointsTests: XCTestCase {
   
   func testOnDismissModifyJointsView() async {
     let testStepBarStorage = Shared.testValue.stepBar
-    let testADViewCaseStorage = Shared.testValue.adViewCase
+    let mockADViewState = ADViewState.testValue(currentView: .MakeAD)
     let state = FindingCharacterJointsFeature.State(
       isSuccessFindCharacterJoints: true
     )
     let store = TestStore(initialState: state) {
       FindingCharacterJointsFeature()
+    } withDependencies: {
+      $0.adViewState = mockADViewState
     }
     
     await store.send(.onDismissModifyJointsView) {
       $0.isSuccessFindCharacterJoints = false
     }
     let testCompleteStep = await testStepBarStorage.completeStep.get()
-    let testADViewCase = await testADViewCaseStorage.get()
+    let currentView = await mockADViewState.currentView.get()
     XCTAssertEqual(testCompleteStep, .FindingCharacterJoints)
-    XCTAssertEqual(testADViewCase, .ConfigureAnimation)
+    XCTAssertEqual(currentView, .ConfigureAnimation)
   }
   
   func testShowNetworkErrorAlert() async {

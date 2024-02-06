@@ -1,5 +1,5 @@
 //
-//  MakeAD.swift
+//  ADInfo.swift
 //  SharedProvider
 //
 //  Created by chminii on 2/6/24.

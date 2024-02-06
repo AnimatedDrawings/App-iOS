@@ -18,7 +18,7 @@ public struct ConfigureAnimationFeature: Reducer {
   @Dependency(\.configureAnimationProvider) var configureAnimationProvider
   @Dependency(\.shared.stepBar) var stepBar
   @Dependency(\.shared.makeAD) var makeAD
-  @Dependency(\.shared.adViewCase) var adViewCase
+  @Dependency(\.adViewState.currentView) var currentView
   @Dependency(\.localFileProvider) var localFileProvider
   
   public init() {}
@@ -121,7 +121,7 @@ extension ConfigureAnimationFeature {
         
       case .fixMakeAD:
         return .run { _ in
-          await adViewCase.set(.MakeAD)
+          await currentView.set(.MakeAD)
         }
         
       case .toggleIsShowAnimationListView:
@@ -283,7 +283,7 @@ extension ConfigureAnimationFeature {
           await makeAD.croppedImage.set(nil)
           await makeAD.maskedImage.set(nil)
           await makeAD.joints.set(nil)
-          await adViewCase.set(.MakeAD)
+          await currentView.set(.MakeAD)
           
           await stepBar.completeStep.set(.None)
           await stepBar.currentStep.set(.UploadADrawing)

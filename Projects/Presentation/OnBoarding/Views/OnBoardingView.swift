@@ -11,7 +11,7 @@ import ADUIKitResources
 import SharedProvider
 
 public struct OnBoardingView: View {
-  @SharedValue(\.shared.adViewCase) var adViewCase
+  @SharedValue(\.adViewState.currentView) var currentView
   
   public init() {}
   
@@ -25,7 +25,7 @@ public struct OnBoardingView: View {
       
       Spacer()
       
-      StartButton { adViewCase = .MakeAD }
+      StartButton { currentView = .MakeAD }
     }
     .padding()
     .padding(.vertical)

@@ -26,23 +26,23 @@ let configureAnimationViewController: UIHostingController<ConfigureAnimationView
 public struct RootView: View {
   public init() {}
   
-  @SharedValue(\.shared.adViewCase) var adViewCase
+  @SharedValue(\.adViewState.currentView) var currentView
   
   public var body: some View {
     ZStack {
       SwitchHostingView(
         vc: onBoardingViewController,
-        switchValue: adViewCase,
+        switchValue: currentView,
         mySwitchValue: ADViewCase.OnBoarding
       )
       SwitchHostingView(
         vc: makeADViewController,
-        switchValue: adViewCase,
+        switchValue: currentView,
         mySwitchValue: ADViewCase.MakeAD
       )
       SwitchHostingView(
         vc: configureAnimationViewController,
-        switchValue: adViewCase,
+        switchValue: currentView,
         mySwitchValue: ADViewCase.ConfigureAnimation
       )
     }

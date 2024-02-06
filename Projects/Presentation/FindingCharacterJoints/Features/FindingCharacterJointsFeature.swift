@@ -17,7 +17,7 @@ public struct FindingCharacterJointsFeature: Reducer {
   @Dependency(\.makeADProvider) var makeADProvider
   @Dependency(\.shared.makeAD) var makeAD
   @Dependency(\.shared.stepBar) var stepBar
-  @Dependency(\.shared.adViewCase) var adViewCase
+  @Dependency(\.adViewState.currentView) var currentView
   
   public var body: some Reducer<State, Action> {
     BindingReducer()
@@ -123,7 +123,7 @@ extension FindingCharacterJointsFeature {
         if state.isSuccessFindCharacterJoints == true {
           state.isSuccessFindCharacterJoints = false
           return .run { _ in
-            await adViewCase.set(.ConfigureAnimation)
+            await currentView.set(.ConfigureAnimation)
             await stepBar.completeStep.set(.FindingCharacterJoints)
           }
         }

@@ -38,14 +38,16 @@ final class ConfigureAnimationTests: XCTestCase {
   }
   
   func testFixMakeAD() async {
-    let mockADViewCaseStorage = Shared.testValue.adViewCase
+    let mockADViewState = ADViewState.testValue(currentView: .ConfigureAnimation)
     let store = TestStore(initialState: .init()) {
       ConfigureAnimationFeature()
+    } withDependencies: {
+      $0.adViewState = mockADViewState
     }
     
     await store.send(.fixMakeAD)
     
-    let mockADViewCase = await mockADViewCaseStorage.get()
+    let mockADViewCase = await mockADViewState.currentView.get()
     XCTAssertEqual(ADViewCase.MakeAD, mockADViewCase)
   }
   
