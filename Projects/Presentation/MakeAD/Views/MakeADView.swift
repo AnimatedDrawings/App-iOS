@@ -70,11 +70,3 @@ private extension MakeADView {
     }
   }
 }
-
-// MARK: - Previews
-
-struct MakeADView_Previews: PreviewProvider {
-  static var previews: some View {
-    MakeADView()
-  }
-}

@@ -10,32 +10,34 @@ import SwiftUI
 import SharedProvider
 import ADUIKitResources
 
-struct StepBar: View {
-  @State var statusBarWidth: CGFloat = 0
-  let statusBarSpacing: CGFloat = 4
-  let activeColor: Color = ADUIKitResourcesAsset.Color.blue1.swiftUIColor
-  let inActiveColor: Color = .gray
-  let completeColor: Color = ADUIKitResourcesAsset.Color.green1.swiftUIColor
-  
-  @SharedValue(\.shared.stepBar.currentStep) var currentStep
-  @SharedValue(\.shared.stepBar.completeStep) var completeStep
-  
-  var currentStepIdx: Int {
-    currentStep.rawValue
-  }
-  var completeStepIdx: Int {
-    completeStep.rawValue
-  }
-  
-  var body: some View {
-    VStack(alignment: .leading) {
-      Title()
-      StatusBar()
+extension MakeADView {
+  struct StepBar: View {
+    @State var statusBarWidth: CGFloat = 0
+    let statusBarSpacing: CGFloat = 4
+    let activeColor: Color = ADUIKitResourcesAsset.Color.blue1.swiftUIColor
+    let inActiveColor: Color = .gray
+    let completeColor: Color = ADUIKitResourcesAsset.Color.green1.swiftUIColor
+    
+    @SharedValue(\.shared.stepBar.currentStep) var currentStep
+    @SharedValue(\.shared.stepBar.completeStep) var completeStep
+    
+    var currentStepIdx: Int {
+      currentStep.rawValue
+    }
+    var completeStepIdx: Int {
+      completeStep.rawValue
+    }
+    
+    var body: some View {
+      VStack(alignment: .leading) {
+        Title()
+        StatusBar()
+      }
     }
   }
 }
 
-private extension StepBar {
+private extension MakeADView.StepBar {
   @ViewBuilder
   func Title() -> some View {
     HStack(spacing: 20) {
@@ -46,7 +48,7 @@ private extension StepBar {
   }
 }
 
-private extension StepBar {
+private extension MakeADView.StepBar {
   @ViewBuilder
   func StatusBar() -> some View {
     GeometryReader { geo in

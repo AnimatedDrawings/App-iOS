@@ -39,4 +39,12 @@ public struct SharedValue<Output: Equatable>: DynamicProperty {
       wrappedValue: SharedObservable(notifier: notifier)
     )
   }
+  
+  public init(
+    _ inject: CombineNotifier<Output>
+  ) {
+    self._storage = StateObject(
+      wrappedValue: SharedObservable(notifier: inject)
+    )
+  }
 }
