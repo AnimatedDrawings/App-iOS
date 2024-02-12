@@ -39,7 +39,7 @@ public struct UploadADrawingView: ADUI {
       VStack(alignment: .leading, spacing: 20) {
         Title()
         
-        CheckList(myStep: .UploadADrawing) {
+        CheckList(myStep: .UploadADrawing, completeStep: .None) {
           CheckListContent(viewStore: viewStore)
         }
         

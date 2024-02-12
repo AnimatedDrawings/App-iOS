@@ -43,7 +43,7 @@ public struct SeparatingCharacterView: ADUI {
       VStack(alignment: .leading, spacing: 20) {
         Title()
         
-        CheckList(myStep: .SeparatingCharacter) {
+        CheckList(myStep: .SeparatingCharacter, completeStep: .FindingTheCharacter) {
           CheckListContent(viewStore: viewStore)
         }
         

@@ -54,11 +54,13 @@ final class UploadADrawingTests: XCTestCase {
   
   func testUploadDrawing() async {
     let mockImageData: Data = ADUIKitResourcesAsset.SampleDrawing.step1Example1.image.pngData()!
-    let testOriginalImageStorage = Shared.testValue.makeAD.originalImage
+//    let testOriginalImageStorage = Shared.testValue.makeAD.originalImage
     let testUploadDrawing = MakeADProvider.testValue.uploadDrawing
-    let state = UploadADrawingFeature.State()
-    let store = TestStore(initialState: state) {
+    let mockADInfo = ADInfo(id: "test")
+    let store = TestStore(initialState: .init()) {
       UploadADrawingFeature()
+    } withDependencies: {
+      $0.adInfo = mockADInfo
     }
     
     store.exhaustivity = .off
@@ -77,16 +79,15 @@ final class UploadADrawingTests: XCTestCase {
   }
   
   func testUploadDrawingResponseSuccess() async {
-    let mockADID = "testMockADID"
+    let mock_ad_id = "test"
     let mockBoundingBox = CGRect(x: 1, y: 1, width: 1, height: 1)
     let mockUploadDrawingResult = UploadDrawingResult(
-      ad_id: mockADID,
+      ad_id: mock_ad_id,
       boundingBox: mockBoundingBox
     )
-    let testADIDStorage = Shared.testValue.makeAD.ad_id
+    let mockADInfo = ADInfo.testValue
     let testBouningBoxStorage = Shared.testValue.makeAD.boundingBox
-    let state = UploadADrawingFeature.State()
-    let store = TestStore(initialState: state) {
+    let store = TestStore(initialState: .init()) {
       UploadADrawingFeature()
     }
     
@@ -94,11 +95,11 @@ final class UploadADrawingTests: XCTestCase {
       $0.isSuccessUploading = true
     }
     
-    let testADID = await testADIDStorage.get()
-    let testBoundingBox = await testBouningBoxStorage.get()
+    let ad_id = await mockADInfo.id.get()
+    let boundingBox = await testBouningBoxStorage.get()
     
-    XCTAssertEqual(mockADID, testADID)
-    XCTAssertEqual(mockBoundingBox, testBoundingBox)
+    XCTAssertEqual(mock_ad_id, ad_id)
+    XCTAssertEqual(mockBoundingBox, boundingBox)
   }
   
   func testUploadDrawingResponseFailure() async {

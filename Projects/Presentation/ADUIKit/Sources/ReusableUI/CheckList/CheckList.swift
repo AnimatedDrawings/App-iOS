@@ -14,7 +14,7 @@ import ADUIKitResources
 public struct CheckList<C: View>: View {
   let CheckListContent: C
   let myStep: Step
-  @SharedValue(\.shared.stepBar.completeStep) var completeStep
+  let completeStep: Step
   var isCorrectStep: Bool {
     myStep.rawValue <= completeStep.rawValue + 1
   }
@@ -35,9 +35,11 @@ public struct CheckList<C: View>: View {
   
   public init(
     myStep: Step,
+    completeStep: Step,
     @ViewBuilder CheckListContent: () -> C
   ) {
     self.myStep = myStep
+    self.completeStep = completeStep
     self.CheckListContent = CheckListContent()
   }
   

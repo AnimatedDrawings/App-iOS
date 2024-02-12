@@ -21,12 +21,7 @@ public struct ADViewState {
 
 extension ADViewState: DependencyKey {
   public static var liveValue = ADViewState()
-  public static func testValue(currentView: ADViewCase) -> ADViewState {
-    ADViewState(currentView: currentView)
-  }
-  public static func previewValue(currentView: ADViewCase) -> ADViewState {
-    ADViewState(currentView: currentView)
-  }
+  public static var testValue = ADViewState()
 }
 
 public extension DependencyValues {

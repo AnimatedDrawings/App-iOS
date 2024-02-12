@@ -40,7 +40,7 @@ public struct FindingTheCharacterView: ADUI {
       VStack(alignment: .leading, spacing: 20) {
         Title()
         
-        CheckList(myStep: .FindingTheCharacter) {
+        CheckList(myStep: .FindingTheCharacter, completeStep: .UploadADrawing) {
           CheckListContent(viewStore: viewStore)
         }
         

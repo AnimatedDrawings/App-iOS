@@ -11,24 +11,41 @@ import ADUIKitResources
 
 /// Use
 public extension View {
-  func addADBackground(withStepBar: Bool) -> some View {
-    self.modifier(ADBackgroundViewModifier(withStepBar: withStepBar))
+  func addADBackground() -> some View {
+    self.modifier(ADBackgroundViewModifier())
+  }
+  
+  func addADBackgroundWithTrigger(
+    _ curveTrigger: Binding<Bool>
+  ) -> some View {
+    self.modifier(ADBackgroundWithTriggerViewModifier(curveTrigger: curveTrigger))
   }
 }
 
 struct ADBackgroundViewModifier: ViewModifier {
-  let withStepBar: Bool
+  @State var curveTrigger = true
   
   func body(content: Content) -> some View {
     ZStack {
-      ADBackground(withStepBar: withStepBar)
+      ADBackground(curveTrigger: $curveTrigger)
+      content
+    }
+  }
+}
+
+struct ADBackgroundWithTriggerViewModifier: ViewModifier {
+  @Binding var curveTrigger: Bool
+  
+  func body(content: Content) -> some View {
+    ZStack {
+      ADBackground(curveTrigger: $curveTrigger)
       content
     }
   }
 }
 
 struct ADBackground: View {
-  let withStepBar: Bool
+  @Binding var curveTrigger: Bool
   
   var body: some View {
     ADUIKitResourcesAsset.Color.blue4.swiftUIColor
@@ -36,7 +53,7 @@ struct ADBackground: View {
         WaveView()
       }
       .mask {
-        RandomCurveView(withStepBar: withStepBar)
+        RandomCurve(curveTrigger: $curveTrigger)
       }
       .ignoresSafeArea()
   }
@@ -44,28 +61,26 @@ struct ADBackground: View {
 
 // MARK: - Preview
 
-import SharedProvider
-
 #Preview {
   Preview_ADBackground()
 }
 
 struct Preview_ADBackground: View {
-  @SharedValue(\.shared.stepBar.currentStep) var currentStep
+  @State var curveTrigger = false
   
   var body: some View {
     ZStack {
       Color.clear.ignoresSafeArea()
       
       Button {
-        currentStep = currentStep == .UploadADrawing ? .FindingTheCharacter : .UploadADrawing
+        curveTrigger.toggle()
       } label: {
         Text("ADBackground")
           .frame(width: 300, height: 300)
           .background(Color.green)
       }
     }
-    .addADBackground(withStepBar: true)
+    .addADBackgroundWithTrigger($curveTrigger)
   }
 }
 

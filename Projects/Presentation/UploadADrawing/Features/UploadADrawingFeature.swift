@@ -21,6 +21,8 @@ public struct UploadADrawingFeature: Reducer {
   @Dependency(\.shared.makeAD) var makeAD
   @Dependency(\.shared.stepBar) var stepBar
   
+  @Dependency(\.adInfo) var adInfo
+  
   public var body: some Reducer<State, Action> {
     BindingReducer()
     MainReducer()
@@ -159,7 +161,7 @@ extension UploadADrawingFeature {
       case .uploadDrawingResponse(.success(let result)):
         state.isSuccessUploading = true
         return .run { _ in
-          await makeAD.ad_id.set(result.ad_id)
+          await adInfo.id.set(result.ad_id)
           await makeAD.boundingBox.set(result.boundingBox)
         }
         

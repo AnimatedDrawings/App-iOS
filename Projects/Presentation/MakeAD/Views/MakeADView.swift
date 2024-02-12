@@ -39,7 +39,9 @@ public struct MakeADView: View {
           .frame(height: geo.size.height + geo.safeAreaInsets.bottom)
       }
       .listStyle(.plain)
-      .addADBackground(withStepBar: true)
+//      .addADBackground(withStepBar: true)
+//      .addADBackgroundWithTrigger(<#T##curveTrigger: Binding<Bool>##Binding<Bool>#>)
+      .addADBackground()
       .scrollContentBackground(.hidden)
       .animation(.default, value: isShowStepStatusBar)
     }

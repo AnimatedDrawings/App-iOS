@@ -42,7 +42,7 @@ public struct FindingCharacterJointsView: ADUI {
       VStack(alignment: .leading, spacing: 20) {
         Title()
         
-        CheckList(myStep: .FindingCharacterJoints) {
+        CheckList(myStep: .FindingCharacterJoints, completeStep: .SeparatingCharacter) {
           CheckListContent(viewStore: viewStore)
         }
         

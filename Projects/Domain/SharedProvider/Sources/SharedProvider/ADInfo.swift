@@ -20,16 +20,7 @@ public struct ADInfo {
 
 extension ADInfo: DependencyKey {
   public static var liveValue = ADInfo()
-  public static func testValue(
-    id: String? = "test"
-  ) -> ADInfo {
-    ADInfo(id: id)
-  }
-  public static func previewValue(
-    id: String? = "test"
-  ) -> ADInfo {
-    ADInfo(id: id)
-  }
+  public static var testValue = ADInfo()
 }
 
 public extension DependencyValues {
