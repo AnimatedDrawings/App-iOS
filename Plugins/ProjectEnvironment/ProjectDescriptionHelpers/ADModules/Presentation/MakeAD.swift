@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct MakeAD: PresentationModule {
+public struct MakeAD: uFeatureModule {
   public static var projectName: String = "MakeAD"
   public static var targetName: String = "MakeAD"
   public static var prefixPathString: String = Presentation.prefixPathString
