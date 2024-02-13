@@ -11,7 +11,7 @@ import SwiftUI
 struct MakeADExample: App {
   var body: some Scene {
     WindowGroup {
-      MakeADView()
+      MockMakeADView()
     }
   }
 }

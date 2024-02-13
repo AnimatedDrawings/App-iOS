@@ -13,9 +13,6 @@ public struct MakeADFeature: Reducer {
   public init() {}
   
   public var body: some Reducer<State, Action> {
-    Scope(state: \.stepBar, action: /Action.stepBar) {
-      StepBarFeature()
-    }
     BindingReducer()
     MainReducer()
   }
@@ -23,20 +20,35 @@ public struct MakeADFeature: Reducer {
 
 public extension MakeADFeature {
   struct State: Equatable {
-    @BindingState public var stepBar: StepBarFeature.State
+    @BindingState public var stepBar: StepBarState
     
     public init(
-      stepBar: StepBarFeature.State = .init()
+      stepBar: StepBarState = .init()
     ) {
       self.stepBar = stepBar
     }
   }
 }
 
+public struct StepBarState: Equatable {
+  public var isShowStepBar: Bool
+  public var currentStep: Step
+  public var completeStep: Step
+  
+  public init(
+    isShowStepBar: Bool = true,
+    currentStep: Step = .UploadADrawing,
+    completeStep: Step = .None
+  ) {
+    self.isShowStepBar = isShowStepBar
+    self.currentStep = currentStep
+    self.completeStep = completeStep
+  }
+}
+
 public extension MakeADFeature {
   enum Action: Equatable, BindableAction {
     case binding(BindingAction<State>)
-    case stepBar(StepBarFeature.Action)
   }
 }
 

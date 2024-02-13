@@ -7,38 +7,32 @@
 //
 
 import SwiftUI
-import SharedProvider
 import ADUIKitResources
-import ThirdPartyLib
-import MakeADFeatures
+import DomainModel
 
-struct StepBarView: ADUI {
+struct StepBarView: View {
   @State var statusBarWidth: CGFloat = 0
   let statusBarSpacing: CGFloat = 4
   let activeColor: Color = ADUIKitResourcesAsset.Color.blue1.swiftUIColor
   let inActiveColor: Color = .gray
   let completeColor: Color = ADUIKitResourcesAsset.Color.green1.swiftUIColor
   
-  public typealias MyFeature = StepBarFeature
-  let store: MyStore
-  @StateObject var viewStore: MyViewStore
+  let currentStep: Step
+  let completeStep: Step
   
   public init(
-    store: MyStore = Store(initialState: .init()) {
-      MyFeature()
-    }
+    currentStep: Step,
+    completeStep: Step
   ) {
-    self.store = store
-    self._viewStore = StateObject(
-      wrappedValue: ViewStore(store, observe: { $0 })
-    )
+    self.currentStep = currentStep
+    self.completeStep = completeStep
   }
   
   var currentStepIdx: Int {
-    viewStore.currentStep.rawValue
+    currentStep.rawValue
   }
   var completeStepIdx: Int {
-    viewStore.completeStep.rawValue
+    completeStep.rawValue
   }
   
   var body: some View {

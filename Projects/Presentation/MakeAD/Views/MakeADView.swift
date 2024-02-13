@@ -7,8 +7,6 @@
 //
 
 import SwiftUI
-import ADUIKitSources
-import SharedProvider
 import DomainModel
 import UploadADrawing
 import FindingTheCharacter
@@ -38,32 +36,11 @@ public struct MakeADView: ADUI {
       List {
         // if -> ishidden 사용
         if viewStore.stepBar.isShowStepBar {
-          StepBarView(store: store.scope(state: \.stepBar, action: MakeADFeature.Action.stepBar))
-            .listRowSeparator(.hidden)
-            .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-            .listRowBackground(Color.clear)
-            .padding()
+          StepBar()
         }
         
-        TabView(selection: viewStore.$stepBar.currentStep) {
-          UploadADrawingView()
-            .tag(Step.UploadADrawing)
-          
-          FindingTheCharacterView()
-            .tag(Step.FindingTheCharacter)
-          
-          SeparatingCharacterView()
-            .tag(Step.SeparatingCharacter)
-          
-          FindingCharacterJointsView()
-            .tag(Step.FindingCharacterJoints)
-        }
-        .tabViewStyle(.page(indexDisplayMode: .never))
-        .ignoresSafeArea()
-        .listRowSeparator(.hidden)
-        .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-        .listRowBackground(Color.clear)
-        .frame(height: geo.size.height + geo.safeAreaInsets.bottom)
+        PageTab()
+          .frame(height: geo.size.height + geo.safeAreaInsets.bottom)
       }
       .listStyle(.plain)
       .addADBackground(with: viewStore.$stepBar.currentStep)
@@ -71,6 +48,42 @@ public struct MakeADView: ADUI {
       .animation(.default, value: viewStore.stepBar.isShowStepBar)
     }
     .fullScreenOverlayPresentationSpace(.named("UploadADrawingView"))
+  }
+}
+
+private extension MakeADView {
+  @ViewBuilder
+  func StepBar() -> some View {
+    StepBarView(
+      currentStep: viewStore.stepBar.currentStep,
+      completeStep: viewStore.stepBar.completeStep
+    )
+      .listRowSeparator(.hidden)
+      .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+      .listRowBackground(Color.clear)
+      .padding()
+  }
+  
+  @ViewBuilder
+  func PageTab() -> some View {
+    TabView(selection: viewStore.$stepBar.currentStep) {
+      UploadADrawingView()
+        .tag(Step.UploadADrawing)
+      
+      FindingTheCharacterView()
+        .tag(Step.FindingTheCharacter)
+      
+      SeparatingCharacterView()
+        .tag(Step.SeparatingCharacter)
+      
+      FindingCharacterJointsView()
+        .tag(Step.FindingCharacterJoints)
+    }
+    .tabViewStyle(.page(indexDisplayMode: .never))
+    .ignoresSafeArea()
+    .listRowSeparator(.hidden)
+    .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+    .listRowBackground(Color.clear)
   }
 }
 
