@@ -16,6 +16,7 @@ public struct MakeADFeature: Reducer {
     Scope(state: \.stepBar, action: /Action.stepBar) {
       StepBarFeature()
     }
+    BindingReducer()
     MainReducer()
   }
 }

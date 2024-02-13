@@ -96,19 +96,6 @@ private extension StepBarView {
   }
 }
 
-struct Previews_StepBar: View {
-  @SharedValue(\.shared.stepBar.completeStep) var completeStep
-  
-  var body: some View {
-    MakeADView()
-      .onAppear {
-        completeStep = .UploadADrawing
-      }
-  }
-}
-
-struct StepBar_Previews: PreviewProvider {
-  static var previews: some View {
-    Previews_StepBar()
-  }
+#Preview {
+  MakeADView()
 }

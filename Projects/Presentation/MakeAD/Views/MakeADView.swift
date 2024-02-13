@@ -22,8 +22,6 @@ public struct MakeADView: ADUI {
   let store: MyStore
   @StateObject var viewStore: MyViewStore
   
-  @SharedValue(\.shared.stepBar.isShowStepStatusBar) var isShowStepStatusBar
-  
   public init(
     store: MyStore = Store(initialState: .init()) {
       MyFeature()
@@ -39,7 +37,7 @@ public struct MakeADView: ADUI {
     GeometryReader { geo in
       List {
         // if -> ishidden 사용
-        if isShowStepStatusBar {
+        if viewStore.stepBar.isShowStepBar {
           StepBarView(store: store.scope(state: \.stepBar, action: MakeADFeature.Action.stepBar))
             .listRowSeparator(.hidden)
             .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
@@ -47,44 +45,35 @@ public struct MakeADView: ADUI {
             .padding()
         }
         
-        PageTabView()
-          .listRowSeparator(.hidden)
-          .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-          .listRowBackground(Color.clear)
-          .frame(height: geo.size.height + geo.safeAreaInsets.bottom)
+        TabView(selection: viewStore.$stepBar.currentStep) {
+          UploadADrawingView()
+            .tag(Step.UploadADrawing)
+          
+          FindingTheCharacterView()
+            .tag(Step.FindingTheCharacter)
+          
+          SeparatingCharacterView()
+            .tag(Step.SeparatingCharacter)
+          
+          FindingCharacterJointsView()
+            .tag(Step.FindingCharacterJoints)
+        }
+        .tabViewStyle(.page(indexDisplayMode: .never))
+        .ignoresSafeArea()
+        .listRowSeparator(.hidden)
+        .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+        .listRowBackground(Color.clear)
+        .frame(height: geo.size.height + geo.safeAreaInsets.bottom)
       }
       .listStyle(.plain)
-//      .addADBackground(withStepBar: true)
-//      .addADBackgroundWithTrigger(<#T##curveTrigger: Binding<Bool>##Binding<Bool>#>)
-//      .addADBackground()
-//      .addADBackgroundWithTrigger(viewStore.$stepBar.currentStep.)
+      .addADBackground(with: viewStore.$stepBar.currentStep)
       .scrollContentBackground(.hidden)
-      .animation(.default, value: isShowStepStatusBar)
+      .animation(.default, value: viewStore.stepBar.isShowStepBar)
     }
     .fullScreenOverlayPresentationSpace(.named("UploadADrawingView"))
   }
 }
 
-private extension MakeADView {
-  struct PageTabView: View {
-    @SharedValue(\.shared.stepBar.currentStep) var currentStep
-    
-    var body: some View {
-      TabView(selection: $currentStep) {
-        UploadADrawingView()
-          .tag(Step.UploadADrawing)
-        
-        FindingTheCharacterView()
-          .tag(Step.FindingTheCharacter)
-        
-        SeparatingCharacterView()
-          .tag(Step.SeparatingCharacter)
-        
-        FindingCharacterJointsView()
-          .tag(Step.FindingCharacterJoints)
-      }
-      .tabViewStyle(.page(indexDisplayMode: .never))
-      .ignoresSafeArea()
-    }
-  }
+#Preview {
+  MakeADView()
 }
