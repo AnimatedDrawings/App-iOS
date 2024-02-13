@@ -19,7 +19,7 @@ public struct UploadADrawingFeature: Reducer {
   
   @Dependency(\.makeADProvider) var makeADProvider
   @Dependency(\.shared.makeAD) var makeAD
-  @Dependency(\.shared.stepBar) var stepBar
+//  @Dependency(\.shared.stepBar) var stepBar
   
   @Dependency(\.adInfo) var adInfo
   
@@ -31,25 +31,18 @@ public struct UploadADrawingFeature: Reducer {
 
 public extension UploadADrawingFeature {
   struct State: Equatable {
-    public var checkState1: Bool
-    public var checkState2: Bool
-    public var checkState3: Bool
-    public var checkState4: Bool
-    
-    @BindingState public var isEnableUploadButton: Bool
+    public var stepBar: StepBarState
+    public var checkState: CheckState
+    public var isEnableUploadButton: Bool
     public var isShowLoadingView: Bool
-    
     var isSuccessUploading: Bool
-    
     @BindingState public var isShowNetworkErrorAlert: Bool
     @BindingState public var isShowFindCharacterErrorAlert: Bool
     @BindingState public var isShowImageSizeErrorAlert: Bool
     
     public init(
-      checkState1: Bool = false,
-      checkState2: Bool = false,
-      checkState3: Bool = false,
-      checkState4: Bool = false,
+      stepBar: StepBarState = .init(),
+      checkState: CheckState = .init(),
       isEnableUploadButton: Bool = false,
       isShowLoadingView: Bool = false,
       isSuccessUploading: Bool = false,
@@ -57,10 +50,8 @@ public extension UploadADrawingFeature {
       isShowFindCharacterErrorAlert: Bool = false,
       isShowImageSizeErrorAlert: Bool = false
     ) {
-      self.checkState1 = checkState1
-      self.checkState2 = checkState2
-      self.checkState3 = checkState3
-      self.checkState4 = checkState4
+      self.stepBar = stepBar
+      self.checkState = checkState
       self.isEnableUploadButton = isEnableUploadButton
       self.isShowLoadingView = isShowLoadingView
       self.isSuccessUploading = isSuccessUploading
@@ -69,16 +60,34 @@ public extension UploadADrawingFeature {
       self.isShowImageSizeErrorAlert = isShowImageSizeErrorAlert
     }
   }
+  
+  struct CheckState: Equatable {
+    public var check1: Bool
+    public var check2: Bool
+    public var check3: Bool
+    public var check4: Bool
+    
+    public init(
+      check1: Bool = false,
+      check2: Bool = false,
+      check3: Bool = false,
+      check4: Bool = false
+    ) {
+      self.check1 = check1
+      self.check2 = check2
+      self.check3 = check3
+      self.check4 = check4
+    }
+  }
 }
 
 public extension UploadADrawingFeature {
   enum Action: BindableAction, Equatable {
     case binding(BindingAction<State>)
     
-    case checkList1
-    case checkList2
-    case checkList3
-    case checkList4
+    case activeUploadButton
+    case check(Check)
+    
     case setIsShowLoadingView(Bool)
     case uploadDrawing(Data?)
     case uploadDrawingResponse(TaskResult<UploadDrawingResult>)
@@ -90,6 +99,13 @@ public extension UploadADrawingFeature {
     
     case initState
   }
+  
+  enum Check: Equatable {
+    case list1
+    case list2
+    case list3
+    case list4
+  }
 }
 
 extension UploadADrawingFeature {
@@ -99,25 +115,28 @@ extension UploadADrawingFeature {
       case .binding:
         return .none
         
-      case .checkList1:
-        state.checkState1.toggle()
-        activeUploadButton(state: &state)
+      case .activeUploadButton:
+        if state.checkState.check1 && state.checkState.check2 
+            && state.checkState.check3 && state.checkState.check4 
+        {
+          state.isEnableUploadButton = true
+        } else {
+          state.isEnableUploadButton = false
+        }
         return .none
-        
-      case .checkList2:
-        state.checkState2.toggle()
-        activeUploadButton(state: &state)
-        return .none
-        
-      case .checkList3:
-        state.checkState3.toggle()
-        activeUploadButton(state: &state)
-        return .none
-        
-      case .checkList4:
-        state.checkState4.toggle()
-        activeUploadButton(state: &state)
-        return .none
+      
+      case .check(let checkList):
+        switch checkList {
+        case .list1:
+          state.checkState.check1.toggle()
+        case .list2:
+          state.checkState.check2.toggle()
+        case .list3:
+          state.checkState.check3.toggle()
+        case .list4:
+          state.checkState.check4.toggle()
+        }
+        return .send(.activeUploadButton)
         
       case .setIsShowLoadingView(let flag):
         state.isShowLoadingView = flag
@@ -177,11 +196,16 @@ extension UploadADrawingFeature {
       case .uploadDrawingNextAction:
         if state.isSuccessUploading {
           state.isSuccessUploading = false
-          return .run { _ in
-            await stepBar.currentStep.set(.FindingTheCharacter)
-            await stepBar.isShowStepStatusBar.set(true)
-            await stepBar.completeStep.set(.UploadADrawing)
-          }
+          state.stepBar = StepBarState(
+            isShowStepBar: true,
+            currentStep: .FindingTheCharacter,
+            completeStep: .UploadADrawing
+          )
+//          return .run { _ in
+//            await stepBar.currentStep.set(.FindingTheCharacter)
+//            await stepBar.isShowStepStatusBar.set(true)
+//            await stepBar.completeStep.set(.UploadADrawing)
+//          }
         }
         return .none
         
@@ -206,11 +230,11 @@ extension UploadADrawingFeature {
 }
 
 extension UploadADrawingFeature {
-  func activeUploadButton(state: inout UploadADrawingFeature.State) {
-    if state.checkState1 && state.checkState2 && state.checkState3 && state.checkState4 {
-      state.isEnableUploadButton = true
-    } else {
-      state.isEnableUploadButton = false
-    }
-  }
+//  func activeUploadButton(state: inout UploadADrawingFeature.State) {
+//    if state.checkState1 && state.checkState2 && state.checkState3 && state.checkState4 {
+//      state.isEnableUploadButton = true
+//    } else {
+//      state.isEnableUploadButton = false
+//    }
+//  }
 }

@@ -30,22 +30,6 @@ public extension MakeADFeature {
   }
 }
 
-public struct StepBarState: Equatable {
-  public var isShowStepBar: Bool
-  public var currentStep: Step
-  public var completeStep: Step
-  
-  public init(
-    isShowStepBar: Bool = true,
-    currentStep: Step = .UploadADrawing,
-    completeStep: Step = .None
-  ) {
-    self.isShowStepBar = isShowStepBar
-    self.currentStep = currentStep
-    self.completeStep = completeStep
-  }
-}
-
 public extension MakeADFeature {
   enum Action: Equatable, BindableAction {
     case binding(BindingAction<State>)

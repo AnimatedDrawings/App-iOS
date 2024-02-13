@@ -13,23 +13,22 @@ import ThirdPartyLib
 import ADUIKitResources
 
 public struct CheckListButton: View {
+  @Binding var state: Bool
   let checkmarkCircle = "checkmark.circle"
   let description: String
-  let state: Bool
-  let action: () -> ()
   
   public init(
     description: String,
-    state: Bool,
-    action: @escaping () -> ()
+    state: Binding<Bool>
   ) {
     self.description = description
-    self.state = state
-    self.action = action
+    self._state = state
   }
   
   public var body: some View {
-    Button(action: action) {
+    Button {
+      state.toggle()
+    } label: {
       HStack(alignment: .top) {
         Image(systemName: checkmarkCircle)
           .foregroundColor(

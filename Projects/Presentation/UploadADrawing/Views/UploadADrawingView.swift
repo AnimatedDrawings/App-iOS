@@ -39,11 +39,14 @@ public struct UploadADrawingView: ADUI {
       VStack(alignment: .leading, spacing: 20) {
         Title()
         
-        CheckList(myStep: .UploadADrawing, completeStep: .None) {
+        CheckList(
+          myStep: .UploadADrawing,
+          completeStep: viewStore.stepBar.completeStep
+        ) {
           CheckListContent(viewStore: viewStore)
         }
         
-        UploadButton(state: viewStore.$isEnableUploadButton) { imageData in
+        UploadButton(state: viewStore.isEnableUploadButton) { imageData in
           viewStore.send(.uploadDrawing(imageData))
         }
         
@@ -137,84 +140,85 @@ private extension UploadADrawingView {
       VStack(alignment: .leading, spacing: 15) {
         CheckListButton(
           description: description1,
-          state: viewStore.checkState1
-        ) {
-          viewStore.send(.checkList1)
-        }
+          state: viewStore.binding(
+            get: \.checkState.check1,
+            send: .check(.list1)
+          )
+        )
         
         CheckListButton(
           description: description2,
-          state: viewStore.checkState2
-        ) {
-          viewStore.send(.checkList2)
-        }
+          state: viewStore.binding(
+            get: \.checkState.check2,
+            send: .check(.list2)
+          )
+        )
         
         CheckListButton(
           description: description3,
-          state: viewStore.checkState3
-        ) {
-          viewStore.send(.checkList3)
-        }
+          state: viewStore.binding(
+            get: \.checkState.check3,
+            send: .check(.list3)
+          )
+        )
         
         CheckListButton(
           description: description4,
-          state: viewStore.checkState4
-        ) {
-          viewStore.send(.checkList4)
-        }
+          state: viewStore.binding(
+            get: \.checkState.check4,
+            send: .check(.list4)
+          )
+        )
       }
     }
   }
 }
 
 private extension UploadADrawingView {
-  @MainActor
-  class UploadButtonViewModel: ObservableObject {
-    let uploadImageAction: (Data?) -> ()
-    
-    init(uploadImageAction: @escaping (Data?) -> Void) {
-      self.uploadImageAction = uploadImageAction
-    }
-    
-    @Published var selectedItem: PhotosPickerItem? = nil {
-      didSet {
-        setImage(from: selectedItem)
-      }
-    }
-    
-    private func setImage(from selectedItem: PhotosPickerItem?) {
-      if let selectedItem = selectedItem {
-        Task {
-          let data = try? await selectedItem.loadTransferable(type: Data.self)
-          uploadImageAction(data)
-          self.selectedItem = nil
-        }
-      }
-    }
-  }
+//  class UploadButtonViewModel: ObservableObject {
+//    let uploadImageAction: (Data?) -> ()
+//    
+//    init(uploadImageAction: @escaping (Data?) -> Void) {
+//      self.uploadImageAction = uploadImageAction
+//    }
+//    
+//    @Published var selectedItem: PhotosPickerItem? = nil {
+//      didSet {
+//        setImage(from: selectedItem)
+//      }
+//    }
+//    
+//    private func setImage(from selectedItem: PhotosPickerItem?) {
+//      if let selectedItem = selectedItem {
+//        Task {
+//          let data = try? await selectedItem.loadTransferable(type: Data.self)
+//          uploadImageAction(data)
+//          self.selectedItem = nil
+//        }
+//      }
+//    }
+//  }
   
   struct UploadButton: View {
-    @Binding var state: Bool
-    @StateObject var vm: UploadButtonViewModel
+    let state: Bool
+    let uploadImageAction: (Data?) -> Void
+    
+    @State var selectedItem: PhotosPickerItem? = nil
     
     init(
-      state: Binding<Bool>,
+      state: Bool,
       uploadImageAction: @escaping (Data?) -> ()
     ) {
-      self._state = state
-      self._vm = StateObject(
-        wrappedValue: UploadButtonViewModel(
-          uploadImageAction: uploadImageAction
-        )
-      )
+      self.state = state
+      self.uploadImageAction = uploadImageAction
     }
     
     let photoFill = "photo.fill"
     let text = "Upload Photo"
 
-    var body: some View {
+    var body: some View   {
       PhotosPicker(
-        selection: $vm.selectedItem,
+        selection: $selectedItem,
         matching: .images,
         label: {
           ADButtonLabel(state) {
@@ -226,6 +230,17 @@ private extension UploadADrawingView {
         }
       )
       .allowsHitTesting(state)
+      .onChange(of: selectedItem, perform: setImage(from:))
+    }
+    
+    private func setImage(from selectedItem: PhotosPickerItem?) {
+      if let selectedItem = selectedItem {
+        Task {
+          let data = try? await selectedItem.loadTransferable(type: Data.self)
+          uploadImageAction(data)
+          self.selectedItem = nil
+        }
+      }
     }
   }
 }
@@ -241,20 +256,21 @@ private extension UploadADrawingView {
       }
     }
     
-    @ViewBuilder
-    func Description() -> some View {
+    struct Description: View {
       let leftTitle = "S A M P L E"
       let rightTitle = "D R A W I N G S"
       let description = "Feel free to try the demo by clicking on one of the following example images."
       
-      VStack(alignment: .leading, spacing: 15) {
-        HStack(spacing: 15) {
-          Text(leftTitle)
-            .font(.system(.title3, weight: .semibold))
-          Text(rightTitle)
-            .font(.system(.title3, weight: .semibold))
+      var body: some View {
+        VStack(alignment: .leading, spacing: 15) {
+          HStack(spacing: 15) {
+            Text(leftTitle)
+              .font(.system(.title3, weight: .semibold))
+            Text(rightTitle)
+              .font(.system(.title3, weight: .semibold))
+          }
+          Text(description)
         }
-        Text(description)
       }
     }
     
@@ -297,9 +313,6 @@ private extension UploadADrawingView {
   }
 }
 
-// MARK: - Previews
-struct UploadADrawingView_Previews: PreviewProvider {
-  static var previews: some View {
-    UploadADrawingView()
-  }
+#Preview {
+  UploadADrawingView()
 }
