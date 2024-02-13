@@ -37,7 +37,7 @@ final class UploadADrawingTests: XCTestCase {
     }
     await store.send(.checkList4) {
       $0.checkState4 = !$0.checkState4
-      $0.isEnableUploadButton = true
+      $0.isActiveUploadButton = true
     }
   }
   

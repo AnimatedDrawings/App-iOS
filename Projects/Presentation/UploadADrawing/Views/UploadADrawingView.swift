@@ -46,7 +46,7 @@ public struct UploadADrawingView: ADUI {
           CheckListContent(viewStore: viewStore)
         }
         
-        UploadButton(state: viewStore.isEnableUploadButton) { imageData in
+        UploadButton(state: viewStore.isActiveUploadButton) { imageData in
           viewStore.send(.uploadDrawing(imageData))
         }
         
@@ -175,30 +175,6 @@ private extension UploadADrawingView {
 }
 
 private extension UploadADrawingView {
-//  class UploadButtonViewModel: ObservableObject {
-//    let uploadImageAction: (Data?) -> ()
-//    
-//    init(uploadImageAction: @escaping (Data?) -> Void) {
-//      self.uploadImageAction = uploadImageAction
-//    }
-//    
-//    @Published var selectedItem: PhotosPickerItem? = nil {
-//      didSet {
-//        setImage(from: selectedItem)
-//      }
-//    }
-//    
-//    private func setImage(from selectedItem: PhotosPickerItem?) {
-//      if let selectedItem = selectedItem {
-//        Task {
-//          let data = try? await selectedItem.loadTransferable(type: Data.self)
-//          uploadImageAction(data)
-//          self.selectedItem = nil
-//        }
-//      }
-//    }
-//  }
-  
   struct UploadButton: View {
     let state: Bool
     let uploadImageAction: (Data?) -> Void

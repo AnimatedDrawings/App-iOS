@@ -19,23 +19,25 @@ public struct UploadADrawingFeature: Reducer {
   
   @Dependency(\.makeADProvider) var makeADProvider
   @Dependency(\.shared.makeAD) var makeAD
-//  @Dependency(\.shared.stepBar) var stepBar
-  
   @Dependency(\.adInfo) var adInfo
   
   public var body: some Reducer<State, Action> {
     BindingReducer()
     MainReducer()
+    CheckListReducer()
+    UploadReducer()
+    AlertReducer()
   }
 }
 
 public extension UploadADrawingFeature {
   struct State: Equatable {
     public var stepBar: StepBarState
+    
     public var checkState: CheckState
-    public var isEnableUploadButton: Bool
+    public var isActiveUploadButton: Bool
+    
     public var isShowLoadingView: Bool
-    var isSuccessUploading: Bool
     @BindingState public var isShowNetworkErrorAlert: Bool
     @BindingState public var isShowFindCharacterErrorAlert: Bool
     @BindingState public var isShowImageSizeErrorAlert: Bool
@@ -45,16 +47,14 @@ public extension UploadADrawingFeature {
       checkState: CheckState = .init(),
       isEnableUploadButton: Bool = false,
       isShowLoadingView: Bool = false,
-      isSuccessUploading: Bool = false,
       isShowNetworkErrorAlert: Bool = false,
       isShowFindCharacterErrorAlert: Bool = false,
       isShowImageSizeErrorAlert: Bool = false
     ) {
       self.stepBar = stepBar
       self.checkState = checkState
-      self.isEnableUploadButton = isEnableUploadButton
+      self.isActiveUploadButton = isEnableUploadButton
       self.isShowLoadingView = isShowLoadingView
-      self.isSuccessUploading = isSuccessUploading
       self.isShowNetworkErrorAlert = isShowNetworkErrorAlert
       self.isShowFindCharacterErrorAlert = isShowFindCharacterErrorAlert
       self.isShowImageSizeErrorAlert = isShowImageSizeErrorAlert
@@ -84,14 +84,14 @@ public extension UploadADrawingFeature {
 public extension UploadADrawingFeature {
   enum Action: BindableAction, Equatable {
     case binding(BindingAction<State>)
+    case setIsShowLoadingView(Bool)
     
     case activeUploadButton
     case check(Check)
     
-    case setIsShowLoadingView(Bool)
     case uploadDrawing(Data?)
     case uploadDrawingResponse(TaskResult<UploadDrawingResult>)
-    case uploadDrawingNextAction
+    case moveToFindingTheCharacter
     
     case showNetworkErrorAlert
     case showFindCharacterErrorAlert
@@ -115,16 +115,117 @@ extension UploadADrawingFeature {
       case .binding:
         return .none
         
+      case .setIsShowLoadingView(let flag):
+        state.isShowLoadingView = flag
+        return .none
+        
+      case .moveToFindingTheCharacter:
+        state.stepBar = StepBarState(
+          isShowStepBar: true,
+          currentStep: .FindingTheCharacter,
+          completeStep: .UploadADrawing
+        )
+        return .none
+        
+      case .initState:
+        state = State()
+        return .none
+        
+      default:
+        return .none
+      }
+    }
+  }
+}
+
+extension UploadADrawingFeature {
+  func UploadReducer() -> some Reducer<State, Action> {
+    Reduce { state, action in
+      switch action {
+      case .uploadDrawing(let imageData):
+        guard let compressResult = compressImage(imageData: imageData) else {
+          return .send(.showImageSizeErrorAlert)
+        }
+        let compressedData: Data = compressResult.0
+        let originalImage: UIImage = compressResult.1
+        
+        return .run { send in
+          await makeAD.originalImage.set(originalImage)
+          await send(.setIsShowLoadingView(true))
+          await send(
+            .uploadDrawingResponse(
+              TaskResult {
+                try await makeADProvider.uploadDrawing(compressedData)
+              }
+            )
+          )
+        }
+        
+      case .uploadDrawingResponse(.success(let result)):
+        return .run { send in
+          await adInfo.id.set(result.ad_id)
+          await makeAD.boundingBox.set(result.boundingBox)
+          await send(.setIsShowLoadingView(false))
+          await send(.moveToFindingTheCharacter)
+        }
+        
+      case .uploadDrawingResponse(.failure(let error)):
+        return .run { send in
+          await send(.setIsShowLoadingView(false))
+          if let error = error as? NetworkError,
+             error == .ADServerError
+          {
+            await send(.showFindCharacterErrorAlert)
+          } else {
+            await send(.showNetworkErrorAlert)
+          }
+        }
+        
+      default:
+        return .none
+      }
+    }
+  }
+  
+  func compressImage(imageData: Data?) -> (Data, UIImage)? {
+    guard let imageData = imageData,
+          let originalImage = UIImage(data: imageData)
+    else {
+      return nil
+    }
+    
+    let maxKB: Double = 3000
+    let originalSize = imageData.getSize(.kilobyte)
+    if originalSize > 10000 {
+      return nil
+    }
+    
+    guard let compressedData: Data = originalSize < maxKB ?
+            imageData :
+              originalImage.reduceFileSize(maxKB: maxKB),
+          let tmpOriginalImage = UIImage(data: compressedData)
+    else {
+      return nil
+    }
+    
+    return (compressedData, tmpOriginalImage)
+  }
+}
+  
+extension UploadADrawingFeature {
+  func CheckListReducer() -> some Reducer<State, Action> {
+    Reduce { state, action in
+      switch action {
       case .activeUploadButton:
-        if state.checkState.check1 && state.checkState.check2 
-            && state.checkState.check3 && state.checkState.check4 
+        if state.checkState.check1 && state.checkState.check2
+            && state.checkState.check3 && state.checkState.check4
         {
-          state.isEnableUploadButton = true
+          state.isActiveUploadButton = true
         } else {
-          state.isEnableUploadButton = false
+          state.isActiveUploadButton = false
         }
         return .none
-      
+        
       case .check(let checkList):
         switch checkList {
         case .list1:
@@ -138,77 +239,17 @@ extension UploadADrawingFeature {
         }
         return .send(.activeUploadButton)
         
-      case .setIsShowLoadingView(let flag):
-        state.isShowLoadingView = flag
+      default:
         return .none
-        
-      case .uploadDrawing(let imageData):
-        guard let imageData = imageData,
-              let originalImage = UIImage(data: imageData)
-        else {
-          return .send(.showImageSizeErrorAlert)
-        }
-        
-        let maxKB: Double = 3000
-        let originalSize = imageData.getSize(.kilobyte)
-        if originalSize > 10000 {
-          return .send(.showImageSizeErrorAlert)
-        }
-          
-        guard let compressedData: Data = originalSize < maxKB ?
-                imageData :
-                  originalImage.reduceFileSize(maxKB: maxKB),
-              let tmpOriginalImage = UIImage(data: compressedData)
-        else {
-          return .send(.showImageSizeErrorAlert)
-        }
-        
-        return .run { send in
-          await makeAD.originalImage.set(tmpOriginalImage)
-          await send(.setIsShowLoadingView(true))
-          await send(
-            .uploadDrawingResponse(
-              TaskResult {
-                try await makeADProvider.uploadDrawing(compressedData)
-              }
-            )
-          )
-          await send(.setIsShowLoadingView(false))
-          await send(.uploadDrawingNextAction)
-        }
-        
-      case .uploadDrawingResponse(.success(let result)):
-        state.isSuccessUploading = true
-        return .run { _ in
-          await adInfo.id.set(result.ad_id)
-          await makeAD.boundingBox.set(result.boundingBox)
-        }
-        
-      case .uploadDrawingResponse(.failure(let error)):
-        state.isSuccessUploading = false
-        if let error = error as? NetworkError,
-           error == .ADServerError
-        {
-          return .send(.showFindCharacterErrorAlert)
-        }
-        return .send(.showNetworkErrorAlert)
-        
-      case .uploadDrawingNextAction:
-        if state.isSuccessUploading {
-          state.isSuccessUploading = false
-          state.stepBar = StepBarState(
-            isShowStepBar: true,
-            currentStep: .FindingTheCharacter,
-            completeStep: .UploadADrawing
-          )
-//          return .run { _ in
-//            await stepBar.currentStep.set(.FindingTheCharacter)
-//            await stepBar.isShowStepStatusBar.set(true)
-//            await stepBar.completeStep.set(.UploadADrawing)
-//          }
-        }
-        return .none
-        
+      }
+    }
+  }
+}
+
+extension UploadADrawingFeature {
+  func AlertReducer() -> some Reducer<State, Action> {
+    Reduce { state, action in
+      switch action {
       case .showNetworkErrorAlert:
         state.isShowNetworkErrorAlert.toggle()
         return .none
@@ -220,21 +261,10 @@ extension UploadADrawingFeature {
       case .showImageSizeErrorAlert:
         state.isShowImageSizeErrorAlert.toggle()
         return .none
-        
-      case .initState:
-        state = State()
+
+      default:
         return .none
       }
     }
   }
-}
-
-extension UploadADrawingFeature {
-//  func activeUploadButton(state: inout UploadADrawingFeature.State) {
-//    if state.checkState1 && state.checkState2 && state.checkState3 && state.checkState4 {
-//      state.isEnableUploadButton = true
-//    } else {
-//      state.isEnableUploadButton = false
-//    }
-//  }
 }
