@@ -8,8 +8,8 @@
 
 import SwiftUI
 
-struct RandomCurve: View {
-  @Binding var curveTrigger: Bool
+struct RandomCurve<T: Equatable>: View {
+  @Binding var curveTrigger: T
   @State var randomCurvePoint: RandomCurvePoint = .init(rect: .zero)
   
   var body: some View {

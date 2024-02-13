@@ -14,18 +14,33 @@ import UploadADrawing
 import FindingTheCharacter
 import SeparatingCharacter
 import FindingCharacterJoints
+import ThirdPartyLib
+import MakeADFeatures
 
-public struct MakeADView: View {
-  public init() {}
+public struct MakeADView: ADUI {
+  public typealias MyFeature = MakeADFeature
+  let store: MyStore
+  @StateObject var viewStore: MyViewStore
   
   @SharedValue(\.shared.stepBar.isShowStepStatusBar) var isShowStepStatusBar
+  
+  public init(
+    store: MyStore = Store(initialState: .init()) {
+      MyFeature()
+    }
+  ) {
+    self.store = store
+    self._viewStore = StateObject(
+      wrappedValue: ViewStore(store, observe: { $0 })
+    )
+  }
   
   public var body: some View {
     GeometryReader { geo in
       List {
         // if -> ishidden 사용
         if isShowStepStatusBar {
-          StepBar()
+          StepBarView(store: store.scope(state: \.stepBar, action: MakeADFeature.Action.stepBar))
             .listRowSeparator(.hidden)
             .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
             .listRowBackground(Color.clear)
@@ -41,7 +56,8 @@ public struct MakeADView: View {
       .listStyle(.plain)
 //      .addADBackground(withStepBar: true)
 //      .addADBackgroundWithTrigger(<#T##curveTrigger: Binding<Bool>##Binding<Bool>#>)
-      .addADBackground()
+//      .addADBackground()
+//      .addADBackgroundWithTrigger(viewStore.$stepBar.currentStep.)
       .scrollContentBackground(.hidden)
       .animation(.default, value: isShowStepStatusBar)
     }

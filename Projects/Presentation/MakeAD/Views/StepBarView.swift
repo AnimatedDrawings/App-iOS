@@ -1,5 +1,5 @@
 //
-//  StepBar.swift
+//  StepBarView.swift
 //  AD_UI
 //
 //  Created by minii on 2023/06/08.
@@ -9,35 +9,47 @@
 import SwiftUI
 import SharedProvider
 import ADUIKitResources
+import ThirdPartyLib
+import MakeADFeatures
 
-extension MakeADView {
-  struct StepBar: View {
-    @State var statusBarWidth: CGFloat = 0
-    let statusBarSpacing: CGFloat = 4
-    let activeColor: Color = ADUIKitResourcesAsset.Color.blue1.swiftUIColor
-    let inActiveColor: Color = .gray
-    let completeColor: Color = ADUIKitResourcesAsset.Color.green1.swiftUIColor
-    
-    @SharedValue(\.shared.stepBar.currentStep) var currentStep
-    @SharedValue(\.shared.stepBar.completeStep) var completeStep
-    
-    var currentStepIdx: Int {
-      currentStep.rawValue
+struct StepBarView: ADUI {
+  @State var statusBarWidth: CGFloat = 0
+  let statusBarSpacing: CGFloat = 4
+  let activeColor: Color = ADUIKitResourcesAsset.Color.blue1.swiftUIColor
+  let inActiveColor: Color = .gray
+  let completeColor: Color = ADUIKitResourcesAsset.Color.green1.swiftUIColor
+  
+  public typealias MyFeature = StepBarFeature
+  let store: MyStore
+  @StateObject var viewStore: MyViewStore
+  
+  public init(
+    store: MyStore = Store(initialState: .init()) {
+      MyFeature()
     }
-    var completeStepIdx: Int {
-      completeStep.rawValue
-    }
-    
-    var body: some View {
-      VStack(alignment: .leading) {
-        Title()
-        StatusBar()
-      }
+  ) {
+    self.store = store
+    self._viewStore = StateObject(
+      wrappedValue: ViewStore(store, observe: { $0 })
+    )
+  }
+  
+  var currentStepIdx: Int {
+    viewStore.currentStep.rawValue
+  }
+  var completeStepIdx: Int {
+    viewStore.completeStep.rawValue
+  }
+  
+  var body: some View {
+    VStack(alignment: .leading) {
+      Title()
+      StatusBar()
     }
   }
 }
 
-private extension MakeADView.StepBar {
+private extension StepBarView {
   @ViewBuilder
   func Title() -> some View {
     HStack(spacing: 20) {
@@ -48,7 +60,7 @@ private extension MakeADView.StepBar {
   }
 }
 
-private extension MakeADView.StepBar {
+private extension StepBarView {
   @ViewBuilder
   func StatusBar() -> some View {
     GeometryReader { geo in
