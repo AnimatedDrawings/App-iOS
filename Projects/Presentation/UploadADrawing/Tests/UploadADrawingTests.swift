@@ -56,7 +56,7 @@ final class UploadADrawingTests: XCTestCase {
     let mockImageData: Data = ADUIKitResourcesAsset.SampleDrawing.step1Example1.image.pngData()!
 //    let testOriginalImageStorage = Shared.testValue.makeAD.originalImage
     let testUploadDrawing = MakeADProvider.testValue.uploadDrawing
-    let mockADInfo = ADInfo(id: "test")
+    let mockADInfo = ADID(id: "test")
     let store = TestStore(initialState: .init()) {
       UploadADrawingFeature()
     } withDependencies: {
@@ -85,7 +85,7 @@ final class UploadADrawingTests: XCTestCase {
       ad_id: mock_ad_id,
       boundingBox: mockBoundingBox
     )
-    let mockADInfo = ADInfo.testValue
+    let mockADInfo = ADID.testValue
     let testBouningBoxStorage = Shared.testValue.makeAD.boundingBox
     let store = TestStore(initialState: .init()) {
       UploadADrawingFeature()

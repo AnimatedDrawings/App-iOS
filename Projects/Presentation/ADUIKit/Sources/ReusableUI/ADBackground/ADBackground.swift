@@ -16,36 +16,36 @@ public extension View {
   }
   
   func addADBackground<T: Equatable>(
-    with trigger: Binding<T>
+    with trigger: T
   ) -> some View {
     self.modifier(ADBackgroundWithTriggerViewModifier(curveTrigger: trigger))
   }
 }
 
 struct ADBackgroundViewModifier: ViewModifier {
-  @State var curveTrigger = true
+  var curveTrigger = true
   
   func body(content: Content) -> some View {
     ZStack {
-      ADBackground(curveTrigger: $curveTrigger)
+      ADBackground(curveTrigger: curveTrigger)
       content
     }
   }
 }
 
 struct ADBackgroundWithTriggerViewModifier<T: Equatable>: ViewModifier {
-  @Binding var curveTrigger: T
+  var curveTrigger: T
   
   func body(content: Content) -> some View {
     ZStack {
-      ADBackground(curveTrigger: $curveTrigger)
+      ADBackground(curveTrigger: curveTrigger)
       content
     }
   }
 }
 
 struct ADBackground<T: Equatable>: View {
-  @Binding var curveTrigger: T
+  var curveTrigger: T
   
   var body: some View {
     ADUIKitResourcesAsset.Color.blue4.swiftUIColor
@@ -53,7 +53,7 @@ struct ADBackground<T: Equatable>: View {
         WaveView()
       }
       .mask {
-        RandomCurve(curveTrigger: $curveTrigger)
+        RandomCurve(curveTrigger: curveTrigger)
       }
       .ignoresSafeArea()
   }
@@ -80,7 +80,7 @@ struct Preview_ADBackground: View {
           .background(Color.green)
       }
     }
-    .addADBackground(with: $curveTrigger)
+    .addADBackground(with: curveTrigger)
   }
 }
 

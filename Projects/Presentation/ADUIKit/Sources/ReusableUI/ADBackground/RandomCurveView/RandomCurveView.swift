@@ -9,8 +9,11 @@
 import SwiftUI
 
 struct RandomCurve<T: Equatable>: View {
-  @Binding var curveTrigger: T
+//  @Binding var curveTrigger: T
+  var curveTrigger: T
   @State var randomCurvePoint: RandomCurvePoint = .init(rect: .zero)
+  
+  var test: any Equatable = 12
   
   var body: some View {
     GeometryReader { geo in

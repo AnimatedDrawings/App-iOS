@@ -47,11 +47,11 @@ public struct UploadADrawingView: ADUI {
         }
         
         UploadButton(state: viewStore.isActiveUploadButton) { imageData in
-          viewStore.send(.uploadDrawing(imageData))
+          viewStore.send(.view(.uploadDrawing(imageData)))
         }
         
         SampleDrawings { imageData in
-          viewStore.send(.uploadDrawing(imageData))
+          viewStore.send(.view(.uploadDrawing(imageData)))
         }
         
         Spacer()
@@ -71,7 +71,7 @@ public struct UploadADrawingView: ADUI {
       }
     }
     .resetMakeADView(.UploadADrawing) {
-      viewStore.send(.initState)
+      viewStore.send(.view(.initState))
     }
   }
 }
@@ -142,7 +142,7 @@ private extension UploadADrawingView {
           description: description1,
           state: viewStore.binding(
             get: \.checkState.check1,
-            send: .check(.list1)
+            send: .view(.check(.list1))
           )
         )
         
@@ -150,7 +150,7 @@ private extension UploadADrawingView {
           description: description2,
           state: viewStore.binding(
             get: \.checkState.check2,
-            send: .check(.list2)
+            send: .view(.check(.list2))
           )
         )
         
@@ -158,7 +158,7 @@ private extension UploadADrawingView {
           description: description3,
           state: viewStore.binding(
             get: \.checkState.check3,
-            send: .check(.list3)
+            send: .view(.check(.list3))
           )
         )
         
@@ -166,7 +166,7 @@ private extension UploadADrawingView {
           description: description4,
           state: viewStore.binding(
             get: \.checkState.check4,
-            send: .check(.list4)
+            send: .view(.check(.list4))
           )
         )
       }

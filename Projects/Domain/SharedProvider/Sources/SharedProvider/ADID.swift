@@ -1,5 +1,5 @@
 //
-//  ADInfo.swift
+//  ADID.swift
 //  SharedProvider
 //
 //  Created by chminii on 2/6/24.
@@ -10,7 +10,7 @@ import Foundation
 import SharedStorage
 import ThirdPartyLib
 
-public struct ADInfo {
+public struct ADID {
   public var id: CombineNotifier<String?>
   
   public init(id: String? = nil) {
@@ -18,14 +18,14 @@ public struct ADInfo {
   }
 }
 
-extension ADInfo: DependencyKey {
-  public static var liveValue = ADInfo()
-  public static var testValue = ADInfo()
+extension ADID: DependencyKey {
+  public static var liveValue = ADID()
+  public static var testValue = ADID()
 }
 
 public extension DependencyValues {
-  var adInfo: ADInfo {
-    get { self[ADInfo.self] }
-    set { self[ADInfo.self] = newValue }
+  var adInfo: ADID {
+    get { self[ADID.self] }
+    set { self[ADID.self] = newValue }
   }
 }

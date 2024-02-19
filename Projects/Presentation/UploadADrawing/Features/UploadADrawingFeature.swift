@@ -24,9 +24,9 @@ public struct UploadADrawingFeature: Reducer {
   public var body: some Reducer<State, Action> {
     BindingReducer()
     MainReducer()
-    CheckListReducer()
-    UploadReducer()
-    AlertReducer()
+    ViewReducer()
+    InnerReducer()
+    asyncReducer()
   }
 }
 
@@ -82,21 +82,19 @@ public extension UploadADrawingFeature {
 }
 
 public extension UploadADrawingFeature {
-  enum Action: BindableAction, Equatable {
+  enum Action: Equatable, BindableAction, ViewActions, InnerActions, AsyncActions {
     case binding(BindingAction<State>)
-    case setIsShowLoadingView(Bool)
     
-    case activeUploadButton
+    case view(ViewAction)
+    case inner(InnerAction)
+    case async(AsyncAction)
+  }
+}
+
+public extension UploadADrawingFeature {
+  enum ViewAction: Equatable {
     case check(Check)
-    
     case uploadDrawing(Data?)
-    case uploadDrawingResponse(TaskResult<UploadDrawingResult>)
-    case moveToFindingTheCharacter
-    
-    case showNetworkErrorAlert
-    case showFindCharacterErrorAlert
-    case showImageSizeErrorAlert
-    
     case initState
   }
   
@@ -106,31 +104,91 @@ public extension UploadADrawingFeature {
     case list3
     case list4
   }
-}
-
-extension UploadADrawingFeature {
-  func MainReducer() -> some Reducer<State, Action> {
+  
+  func ViewReducer() -> some Reducer<State, Action> {
     Reduce { state, action in
       switch action {
-      case .binding:
-        return .none
+      case .view(let viewAction):
+        switch viewAction {
+          
+        case .check(let checkList):
+          switch checkList {
+          case .list1:
+            state.checkState.check1.toggle()
+          case .list2:
+            state.checkState.check2.toggle()
+          case .list3:
+            state.checkState.check3.toggle()
+          case .list4:
+            state.checkState.check4.toggle()
+          }
+          activeUploadButton(state: &state)
+          return .none
+          
+        case .uploadDrawing(let imageData):
+          return .send(.async(.uploadDrawing(imageData)))
+          
+        case .initState:
+          state = State()
+          return .none
+        }
         
-      case .setIsShowLoadingView(let flag):
-        state.isShowLoadingView = flag
+      default:
         return .none
-        
-      case .moveToFindingTheCharacter:
-        state.stepBar = StepBarState(
-          isShowStepBar: true,
-          currentStep: .FindingTheCharacter,
-          completeStep: .UploadADrawing
-        )
-        return .none
-        
-      case .initState:
-        state = State()
-        return .none
-        
+      }
+    }
+  }
+  
+  func activeUploadButton(state: inout State) {
+    if state.checkState.check1 && state.checkState.check2
+        && state.checkState.check3 && state.checkState.check4
+    {
+      state.isActiveUploadButton = true
+    } else {
+      state.isActiveUploadButton = false
+    }
+  }
+}
+
+public extension UploadADrawingFeature {
+  enum InnerAction: Equatable {
+    case setLoadingView(Bool)
+    case moveToFindingTheCharacter
+    
+    case showNetworkErrorAlert
+    case showFindCharacterErrorAlert
+    case showImageSizeErrorAlert
+  }
+  
+  func InnerReducer() -> some Reducer<State, Action> {
+    Reduce { state, action in
+      switch action {
+      case .inner(let innerAction):
+        switch innerAction {
+        case .setLoadingView(let flag):
+          state.isShowLoadingView = flag
+          return .none
+          
+        case .moveToFindingTheCharacter:
+          state.stepBar = StepBarState(
+            isShowStepBar: true,
+            currentStep: .FindingTheCharacter,
+            completeStep: .UploadADrawing
+          )
+          return .none
+          
+        case .showNetworkErrorAlert:
+          state.isShowNetworkErrorAlert.toggle()
+          return .none
+          
+        case .showFindCharacterErrorAlert:
+          state.isShowFindCharacterErrorAlert.toggle()
+          return .none
+          
+        case .showImageSizeErrorAlert:
+          state.isShowImageSizeErrorAlert.toggle()
+          return .none
+        }
       default:
         return .none
       }
@@ -138,49 +196,58 @@ extension UploadADrawingFeature {
   }
 }
 
-extension UploadADrawingFeature {
-  func UploadReducer() -> some Reducer<State, Action> {
+public extension UploadADrawingFeature {
+  enum AsyncAction: Equatable {
+    case uploadDrawing(Data?)
+    case uploadDrawingResponse(TaskResult<UploadDrawingResult>)
+  }
+  
+  func asyncReducer() -> some Reducer<State, Action> {
     Reduce { state, action in
       switch action {
-      case .uploadDrawing(let imageData):
-        guard let compressResult = compressImage(imageData: imageData) else {
-          return .send(.showImageSizeErrorAlert)
-        }
-        let compressedData: Data = compressResult.0
-        let originalImage: UIImage = compressResult.1
-        
-        return .run { send in
-          await makeAD.originalImage.set(originalImage)
-          await send(.setIsShowLoadingView(true))
-          await send(
-            .uploadDrawingResponse(
-              TaskResult {
-                try await makeADProvider.uploadDrawing(compressedData)
-              }
+      case .async(let asyncAction):
+        switch asyncAction {
+        case .uploadDrawing(let imageData):
+          guard let compressResult = compressImage(imageData: imageData) else {
+            return .send(.inner(.showImageSizeErrorAlert))
+          }
+          let compressedData: Data = compressResult.0
+          let originalImage: UIImage = compressResult.1
+          
+          return .run { send in
+            await makeAD.originalImage.set(originalImage)
+            await send(.inner(.setLoadingView(true)))
+            await send(
+              .async(
+                .uploadDrawingResponse(
+                  TaskResult {
+                    try await makeADProvider.uploadDrawing(compressedData)
+                  }
+                )
+              )
             )
-          )
-        }
-        
-      case .uploadDrawingResponse(.success(let result)):
-        return .run { send in
-          await adInfo.id.set(result.ad_id)
-          await makeAD.boundingBox.set(result.boundingBox)
-          await send(.setIsShowLoadingView(false))
-          await send(.moveToFindingTheCharacter)
-        }
-        
-      case .uploadDrawingResponse(.failure(let error)):
-        return .run { send in
-          await send(.setIsShowLoadingView(false))
-          if let error = error as? NetworkError,
-             error == .ADServerError
-          {
-            await send(.showFindCharacterErrorAlert)
-          } else {
-            await send(.showNetworkErrorAlert)
+          }
+          
+        case .uploadDrawingResponse(.success(let result)):
+          return .run { send in
+            await adInfo.id.set(result.ad_id)
+            await makeAD.boundingBox.set(result.boundingBox)
+            await send(.inner(.setLoadingView(false)))
+            await send(.inner(.moveToFindingTheCharacter))
+          }
+          
+        case .uploadDrawingResponse(.failure(let error)):
+          return .run { send in
+            await send(.inner(.setLoadingView(false)))
+            if let error = error as? NetworkError,
+               error == .ADServerError
+            {
+              await send(.inner(.showFindCharacterErrorAlert))
+            } else {
+              await send(.inner(.showNetworkErrorAlert))
+            }
           }
         }
-        
       default:
         return .none
       }
@@ -211,57 +278,14 @@ extension UploadADrawingFeature {
     return (compressedData, tmpOriginalImage)
   }
 }
-  
-extension UploadADrawingFeature {
-  func CheckListReducer() -> some Reducer<State, Action> {
-    Reduce { state, action in
-      switch action {
-      case .activeUploadButton:
-        if state.checkState.check1 && state.checkState.check2
-            && state.checkState.check3 && state.checkState.check4
-        {
-          state.isActiveUploadButton = true
-        } else {
-          state.isActiveUploadButton = false
-        }
-        return .none
-        
-      case .check(let checkList):
-        switch checkList {
-        case .list1:
-          state.checkState.check1.toggle()
-        case .list2:
-          state.checkState.check2.toggle()
-        case .list3:
-          state.checkState.check3.toggle()
-        case .list4:
-          state.checkState.check4.toggle()
-        }
-        return .send(.activeUploadButton)
-        
-      default:
-        return .none
-      }
-    }
-  }
-}
 
 extension UploadADrawingFeature {
-  func AlertReducer() -> some Reducer<State, Action> {
+  func MainReducer() -> some Reducer<State, Action> {
     Reduce { state, action in
       switch action {
-      case .showNetworkErrorAlert:
-        state.isShowNetworkErrorAlert.toggle()
+      case .binding:
         return .none
         
-      case .showFindCharacterErrorAlert:
-        state.isShowFindCharacterErrorAlert.toggle()
-        return .none
-        
-      case .showImageSizeErrorAlert:
-        state.isShowImageSizeErrorAlert.toggle()
-        return .none
-
       default:
         return .none
       }

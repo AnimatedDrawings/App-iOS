@@ -1,5 +1,5 @@
 //
-//  StepBarView.swift
+//  StepBar.swift
 //  AD_UI
 //
 //  Created by minii on 2023/06/08.
@@ -10,40 +10,46 @@ import SwiftUI
 import ADUIKitResources
 import DomainModel
 
-struct StepBarView: View {
-  @State var statusBarWidth: CGFloat = 0
-  let statusBarSpacing: CGFloat = 4
-  let activeColor: Color = ADUIKitResourcesAsset.Color.blue1.swiftUIColor
-  let inActiveColor: Color = .gray
-  let completeColor: Color = ADUIKitResourcesAsset.Color.green1.swiftUIColor
-  
-  let currentStep: Step
-  let completeStep: Step
-  
-  public init(
-    currentStep: Step,
-    completeStep: Step
-  ) {
-    self.currentStep = currentStep
-    self.completeStep = completeStep
-  }
-  
-  var currentStepIdx: Int {
-    currentStep.rawValue
-  }
-  var completeStepIdx: Int {
-    completeStep.rawValue
-  }
-  
-  var body: some View {
-    VStack(alignment: .leading) {
-      Title()
-      StatusBar()
+extension MakeADView {
+  struct StepBar: View {
+    @State var statusBarWidth: CGFloat = 0
+    let statusBarSpacing: CGFloat = 4
+    let activeColor: Color = ADUIKitResourcesAsset.Color.blue1.swiftUIColor
+    let inActiveColor: Color = .gray
+    let completeColor: Color = ADUIKitResourcesAsset.Color.green1.swiftUIColor
+    
+    let currentStep: Step
+    let completeStep: Step
+    
+    public init(
+      currentStep: Step,
+      completeStep: Step
+    ) {
+      self.currentStep = currentStep
+      self.completeStep = completeStep
+    }
+    
+    var currentStepIdx: Int {
+      currentStep.rawValue
+    }
+    var completeStepIdx: Int {
+      completeStep.rawValue
+    }
+    
+    var body: some View {
+      VStack(alignment: .leading) {
+        Title()
+        StatusBar()
+      }
+      .listRowSeparator(.hidden)
+      .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+      .listRowBackground(Color.clear)
+      .padding()
     }
   }
 }
 
-private extension StepBarView {
+private extension MakeADView.StepBar {
   @ViewBuilder
   func Title() -> some View {
     HStack(spacing: 20) {
@@ -54,7 +60,7 @@ private extension StepBarView {
   }
 }
 
-private extension StepBarView {
+private extension MakeADView.StepBar {
   @ViewBuilder
   func StatusBar() -> some View {
     GeometryReader { geo in
