@@ -80,7 +80,8 @@ extension MakeADProvider: DependencyKey {
   
   public static let testValue = Self(
     uploadDrawing: { _ in
-      return UploadDrawingResult(ad_id: "test", boundingBox: CGRect())
+//      return UploadDrawingResult(ad_id: "test", boundingBox: CGRect())
+      return UploadDrawingResult.example1Mock()
     },
     findTheCharacter: { _, _ in },
     downloadMaskImage: { _ in
@@ -95,7 +96,7 @@ extension MakeADProvider: DependencyKey {
   public static var previewValue = Self(
     uploadDrawing: { _ in
       logPrint()
-      return UploadDrawingResult(ad_id: "test", boundingBox: CGRect())
+      return UploadDrawingResult.example1Mock()
     },
     findTheCharacter: { _, _ in
       logPrint()
