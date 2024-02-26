@@ -22,14 +22,15 @@ let project: Project = .makeProject(
       name: ADUIKit.sources,
       product: .staticLibrary,
       sources: ADUIKit.sourceFilesList([.features]),
-      dependencies: [.target(name: ADUIKit.resources)]
-    ),
-    .makeTarget(
-      name: ADUIKit.resources,
-      product: .staticLibrary,
-      sources: nil,
-      resources: .resource,
+//      dependencies: [.target(name: ADUIKit.resources)]
       dependencies: [Domain.projectDepedency]
-    )
+    ),
+//    .makeTarget(
+//      name: ADUIKit.resources,
+//      product: .staticLibrary,
+//      sources: nil,
+//      resources: .resource,
+//      dependencies: [Domain.projectDepedency]
+//    )
   ]
 )

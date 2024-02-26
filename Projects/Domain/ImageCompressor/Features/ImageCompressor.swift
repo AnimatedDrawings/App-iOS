@@ -1,43 +1,18 @@
 //
 //  ImageCompressor.swift
-//  UploadADrawingFeatures
+//  ImageCompressor
 //
-//  Created by chminii on 2/22/24.
+//  Created by chminii on 2/26/24.
 //  Copyright © 2024 chminipark. All rights reserved.
 //
 
 import ThirdPartyLib
 import ADUIKitResources
 import UIKit
-import ADUIKitSources
+import DomainModel
+import ImageCompressorInterfaces
 
-extension DependencyValues {
-  var imageCompressor: any ImageCompressorProtocol {
-    get { self[ImageCompressorKey.self] }
-    set { self[ImageCompressorKey.self] = newValue }
-  }
-}
-
-enum ImageCompressorKey: DependencyKey {
-  static let liveValue: any ImageCompressorProtocol = ImageCompressor()
-  static let testValue: any ImageCompressorProtocol = TestImageCompressor()
-}
-
-struct TestImageCompressor: ImageCompressorProtocol {
-  func compress(with data: Data) throws -> CompressedInfo {
-    return CompressedInfo.mock()
-  }
-  
-  func compress(with image: UIImage) throws -> CompressedInfo {
-    return CompressedInfo.mock()
-  }
-}
-
-protocol ImageCompressorProtocol {
-  func compress(with data: Data) throws -> CompressedInfo
-  func compress(with image: UIImage) throws -> CompressedInfo
-}
-
+/// Use
 struct ImageCompressor: ImageCompressorProtocol {
   func compress(with data: Data) throws -> CompressedInfo {
     guard let image = UIImage(data: data),
@@ -119,17 +94,24 @@ extension ImageCompressor {
   }
 }
 
-struct CompressedInfo: Equatable {
-  let data: Data
-  let image: UIImage
-  let original: UIImage
+extension DependencyValues {
+  var imageCompressor: any ImageCompressorProtocol {
+    get { self[ImageCompressorKey.self] }
+    set { self[ImageCompressorKey.self] = newValue }
+  }
 }
 
-extension CompressedInfo {
-  static func mock() -> Self {
-    let mockImage = ADUIKitResourcesAsset.TestImages.garlic.image
-    let mockData = mockImage.pngData() ?? Data()
-    
-    return Self(data: mockData, image: mockImage, original: mockImage)
+enum ImageCompressorKey: DependencyKey {
+  static let liveValue: any ImageCompressorProtocol = ImageCompressor()
+  static let testValue: any ImageCompressorProtocol = TestImageCompressor()
+}
+
+struct TestImageCompressor: ImageCompressorProtocol {
+  func compress(with data: Data) throws -> CompressedInfo {
+    return CompressedInfo.mock()
+  }
+  
+  func compress(with image: UIImage) throws -> CompressedInfo {
+    return CompressedInfo.mock()
   }
 }

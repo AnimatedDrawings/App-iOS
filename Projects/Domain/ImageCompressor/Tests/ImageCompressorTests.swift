@@ -1,26 +1,27 @@
 //
 //  ImageCompressorTests.swift
-//  UploadADrawingTests
+//  ImageCompressor
 //
-//  Created by chminii on 2/22/24.
+//  Created by chminii on 2/26/24.
 //  Copyright © 2024 chminipark. All rights reserved.
 //
 
 import XCTest
-@testable import UploadADrawingFeatures
+@testable import ImageCompressor
 import ADUIKitResources
+import DomainModel
 
 final class ImageCompressorTests: XCTestCase {
-  var image: UIImage!
+  var garlic: UIImage!
   var imageCompressor: ImageCompressor!
   
   override func setUp() async throws {
-    image = ADUIKitResourcesAsset.TestImages.garlic.image
+    garlic = ADUIKitResourcesAsset.TestImages.garlic.image
     imageCompressor = ImageCompressor()
   }
   
   func testCompressWithDataSuccess() {
-    guard let data = image.pngData() else {
+    guard let data = garlic.pngData() else {
       XCTFail()
       return
     }
@@ -33,7 +34,7 @@ final class ImageCompressorTests: XCTestCase {
   }
   
   func testCompressWithImageSuccess() {
-    XCTAssertNoThrow(try imageCompressor.compress(with: image))
+    XCTAssertNoThrow(try imageCompressor.compress(with: garlic))
   }
   
   func testCompressWithImageFail() {
@@ -41,7 +42,7 @@ final class ImageCompressorTests: XCTestCase {
   }
   
   func testReduceFileSizeReturnResult() {
-    let result = imageCompressor.reduceFileSize(image: image)
+    let result = imageCompressor.reduceFileSize(image: garlic)
     XCTAssertNotNil(result)
   }
   
@@ -55,7 +56,7 @@ final class ImageCompressorTests: XCTestCase {
     let sizeInBytes = Int(maxKB * 1024)
     guard let compressedData = imageCompressor
       .compressImage(
-        with: image,
+        with: garlic,
         maxKB: maxKB
       )
     else {
@@ -68,10 +69,10 @@ final class ImageCompressorTests: XCTestCase {
   
   func testResizeImage() {
     let resizeWidth: Double = 600
-    let scale = resizeWidth / image.size.width
-    let resizeHeight = image.size.height * scale
+    let scale = resizeWidth / garlic.size.width
+    let resizeHeight = garlic.size.height * scale
     let resizedImage = imageCompressor.resizeImage(
-      with: image,
+      with: garlic,
       resizeWidth: resizeWidth
     )
     let newSize = CGSize(
@@ -79,7 +80,7 @@ final class ImageCompressorTests: XCTestCase {
       height: resizeHeight
     )
     
-    XCTAssertNotEqual(image, resizedImage)
+    XCTAssertNotEqual(garlic, resizedImage)
     XCTAssertEqual(resizedImage.size, newSize)
   }
   
@@ -103,3 +104,4 @@ final class ImageCompressorTests: XCTestCase {
     XCTAssertEqual(compressWithImage, mockCompressedInfo)
   }
 }
+

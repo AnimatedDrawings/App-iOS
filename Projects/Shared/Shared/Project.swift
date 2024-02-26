@@ -14,7 +14,13 @@ let project: Project = .makeProject(
     .makeTarget(
       name: Shared.projectName,
       product: .staticLibrary,
-      dependencies: [ThirdPartyLib.projectDepedency]
+      dependencies: [
+        .project(
+          target: ADUIKit.resources,
+          path: .relativeToRoot(Shared.prefixPathString + "/\(ADUIKit.projectName)")
+        ),
+        ThirdPartyLib.projectDepedency
+      ]
     )
   ]
 )

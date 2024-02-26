@@ -10,6 +10,7 @@ import ProjectEnvironment
 
 let project: Project = .makeProject(
   name: ImageCompressor.projectName,
+  options: .enableCodeCoverage,
   targets: ImageCompressor.uFeatureTargets(
     dependencies: [DomainModel.projectDepedency]
   )
