@@ -20,10 +20,7 @@ public extension UploadADrawingFeature {
       switch action {
       case .delegate(let delegateAction):
         switch delegateAction {
-        case .setOriginalImage(let image): // default: 처리 가능?
-          return .none
-          
-        case .setBoundingBox(let box):
+        default:
           return .none
         }
       default:

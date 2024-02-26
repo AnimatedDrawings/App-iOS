@@ -8,5 +8,5 @@
 import Foundation
 
 public struct DomainModel: Module {
-  public static var prefixPathString: String = Domain.prefixPathString
+  public static let prefixPathString: String = Domain.prefixPathString
 }

@@ -8,5 +8,5 @@
 import Foundation
 
 public struct SharedProvider: uFeatureModule {
-  public static var prefixPathString: String = Domain.prefixPathString
+  public static let prefixPathString: String = Domain.prefixPathString
 }

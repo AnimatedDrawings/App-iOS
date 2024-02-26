@@ -1,12 +1,12 @@
 //
-//  LocalFileProvider.swift
+//  ImageCompressor.swift
 //  ProjectEnvironment
 //
-//  Created by minii on 2023/09/19.
+//  Created by chminii on 2/26/24.
 //
 
 import Foundation
 
-public struct LocalFileProvider: uFeatureModule {
+public struct ImageCompressor: uFeatureModule {
   public static let prefixPathString: String = Domain.prefixPathString
 }

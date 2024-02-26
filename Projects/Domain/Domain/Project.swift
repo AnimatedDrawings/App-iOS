@@ -17,7 +17,8 @@ let project: Project = .makeProject(
       dependencies: [
         LocalFileProvider.projectDepedency,
         SharedProvider.projectDepedency,
-        NetworkProvider.projectDepedency
+        NetworkProvider.projectDepedency,
+        ImageCompressor.projectDepedency
       ]
     )
   ]
