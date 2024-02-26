@@ -7,8 +7,6 @@
 
 import Foundation
 
-public struct NetworkStorage: Module {
-  public static var projectName: String = "NetworkStorage"
-  public static var targetName: String = "NetworkStorage"
+public struct NetworkStorage: uFeatureModule {
   public static var prefixPathString: String = Core.prefixPathString
 }

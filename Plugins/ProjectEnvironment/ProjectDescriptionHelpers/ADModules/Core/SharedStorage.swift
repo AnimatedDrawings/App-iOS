@@ -7,8 +7,6 @@
 
 import Foundation
 
-public struct SharedStorage: Module {
-  public static var projectName: String = "SharedStorage"
-  public static var targetName: String = "SharedStorage"
+public struct SharedStorage: uFeatureModule {
   public static var prefixPathString: String = Core.prefixPathString
 }

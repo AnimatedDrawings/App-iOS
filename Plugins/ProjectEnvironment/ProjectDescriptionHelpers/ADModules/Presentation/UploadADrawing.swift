@@ -8,7 +8,5 @@
 import Foundation
 
 public struct UploadADrawing: uFeatureModule {
-  public static var projectName: String = "UploadADrawing"
-  public static var targetName: String = "UploadADrawing"
   public static var prefixPathString: String = Presentation.prefixPathString
 }

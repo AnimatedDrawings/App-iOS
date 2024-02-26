@@ -12,30 +12,24 @@ let project: Project = .makeProject(
   name: ADUIKit.projectName,
   targets: [
     .makeTarget(
-      targetName: ADUIKit.targetName,
-      product: .staticLibrary,
-      resources: nil,
-      dependencies: [
-        .target(name: ADUIKit.projectName + "Resources")
-      ]
-    ),
-    .makeTarget(
-      targetName: ADUIKit.projectName + "Resources",
-      product: .staticLibrary,
-      sources: nil,
-      dependencies: [
-        Domain.projectDepedency
-      ]
-    ),
-    .makeTarget(
-      targetName: ADUIKit.projectName + "Example",
+      name: ADUIKit.targetName(.example),
       product: .app,
       infoPlist: .AD,
-      sources: ["Example/**", "Sources/**"],
-      resources: nil,
-      dependencies: [
-        .target(name: ADUIKit.targetName)
-      ]
+      sources: ADUIKit.sourceFilesList([.example, .features]),
+      dependencies: [.target(name: ADUIKit.sources)]
+    ),
+    .makeTarget(
+      name: ADUIKit.sources,
+      product: .staticLibrary,
+      sources: ADUIKit.sourceFilesList([.features]),
+      dependencies: [.target(name: ADUIKit.resources)]
+    ),
+    .makeTarget(
+      name: ADUIKit.resources,
+      product: .staticLibrary,
+      sources: nil,
+      resources: .resource,
+      dependencies: [Domain.projectDepedency]
     )
   ]
 )

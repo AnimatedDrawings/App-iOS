@@ -13,7 +13,6 @@ let project: Project = .makeProject(
   options: .enableCodeCoverage,
   targets: FindingTheCharacter
     .uPresentationTargets(
-      resource: false,
-      dependency: CropImage.projectDepedency
+      dependencies: [CropImage.projectDepedency]
     )
 )

@@ -7,8 +7,6 @@
 
 import Foundation
 
-public struct LocalFileProvider: Module {
-  public static var projectName: String = "LocalFileProvider"
-  public static var targetName: String = "LocalFileProvider"
+public struct LocalFileProvider: uFeatureModule {
   public static var prefixPathString: String = Domain.prefixPathString
 }

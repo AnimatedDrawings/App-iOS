@@ -63,13 +63,14 @@ private extension MakeADView {
     
     var body: some View {
       TabView(selection: viewStore.$stepBar.currentStep) {
-        UploadADrawingView(
-          store: store.scope(
-            state: \.uploadADrawing,
-            action: MakeADFeature.Action.uploadADrawing
-          )
-        )
-        .tag(Step.UploadADrawing)
+//        UploadADrawingView(
+//          store: store.scope(
+//            state: \.uploadADrawing,
+//            action: MakeADFeature.Action.uploadADrawing
+//          )
+//        )
+        UploadADrawingView()
+          .tag(Step.UploadADrawing)
         
         FindingTheCharacterView()
           .tag(Step.FindingTheCharacter)

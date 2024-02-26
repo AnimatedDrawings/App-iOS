@@ -13,7 +13,6 @@ let project: Project = .makeProject(
   options: .enableCodeCoverage,
   targets: ConfigureAnimation
     .uPresentationTargets(
-      resource: false,
-      dependency: ADUIKit.projectDepedency
+      dependencies: [ADUIKit.projectDepedency]
     )
 )

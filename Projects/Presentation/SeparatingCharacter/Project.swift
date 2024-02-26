@@ -13,7 +13,6 @@ let project: Project = .makeProject(
   options: .enableCodeCoverage,
   targets: SeparatingCharacter
     .uPresentationTargets(
-      resource: false,
-      dependency: MaskingImage.projectDepedency
+      dependencies: [MaskingImage.projectDepedency]
     )
 )

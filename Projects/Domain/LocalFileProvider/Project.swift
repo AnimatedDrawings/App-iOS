@@ -11,13 +11,8 @@ import ProjectEnvironment
 let project: Project = .makeProject(
   name: LocalFileProvider.projectName,
   targets: [
-    .makeTarget(
-      targetName: LocalFileProvider.targetName,
-      product: .staticLibrary,
-      resources: nil,
-      dependencies: [
-        DomainModel.projectDepedency
-      ]
+    LocalFileProvider.features(
+      dependencies: [DomainModel.projectDepedency]
     )
   ]
 )

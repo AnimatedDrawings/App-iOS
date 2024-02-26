@@ -10,15 +10,18 @@ import ThirdPartyLib
 import DomainModel
 import UploadADrawingFeatures
 
-public struct MakeADFeature: Reducer {
+@Reducer
+public struct MakeADFeature {
   public init() {}
   
   public var body: some Reducer<State, Action> {
-    Scope(state: \.uploadADrawing, action: /Action.uploadADrawing) {
+    Scope(state: \.uploadADrawing, action: \.scope.uploadADrawing) {
       UploadADrawingFeature()
     }
+    
     BindingReducer()
     MainReducer()
+    ScopeReducer()
   }
 }
 
@@ -42,19 +45,44 @@ public extension MakeADFeature {
 }
 
 public extension MakeADFeature {
-  enum Action: Equatable, BindableAction {
+  @CasePathable
+  enum Action: Equatable, BindableAction, ScopeActions {
     case binding(BindingAction<State>)
-    
-    case uploadADrawing(UploadADrawingFeature.Action)
+    case scope(ScopeAction)
   }
-}
-
-extension MakeADFeature {
+  
   func MainReducer() -> some Reducer<State, Action> {
     Reduce { state, action in
       switch action {
       case .binding:
         return .none
+      default:
+        return .none
+      }
+    }
+  }
+}
+
+public extension MakeADFeature {
+  @CasePathable
+  enum ScopeAction: Equatable {
+    case uploadADrawing(UploadADrawingFeature.Action)
+  }
+  
+  func ScopeReducer() -> some Reducer<State, Action> {
+    Reduce { state, action in
+      switch action {
+      case .scope(.uploadADrawing(.delegate(let uploadADrawingAction))):
+        switch uploadADrawingAction {
+        case .setOriginalImage(let originalImage):
+          state.makeADInfo.originalImage = originalImage
+          return .none
+          
+        case .setBoundingBox(let boundingBox):
+          state.makeADInfo.boundingBox = boundingBox
+          return .none
+        }
+        
       default:
         return .none
       }

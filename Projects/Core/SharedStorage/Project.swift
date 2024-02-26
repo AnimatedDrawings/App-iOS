@@ -12,14 +12,11 @@ let project: Project = .makeProject(
   name: SharedStorage.projectName,
   options: .enableCodeCoverage,
   targets: [
-    .makeTarget(
-      targetName: SharedStorage.targetName,
-      product: .staticLibrary,
-      resources: nil,
-      dependencies: [
-        CoreModel.projectDepedency
-      ]
+    SharedStorage.tests(
+      dependencies: [.features]
     ),
-    .makeTestTarget(targetName: SharedStorage.targetName)
+    SharedStorage.features(
+      dependencies: [CoreModel.projectDepedency]
+    )
   ]
 )

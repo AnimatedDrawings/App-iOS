@@ -116,10 +116,8 @@ private extension SeparatingCharacterView {
       VStack(alignment: .leading, spacing: 15) {
         CheckListButton(
           description: description1,
-          state: viewStore.checkState1
-        ) {
-          viewStore.send(.checkAction1)
-        }
+          state: viewStore.$checkState1
+        )
         
         GIFImage(sample: ADUIKitResourcesAsset.Gifs.step3Gif1)
           .frame(height: 250)
@@ -127,10 +125,8 @@ private extension SeparatingCharacterView {
         
         CheckListButton(
           description: description2,
-          state: viewStore.checkState2
-        ) {
-          viewStore.send(.checkAction2)
-        }
+          state: viewStore.$checkState2
+        )
         
         GIFImage(sample: ADUIKitResourcesAsset.Gifs.step3Gif2)
           .frame(height: 250, alignment: .center)

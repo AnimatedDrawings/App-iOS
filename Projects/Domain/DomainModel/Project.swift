@@ -12,9 +12,8 @@ let project: Project = .makeProject(
   name: DomainModel.projectName,
   targets: [
     .makeTarget(
-      targetName: DomainModel.targetName,
+      name: DomainModel.featureName,
       product: .staticLibrary,
-      resources: nil,
       dependencies: [
         Core.projectDepedency
       ]

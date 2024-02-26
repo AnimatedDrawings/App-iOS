@@ -13,7 +13,6 @@ let project: Project = .makeProject(
   options: .enableCodeCoverage,
   targets: FindingCharacterJoints
     .uPresentationTargets(
-      resource: false,
-      dependency: ModifyJoints.projectDepedency
+      dependencies: [ModifyJoints.projectDepedency]
     )
 )

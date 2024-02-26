@@ -7,8 +7,6 @@
 
 import Foundation
 
-public struct LocalFileStorage: Module {
-  public static var projectName: String = "LocalFileStorage"
-  public static var targetName: String = "LocalFileStorage"
+public struct LocalFileStorage: uFeatureModule {
   public static var prefixPathString: String = Core.prefixPathString
 }

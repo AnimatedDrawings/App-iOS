@@ -12,9 +12,8 @@ let project: Project = .makeProject(
   name: Core.projectName,
   targets: [
     .makeTarget(
-      targetName: Core.targetName,
+      name: Core.featureName,
       product: .staticLibrary,
-      resources: nil,
       dependencies: [
         LocalFileStorage.projectDepedency,
         SharedStorage.projectDepedency,

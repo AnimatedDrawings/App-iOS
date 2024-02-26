@@ -11,13 +11,8 @@ import ProjectEnvironment
 let project: Project = .makeProject(
   name: SharedProvider.projectName,
   targets: [
-    .makeTarget(
-      targetName: SharedProvider.targetName,
-      product: .staticLibrary,
-      resources: nil,
-      dependencies: [
-        DomainModel.projectDepedency
-      ]
+    SharedProvider.features(
+      dependencies: [DomainModel.projectDepedency]
     )
   ]
 )

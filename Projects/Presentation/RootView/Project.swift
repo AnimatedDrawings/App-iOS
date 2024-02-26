@@ -4,7 +4,7 @@ import ProjectEnvironment
 let project: Project = .makeProject(
   name: RootView.projectName,
   targets: [
-    RootView.example(),
+    RootView.example(dependencies: [.views]),
     RootView.views(
       dependencies: [
         OnBoarding.projectDepedency,

@@ -8,7 +8,5 @@
 import Foundation
 
 public struct CoreModel: Module {
-  public static var projectName: String = "CoreModel"
-  public static var targetName: String = "CoreModel"
   public static var prefixPathString: String = Core.prefixPathString
 }

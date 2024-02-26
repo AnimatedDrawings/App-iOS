@@ -8,7 +8,5 @@
 import Foundation
 
 public struct MaskingImage: uFeatureModule {
-  public static var projectName: String = "MaskingImage"
-  public static var targetName: String = "MaskingImage"
   public static var prefixPathString: String = Presentation.prefixPathString
 }

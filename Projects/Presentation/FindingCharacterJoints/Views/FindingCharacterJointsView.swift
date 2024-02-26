@@ -126,10 +126,8 @@ private extension FindingCharacterJointsView {
       VStack(alignment: .leading, spacing: 15) {
         CheckListButton(
           description: description,
-          state: viewStore.checkState
-        ) {
-          viewStore.send(.checkAction)
-        }
+          state: viewStore.$checkState
+        )
         
         GIFImage(sample: ADUIKitResourcesAsset.Gifs.step4Gif)
           .frame(height: 250)

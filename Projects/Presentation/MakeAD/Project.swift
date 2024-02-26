@@ -13,7 +13,6 @@ let project: Project = .makeProject(
   options: .enableCodeCoverage,
   targets: MakeAD
     .uPresentationTargets(
-      resource: false,
       dependencies: [
         UploadADrawing.projectDepedency,
         FindingTheCharacter.projectDepedency,

@@ -8,7 +8,5 @@
 import Foundation
 
 public struct ThirdPartyLib: Module {
-  public static var projectName: String = "ThirdPartyLib"
-  public static var targetName: String = "ThirdPartyLib"
   public static var prefixPathString: String = Shared.prefixPathString
 }

@@ -8,7 +8,5 @@
 import Foundation
 
 public struct DomainModel: Module {
-  public static var projectName: String = "DomainModel"
-  public static var targetName: String = "DomainModel"
   public static var prefixPathString: String = Domain.prefixPathString
 }

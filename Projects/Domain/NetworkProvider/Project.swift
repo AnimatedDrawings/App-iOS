@@ -11,13 +11,8 @@ import ProjectEnvironment
 let project: Project = .makeProject(
   name: NetworkProvider.projectName,
   targets: [
-    .makeTarget(
-      targetName: NetworkProvider.targetName,
-      product: .staticLibrary,
-      resources: nil,
-      dependencies: [
-        DomainModel.projectDepedency
-      ]
+    NetworkProvider.features(
+      dependencies: [DomainModel.projectDepedency]
     )
   ]
 )

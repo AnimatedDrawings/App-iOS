@@ -12,14 +12,11 @@ let project: Project = .makeProject(
   name: LocalFileStorage.projectName,
   options: .enableCodeCoverage,
   targets: [
-    .makeTarget(
-      targetName: LocalFileStorage.targetName,
-      product: .staticLibrary,
-      resources: nil,
-      dependencies: [
-        CoreModel.projectDepedency
-      ]
+    LocalFileStorage.tests(
+      dependencies: [.features]
     ),
-    .makeTestTarget(targetName: LocalFileStorage.targetName)
+    LocalFileStorage.features(
+      dependencies: [CoreModel.projectDepedency]
+    )
   ]
 )

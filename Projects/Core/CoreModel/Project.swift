@@ -12,13 +12,9 @@ let project: Project = .makeProject(
   name: CoreModel.projectName,
   targets: [
     .makeTarget(
-      targetName: CoreModel.targetName,
+      name: CoreModel.featureName,
       product: .staticLibrary,
-      resources: nil,
-      dependencies: [
-        Shared.projectDepedency
-      ]
+      dependencies: [Shared.projectDepedency]
     )
   ]
 )
-

@@ -107,10 +107,8 @@ private extension FindingTheCharacterView {
       VStack(alignment: .leading, spacing: 15) {
         CheckListButton(
           description: description,
-          state: viewStore.checkState
-        ) {
-          viewStore.send(.checkAction)
-        }
+          state: viewStore.$checkState
+        )
         
         HStack {
           GIFImage(sample: ADUIKitResourcesAsset.Gifs.step2Gif1)

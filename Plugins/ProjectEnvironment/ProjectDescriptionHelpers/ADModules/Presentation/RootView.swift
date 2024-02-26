@@ -7,8 +7,6 @@
 
 import Foundation
 
-public struct RootView: PresentationModule {
-  public static var projectName: String = "RootView"
-  public static var targetName: String = "RootView"
+public struct RootView: uFeatureModule {
   public static var prefixPathString: String = Presentation.prefixPathString
 }

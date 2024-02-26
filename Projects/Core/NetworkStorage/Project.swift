@@ -12,14 +12,11 @@ let project: Project = .makeProject(
   name: NetworkStorage.projectName,
   options: .enableCodeCoverage,
   targets: [
-    .makeTarget(
-      targetName: NetworkStorage.targetName,
-      product: .staticLibrary,
-      resources: nil,
-      dependencies: [
-        CoreModel.projectDepedency
-      ]
+    NetworkStorage.tests(
+      dependencies: [.features]
     ),
-    .makeTestTarget(targetName: NetworkStorage.targetName)
+    NetworkStorage.features(
+      dependencies: [CoreModel.projectDepedency]
+    )
   ]
 )
