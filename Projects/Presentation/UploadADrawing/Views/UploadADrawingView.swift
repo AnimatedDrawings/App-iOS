@@ -15,24 +15,16 @@ import PhotosUI
 import DomainModel
 import SharedProvider
 
-public struct UploadADrawingView: ADUI {
-  public typealias MyFeature = UploadADrawingFeature
+public struct UploadADrawingView: View {
+  @Perception.Bindable var store: StoreOf<UploadADrawingFeature>
 
   public init(
-    store: MyStore = Store(
-      initialState: .init()
-    ) {
-      MyFeature()
+    store: StoreOf<UploadADrawingFeature> = Store(initialState: .init()) {
+      UploadADrawingFeature()
     }
   ) {
     self.store = store
-    self._viewStore = StateObject(
-      wrappedValue: ViewStore(store, observe: { $0 })
-    )
   }
-  
-  let store: MyStore
-  @StateObject var viewStore: MyViewStore
   
   public var body: some View {
     ADScrollView {
@@ -41,28 +33,28 @@ public struct UploadADrawingView: ADUI {
         
         CheckList(
           myStep: .UploadADrawing,
-          completeStep: viewStore.stepBar.completeStep
+          completeStep: store.stepBar.completeStep
         ) {
-          CheckListContent(viewStore: viewStore)
+          CheckListContent(store: store)
         }
         
-        UploadButton(state: viewStore.isActiveUploadButton) { imageData in
-          viewStore.send(.view(.uploadDrawing(imageData)))
+        UploadButton(state: store.uploadButton) { imageData in
+          store.send(.view(.uploadDrawing(imageData)))
         }
         
         SampleDrawings { imageData in
-          viewStore.send(.view(.uploadDrawing(imageData)))
+          store.send(.view(.uploadDrawing(imageData)))
         }
         
         Spacer()
       }
       .padding()
     }
-    .alertNetworkError(isPresented: viewStore.$isShowNetworkErrorAlert)
-    .alertFindCharacterError(isPresented: viewStore.$isShowFindCharacterErrorAlert)
-    .alertimageSizeError(isPresented: viewStore.$isShowImageSizeErrorAlert)
+    .alertNetworkError(isPresented: $store.alert.networkError)
+    .alertFindCharacterError(isPresented: $store.alert.findCharacterError)
+    .alertimageSizeError(isPresented: $store.alert.imageSizeError)
     .fullScreenOverlay(presentationSpace: .named("UploadADrawingView")) {
-      if viewStore.state.isShowLoadingView {
+      if store.loadingView {
         LoadingView(description: "Uploading Drawing...")
           .transparentBlurBackground(
             effect: UIBlurEffect(style: .light),
@@ -71,7 +63,7 @@ public struct UploadADrawingView: ADUI {
       }
     }
     .resetMakeADView(.UploadADrawing) {
-      viewStore.send(.view(.initState))
+      store.send(.view(.initState))
     }
   }
 }
@@ -129,7 +121,7 @@ private extension UploadADrawingView {
 
 private extension UploadADrawingView {
   struct CheckListContent: View {
-    @ObservedObject var viewStore: MyViewStore
+    @Perception.Bindable var store: StoreOf<UploadADrawingFeature>
     
     let description1 = "Make sure the character is drawn on a white piece of paper without lines, wrinkles, or tears"
     let description2 = "Make sure the drawing is well lit. To minimize shadows, hold the camera further away and zoom in on the drawing."
@@ -140,34 +132,22 @@ private extension UploadADrawingView {
       VStack(alignment: .leading, spacing: 15) {
         CheckListButton(
           description: description1,
-          state: viewStore.binding(
-            get: \.checkState.check1,
-            send: .view(.check(.list1))
-          )
+          state: $store.check.list1.sending(\.view.check.list1)
         )
         
         CheckListButton(
           description: description2,
-          state: viewStore.binding(
-            get: \.checkState.check2,
-            send: .view(.check(.list2))
-          )
+          state: $store.check.list2.sending(\.view.check.list2)
         )
         
         CheckListButton(
           description: description3,
-          state: viewStore.binding(
-            get: \.checkState.check3,
-            send: .view(.check(.list3))
-          )
+          state: $store.check.list3.sending(\.view.check.list3)
         )
         
         CheckListButton(
           description: description4,
-          state: viewStore.binding(
-            get: \.checkState.check4,
-            send: .view(.check(.list4))
-          )
+          state: $store.check.list4.sending(\.view.check.list4)
         )
       }
     }

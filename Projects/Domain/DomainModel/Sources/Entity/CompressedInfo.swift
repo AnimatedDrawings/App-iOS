@@ -10,9 +10,9 @@ import UIKit
 import ADUIKitResources
 
 public struct CompressedInfo: Equatable {
-  let data: Data
-  let image: UIImage
-  let original: UIImage
+  public let data: Data
+  public let image: UIImage
+  public let original: UIImage
   
   public init(data: Data, image: UIImage, original: UIImage) {
     self.data = data

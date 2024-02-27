@@ -10,52 +10,63 @@ import ThirdPartyLib
 import DomainModel
 
 public extension UploadADrawingFeature {
+  @ObservableState
   struct State: Equatable {
     public var stepBar: StepBarState
-    
-    public var checkState: CheckState
-    public var isActiveUploadButton: Bool
-    
-    public var isShowLoadingView: Bool
-    @BindingState public var isShowNetworkErrorAlert: Bool
-    @BindingState public var isShowFindCharacterErrorAlert: Bool
-    @BindingState public var isShowImageSizeErrorAlert: Bool
+    public var check: Check
+    public var uploadButton: Bool
+    public var loadingView: Bool
+    public var alert: Alert
     
     public init(
       stepBar: StepBarState = .init(),
-      checkState: CheckState = .init(),
-      isEnableUploadButton: Bool = false,
-      isShowLoadingView: Bool = false,
-      isShowNetworkErrorAlert: Bool = false,
-      isShowFindCharacterErrorAlert: Bool = false,
-      isShowImageSizeErrorAlert: Bool = false
+      check: Check = .init(),
+      uploadButton: Bool = .init(),
+      loadingView: Bool = .init(),
+      alert: Alert = .init()
     ) {
       self.stepBar = stepBar
-      self.checkState = checkState
-      self.isActiveUploadButton = isEnableUploadButton
-      self.isShowLoadingView = isShowLoadingView
-      self.isShowNetworkErrorAlert = isShowNetworkErrorAlert
-      self.isShowFindCharacterErrorAlert = isShowFindCharacterErrorAlert
-      self.isShowImageSizeErrorAlert = isShowImageSizeErrorAlert
+      self.check = check
+      self.uploadButton = uploadButton
+      self.loadingView = loadingView
+      self.alert = alert
     }
   }
   
-  struct CheckState: Equatable {
-    public var check1: Bool
-    public var check2: Bool
-    public var check3: Bool
-    public var check4: Bool
+  @ObservableState
+  struct Alert: Equatable {
+    public var networkError: Bool
+    public var findCharacterError: Bool
+    public var imageSizeError: Bool
     
     public init(
-      check1: Bool = false,
-      check2: Bool = false,
-      check3: Bool = false,
-      check4: Bool = false
+      networkError: Bool = false,
+      findCharacterError: Bool = false,
+      imageSizeError: Bool = false
     ) {
-      self.check1 = check1
-      self.check2 = check2
-      self.check3 = check3
-      self.check4 = check4
+      self.networkError = networkError
+      self.findCharacterError = findCharacterError
+      self.imageSizeError = imageSizeError
+    }
+  }
+  
+  @ObservableState
+  struct Check: Equatable {
+    public var list1: Bool
+    public var list2: Bool
+    public var list3: Bool
+    public var list4: Bool
+    
+    public init(
+      list1: Bool = false,
+      list2: Bool = false,
+      list3: Bool = false,
+      list4: Bool = false
+    ) {
+      self.list1 = list1
+      self.list2 = list2
+      self.list3 = list3
+      self.list4 = list4
     }
   }
 }

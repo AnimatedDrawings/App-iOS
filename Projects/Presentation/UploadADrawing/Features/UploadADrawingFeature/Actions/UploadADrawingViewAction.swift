@@ -10,17 +10,19 @@ import ThirdPartyLib
 import UIKit
 
 public extension UploadADrawingFeature {
+  @CasePathable
   enum ViewAction: Equatable {
-    case check(Check)
+    case check(CheckAction)
     case uploadDrawing(Data?)
     case initState
   }
   
-  enum Check: Equatable {
-    case list1
-    case list2
-    case list3
-    case list4
+  @CasePathable
+  enum CheckAction: Equatable {
+    case list1(Bool)
+    case list2(Bool)
+    case list3(Bool)
+    case list4(Bool)
   }
   
   func ViewReducer() -> some Reducer<State, Action> {
@@ -31,14 +33,14 @@ public extension UploadADrawingFeature {
           
         case .check(let checkList):
           switch checkList {
-          case .list1:
-            state.checkState.check1.toggle()
-          case .list2:
-            state.checkState.check2.toggle()
-          case .list3:
-            state.checkState.check3.toggle()
-          case .list4:
-            state.checkState.check4.toggle()
+          case .list1(let checkState):
+            state.check.list1 = checkState
+          case .list2(let checkState):
+            state.check.list2 = checkState
+          case .list3(let checkState):
+            state.check.list3 = checkState
+          case .list4(let checkState):
+            state.check.list4 = checkState
           }
           activeUploadButton(state: &state)
           return .none
@@ -58,12 +60,12 @@ public extension UploadADrawingFeature {
   }
   
   func activeUploadButton(state: inout State) {
-    if state.checkState.check1 && state.checkState.check2
-        && state.checkState.check3 && state.checkState.check4
+    if state.check.list1 && state.check.list2
+        && state.check.list3 && state.check.list4
     {
-      state.isActiveUploadButton = true
+      state.uploadButton = true
     } else {
-      state.isActiveUploadButton = false
+      state.uploadButton = false
     }
   }
 }

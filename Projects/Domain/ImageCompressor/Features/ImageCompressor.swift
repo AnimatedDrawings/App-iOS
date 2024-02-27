@@ -13,8 +13,10 @@ import DomainModel
 import ImageCompressorInterfaces
 
 /// Use
-struct ImageCompressor: ImageCompressorProtocol {
-  func compress(with data: Data) throws -> CompressedInfo {
+public struct ImageCompressor: ImageCompressorProtocol {
+  public init() {}
+  
+  public func compress(with data: Data) throws -> CompressedInfo {
     guard let image = UIImage(data: data),
           let result = reduceFileSize(image: image)
     else {
@@ -24,7 +26,7 @@ struct ImageCompressor: ImageCompressorProtocol {
     return result
   }
   
-  func compress(with image: UIImage) throws -> CompressedInfo {
+  public func compress(with image: UIImage) throws -> CompressedInfo {
     guard let result = reduceFileSize(image: image)
     else {
       throw NSError()
@@ -94,16 +96,16 @@ extension ImageCompressor {
   }
 }
 
-extension DependencyValues {
+public extension DependencyValues {
   var imageCompressor: any ImageCompressorProtocol {
     get { self[ImageCompressorKey.self] }
     set { self[ImageCompressorKey.self] = newValue }
   }
 }
 
-enum ImageCompressorKey: DependencyKey {
-  static let liveValue: any ImageCompressorProtocol = ImageCompressor()
-  static let testValue: any ImageCompressorProtocol = TestImageCompressor()
+public enum ImageCompressorKey: DependencyKey {
+  public static let liveValue: any ImageCompressorProtocol = ImageCompressor()
+  public static let testValue: any ImageCompressorProtocol = TestImageCompressor()
 }
 
 struct TestImageCompressor: ImageCompressorProtocol {

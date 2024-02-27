@@ -13,6 +13,7 @@ import ADUIKitResources
 import DomainModel
 import NetworkStorage
 import SharedProvider
+import ImageCompressor
 
 @MainActor
 final class UploadADrawingAsyncActionTests: XCTestCase {

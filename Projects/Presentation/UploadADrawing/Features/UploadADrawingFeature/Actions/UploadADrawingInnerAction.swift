@@ -24,8 +24,8 @@ public extension UploadADrawingFeature {
       switch action {
       case .inner(let innerAction):
         switch innerAction {
-        case .setLoadingView(let flag):
-          state.isShowLoadingView = flag
+        case .setLoadingView(let isShow):
+          state.loadingView = isShow
           return .none
           
         case .moveToFindingTheCharacter:
@@ -37,15 +37,15 @@ public extension UploadADrawingFeature {
           return .none
           
         case .showNetworkErrorAlert:
-          state.isShowNetworkErrorAlert.toggle()
+          state.alert.networkError.toggle()
           return .none
           
         case .showFindCharacterErrorAlert:
-          state.isShowFindCharacterErrorAlert.toggle()
+          state.alert.findCharacterError.toggle()
           return .none
           
         case .showImageSizeErrorAlert:
-          state.isShowImageSizeErrorAlert.toggle()
+          state.alert.imageSizeError.toggle()
           return .none
         }
       default:

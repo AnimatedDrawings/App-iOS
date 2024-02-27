@@ -25,7 +25,8 @@ final class UploadADrawingInnerActionTests: XCTestCase {
   
   func testSetLoadingView() async {
     await store.send(.inner(.setLoadingView(true))) {
-      $0.isShowLoadingView = true
+//      $0.isShowLoadingView = true
+      $0.loadingView = true
     }
   }
   
@@ -40,38 +41,41 @@ final class UploadADrawingInnerActionTests: XCTestCase {
   }
   
   func testShowNetworkErrorAlert() async {
-    var isShow = true
-    state = UploadADrawingFeature.State(isShowNetworkErrorAlert: isShow)
+    let isShow = true
+//    state = UploadADrawingFeature.State(isShowNetworkErrorAlert: isShow)
+    state = UploadADrawingFeature.State(alert: .init(networkError: isShow))
     store = TestStore(initialState: state) {
       UploadADrawingFeature()
     }
     
     await store.send(.inner(.showNetworkErrorAlert)) {
-      $0.isShowNetworkErrorAlert = !isShow
+//      $0.isShowNetworkErrorAlert = !isShow
+      $0.alert.networkError = !isShow
     }
   }
   
   func testShowFindCharacterErrorAlert() async {
-    var isShow = true
-    state = UploadADrawingFeature.State(isShowFindCharacterErrorAlert: isShow)
+    let isShow = true
+//    state = UploadADrawingFeature.State(isShowFindCharacterErrorAlert: isShow)
+    state = UploadADrawingFeature.State(alert: .init(findCharacterError: isShow))
     store = TestStore(initialState: state) {
       UploadADrawingFeature()
     }
     
     await store.send(.inner(.showFindCharacterErrorAlert)) {
-      $0.isShowFindCharacterErrorAlert = !isShow
+      $0.alert.findCharacterError = !isShow
     }
   }
   
   func testShowImageSizeErrorAlert() async {
-    var isShow = true
-    state = UploadADrawingFeature.State(isShowImageSizeErrorAlert: isShow)
+    let isShow = true
+    state = UploadADrawingFeature.State(alert: .init(imageSizeError: isShow))
     store = TestStore(initialState: state) {
       UploadADrawingFeature()
     }
     
     await store.send(.inner(.showImageSizeErrorAlert)) {
-      $0.isShowImageSizeErrorAlert = !isShow
+      $0.alert.imageSizeError = !isShow
     }
   }
 }

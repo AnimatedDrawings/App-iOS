@@ -23,21 +23,22 @@ final class UploadADrawingViewActionTests: XCTestCase {
   }
   
   func testCheck() async {
-    await store.send(.view(.check(.list1))) {
-      $0.checkState.check1 = !$0.checkState.check1
+    let show = true
+    await store.send(.view(.check(.list1(show)))) {
+      $0.check.list1 = !$0.check.list1
     }
     
-    await store.send(.view(.check(.list2))) {
-      $0.checkState.check2 = !$0.checkState.check2
+    await store.send(.view(.check(.list2(show)))) {
+      $0.check.list2 = !$0.check.list2
     }
     
-    await store.send(.view(.check(.list4))) {
-      $0.checkState.check4 = !$0.checkState.check4
+    await store.send(.view(.check(.list4(show)))) {
+      $0.check.list4 = !$0.check.list4
     }
     
-    await store.send(.view(.check(.list3))) {
-      $0.checkState.check3 = !$0.checkState.check3
-      $0.isActiveUploadButton = true
+    await store.send(.view(.check(.list3(show)))) {
+      $0.check.list3 = !$0.check.list3
+      $0.uploadButton = show
     }
   }
   
@@ -49,7 +50,7 @@ final class UploadADrawingViewActionTests: XCTestCase {
   }
   
   func testInitState() async {
-    state = UploadADrawingFeature.State(isEnableUploadButton: true)
+    state = UploadADrawingFeature.State(uploadButton: true)
     store = TestStore(initialState: state) {
       UploadADrawingFeature()
     }
