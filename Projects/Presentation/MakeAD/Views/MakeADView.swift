@@ -15,42 +15,35 @@ import FindingCharacterJoints
 import ThirdPartyLib
 import MakeADFeatures
 
-import UploadADrawingFeatures
-
-public struct MakeADView: ADUI {
-  public typealias MyFeature = MakeADFeature
-  let store: MyStore
-  @StateObject var viewStore: MyViewStore
+public struct MakeADView: View {
+  @Perception.Bindable var store: StoreOf<MakeADFeature>
   
   public init(
-    store: MyStore = Store(initialState: .init()) {
-      MyFeature()
+    store: StoreOf<MakeADFeature> = Store(initialState: .init()) {
+      MakeADFeature()
     }
   ) {
     self.store = store
-    self._viewStore = StateObject(
-      wrappedValue: ViewStore(store, observe: { $0 })
-    )
   }
   
   public var body: some View {
     GeometryReader { geo in
       List {
         // if -> ishidden 사용
-        if viewStore.stepBar.isShowStepBar {
+        if store.stepBar.isShowStepBar {
           StepBar(
-            currentStep: viewStore.stepBar.currentStep,
-            completeStep: viewStore.stepBar.completeStep
+            currentStep: store.stepBar.currentStep,
+            completeStep: store.stepBar.completeStep
           )
         }
         
-        PageTabView(store: store, viewStore: viewStore)
+        PageTabView(store: store)
           .frame(height: geo.size.height + geo.safeAreaInsets.bottom)
       }
       .listStyle(.plain)
-      .addADBackground(with: viewStore.stepBar.currentStep)
+      .addADBackground(with: store.stepBar.currentStep)
       .scrollContentBackground(.hidden)
-      .animation(.default, value: viewStore.stepBar.isShowStepBar)
+      .animation(.default, value: store.stepBar.isShowStepBar)
     }
     .fullScreenOverlayPresentationSpace(.named("UploadADrawingView"))
   }
@@ -58,19 +51,17 @@ public struct MakeADView: ADUI {
 
 private extension MakeADView {
   struct PageTabView: View {
-    let store: MyStore
-    @ObservedObject var viewStore: MyViewStore
+    @Perception.Bindable var store: StoreOf<MakeADFeature>
     
     var body: some View {
-      TabView(selection: viewStore.$stepBar.currentStep) {
-//        UploadADrawingView(
-//          store: store.scope(
-//            state: \.uploadADrawing,
-//            action: MakeADFeature.Action.uploadADrawing
-//          )
-//        )
-        UploadADrawingView()
-          .tag(Step.UploadADrawing)
+      TabView(selection: $store.stepBar.currentStep) {
+        UploadADrawingView(
+          store: store.scope(
+            state: \.uploadADrawing,
+            action: \.scope.uploadADrawing
+          )
+        )
+        .tag(Step.UploadADrawing)
         
         FindingTheCharacterView()
           .tag(Step.FindingTheCharacter)
