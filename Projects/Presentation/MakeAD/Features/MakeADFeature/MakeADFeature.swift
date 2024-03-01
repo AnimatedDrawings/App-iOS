@@ -26,9 +26,9 @@ public struct MakeADFeature {
 
 public extension MakeADFeature {
   @CasePathable
-  enum Action: Equatable, BindableAction, ScopeActions {
+  enum Action: Equatable, BindableAction, ScopeAction {
     case binding(BindingAction<State>)
-    case scope(ScopeAction)
+    case scope(ScopeActions)
   }
   
   func MainReducer() -> some Reducer<State, Action> {

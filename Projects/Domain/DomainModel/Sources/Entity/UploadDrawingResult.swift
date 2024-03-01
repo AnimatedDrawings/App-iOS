@@ -21,6 +21,8 @@ public struct UploadDrawingResult: Equatable {
   }
 }
 
+import CoreModel
+
 public extension UploadDrawingResult {
   static func example1Mock() -> Self {
     UploadDrawingResult(

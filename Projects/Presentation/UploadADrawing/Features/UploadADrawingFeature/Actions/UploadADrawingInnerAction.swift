@@ -10,7 +10,7 @@ import ThirdPartyLib
 import DomainModel
 
 public extension UploadADrawingFeature {
-  enum InnerAction: Equatable {
+  enum InnerActions: Equatable {
     case setLoadingView(Bool)
     case moveToFindingTheCharacter
     
@@ -22,8 +22,8 @@ public extension UploadADrawingFeature {
   func InnerReducer() -> some Reducer<State, Action> {
     Reduce { state, action in
       switch action {
-      case .inner(let innerAction):
-        switch innerAction {
+      case .inner(let innerActions):
+        switch innerActions {
         case .setLoadingView(let isShow):
           state.loadingView = isShow
           return .none

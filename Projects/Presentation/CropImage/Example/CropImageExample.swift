@@ -12,7 +12,8 @@ import SwiftUI
 struct FindingTheCharacterExample: App {
   var body: some Scene {
     WindowGroup {
-      Previews_CropImageView()
+//      Previews_CropImageView()
+      Preview_CropCircles()
     }
   }
 }

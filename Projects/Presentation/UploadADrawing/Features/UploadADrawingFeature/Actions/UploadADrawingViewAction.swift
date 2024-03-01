@@ -11,14 +11,14 @@ import UIKit
 
 public extension UploadADrawingFeature {
   @CasePathable
-  enum ViewAction: Equatable {
-    case check(CheckAction)
+  enum ViewActions: Equatable {
+    case check(CheckActions)
     case uploadDrawing(Data?)
     case initState
   }
   
   @CasePathable
-  enum CheckAction: Equatable {
+  enum CheckActions: Equatable {
     case list1(Bool)
     case list2(Bool)
     case list3(Bool)
@@ -28,9 +28,8 @@ public extension UploadADrawingFeature {
   func ViewReducer() -> some Reducer<State, Action> {
     Reduce { state, action in
       switch action {
-      case .view(let viewAction):
-        switch viewAction {
-          
+      case .view(let viewActions):
+        switch viewActions {
         case .check(let checkList):
           switch checkList {
           case .list1(let checkState):

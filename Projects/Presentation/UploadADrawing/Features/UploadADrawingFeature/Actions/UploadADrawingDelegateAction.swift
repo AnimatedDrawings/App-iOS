@@ -10,7 +10,7 @@ import ThirdPartyLib
 import UIKit
 
 public extension UploadADrawingFeature {
-  enum DelegateAction: Equatable {
+  enum DelegateActions: Equatable {
     case setOriginalImage(UIImage)
     case setBoundingBox(CGRect)
   }
@@ -18,8 +18,8 @@ public extension UploadADrawingFeature {
   func DelegateReducer() -> some Reducer<State, Action> {
     Reduce { state, action in
       switch action {
-      case .delegate(let delegateAction):
-        switch delegateAction {
+      case .delegate(let delegateActions):
+        switch delegateActions {
         default:
           return .none
         }

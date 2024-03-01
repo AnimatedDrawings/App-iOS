@@ -31,12 +31,12 @@ public struct UploadADrawingFeature: Reducer {
 
 public extension UploadADrawingFeature {
   @CasePathable
-  enum Action: Equatable, BindableAction, ViewActions, InnerActions, AsyncActions, DelegateActions {
+  enum Action: Equatable, BindableAction, ViewAction, InnerAction, AsyncAction, DelegateAction {
     case binding(BindingAction<State>)
-    case view(ViewAction)
-    case inner(InnerAction)
-    case async(AsyncAction)
-    case delegate(DelegateAction)
+    case view(ViewActions)
+    case inner(InnerActions)
+    case async(AsyncActions)
+    case delegate(DelegateActions)
   }
   
   func MainReducer() -> some Reducer<State, Action> {

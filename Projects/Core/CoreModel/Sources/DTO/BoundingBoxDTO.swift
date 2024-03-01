@@ -35,3 +35,19 @@ public struct BoundingBoxDTO: Codable, Equatable {
     case right
   }
 }
+
+public extension BoundingBoxDTO {
+  static func mock() -> Self {
+    let data = """
+    {
+      "bottom": 402,
+      "left": 88,
+      "right": 264,
+      "top": 118
+    }
+""".data(using: .utf8)!
+    
+    let decoded = try! JSONDecoder().decode(Self.self, from: data)
+    return decoded
+  }
+}

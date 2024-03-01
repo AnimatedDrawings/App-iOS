@@ -37,7 +37,7 @@ struct ViewFinder: View {
           cropImageViewStore.send(.initImageScale(imageScale))
         }
         .overlay {
-          GridView(cropImageViewStore: cropImageViewStore)
+//          GridView(cropImageViewStore: cropImageViewStore)
         }
     }
   }

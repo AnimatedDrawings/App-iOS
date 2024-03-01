@@ -11,15 +11,15 @@ import UploadADrawingFeatures
 
 public extension MakeADFeature {
   @CasePathable
-  enum ScopeAction: Equatable {
+  enum ScopeActions: Equatable {
     case uploadADrawing(UploadADrawingFeature.Action)
   }
   
   func ScopeReducer() -> some Reducer<State, Action> {
     Reduce { state, action in
       switch action {
-      case .scope(.uploadADrawing(.delegate(let uploadADrawingAction))):
-        switch uploadADrawingAction {
+      case .scope(.uploadADrawing(.delegate(let uploadADrawingActions))):
+        switch uploadADrawingActions {
         case .setOriginalImage(let originalImage):
           state.makeADInfo.originalImage = originalImage
           return .none

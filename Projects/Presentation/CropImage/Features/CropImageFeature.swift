@@ -10,7 +10,8 @@ import ThirdPartyLib
 import UIKit
 import SharedProvider
 
-public struct CropImageFeature: Reducer {
+@Reducer
+public struct CropImageFeature {
   @Dependency(\.shared.makeAD.originalImage) var originalImage
   @Dependency(\.shared.makeAD.boundingBox) var boundingBox
   

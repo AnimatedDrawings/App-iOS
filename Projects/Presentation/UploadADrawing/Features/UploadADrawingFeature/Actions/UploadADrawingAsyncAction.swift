@@ -12,7 +12,7 @@ import DomainModel
 import NetworkStorage
 
 public extension UploadADrawingFeature {
-  enum AsyncAction: Equatable {
+  enum AsyncActions: Equatable {
     case uploadDrawing(Data?)
     case uploadDrawingResponse(TaskResult<UploadDrawingResult>)
   }
@@ -20,8 +20,8 @@ public extension UploadADrawingFeature {
   func AsyncReducer() -> some Reducer<State, Action> {
     Reduce { state, action in
       switch action {
-      case .async(let asyncAction):
-        switch asyncAction {
+      case .async(let asyncActions):
+        switch asyncActions {
         case .uploadDrawing(let imageData):
           guard let data = imageData,
                 let compressedInfo = try? imageCompressor.compress(with: data)

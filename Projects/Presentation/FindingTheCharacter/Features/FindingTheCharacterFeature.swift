@@ -13,6 +13,7 @@ import DomainModel
 import NetworkProvider
 import CropImageFeatures
 
+@Reducer
 public struct FindingTheCharacterFeature: Reducer {
   public init() {}
 
@@ -26,45 +27,19 @@ public struct FindingTheCharacterFeature: Reducer {
       CropImageFeature()
     }
     MainReducer()
+    ViewReducer()
+    InnerReducer()
   }
 }
 
 public extension FindingTheCharacterFeature {
-  struct State: Equatable {
-    @BindingState public var checkState: Bool
-    @BindingState public var isShowCropImageView: Bool
-    public var isShowLoadingView: Bool
-    var isSuccessUpload: Bool
-    @BindingState public var isShowNetworkErrorAlert: Bool
-    public var cropImage: CropImageFeature.State
-    
-    public init(
-      checkState: Bool = false,
-      isShowCropImageView: Bool = false,
-      isShowLoadingView: Bool = false,
-      isSuccessUpload: Bool = false,
-      isShowNetworkErrorAlert: Bool = false,
-      cropImage: CropImageFeature.State = .init()
-    ) {
-      self.checkState = checkState
-      self.isShowCropImageView = isShowCropImageView
-      self.isShowLoadingView = isShowLoadingView
-      self.isSuccessUpload = isSuccessUpload
-      self.isShowNetworkErrorAlert = isShowNetworkErrorAlert
-      self.cropImage = cropImage
-    }
-  }
-}
-
-public extension FindingTheCharacterFeature {
-  enum Action: BindableAction, Equatable {
+  enum Action: Equatable, BindableAction, ViewAction, InnerAction {
     case binding(BindingAction<State>)
+    case view(ViewActions)
+    case inner(InnerActions)
     
-    case checkAction
-    case toggleCropImageView
     case findTheCharacter
     case findTheCharacterResponse(TaskEmptyResult)
-    case setLoadingView(Bool)
     case onDismissCropImageView
     
     case downloadMaskImage
@@ -83,18 +58,6 @@ extension FindingTheCharacterFeature {
     Reduce { state, action in
       switch action {
       case .binding:
-        return .none
-        
-      case .checkAction:
-        state.checkState.toggle()
-        return .none
-        
-      case .toggleCropImageView:
-        state.isShowCropImageView.toggle()
-        return .none
-        
-      case .setLoadingView(let flag):
-        state.isShowLoadingView = flag
         return .none
         
       case .findTheCharacter:

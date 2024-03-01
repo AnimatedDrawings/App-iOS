@@ -63,32 +63,32 @@ public extension ViewStore {
 //  static func delegate(_: DelegateAction) -> Self
 //}
 
-public protocol ViewActions {
-  associatedtype ViewAction
+public protocol ViewAction {
+  associatedtype ViewActions
   
-  static func view(_: ViewAction) -> Self
+  static func view(_: ViewActions) -> Self
 }
 
-public protocol InnerActions {
-  associatedtype InnerAction
+public protocol InnerAction {
+  associatedtype InnerActions
   
-  static func inner(_: InnerAction) -> Self
+  static func inner(_: InnerActions) -> Self
 }
 
-public protocol AsyncActions {
-  associatedtype AsyncAction
+public protocol AsyncAction {
+  associatedtype AsyncActions
   
-  static func async(_: AsyncAction) -> Self
+  static func async(_: AsyncActions) -> Self
 }
 
-public protocol ScopeActions {
-  associatedtype ScopeAction
+public protocol ScopeAction {
+  associatedtype ScopeActions
   
-  static func scope(_: ScopeAction) -> Self
+  static func scope(_: ScopeActions) -> Self
 }
 
-public protocol DelegateActions {
-  associatedtype DelegateAction
+public protocol DelegateAction {
+  associatedtype DelegateActions
   
-  static func delegate(_: DelegateAction) -> Self
+  static func delegate(_: DelegateActions) -> Self
 }
