@@ -14,7 +14,7 @@ import NetworkProvider
 import CropImageFeatures
 
 @Reducer
-public struct FindingTheCharacterFeature: Reducer {
+public struct FindingTheCharacterFeature {
   public init() {}
 
   @Dependency(\.makeADProvider) var makeADProvider

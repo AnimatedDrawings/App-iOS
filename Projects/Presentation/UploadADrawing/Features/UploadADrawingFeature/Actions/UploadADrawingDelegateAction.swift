@@ -8,11 +8,13 @@
 
 import ThirdPartyLib
 import UIKit
+import DomainModel
 
 public extension UploadADrawingFeature {
   enum DelegateActions: Equatable {
     case setOriginalImage(UIImage)
     case setBoundingBox(CGRect)
+    case setStepBar(StepBarState)
   }
   
   func DelegateReducer() -> some Reducer<State, Action> {

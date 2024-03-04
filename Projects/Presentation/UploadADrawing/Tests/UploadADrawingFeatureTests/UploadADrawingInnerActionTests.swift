@@ -25,38 +25,24 @@ final class UploadADrawingInnerActionTests: XCTestCase {
   
   func testSetLoadingView() async {
     await store.send(.inner(.setLoadingView(true))) {
-//      $0.isShowLoadingView = true
       $0.loadingView = true
-    }
-  }
-  
-  func testMoveToFindingTheCharacter() async {
-    await store.send(.inner(.moveToFindingTheCharacter)) {
-      $0.stepBar = StepBarState(
-        isShowStepBar: true,
-        currentStep: .FindingTheCharacter,
-        completeStep: .UploadADrawing
-      )
     }
   }
   
   func testShowNetworkErrorAlert() async {
     let isShow = true
-//    state = UploadADrawingFeature.State(isShowNetworkErrorAlert: isShow)
     state = UploadADrawingFeature.State(alert: .init(networkError: isShow))
     store = TestStore(initialState: state) {
       UploadADrawingFeature()
     }
     
     await store.send(.inner(.showNetworkErrorAlert)) {
-//      $0.isShowNetworkErrorAlert = !isShow
       $0.alert.networkError = !isShow
     }
   }
   
   func testShowFindCharacterErrorAlert() async {
     let isShow = true
-//    state = UploadADrawingFeature.State(isShowFindCharacterErrorAlert: isShow)
     state = UploadADrawingFeature.State(alert: .init(findCharacterError: isShow))
     store = TestStore(initialState: state) {
       UploadADrawingFeature()

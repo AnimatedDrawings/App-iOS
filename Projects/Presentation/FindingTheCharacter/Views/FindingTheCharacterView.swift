@@ -8,32 +8,22 @@
 
 import SwiftUI
 import ThirdPartyLib
-import ADUIKitSources
-import ADUIKitResources
 import FindingTheCharacterFeatures
-import CropImage
+import ADUIKitSources
 import DomainModel
-import SharedProvider
 
-public struct FindingTheCharacterView: ADUI {
-  public typealias MyFeature = FindingTheCharacterFeature
+public struct FindingTheCharacterView: View {
+  let store: StoreOf<FindingTheCharacterFeature>
   
   public init(
-    store: MyStore = Store(initialState: .init()) {
-      MyFeature()
+    store: StoreOf<FindingTheCharacterFeature> = Store(
+      initialState: .init()
+    ) {
+      FindingTheCharacterFeature()
     }
   ) {
     self.store = store
-    self._viewStore = StateObject(
-      wrappedValue: ViewStore(store, observe: { $0 })
-    )
   }
-  
-  let store: MyStore
-  @StateObject var viewStore: MyViewStore
-  
-  @SharedValue(\.shared.makeAD.originalImage) var originalImage
-  @SharedValue(\.shared.makeAD.boundingBox) var boundingBox
   
   public var body: some View {
     ADScrollView {

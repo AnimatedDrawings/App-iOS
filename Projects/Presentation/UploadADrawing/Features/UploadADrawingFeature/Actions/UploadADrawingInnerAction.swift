@@ -12,7 +12,6 @@ import DomainModel
 public extension UploadADrawingFeature {
   enum InnerActions: Equatable {
     case setLoadingView(Bool)
-    case moveToFindingTheCharacter
     
     case showNetworkErrorAlert
     case showFindCharacterErrorAlert
@@ -26,14 +25,6 @@ public extension UploadADrawingFeature {
         switch innerActions {
         case .setLoadingView(let isShow):
           state.loadingView = isShow
-          return .none
-          
-        case .moveToFindingTheCharacter:
-          state.stepBar = StepBarState(
-            isShowStepBar: true,
-            currentStep: .FindingTheCharacter,
-            completeStep: .UploadADrawing
-          )
           return .none
           
         case .showNetworkErrorAlert:

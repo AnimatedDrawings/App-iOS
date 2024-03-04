@@ -23,3 +23,13 @@ public struct StepBarState: Equatable {
     self.completeStep = completeStep
   }
 }
+
+public extension StepBarState {
+  static func toFindingTheCharacter() -> Self {
+    StepBarState(
+      isShowStepBar: true,
+      currentStep: .FindingTheCharacter,
+      completeStep: .UploadADrawing
+    )
+  }
+}
