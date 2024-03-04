@@ -40,53 +40,41 @@ public extension ViewStore {
   }
 }
 
-//public protocol FeatureAction {
-//  associatedtype ViewAction
-//  associatedtype InnerAction
-//  associatedtype AsyncAction
-//  associatedtype ScopeAction
-//  associatedtype DelegateAction
-//  
-//  // NOTE: view 에서 사용되는 Action 을 정의합니다.
-//  static func view(_: ViewAction) -> Self
-//  
-//  // NOTE: 그 외 Reducer 내부적으로 사용되는 Action 을 정의합니다.
-//  static func inner(_: InnerAction) -> Self
-//  
-//  // NOTE: 비동기적으로 돌아가는 Action 을 정의합니다.
-//  static func async(_: AsyncAction) -> Self
-//  
-//  // NOTE: 자식 Redcuer 에서 사용되는 Action 을 정의합니다.
-//  static func scope(_: ScopeAction) -> Self
-//  
-//  // NOTE: 부모 Reducer 에서 사용되는 Action 을 정의합니다.
-//  static func delegate(_: DelegateAction) -> Self
-//}
+public extension Store {
+  func action(_ action: Action) -> (() -> Void) {
+    return { self.send(action) }
+  }
+}
 
+// NOTE: view 에서 사용되는 Action 을 정의합니다.
 public protocol ViewAction {
   associatedtype ViewActions
   
   static func view(_: ViewActions) -> Self
 }
 
+// NOTE: 그 외 Reducer 내부적으로 사용되는 Action 을 정의합니다.
 public protocol InnerAction {
   associatedtype InnerActions
   
   static func inner(_: InnerActions) -> Self
 }
 
+// NOTE: 비동기적으로 돌아가는 Action 을 정의합니다.
 public protocol AsyncAction {
   associatedtype AsyncActions
   
   static func async(_: AsyncActions) -> Self
 }
 
+// NOTE: 자식 Redcuer 에서 사용되는 Action 을 정의합니다.
 public protocol ScopeAction {
   associatedtype ScopeActions
   
   static func scope(_: ScopeActions) -> Self
 }
 
+// NOTE: 부모 Reducer 에서 사용되는 Action 을 정의합니다.
 public protocol DelegateAction {
   associatedtype DelegateActions
   

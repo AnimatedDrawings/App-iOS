@@ -9,30 +9,29 @@
 import SwiftUI
 
 struct CropCircles: View {
-  @Binding var viewBoundingBox: CGRect
-  @Binding var viewSize: CGSize
+  @Binding var curRect: CGRect
+  @Binding var lastRect: CGRect
+  let maxSize: CGSize
   let strokeColor: Color
   let lineWidth: CGFloat
   
-  @State var curRect: CGRect = .init()
-  @State var lastRect: CGRect = .init()
   let circleCount: Int
   let circleSize: CGFloat
   let minSize: CGFloat
   
   init(
-    viewBoundingBox: Binding<CGRect>,
-    viewSize: Binding<CGSize>,
+    curRect: Binding<CGRect>,
+    lastRect: Binding<CGRect>,
+    maxSize: CGSize,
     strokeColor: Color,
     lineWidth: CGFloat
   ) {
-    self._viewBoundingBox = viewBoundingBox
-    self._viewSize = viewSize
+    self._curRect = curRect
+    self._lastRect = lastRect
+    self.maxSize = maxSize
     self.strokeColor = strokeColor
     self.lineWidth = lineWidth
     
-    self._curRect = State(initialValue: viewBoundingBox.wrappedValue)
-    self._lastRect = State(initialValue: viewBoundingBox.wrappedValue)
     self.circleCount = 3
     self.circleSize = 20
     let totalCircleSize: CGFloat = circleSize * CGFloat(circleCount - 1)
@@ -57,7 +56,6 @@ struct CropCircles: View {
         }
       }
     }
-    .onChange(of: viewBoundingBox, perform: updateBoundingBox)
   }
   
   func edgeIndex(row: Int, col: Int) -> Bool {
@@ -66,11 +64,6 @@ struct CropCircles: View {
   
   func pointIndex(row: Int, col: Int) -> Bool {
     return (row + col) % (circleCount - 1) == 0
-  }
-  
-  func updateBoundingBox(_: CGRect) {
-    self.curRect = viewBoundingBox
-    self.lastRect = viewBoundingBox
   }
 }
 
@@ -149,7 +142,7 @@ extension CropCircles {
           return
         }
         
-        guard nexHeight < viewSize.height - lastRect.minY else {
+        guard nexHeight < maxSize.height - lastRect.minY else {
           return
         }
         
@@ -189,7 +182,7 @@ extension CropCircles {
           return
         }
         
-        guard nexWidth < viewSize.width - lastRect.minX else {
+        guard nexWidth < maxSize.width - lastRect.minX else {
           return
         }
         

@@ -9,8 +9,9 @@
 import SwiftUI
 
 struct CropStroke: View {
-  @Binding var curPoint: CGPoint
-  @Binding var curSize: CGSize
+//  @Binding var curPoint: CGPoint
+//  @Binding var curSize: CGSize
+  @Binding var curRect: CGRect
   let strokeColor: Color
   let lineWidth: CGFloat
   
@@ -21,10 +22,10 @@ struct CropStroke: View {
           .stroke(strokeColor, lineWidth: lineWidth)
       }
       .offset(
-        x: curPoint.x,
-        y: curPoint.y
+        x: curRect.minX,
+        y: curRect.minY
       )
-      .frame(maxWidth: curSize.width, maxHeight: curSize.height, alignment: .topLeading)
+      .frame(maxWidth: curRect.width, maxHeight: curRect.height, alignment: .topLeading)
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
   }

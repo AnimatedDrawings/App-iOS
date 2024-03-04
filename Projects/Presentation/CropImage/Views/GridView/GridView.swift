@@ -12,98 +12,75 @@ import ThirdPartyLib
 import CropImageFeatures
 
 struct GridView: View {
-//  @Binding var croppedRect: CGRect
-//  @Binding var curX: CGFloat
-//  @Binding var curY: CGFloat
-//  @Binding var curWidth: CGFloat
-//  @Binding var curHeight: CGFloat
-//  let maxWidth: CGFloat
-//  let maxHeight: CGFloat
+  let maxSize: CGSize
+  @Binding var initalBoundingBox: CGRect
+  let updateBoundingBox: (CGRect) -> ()
   
+  @State var curRect: CGRect = .init()
+  @State var lastRect: CGRect = .init()
   let strokeColor: Color = ADUIKitResourcesAsset.Color.blue3.swiftUIColor
   let lineWidth: CGFloat = 3
   
-  
-//  @MainActor
-//  init(cropImageViewStore: ViewStoreOf<CropImageFeature>) {
-//    self._croppedRect = cropImageViewStore.$boundingBoxInfo.croppedRect
-//    self._curX = cropImageViewStore.$boundingBoxInfo.curRect.origin.x
-//    self._curY = cropImageViewStore.$boundingBoxInfo.curRect.origin.y
-//    self._curWidth = cropImageViewStore.$boundingBoxInfo.curRect.size.width
-//    self._curHeight = cropImageViewStore.$boundingBoxInfo.curRect.size.height
-//    self.maxWidth = cropImageViewStore.boundingBoxInfo.viewSize.width
-//    self.maxHeight = cropImageViewStore.boundingBoxInfo.viewSize.height
-//  }
-  
-  @State var curPoint: CGPoint = .init()
-  @State var curSize: CGSize = .init()
-  let maxSize: CGSize
+  init(
+    initalBoundingBox: Binding<CGRect>,
+    viewSize maxSize: CGSize,
+    updateBoundingBox: @escaping (CGRect) -> ()
+  ) {
+    self._initalBoundingBox = initalBoundingBox
+    self.maxSize = maxSize
+    self.updateBoundingBox = updateBoundingBox
+  }
   
   var body: some View {
     ZStack {
       CropStroke(
-        curPoint: $curPoint,
-        curSize: $curSize,
+        curRect: $curRect,
         strokeColor: strokeColor,
         lineWidth: lineWidth
       )
-//      CropCircles()
+      CropCircles(
+        curRect: $curRect,
+        lastRect: $lastRect,
+        maxSize: maxSize,
+        strokeColor: strokeColor,
+        lineWidth: lineWidth
+      )
     }
     .contentShape(Rectangle())
     .gesture(DragGridGesture())
+    .onChange(of: initalBoundingBox, perform: initBoundingBox)
+    .onChange(of: lastRect, perform: updateBoundingBoxAction)
+  }
+}
+
+extension GridView {
+  func initBoundingBox(_: CGRect) {
+    self.curRect = initalBoundingBox
+    self.lastRect = initalBoundingBox
+  }
+  
+  func updateBoundingBoxAction(_: CGRect) {
+    updateBoundingBox(lastRect)
   }
 }
 
 extension GridView {
   func DragGridGesture() -> some Gesture {
-    return DragGesture()
+    DragGesture()
       .onChanged { value in
-//        let curOriginX: CGFloat = croppedRect.origin.x + value.translation.width
-//        let curOriginY: CGFloat = croppedRect.origin.y + value.translation.height
-        let tmpX: CGFloat = curPoint.x + value.translation.width
-        let tmpY: CGFloat = curPoint.y + value.translation.height
-//        let tmpX: CGFloat = currentOrigin(
-//          curOrigin: curX,
-//          maxSize: maxWidth,
-//          lastSize: croppedRect.size.width
-//        )
-//        let tmpY: CGFloat = currentOrigin(
-//          curOrigin: curY,
-//          maxSize: maxHeight,
-//          lastSize: croppedRect.size.height
-//        )
-        
-        let tmpPoint: CGPoint = CGPoint(x: tmpX, y: tmpY)
-        let nexPoint: CGPoint = calNexPoint(curPoint: tmpPoint)
-        if curPoint != nexPoint {
-          curPoint = nexPoint
+        let nexX: CGFloat = lastRect.minX + value.translation.width
+        let nexY: CGFloat = lastRect.minY + value.translation.height
+        guard 0 < nexX && nexX < maxSize.width - lastRect.width else {
+          return
+        }
+        guard 0 < nexY && nexY < maxSize.height - lastRect.height else {
+          return
         }
         
-//        if tmpX != curX {
-//          curPoint.x = tmpX
-//        }
-//        if tmpY != curY {
-//          curPoint.y = tmpY
-//        }
+        curRect.origin = CGPoint(x: nexX, y: nexY)
       }
-//      .onEnded { value in
-//        croppedRect.origin.x = curX
-//        croppedRect.origin.y = curY
-//      }
-  }
-  
-  func calNexPoint(curPoint: CGPoint) -> CGPoint {
-    let nexX: CGFloat = max(0, min(curPoint.x, maxSize.width - curSize.width))
-    let nexY: CGFloat = max(0, min(curPoint.y, maxSize.height - curSize.height))
-    return CGPoint(x: nexX, y: nexY)
-  }
-
-  func currentOrigin(
-    curOrigin: CGFloat,
-    maxSize: CGFloat,
-    lastSize: CGFloat
-  ) -> CGFloat {
-    let tmpMaxOrigin: CGFloat = maxSize - lastSize
-    return max(0, min(curOrigin, tmpMaxOrigin))
+      .onEnded { _ in
+        lastRect = curRect
+      }
   }
 }
