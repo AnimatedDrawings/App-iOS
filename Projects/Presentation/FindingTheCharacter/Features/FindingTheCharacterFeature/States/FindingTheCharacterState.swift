@@ -13,7 +13,7 @@ import DomainModel
 public extension FindingTheCharacterFeature {
   @ObservableState
   struct State: Equatable {
-    public var completeStep: Step
+    public var stepBar: StepBarState
     public var checkList: Bool
     public var cropImageView: Bool
     public var loadingView: Bool
@@ -23,7 +23,7 @@ public extension FindingTheCharacterFeature {
     public var cropImage: CropImageFeature.State?
     
     public init(
-      completeStep: Step = .None,
+      stepBar: StepBarState = .init(),
       checkList: Bool = false,
       cropImageView: Bool = false,
       loadingView: Bool = false,
@@ -31,7 +31,7 @@ public extension FindingTheCharacterFeature {
       alert: Alert = Alert(),
       cropImage: CropImageFeature.State? = nil
     ) {
-      self.completeStep = completeStep
+      self.stepBar = stepBar
       self.checkList = checkList
       self.cropImageView = cropImageView
       self.loadingView = loadingView

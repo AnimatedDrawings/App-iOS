@@ -29,11 +29,11 @@ public struct FindingTheCharacterView: View {
   
   public var body: some View {
     WithPerceptionTracking {
-      ADScrollView {
+      ADScrollView($store.stepBar.isShowStepBar) {
         VStack(alignment: .leading, spacing: 20) {
           Title()
           
-          CheckList(myStep: .FindingTheCharacter, completeStep: store.completeStep) {
+          CheckList(myStep: .FindingTheCharacter, completeStep: store.stepBar.completeStep) {
             CheckListContent(state: $store.checkList)
           }
           

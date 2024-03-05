@@ -10,16 +10,17 @@ import SwiftUI
 import SharedProvider
 
 public struct ADScrollView<C: View>: View {
-  let topScrollID = "topScrollID"
+  @Binding var isShowStepBar: Bool
   var content: C
+  let topScrollID = "topScrollID"
   
   public init(
+    _ isShowStepBar: Binding<Bool>,
     @ViewBuilder content: () -> C
   ) {
+    self._isShowStepBar = isShowStepBar
     self.content = content()
   }
-  
-  @SharedValue(\.shared.stepBar.isShowStepStatusBar) var isShowStepStatusBar
   
   public var body: some View {
     GeometryReader { geo in
@@ -32,7 +33,7 @@ public struct ADScrollView<C: View>: View {
             TrackingView(
               topScrollID: topScrollID,
               scrollViewBottom: scrollViewBottom,
-              isShowStepStatusBar: $isShowStepStatusBar
+              isShowStepBar: $isShowStepBar
             )
           )
       }
@@ -45,16 +46,16 @@ extension ADScrollView {
   struct TrackingView: View {
     let topScrollID: String
     let scrollViewBottom: CGFloat
-    @Binding var isShowStepStatusBar: Bool
+    @Binding var isShowStepBar: Bool
     
     init(
       topScrollID: String,
       scrollViewBottom: CGFloat,
-      isShowStepStatusBar: Binding<Bool>
+      isShowStepBar: Binding<Bool>
     ) {
       self.topScrollID = topScrollID
       self.scrollViewBottom = scrollViewBottom
-      self._isShowStepStatusBar = isShowStepStatusBar
+      self._isShowStepBar = isShowStepBar
     }
     
     @State var curTop: CGFloat = 0
@@ -142,11 +143,11 @@ extension ADScrollView {
     }
     
     func appearStepBar() {
-      self.isShowStepStatusBar = true
+      self.isShowStepBar = true
     }
     
     func disappearStepBar() {
-      self.isShowStepStatusBar = false
+      self.isShowStepBar = false
     }
   }
 }

@@ -18,16 +18,28 @@ public struct MakeADFeature {
     Scope(state: \.uploadADrawing, action: \.scope.uploadADrawing) {
       UploadADrawingFeature()
     }
+    .onChange(of: \.uploadADrawing.stepBar) { _, stepBar in
+      Reduce { state, action in
+        state.stepBar = stepBar
+        return .none
+      }
+    }
     Scope(state: \.findTheCharacter, action: \.scope.findingTheCharacter) {
       FindingTheCharacterFeature()
+    }
+    .onChange(of: \.findTheCharacter.stepBar) { _, stepBar in
+      Reduce { state, action in
+        state.stepBar = stepBar
+        return .none
+      }
     }
     
     BindingReducer()
     MainReducer()
-      .onChange(of: \.stepBar.completeStep) { oldValue, newValue in
+      .onChange(of: \.stepBar) { _, stepBar in
         Reduce { state, action in
-          state.uploadADrawing.completeStep = newValue
-          state.findTheCharacter.completeStep = newValue
+          state.uploadADrawing.stepBar = stepBar
+          state.findTheCharacter.stepBar = stepBar
           return .none
         }
       }

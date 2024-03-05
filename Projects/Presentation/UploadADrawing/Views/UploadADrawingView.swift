@@ -28,13 +28,13 @@ public struct UploadADrawingView: View {
   
   public var body: some View {
     WithPerceptionTracking {
-      ADScrollView {
+      ADScrollView($store.stepBar.isShowStepBar) {
         VStack(alignment: .leading, spacing: 20) {
           Title()
           
           CheckList(
             myStep: .UploadADrawing,
-            completeStep: store.completeStep
+            completeStep: store.stepBar.completeStep
           ) {
             CheckListContent(store: store)
           }

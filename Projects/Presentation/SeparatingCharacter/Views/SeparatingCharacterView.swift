@@ -39,7 +39,7 @@ public struct SeparatingCharacterView: ADUI {
   @SharedValue(\.shared.makeAD.maskedImage) var maskedImage
   
   public var body: some View {
-    ADScrollView {
+    ADScrollView(.constant(true)) {
       VStack(alignment: .leading, spacing: 20) {
         Title()
         

@@ -38,7 +38,7 @@ public struct FindingCharacterJointsView: ADUI {
   @SharedValue(\.shared.makeAD.joints) var joints
   
   public var body: some View {
-    ADScrollView {
+    ADScrollView(.constant(true)) {
       VStack(alignment: .leading, spacing: 20) {
         Title()
         

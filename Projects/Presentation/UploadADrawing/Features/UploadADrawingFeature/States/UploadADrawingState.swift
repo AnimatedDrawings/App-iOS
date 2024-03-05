@@ -12,20 +12,20 @@ import DomainModel
 public extension UploadADrawingFeature {
   @ObservableState
   struct State: Equatable {
-    public var completeStep: Step
+    public var stepBar: StepBarState
     public var check: Check
     public var uploadButton: Bool
     public var loadingView: Bool
     public var alert: Alert
     
     public init(
-      completeStep: Step = .None,
+      stepBar: StepBarState = .init(),
       check: Check = .init(),
       uploadButton: Bool = .init(),
       loadingView: Bool = .init(),
       alert: Alert = .init()
     ) {
-      self.completeStep = completeStep
+      self.stepBar = stepBar
       self.check = check
       self.uploadButton = uploadButton
       self.loadingView = loadingView
