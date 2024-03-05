@@ -9,7 +9,7 @@
 import ThirdPartyLib
 import NetworkProvider
 import SharedProvider
-import ImageCompressor
+import ImageTools
 
 @Reducer
 public struct UploadADrawingFeature: Reducer {

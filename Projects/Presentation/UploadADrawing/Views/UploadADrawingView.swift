@@ -27,43 +27,45 @@ public struct UploadADrawingView: View {
   }
   
   public var body: some View {
-    ADScrollView {
-      VStack(alignment: .leading, spacing: 20) {
-        Title()
-        
-        CheckList(
-          myStep: .UploadADrawing,
-          completeStep: store.completeStep
-        ) {
-          CheckListContent(store: store)
+    WithPerceptionTracking {
+      ADScrollView {
+        VStack(alignment: .leading, spacing: 20) {
+          Title()
+          
+          CheckList(
+            myStep: .UploadADrawing,
+            completeStep: store.completeStep
+          ) {
+            CheckListContent(store: store)
+          }
+          
+          UploadButton(state: store.uploadButton) { imageData in
+            store.send(.view(.uploadDrawing(imageData)))
+          }
+          
+          SampleDrawings { imageData in
+            store.send(.view(.uploadDrawing(imageData)))
+          }
+          
+          Spacer()
         }
-        
-        UploadButton(state: store.uploadButton) { imageData in
-          store.send(.view(.uploadDrawing(imageData)))
-        }
-        
-        SampleDrawings { imageData in
-          store.send(.view(.uploadDrawing(imageData)))
-        }
-        
-        Spacer()
+        .padding()
       }
-      .padding()
-    }
-    .alertNetworkError(isPresented: $store.alert.networkError)
-    .alertFindCharacterError(isPresented: $store.alert.findCharacterError)
-    .alertimageSizeError(isPresented: $store.alert.imageSizeError)
-    .fullScreenOverlay(presentationSpace: .named("UploadADrawingView")) {
-      if store.loadingView {
-        LoadingView(description: "Uploading Drawing...")
-          .transparentBlurBackground(
-            effect: UIBlurEffect(style: .light),
-            intensity: 0.3
-          )
+      .alertNetworkError(isPresented: $store.alert.networkError)
+      .alertFindCharacterError(isPresented: $store.alert.findCharacterError)
+      .alertimageSizeError(isPresented: $store.alert.imageSizeError)
+      .fullScreenOverlay(presentationSpace: .named("UploadADrawingView")) {
+        if store.loadingView {
+          LoadingView(description: "Uploading Drawing...")
+            .transparentBlurBackground(
+              effect: UIBlurEffect(style: .light),
+              intensity: 0.3
+            )
+        }
       }
-    }
-    .resetMakeADView(.UploadADrawing) {
-      store.send(.view(.initState))
+      .resetMakeADView(.UploadADrawing) {
+        store.send(.view(.initState))
+      }
     }
   }
 }
@@ -129,26 +131,28 @@ private extension UploadADrawingView {
     let description4 = "Please use file type of image and size 10MB or less"
     
     var body: some View {
-      VStack(alignment: .leading, spacing: 15) {
-        CheckListButton(
-          description: description1,
-          state: $store.check.list1.sending(\.view.check.list1)
-        )
-        
-        CheckListButton(
-          description: description2,
-          state: $store.check.list2.sending(\.view.check.list2)
-        )
-        
-        CheckListButton(
-          description: description3,
-          state: $store.check.list3.sending(\.view.check.list3)
-        )
-        
-        CheckListButton(
-          description: description4,
-          state: $store.check.list4.sending(\.view.check.list4)
-        )
+      WithPerceptionTracking {
+        VStack(alignment: .leading, spacing: 15) {
+          CheckListButton(
+            description: description1,
+            state: $store.check.list1.sending(\.view.check.list1)
+          )
+          
+          CheckListButton(
+            description: description2,
+            state: $store.check.list2.sending(\.view.check.list2)
+          )
+          
+          CheckListButton(
+            description: description3,
+            state: $store.check.list3.sending(\.view.check.list3)
+          )
+          
+          CheckListButton(
+            description: description4,
+            state: $store.check.list4.sending(\.view.check.list4)
+          )
+        }
       }
     }
   }

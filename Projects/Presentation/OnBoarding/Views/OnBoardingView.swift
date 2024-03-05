@@ -30,7 +30,6 @@ public struct OnBoardingView: View {
     .padding()
     .padding(.vertical)
     .frame(maxWidth: .infinity, maxHeight: .infinity)
-//    .addADBackground(withStepBar: false)
     .addADBackground()
   }
 }
@@ -119,13 +118,5 @@ private extension OnBoardingView {
     var body: some View {
       ADButton(title: startText, action: action)
     }
-  }
-}
-
-// MARK: - Previews_OnBoardingView
-
-struct OnBoardingView_Previews: PreviewProvider {
-  static var previews: some View {
-    OnBoardingView()
   }
 }

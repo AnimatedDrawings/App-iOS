@@ -11,20 +11,8 @@ import ThirdPartyLib
 import MakeADFeatures
 
 struct MockMakeADView: View {
-  let store = Store(
-    initialState: MakeADFeature.State(
-      stepBar: .init(
-        isShowStepBar: true,
-        currentStep: .UploadADrawing,
-        completeStep: .UploadADrawing
-      )
-    )
-  ) {
-    MakeADFeature()
-  }
-  
   var body: some View {
-    MakeADView(store: store)
+    MakeADView()
   }
 }
 

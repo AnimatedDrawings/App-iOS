@@ -28,46 +28,51 @@ public struct FindingTheCharacterView: View {
   }
   
   public var body: some View {
-    ADScrollView {
-      VStack(alignment: .leading, spacing: 20) {
-        Title()
-        
-        CheckList(myStep: .FindingTheCharacter, completeStep: store.completeStep) {
-          CheckListContent(state: $store.checkList)
+    WithPerceptionTracking {
+      ADScrollView {
+        VStack(alignment: .leading, spacing: 20) {
+          Title()
+          
+          CheckList(myStep: .FindingTheCharacter, completeStep: store.completeStep) {
+            CheckListContent(state: $store.checkList)
+          }
+          
+          Spacer()
+          
+          ShowCropImageViewButton(store.checkList) {
+            store.send(.view(.toggleCropImageView))
+          }
+          
+          Spacer().frame(height: 1)
         }
-        
-        Spacer()
-        
-        ShowCropImageViewButton(store.checkList) {
-          store.send(.view(.toggleCropImageView))
-        }
-        
-        Spacer().frame(height: 1)
+        .padding()
       }
-      .padding()
-    }
-    .alertNoCropImageError(isPresented: $store.alert.noCropImage)
-    .fullScreenCover(
-      isPresented: $store.cropImageView,
-      content: { IfLetCropImageView() }
-    )
-    .resetMakeADView(.FindingTheCharacter) {
-      store.send(.view(.initState))
+      .alertNoCropImageError(isPresented: $store.alert.noCropImage)
+      .fullScreenCover(
+        isPresented: $store.cropImageView,
+        content: { IfLetCropImageView() }
+      )
+      .resetMakeADView(.FindingTheCharacter) {
+        store.send(.view(.initState))
+      }
     }
   }
 }
 
 private extension FindingTheCharacterView {
+  @MainActor
   func IfLetCropImageView() -> some View {
     Group {
       if let cropImageStore = self.store.scope(state: \.cropImage, action: \.scope.cropImage) {
-        CropImageView(store: cropImageStore)
-          .transparentBlurBackground()
-          .addLoadingView(
-            isShow: store.loadingView,
-            description: "Cropping Image ..."
-          )
-          .alertNetworkError(isPresented: $store.alert.networkError)
+        WithPerceptionTracking {
+          CropImageView(store: cropImageStore)
+            .transparentBlurBackground()
+            .addLoadingView(
+              isShow: store.loadingView,
+              description: "Cropping Image ..."
+            )
+            .alertNetworkError(isPresented: $store.alert.networkError)
+        }
       } else {
         Text("No CropImage..")
       }

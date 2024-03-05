@@ -10,7 +10,7 @@ import ThirdPartyLib
 import ADUIKitResources
 import UIKit
 import DomainModel
-import ImageCompressorInterfaces
+import ImageToolsInterfaces
 
 /// Use
 public struct ImageCompressor: ImageCompressorProtocol {

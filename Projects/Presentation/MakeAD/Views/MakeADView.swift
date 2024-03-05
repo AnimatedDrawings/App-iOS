@@ -27,25 +27,27 @@ public struct MakeADView: View {
   }
   
   public var body: some View {
-    GeometryReader { geo in
-      List {
-        // if -> ishidden 사용
-        if store.stepBar.isShowStepBar {
-          StepBar(
-            currentStep: store.stepBar.currentStep,
-            completeStep: store.stepBar.completeStep
-          )
+    WithPerceptionTracking {
+      GeometryReader { geo in
+        List {
+          // if -> ishidden 사용
+          if store.stepBar.isShowStepBar {
+            StepBar(
+              currentStep: store.stepBar.currentStep,
+              completeStep: store.stepBar.completeStep
+            )
+          }
+          
+          PageTabView(store: store)
+            .frame(height: geo.size.height + geo.safeAreaInsets.bottom)
         }
-        
-        PageTabView(store: store)
-          .frame(height: geo.size.height + geo.safeAreaInsets.bottom)
+        .listStyle(.plain)
+        .addADBackground(with: store.stepBar.currentStep)
+        .scrollContentBackground(.hidden)
+        .animation(.default, value: store.stepBar.isShowStepBar)
       }
-      .listStyle(.plain)
-      .addADBackground(with: store.stepBar.currentStep)
-      .scrollContentBackground(.hidden)
-      .animation(.default, value: store.stepBar.isShowStepBar)
+      .fullScreenOverlayPresentationSpace(.named("UploadADrawingView"))
     }
-    .fullScreenOverlayPresentationSpace(.named("UploadADrawingView"))
   }
 }
 
@@ -54,29 +56,36 @@ private extension MakeADView {
     @Perception.Bindable var store: StoreOf<MakeADFeature>
     
     var body: some View {
-      TabView(selection: $store.stepBar.currentStep) {
-        UploadADrawingView(
-          store: store.scope(
-            state: \.uploadADrawing,
-            action: \.scope.uploadADrawing
+      WithPerceptionTracking {      
+        TabView(selection: $store.stepBar.currentStep) {
+          UploadADrawingView(
+            store: store.scope(
+              state: \.uploadADrawing,
+              action: \.scope.uploadADrawing
+            )
           )
-        )
-        .tag(Step.UploadADrawing)
-        
-        FindingTheCharacterView()
+          .tag(Step.UploadADrawing)
+          
+          FindingTheCharacterView(
+            store: store.scope(
+              state: \.findTheCharacter,
+              action: \.scope.findingTheCharacter
+            )
+          )
           .tag(Step.FindingTheCharacter)
-        
-        SeparatingCharacterView()
-          .tag(Step.SeparatingCharacter)
-        
-        FindingCharacterJointsView()
-          .tag(Step.FindingCharacterJoints)
+          
+          SeparatingCharacterView()
+            .tag(Step.SeparatingCharacter)
+          
+          FindingCharacterJointsView()
+            .tag(Step.FindingCharacterJoints)
+        }
+        .tabViewStyle(.page(indexDisplayMode: .never))
+        .ignoresSafeArea()
+        .listRowSeparator(.hidden)
+        .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+        .listRowBackground(Color.clear)
       }
-      .tabViewStyle(.page(indexDisplayMode: .never))
-      .ignoresSafeArea()
-      .listRowSeparator(.hidden)
-      .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-      .listRowBackground(Color.clear)
     }
   }
 }
