@@ -1,20 +1,18 @@
 //
-//  UploadADrawingDelegateAction.swift
-//  UploadADrawingFeatures
+//  CropImageDelegateAction.swift
+//  CropImageFeatures
 //
-//  Created by chminii on 2/22/24.
+//  Created by chminii on 3/4/24.
 //  Copyright © 2024 chminipark. All rights reserved.
 //
 
 import ThirdPartyLib
-import UIKit
 import DomainModel
 
-public extension UploadADrawingFeature {
+public extension CropImageFeature {
   enum DelegateActions: Equatable {
-    case setOriginalImage(UIImage)
-    case setBoundingBox(CGRect)
-    case moveToFindingTheCharacter
+    case cropResult(CropResult)
+    case cancel
   }
   
   func DelegateReducer() -> some Reducer<State, Action> {
@@ -22,7 +20,9 @@ public extension UploadADrawingFeature {
       switch action {
       case .delegate(let delegateActions):
         switch delegateActions {
-        default:
+        case .cropResult:
+          return .none
+        case .cancel:
           return .none
         }
       default:

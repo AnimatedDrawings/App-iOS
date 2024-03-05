@@ -33,7 +33,7 @@ public struct UploadADrawingView: View {
         
         CheckList(
           myStep: .UploadADrawing,
-          completeStep: store.stepBar.completeStep
+          completeStep: store.completeStep
         ) {
           CheckListContent(store: store)
         }

@@ -8,6 +8,7 @@
 
 import ThirdPartyLib
 import UIKit
+import DomainModel
 
 public extension CropImageFeature {
   enum ViewActions: Equatable {
@@ -22,33 +23,19 @@ public extension CropImageFeature {
       case .view(let viewActions):
         switch viewActions {
         case .save:
-          let reciprocal: CGFloat = 1 / state.imageScale
-          
-          let cropCGSize = CGSize(
-            width: state.viewBoundingBox.width * reciprocal,
-            height: state.viewBoundingBox.height * reciprocal
+          let cropRequest = CropRequest(
+            imageScale: state.imageScale,
+            viewBoundingBox: state.viewBoundingBox,
+            originalImage: state.originalImage
           )
-          
-          let cropCGPoint = CGPoint(
-            x: -state.viewBoundingBox.minX * reciprocal,
-            y: -state.viewBoundingBox.minY * reciprocal
-          )
-          
-          UIGraphicsBeginImageContext(cropCGSize)
-          
-          state.originalImage.draw(at: cropCGPoint)
-          
-          guard let croppedImage = UIGraphicsGetImageFromCurrentImageContext() else {
+          guard let cropResult = try? imageCropper.crop(cropRequest) else {
             return .none
           }
-          let croppedBoundingBox = scale(
-            boundingBox: state.boundingBox,
-            reciprocal: reciprocal
-          )
-          return .none
+          
+          return .send(.delegate(.cropResult(cropResult)))
           
         case .cancel:
-          return .none
+          return .send(.delegate(.cancel))
           
         case .reset:
           state.resetTrigger.toggle()
@@ -58,14 +45,5 @@ public extension CropImageFeature {
         return .none
       }
     }
-  }
-  
-  func scale(boundingBox: CGRect, reciprocal: CGFloat) -> CGRect {
-    let x: CGFloat = boundingBox.minX * reciprocal
-    let y: CGFloat = boundingBox.minY * reciprocal
-    let width: CGFloat = boundingBox.width * reciprocal
-    let height: CGFloat = boundingBox.height * reciprocal
-    
-    return CGRect(x: x, y: y, width: width, height: height)
   }
 }

@@ -47,7 +47,7 @@ public extension UploadADrawingFeature {
             await adInfo.id.set(result.ad_id)
             await send(.delegate(.setBoundingBox(result.boundingBox)))
             await send(.inner(.setLoadingView(false)))
-            await send(.delegate(.setStepBar(StepBarState.toFindingTheCharacter())))
+            await send(.delegate(.moveToFindingTheCharacter))
           }
           
         case .uploadDrawingResponse(.failure(let error)):

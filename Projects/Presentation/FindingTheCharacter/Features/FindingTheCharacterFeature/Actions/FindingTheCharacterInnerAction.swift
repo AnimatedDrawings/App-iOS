@@ -10,9 +10,11 @@ import ThirdPartyLib
 
 public extension FindingTheCharacterFeature {
   enum InnerActions: Equatable {
-    case alert
     case setLoadingView(Bool)
     case presentCropImageView
+    
+    case networkErrorAlert
+    case noCropImageErrorAlert
   }
   
   func InnerReducer() -> some Reducer<State, Action> {
@@ -20,14 +22,18 @@ public extension FindingTheCharacterFeature {
       switch action {
       case .inner(let innerActions):
         switch innerActions {
-        case .alert:
-          state.alert.networkError.toggle()
-          return .none
         case .setLoadingView(let isShow):
           state.loadingView = isShow
           return .none
         case .presentCropImageView:
           state.cropImageView.toggle()
+          return .none
+          
+        case .networkErrorAlert:
+          state.alert.networkError.toggle()
+          return .none
+        case .noCropImageErrorAlert:
+          state.alert.noCropImage.toggle()
           return .none
         }
         

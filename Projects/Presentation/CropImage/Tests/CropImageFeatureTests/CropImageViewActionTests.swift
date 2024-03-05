@@ -10,8 +10,9 @@ import XCTest
 @testable import CropImageFeatures
 import ThirdPartyLib
 import ADUIKitResources
+import DomainModel
+import ImageTools
 import CoreModel
-import ADUIKitSources
 
 @MainActor
 final class CropImageViewActionTests: XCTestCase {
@@ -27,12 +28,26 @@ final class CropImageViewActionTests: XCTestCase {
     }
   }
   
-  func testSave() {
+  func testSave() async {
+    let example1 = ADUIKitResourcesAsset.SampleDrawing.step1Example1.image
+    let boundingBox = BoundingBoxDTO.mock().toCGRect()
+    state = CropImageFeature.State(
+      originalImage: example1,
+      boundingBox: boundingBox,
+      viewBoundingBox: boundingBox
+    )
+    store = TestStore(initialState: state) {
+      CropImageFeature()
+        .dependency(ImageCropper.testValue)
+    }
+    let cropResult = CropResult(image: state.originalImage, boundingBox: state.viewBoundingBox)
     
+    await store.send(.view(.save))
+    await store.receive(.delegate(.cropResult(cropResult)))
   }
   
-  func testCancel() {
-    
+  func testCancel() async {
+    await store.send(.view(.cancel))
   }
   
   func testReset() async {
@@ -41,3 +56,5 @@ final class CropImageViewActionTests: XCTestCase {
     }
   }
 }
+
+

@@ -18,36 +18,28 @@ public struct FindingTheCharacterFeature {
   public init() {}
 
   @Dependency(\.makeADProvider) var makeADProvider
-  @Dependency(\.shared.makeAD) var makeAD
-  @Dependency(\.shared.stepBar) var stepBar
+  @Dependency(\.adInfo) var adInfo
   
   public var body: some Reducer<State, Action> {
     BindingReducer()
-    Scope(state: \.cropImage, action: /Action.cropImage) {
-      CropImageFeature()
-    }
     MainReducer()
     ViewReducer()
     InnerReducer()
+    AsyncReducer()
+    ScopeReducer()
+    DelegateReducer()
   }
 }
 
 public extension FindingTheCharacterFeature {
-  enum Action: Equatable, BindableAction, ViewAction, InnerAction {
+  @CasePathable
+  enum Action: Equatable, BindableAction, ViewAction, InnerAction, AsyncAction, ScopeAction, DelegateAction {
     case binding(BindingAction<State>)
     case view(ViewActions)
     case inner(InnerActions)
-    
-    case findTheCharacter
-    case findTheCharacterResponse(TaskEmptyResult)
-    case onDismissCropImageView
-    
-    case downloadMaskImage
-    case downloadMaskImageResponse(TaskResult<UIImage>)
-    
-    case showNetworkErrorAlert
-    
-    case initState
+    case async(AsyncActions)
+    case scope(ScopeActions)
+    case delegate(DelegateActions)
     
     case cropImage(CropImageFeature.Action)
   }
@@ -60,87 +52,73 @@ extension FindingTheCharacterFeature {
       case .binding:
         return .none
         
-      case .findTheCharacter:
-        guard state.cropImage.croppedImage != nil else {
-          return .none
-        }
-        let croppedCGRect = state.cropImage.croppedCGRect
+//      case .findTheCharacter:
+//        guard state.cropImage.croppedImage != nil else {
+//          return .none
+//        }
+//        let croppedCGRect = state.cropImage.croppedCGRect
+//        
+//        return .run { send in
+//          guard let ad_id = await makeAD.ad_id.get() else { return }
+//          await send(.setLoadingView(true))
+//          await send(
+//            .findTheCharacterResponse(
+//              TaskResult.empty {
+//                try await makeADProvider.findTheCharacter(ad_id, croppedCGRect)
+//              }
+//            )
+//          )
+//        }
+//        
+//      case .findTheCharacterResponse(.success):
+//        return .send(.downloadMaskImage)
+//        
+//      case .findTheCharacterResponse(.failure(let error)):
+//        print(error)
+//        state.isSuccessUpload = false
+//        return .run { send in
+//          await send(.setLoadingView(false))
+//          await send(.showNetworkErrorAlert)
+//        }
+//        
+//      case .downloadMaskImage:
+//        return .run { send in
+//          guard let ad_id = await makeAD.ad_id.get() else { return }
+//          await send(
+//            .downloadMaskImageResponse(
+//              TaskResult {
+//                try await makeADProvider.downloadMaskImage(ad_id)
+//              }
+//            )
+//          )
+//        }
+//        
+//      case .downloadMaskImageResponse(.success(let maskImage)):
+//        state.isSuccessUpload = true
+//        return .run { send in
+//          await makeAD.initMaskImage.set(maskImage)
+//          await send(.setLoadingView(false))
+//          await send(.toggleCropImageView)
+//        }
+//        
+//      case .downloadMaskImageResponse(.failure(let error)):
+//        print(error)
+//        state.isSuccessUpload = false
+//        return .run { send in
+//          await send(.setLoadingView(false))
+//          await send(.showNetworkErrorAlert)
+//        }
         
-        return .run { send in
-          guard let ad_id = await makeAD.ad_id.get() else { return }
-          await send(.setLoadingView(true))
-          await send(
-            .findTheCharacterResponse(
-              TaskResult.empty {
-                try await makeADProvider.findTheCharacter(ad_id, croppedCGRect)
-              }
-            )
-          )
-        }
-        
-      case .findTheCharacterResponse(.success):
-        return .send(.downloadMaskImage)
-        
-      case .findTheCharacterResponse(.failure(let error)):
-        print(error)
-        state.isSuccessUpload = false
-        return .run { send in
-          await send(.setLoadingView(false))
-          await send(.showNetworkErrorAlert)
-        }
-        
-      case .downloadMaskImage:
-        return .run { send in
-          guard let ad_id = await makeAD.ad_id.get() else { return }
-          await send(
-            .downloadMaskImageResponse(
-              TaskResult {
-                try await makeADProvider.downloadMaskImage(ad_id)
-              }
-            )
-          )
-        }
-        
-      case .downloadMaskImageResponse(.success(let maskImage)):
-        state.isSuccessUpload = true
-        return .run { send in
-          await makeAD.initMaskImage.set(maskImage)
-          await send(.setLoadingView(false))
-          await send(.toggleCropImageView)
-        }
-        
-      case .downloadMaskImageResponse(.failure(let error)):
-        print(error)
-        state.isSuccessUpload = false
-        return .run { send in
-          await send(.setLoadingView(false))
-          await send(.showNetworkErrorAlert)
-        }
-        
-      case .onDismissCropImageView:
-        if state.isSuccessUpload {
-          state.isSuccessUpload = false
-          return .run { _ in
-            await stepBar.currentStep.set(.SeparatingCharacter)
-            await stepBar.isShowStepStatusBar.set(true)
-            await stepBar.completeStep.set(.FindingTheCharacter)
-          }
-        }
-        return .none
-        
-      case .showNetworkErrorAlert:
-        state.isShowNetworkErrorAlert.toggle()
-        return .none
-        
-      case .initState:
-        state = State()
-        return .none
-        
-      case .cropImage(.cancel):
-        return .send(.toggleCropImageView)
-        
-      case .cropImage(.save):
-        return .send(.findTheCharacter)
+//      case .onDismissCropImageView:
+//        if state.isSuccessUpload {
+//          state.isSuccessUpload = false
+//          return .run { _ in
+//            await stepBar.currentStep.set(.SeparatingCharacter)
+//            await stepBar.isShowStepStatusBar.set(true)
+//            await stepBar.completeStep.set(.FindingTheCharacter)
+//          }
+//        }
+//        return .none
         
       default:
         return .none

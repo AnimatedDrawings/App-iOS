@@ -15,6 +15,10 @@ import ThirdPartyLib
 public struct CropImageView: View {
   @Perception.Bindable var store: StoreOf<CropImageFeature>
   
+  public init(store: StoreOf<CropImageFeature>) {
+    self.store = store
+  }
+  
   public var body: some View {
     WithPerceptionTracking {
       VStack(spacing: 40) {

@@ -10,10 +10,12 @@ import SwiftUI
 import ThirdPartyLib
 import FindingTheCharacterFeatures
 import ADUIKitSources
+import ADUIKitResources
 import DomainModel
+import CropImage
 
 public struct FindingTheCharacterView: View {
-  let store: StoreOf<FindingTheCharacterFeature>
+  @Perception.Bindable var store: StoreOf<FindingTheCharacterFeature>
   
   public init(
     store: StoreOf<FindingTheCharacterFeature> = Store(
@@ -30,42 +32,45 @@ public struct FindingTheCharacterView: View {
       VStack(alignment: .leading, spacing: 20) {
         Title()
         
-        CheckList(myStep: .FindingTheCharacter, completeStep: .UploadADrawing) {
-          CheckListContent(viewStore: viewStore)
+        CheckList(myStep: .FindingTheCharacter, completeStep: store.completeStep) {
+          CheckListContent(state: $store.checkList)
         }
         
         Spacer()
         
-        ShowCropImageViewButton(viewStore.checkState) {
-          viewStore.send(.toggleCropImageView)
+        ShowCropImageViewButton(store.checkList) {
+          store.send(.view(.toggleCropImageView))
         }
         
         Spacer().frame(height: 1)
       }
       .padding()
     }
+    .alertNoCropImageError(isPresented: $store.alert.noCropImage)
     .fullScreenCover(
-      isPresented: viewStore.$isShowCropImageView,
-      onDismiss: {
-        viewStore.send(.onDismissCropImageView)
-      },
-      content: {
-        CropImageView(
-          store: self.store.scope(
-            state: \.cropImage,
-            action: FindingTheCharacterFeature.Action.cropImage
-          )
-        )
-        .transparentBlurBackground()
-        .addLoadingView(
-          isShow: viewStore.state.isShowLoadingView,
-          description: "Cropping Image ..."
-        )
-        .alertNetworkError(isPresented: viewStore.$isShowNetworkErrorAlert)
-      }
+      isPresented: $store.cropImageView,
+      content: { IfLetCropImageView() }
     )
     .resetMakeADView(.FindingTheCharacter) {
-      viewStore.send(.initState)
+      store.send(.view(.initState))
+    }
+  }
+}
+
+private extension FindingTheCharacterView {
+  func IfLetCropImageView() -> some View {
+    Group {
+      if let cropImageStore = self.store.scope(state: \.cropImage, action: \.scope.cropImage) {
+        CropImageView(store: cropImageStore)
+          .transparentBlurBackground()
+          .addLoadingView(
+            isShow: store.loadingView,
+            description: "Cropping Image ..."
+          )
+          .alertNetworkError(isPresented: $store.alert.networkError)
+      } else {
+        Text("No CropImage..")
+      }
     }
   }
 }
@@ -89,15 +94,14 @@ private extension FindingTheCharacterView {
 
 private extension FindingTheCharacterView {
   struct CheckListContent: View {
-    @ObservedObject var viewStore: MyViewStore
+    @Binding var state: Bool
     let description = "Resize the box to ensure it tightly fits one character."
-    let myStep: Step = .FindingTheCharacter
     
     var body: some View {
       VStack(alignment: .leading, spacing: 15) {
         CheckListButton(
           description: description,
-          state: viewStore.$checkState
+          state: $state
         )
         
         HStack {
@@ -135,5 +139,22 @@ private extension FindingTheCharacterView {
         }
       )
     }
+  }
+}
+
+private extension View {
+  func alertNoCropImageError(
+    isPresented: Binding<Bool>
+  ) -> some View {
+    self.alert(
+      "No CropImage Data",
+      isPresented: isPresented,
+      actions: {
+        Button("OK", action: {})
+      },
+      message: {
+        Text("There is no image data. Please proceed from step 1 again")
+      }
+    )
   }
 }

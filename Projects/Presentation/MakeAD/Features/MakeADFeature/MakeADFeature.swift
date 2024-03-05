@@ -8,6 +8,7 @@
 
 import ThirdPartyLib
 import UploadADrawingFeatures
+import FindingTheCharacterFeatures
 
 @Reducer
 public struct MakeADFeature {
@@ -17,10 +18,21 @@ public struct MakeADFeature {
     Scope(state: \.uploadADrawing, action: \.scope.uploadADrawing) {
       UploadADrawingFeature()
     }
+    Scope(state: \.findTheCharacter, action: \.scope.findingTheCharacter) {
+      FindingTheCharacterFeature()
+    }
     
     BindingReducer()
     MainReducer()
-    ScopeReducer()
+      .onChange(of: \.stepBar.completeStep) { oldValue, newValue in
+        Reduce { state, action in
+          state.uploadADrawing.completeStep = newValue
+          state.findTheCharacter.completeStep = newValue
+          return .none
+        }
+      }
+    UploadADrawingReducer()
+    FindTheCharacterReducer()
   }
 }
 

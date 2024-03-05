@@ -3,7 +3,7 @@ import ProjectDescription
 public extension Package {
   static let ComposableArchitecture: Self = .remote(
     url: "https://github.com/pointfreeco/swift-composable-architecture.git",
-    requirement: .exact("1.8.2")
+    requirement: .exact("1.9.2")
   )
 }
 
