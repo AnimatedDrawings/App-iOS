@@ -19,7 +19,14 @@ public extension MakeADFeature {
     case findingTheCharacter(FindingTheCharacterFeature.Action)
   }
   
-  func UploadADrawingReducer() -> some Reducer<State, Action> {
+  func ScopeReducer() -> some ReducerOf<Self> {
+    CombineReducers {
+      UploadADrawingReducer()
+      FindTheCharacterReducer()
+    }
+  }
+  
+  func UploadADrawingReducer() -> some ReducerOf<Self> {
     Reduce { state, action in
       switch action {
       case .scope(.uploadADrawing(.delegate(let uploadADrawingActions))):
@@ -39,14 +46,12 @@ public extension MakeADFeature {
               originalImage: originalImage,
               boundingBox: boundingBox
             )
-            
-//            state.stepBar = StepState(
-//              isShowStepBar: true,
-//              currentStep: .FindingTheCharacter,
-//              completeStep: .UploadADrawing
-//            )
           }
-          return .none
+          return .run { send in
+            await stepBar.isShowStepBar.set(true)
+            await stepBar.currentStep.set(.FindingTheCharacter)
+            await stepBar.completeStep.set(.UploadADrawing)
+          }
         }
         
       default:
@@ -55,7 +60,7 @@ public extension MakeADFeature {
     }
   }
   
-  func FindTheCharacterReducer() -> some Reducer<State, Action> {
+  func FindTheCharacterReducer() -> some ReducerOf<Self> {
     Reduce { state, action in
       switch action {
       case .scope(.findingTheCharacter(let findingTheCharacterActions)):
@@ -64,12 +69,11 @@ public extension MakeADFeature {
           state.makeADInfo.maskedImage = maskImage
           return .none
         case .delegate(.moveToSeparatingCharacter):
-//          state.stepBar = StepState(
-//            isShowStepBar: true,
-//            currentStep: .SeparatingCharacter,
-//            completeStep: .FindingTheCharacter
-//          )
-          return .none
+          return .run { send in
+            await stepBar.isShowStepBar.set(true)
+            await stepBar.currentStep.set(.SeparatingCharacter)
+            await stepBar.completeStep.set(.FindingTheCharacter)
+          }
         default:
           return .none
         }

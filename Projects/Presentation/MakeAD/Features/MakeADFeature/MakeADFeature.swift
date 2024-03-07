@@ -19,6 +19,7 @@ public struct MakeADFeature {
   public var body: some Reducer<State, Action> {
     BindingReducer()
     MainReducer()
+    ScopeReducer()
     UpdateReducer()
   }
 }
