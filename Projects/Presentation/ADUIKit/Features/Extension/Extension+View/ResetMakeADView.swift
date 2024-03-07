@@ -11,7 +11,7 @@ import DomainModel
 
 public extension View {
   func resetMakeADView(
-    _ myStep: Step,
+    _ myStep: MakeADStep,
     action: @escaping () -> ()
   ) -> some View {
     self.receiveShared(\.shared.stepBar.completeStep) { completeStep in

@@ -16,8 +16,9 @@ public struct UploadADrawingFeature: Reducer {
   public init() {}
   
   @Dependency(\.makeADProvider) var makeADProvider
-  @Dependency(\.adInfo) var adInfo
   @Dependency(\.imageCompressor) var imageCompressor
+  @Dependency(\.shared.stepBar) var stepBar
+  @Dependency(\.shared.ad_id) var ad_id
   
   public var body: some Reducer<State, Action> {
     BindingReducer()
@@ -26,17 +27,19 @@ public struct UploadADrawingFeature: Reducer {
     InnerReducer()
     AsyncReducer()
     DelegateReducer()
+    UpdateReducer()
   }
 }
 
 public extension UploadADrawingFeature {
   @CasePathable
-  enum Action: Equatable, BindableAction, ViewAction, InnerAction, AsyncAction, DelegateAction {
+  enum Action: Equatable, BindableAction, ViewAction, InnerAction, AsyncAction, DelegateAction, UpdateAction {
     case binding(BindingAction<State>)
     case view(ViewActions)
     case inner(InnerActions)
     case async(AsyncActions)
     case delegate(DelegateActions)
+    case update(UpdateActions)
   }
   
   func MainReducer() -> some Reducer<State, Action> {

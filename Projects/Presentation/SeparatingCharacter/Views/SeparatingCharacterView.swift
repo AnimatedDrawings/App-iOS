@@ -108,7 +108,7 @@ private extension SeparatingCharacterView {
   struct CheckListContent: View {
     let description1 = "If the body parts of your character are not highlighted, use the pen and eraser tools to fix it."
     let description2 = "If the arms or legs are stuck together, use the eraser tool to separate them"
-    let myStep: Step = .SeparatingCharacter
+    let myStep: MakeADStep = .SeparatingCharacter
     
     @ObservedObject var viewStore: MyViewStore
     

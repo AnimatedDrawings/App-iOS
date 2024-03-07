@@ -28,13 +28,13 @@ public struct UploadADrawingView: View {
   
   public var body: some View {
     WithPerceptionTracking {
-      ADScrollView($store.stepBar.isShowStepBar) {
+      ADScrollView($store.step.isShowStepBar.sending(\.update.setIsShowStepBar)) {
         VStack(alignment: .leading, spacing: 20) {
           Title()
           
           CheckList(
             myStep: .UploadADrawing,
-            completeStep: store.stepBar.completeStep
+            completeStep: store.step.completeStep
           ) {
             CheckListContent(store: store)
           }
@@ -65,6 +65,9 @@ public struct UploadADrawingView: View {
       }
       .resetMakeADView(.UploadADrawing) {
         store.send(.view(.initState))
+      }
+      .task {
+        await store.send(.update(.task)).finish()
       }
     }
   }

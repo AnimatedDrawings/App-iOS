@@ -18,12 +18,12 @@ extension MakeADView {
     let inActiveColor: Color = .gray
     let completeColor: Color = ADUIKitResourcesAsset.Color.green1.swiftUIColor
     
-    let currentStep: Step
-    let completeStep: Step
+    let currentStep: MakeADStep
+    let completeStep: MakeADStep
     
     public init(
-      currentStep: Step,
-      completeStep: Step
+      currentStep: MakeADStep,
+      completeStep: MakeADStep
     ) {
       self.currentStep = currentStep
       self.completeStep = completeStep

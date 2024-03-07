@@ -13,15 +13,18 @@ import UIKit
 import ComposableArchitecture
 
 public struct Shared {
+  public var ad_id: CombineNotifier<String?>
   public var makeAD: Self.MakeAD
   public var stepBar: Self.StepBar
   public var adViewCase: CombineNotifier<ADViewCase>
   
   public init(
+    ad_id: String? = nil,
     makeAD: Self.MakeAD = Self.MakeAD(),
     stepBar: Self.StepBar = Self.StepBar(),
     adViewCase: ADViewCase = .OnBoarding
   ) {
+    self.ad_id = CombineNotifier(initialValue: ad_id)
     self.makeAD = makeAD
     self.stepBar = stepBar
     self.adViewCase = .init(initialValue: adViewCase)
@@ -30,16 +33,16 @@ public struct Shared {
 
 public extension Shared {
   struct StepBar {
-    public var isShowStepStatusBar: CombineNotifier<Bool>
-    public var currentStep: CombineNotifier<Step>
-    public var completeStep: CombineNotifier<Step>
+    public var isShowStepBar: CombineNotifier<Bool>
+    public var currentStep: CombineNotifier<MakeADStep>
+    public var completeStep: CombineNotifier<MakeADStep>
     
     public init(
-      isShowStepStatusBar: Bool = true,
-      currentStep: Step = .UploadADrawing,
-      completeStep: Step = .None
+      isShowStepBar: Bool = true,
+      currentStep: MakeADStep = .UploadADrawing,
+      completeStep: MakeADStep = .None
     ) {
-      self.isShowStepStatusBar = .init(initialValue: isShowStepStatusBar)
+      self.isShowStepBar = .init(initialValue: isShowStepBar)
       self.currentStep = .init(initialValue: currentStep)
       self.completeStep = .init(initialValue: completeStep)
     }

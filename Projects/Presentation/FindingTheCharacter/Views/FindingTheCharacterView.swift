@@ -29,11 +29,11 @@ public struct FindingTheCharacterView: View {
   
   public var body: some View {
     WithPerceptionTracking {
-      ADScrollView($store.stepBar.isShowStepBar) {
+      ADScrollView($store.step.isShowStepBar.sending(\.update.setIsShowStepBar)) {
         VStack(alignment: .leading, spacing: 20) {
           Title()
           
-          CheckList(myStep: .FindingTheCharacter, completeStep: store.stepBar.completeStep) {
+          CheckList(myStep: .FindingTheCharacter, completeStep: store.step.completeStep) {
             CheckListContent(state: $store.checkList)
           }
           
@@ -56,6 +56,7 @@ public struct FindingTheCharacterView: View {
         store.send(.view(.initState))
       }
     }
+    .task { await store.send(.update(.task)).finish() }
   }
 }
 

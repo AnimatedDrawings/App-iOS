@@ -10,14 +10,12 @@ import ProjectEnvironment
 
 let project: Project = .makeProject(
   name: ThirdPartyLib.projectName,
-  packages: [
-    .ComposableArchitecture
-  ],
+  packages: [.ComposableArchitecture, .AsyncAlgorithms],
   targets: [
     .makeTarget(
       name: ThirdPartyLib.projectName,
       product: .staticLibrary,
-      dependencies: [.ComposableArchitecture]
+      dependencies: [.ComposableArchitecture, .AsyncAlgorithms]
     )
   ]
 )

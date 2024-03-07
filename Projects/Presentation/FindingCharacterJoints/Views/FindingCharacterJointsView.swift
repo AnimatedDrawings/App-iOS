@@ -118,7 +118,7 @@ private extension FindingCharacterJointsView {
 private extension FindingCharacterJointsView {
   struct CheckListContent: View {
     let description = "If your character doesn't have any arms, drag the elbows and wrist joints far away from the character and it can still be animated"
-    let myStep: Step = .FindingCharacterJoints
+    let myStep: MakeADStep = .FindingCharacterJoints
     
     @ObservedObject var viewStore: MyViewStore
     

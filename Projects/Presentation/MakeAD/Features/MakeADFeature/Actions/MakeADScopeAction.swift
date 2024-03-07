@@ -40,11 +40,11 @@ public extension MakeADFeature {
               boundingBox: boundingBox
             )
             
-            state.stepBar = StepBarState(
-              isShowStepBar: true,
-              currentStep: .FindingTheCharacter,
-              completeStep: .UploadADrawing
-            )
+//            state.stepBar = StepState(
+//              isShowStepBar: true,
+//              currentStep: .FindingTheCharacter,
+//              completeStep: .UploadADrawing
+//            )
           }
           return .none
         }
@@ -64,11 +64,11 @@ public extension MakeADFeature {
           state.makeADInfo.maskedImage = maskImage
           return .none
         case .delegate(.moveToSeparatingCharacter):
-          state.stepBar = StepBarState(
-            isShowStepBar: true,
-            currentStep: .SeparatingCharacter,
-            completeStep: .FindingTheCharacter
-          )
+//          state.stepBar = StepState(
+//            isShowStepBar: true,
+//            currentStep: .SeparatingCharacter,
+//            completeStep: .FindingTheCharacter
+//          )
           return .none
         default:
           return .none

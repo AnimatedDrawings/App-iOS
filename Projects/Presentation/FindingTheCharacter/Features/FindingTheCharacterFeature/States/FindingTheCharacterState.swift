@@ -13,7 +13,7 @@ import DomainModel
 public extension FindingTheCharacterFeature {
   @ObservableState
   struct State: Equatable {
-    public var stepBar: StepBarState
+    public var step: StepState
     public var checkList: Bool
     public var cropImageView: Bool
     public var loadingView: Bool
@@ -23,7 +23,7 @@ public extension FindingTheCharacterFeature {
     public var cropImage: CropImageFeature.State?
     
     public init(
-      stepBar: StepBarState = .init(),
+      step: StepState = .init(),
       checkList: Bool = false,
       cropImageView: Bool = false,
       loadingView: Bool = false,
@@ -31,7 +31,7 @@ public extension FindingTheCharacterFeature {
       alert: Alert = Alert(),
       cropImage: CropImageFeature.State? = nil
     ) {
-      self.stepBar = stepBar
+      self.step = step
       self.checkList = checkList
       self.cropImageView = cropImageView
       self.loadingView = loadingView
@@ -52,6 +52,20 @@ public extension FindingTheCharacterFeature {
     ) {
       self.networkError = networkError
       self.noCropImage = noCropImage
+    }
+  }
+  
+  @ObservableState
+  struct StepState: Equatable {
+    public var isShowStepBar: Bool
+    public var completeStep: MakeADStep
+    
+    public init(
+      isShowStepBar: Bool = true,
+      completeStep: MakeADStep = .None
+    ) {
+      self.isShowStepBar = isShowStepBar
+      self.completeStep = completeStep
     }
   }
 }

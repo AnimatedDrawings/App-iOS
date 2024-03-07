@@ -287,7 +287,7 @@ extension ConfigureAnimationFeature {
           
           await stepBar.completeStep.set(.None)
           await stepBar.currentStep.set(.UploadADrawing)
-          await stepBar.isShowStepStatusBar.set(true)
+          await stepBar.isShowStepBar.set(true)
         }
       }
     }

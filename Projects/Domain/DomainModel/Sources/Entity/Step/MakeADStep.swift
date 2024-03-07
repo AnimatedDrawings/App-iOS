@@ -1,5 +1,5 @@
 //
-//  Step.swift
+//  MakeADStep.swift
 //  DTO
 //
 //  Created by minii on 2023/10/02.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum Step: Int {
+public enum MakeADStep: Int {
   case None = 0
   case UploadADrawing = 1
   case FindingTheCharacter = 2

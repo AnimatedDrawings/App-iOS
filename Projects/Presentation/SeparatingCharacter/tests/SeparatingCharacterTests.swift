@@ -145,9 +145,9 @@ final class SeparatingCharacterTests: XCTestCase {
     }
     let testCompleteStep = await testStepBarStorage.completeStep.get()
     let testCurrentStep = await testStepBarStorage.currentStep.get()
-    let testIsShowStepStatusBar = await testStepBarStorage.isShowStepStatusBar.get()
-    XCTAssertEqual(testCompleteStep, Step.SeparatingCharacter)
-    XCTAssertEqual(testCurrentStep, Step.FindingCharacterJoints)
+    let testIsShowStepStatusBar = await testStepBarStorage.isShowStepBar.get()
+    XCTAssertEqual(testCompleteStep, MakeADStep.SeparatingCharacter)
+    XCTAssertEqual(testCurrentStep, MakeADStep.FindingCharacterJoints)
     XCTAssertEqual(testIsShowStepStatusBar, true)
   }
   

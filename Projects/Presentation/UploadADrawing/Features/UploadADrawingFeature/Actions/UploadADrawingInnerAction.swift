@@ -12,7 +12,6 @@ import DomainModel
 public extension UploadADrawingFeature {
   enum InnerActions: Equatable {
     case setLoadingView(Bool)
-    
     case showNetworkErrorAlert
     case showFindCharacterErrorAlert
     case showImageSizeErrorAlert
@@ -37,6 +36,9 @@ public extension UploadADrawingFeature {
           
         case .showImageSizeErrorAlert:
           state.alert.imageSizeError.toggle()
+          return .none
+          
+        default:
           return .none
         }
       default:

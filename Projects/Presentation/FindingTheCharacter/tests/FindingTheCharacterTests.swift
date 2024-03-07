@@ -194,9 +194,9 @@ final class FindingTheCharacterTests: XCTestCase {
     }
     let testCompleteStep = await testStepBar.completeStep.get()
     let testCurrentStep = await testStepBar.currentStep.get()
-    let testIsShowStepStatusBar = await testStepBar.isShowStepStatusBar.get()
-    XCTAssertEqual(testCompleteStep, Step.FindingTheCharacter)
-    XCTAssertEqual(testCurrentStep, Step.SeparatingCharacter)
+    let testIsShowStepStatusBar = await testStepBar.isShowStepBar.get()
+    XCTAssertEqual(testCompleteStep, MakeADStep.FindingTheCharacter)
+    XCTAssertEqual(testCurrentStep, MakeADStep.SeparatingCharacter)
     XCTAssertEqual(testIsShowStepStatusBar, true)
   }
   
