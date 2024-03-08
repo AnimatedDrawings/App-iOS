@@ -7,13 +7,46 @@
 //
 
 import SwiftUI
+import ThirdPartyLib
+import FindingTheCharacterFeatures
+import CropImageFeatures
+import ADUIKitResources
+import SharedProvider
+import CoreModel
 
-struct MockFindingTheCharacter: View {
-  var body: some View {
-    FindingTheCharacterView()
+struct MockFindingTheCharacterView: View {
+  @Dependency(StepProvider.self) var step
+  let store: StoreOf<FindingTheCharacterFeature>
+  let cropImageState: CropImageFeature.State
+  
+  init() {
+    let originalImage = ADUIKitResourcesAsset.SampleDrawing.step1Example1.image
+    let boundingBox = BoundingBoxDTO().toCGRect()
+    let cropImageState = CropImageFeature.State(
+      originalImage: originalImage,
+      boundingBox: boundingBox
+    )
+    let store: StoreOf<FindingTheCharacterFeature> = Store(
+      initialState: FindingTheCharacterFeature.State(
+        cropImage: cropImageState
+      )
+    ) {
+      FindingTheCharacterFeature()
+    }
+    
+    self.store = store
+    self.cropImageState = cropImageState
   }
-}
-
-#Preview {
-  MockFindingTheCharacter()
+  
+  var body: some View {
+    FindingTheCharacterView(store: store)
+      .task {
+        await step.completeStep.set(.UploadADrawing)
+      }
+      .onAppear {
+        if store.cropImage == nil {
+          print("store cropImage nil??")
+        }
+      }
+  }
 }

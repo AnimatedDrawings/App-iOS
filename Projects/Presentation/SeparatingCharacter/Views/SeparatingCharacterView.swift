@@ -81,9 +81,9 @@ public struct SeparatingCharacterView: ADUI {
         }
       }
     )
-    .resetMakeADView(.SeparatingCharacter) {
-      viewStore.send(.initState)
-    }
+//    .resetMakeADView(.SeparatingCharacter) {
+//      viewStore.send(.initState)
+//    }
   }
 }
 

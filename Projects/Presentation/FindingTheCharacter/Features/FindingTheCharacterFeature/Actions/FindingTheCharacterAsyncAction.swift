@@ -41,6 +41,7 @@ public extension FindingTheCharacterFeature {
         case .findTheCharacterResponse(.success):
           return .send(.async(.downloadMaskImage))
         case .findTheCharacterResponse(.failure(let error)):
+          print(error)
           return .run { send in
             await send(.inner(.setLoadingView(false)))
             await send(.inner(.networkErrorAlert))
@@ -69,6 +70,7 @@ public extension FindingTheCharacterFeature {
           }
           
         case .downloadMaskImageResponse(.failure(let error)):
+          print(error)
           return .run { send in
             await send(.inner(.setLoadingView(false)))
             await send(.inner(.networkErrorAlert))

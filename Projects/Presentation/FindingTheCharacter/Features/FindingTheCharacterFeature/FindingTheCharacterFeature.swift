@@ -43,8 +43,6 @@ public extension FindingTheCharacterFeature {
     case scope(ScopeActions)
     case delegate(DelegateActions)
     case update(UpdateActions)
-    
-    case cropImage(CropImageFeature.Action)
   }
 }
 
@@ -58,6 +56,9 @@ extension FindingTheCharacterFeature {
       default:
         return .none
       }
+    }
+    .ifLet(\.cropImage, action: \.scope.cropImage) {
+      CropImageFeature()
     }
   }
 }

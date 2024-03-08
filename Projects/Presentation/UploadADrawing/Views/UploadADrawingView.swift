@@ -63,9 +63,9 @@ public struct UploadADrawingView: View {
             )
         }
       }
-      .resetMakeADView(.UploadADrawing) {
-        store.send(.view(.initState))
-      }
+//      .resetMakeADView(.UploadADrawing) {
+//        store.send(.view(.initState))
+//      }
       .task {
         await store.send(.view(.task)).finish()
       }

@@ -52,9 +52,9 @@ public struct FindingTheCharacterView: View {
         isPresented: $store.cropImageView,
         content: { IfLetCropImageView() }
       )
-      .resetMakeADView(.FindingTheCharacter) {
-        store.send(.view(.initState))
-      }
+//      .resetMakeADView(.FindingTheCharacter) {
+//        store.send(.view(.initState))
+//      }
     }
     .task { await store.send(.view(.task)).finish() }
   }

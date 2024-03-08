@@ -39,11 +39,10 @@ public extension FindingTheCharacterFeature {
           state.checkList = checkState
           return .none
         case .toggleCropImageView:
-          if state.cropImage != nil {
-            state.cropImageView.toggle()
-          } else {
+          if state.cropImage == nil {
             return .send(.inner(.noCropImageErrorAlert))
           }
+          state.cropImageView.toggle()
           return .none
         case .onDismissCropImageView:
           return .none

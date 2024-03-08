@@ -82,9 +82,9 @@ public struct FindingCharacterJointsView: ADUI {
         }
       }
     )
-    .resetMakeADView(.FindingCharacterJoints) {
-      viewStore.send(.initState)
-    }
+//    .resetMakeADView(.FindingCharacterJoints) {
+//      viewStore.send(.initState)
+//    }
   }
 }
 
