@@ -81,7 +81,7 @@ public protocol DelegateAction {
   static func delegate(_: DelegateActions) -> Self
 }
 
-// NOTE: Store에서 SharedValue를 업데이트하는 InnerAction을 정의합니다.
+// NOTE: Store에서 SharedValue를 업데이트하는 Action 을 정의합니다.
 public protocol UpdateAction {
   associatedtype UpdateActions
   

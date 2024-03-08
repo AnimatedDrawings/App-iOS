@@ -17,10 +17,10 @@ public struct UploadADrawingFeature: Reducer {
   
   @Dependency(\.makeADProvider) var makeADProvider
   @Dependency(\.imageCompressor) var imageCompressor
-  @Dependency(\.shared.stepBar) var stepBar
-  @Dependency(\.shared.ad_id) var ad_id
+  @Dependency(StepProvider.self) var step
+  @Dependency(\.adInfo.id) var ad_id
   
-  public var body: some Reducer<State, Action> {
+  public var body: some ReducerOf<Self> {
     BindingReducer()
     MainReducer()
     ViewReducer()
@@ -42,7 +42,7 @@ public extension UploadADrawingFeature {
     case update(UpdateActions)
   }
   
-  func MainReducer() -> some Reducer<State, Action> {
+  func MainReducer() -> some ReducerOf<Self> {
     Reduce { state, action in
       switch action {
       case .binding:

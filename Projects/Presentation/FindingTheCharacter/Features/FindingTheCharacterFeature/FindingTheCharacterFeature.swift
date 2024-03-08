@@ -18,8 +18,8 @@ public struct FindingTheCharacterFeature {
   public init() {}
 
   @Dependency(\.makeADProvider) var makeADProvider
-  @Dependency(\.shared.ad_id) var ad_id
-  @Dependency(\.shared.stepBar) var stepBar
+  @Dependency(\.adInfo.id) var ad_id
+  @Dependency(StepProvider.self) var step
   
   public var body: some Reducer<State, Action> {
     BindingReducer()

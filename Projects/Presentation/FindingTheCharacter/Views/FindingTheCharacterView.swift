@@ -56,7 +56,7 @@ public struct FindingTheCharacterView: View {
         store.send(.view(.initState))
       }
     }
-    .task { await store.send(.update(.task)).finish() }
+    .task { await store.send(.view(.task)).finish() }
   }
 }
 

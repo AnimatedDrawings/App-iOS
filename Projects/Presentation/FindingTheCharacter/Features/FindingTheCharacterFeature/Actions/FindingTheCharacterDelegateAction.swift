@@ -11,8 +11,7 @@ import UIKit
 
 public extension FindingTheCharacterFeature {
   enum DelegateActions: Equatable {
-    case setMaskImage(UIImage)
-    case moveToSeparatingCharacter
+    case moveToSeparatingCharacter(FindingTheCharacterResult)
   }
   
   func DelegateReducer() -> some Reducer<State, Action> {
@@ -24,5 +23,15 @@ public extension FindingTheCharacterFeature {
         return .none
       }
     }
+  }
+}
+
+public struct FindingTheCharacterResult: Equatable {
+  public let cropImage: UIImage
+  public let maskImage: UIImage
+  
+  public init(cropImage: UIImage, maskImage: UIImage) {
+    self.cropImage = cropImage
+    self.maskImage = maskImage
   }
 }

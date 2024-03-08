@@ -35,11 +35,8 @@ public extension MakeADFeature {
           state.makeADInfo.originalImage = originalImage
           return .none
           
-        case .setBoundingBox(let boundingBox):
+        case .moveToFindingTheCharacter(let boundingBox):
           state.makeADInfo.boundingBox = boundingBox
-          return .none
-          
-        case .moveToFindingTheCharacter:
           if let originalImage = state.makeADInfo.originalImage,
              let boundingBox = state.makeADInfo.boundingBox {
             state.findTheCharacter.cropImage = CropImageFeature.State(
@@ -48,9 +45,9 @@ public extension MakeADFeature {
             )
           }
           return .run { send in
-            await stepBar.isShowStepBar.set(true)
-            await stepBar.currentStep.set(.FindingTheCharacter)
-            await stepBar.completeStep.set(.UploadADrawing)
+            await step.isShowStepBar.set(true)
+            await step.currentStep.set(.FindingTheCharacter)
+            await step.completeStep.set(.UploadADrawing)
           }
         }
         
@@ -65,14 +62,13 @@ public extension MakeADFeature {
       switch action {
       case .scope(.findingTheCharacter(let findingTheCharacterActions)):
         switch findingTheCharacterActions {
-        case .delegate(.setMaskImage(let maskImage)):
-          state.makeADInfo.maskedImage = maskImage
-          return .none
-        case .delegate(.moveToSeparatingCharacter):
+        case .delegate(.moveToSeparatingCharacter(let result)):
+          state.makeADInfo.croppedImage = result.cropImage
+          state.makeADInfo.maskedImage = result.maskImage
           return .run { send in
-            await stepBar.isShowStepBar.set(true)
-            await stepBar.currentStep.set(.SeparatingCharacter)
-            await stepBar.completeStep.set(.FindingTheCharacter)
+            await step.isShowStepBar.set(true)
+            await step.currentStep.set(.SeparatingCharacter)
+            await step.completeStep.set(.FindingTheCharacter)
           }
         default:
           return .none

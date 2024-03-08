@@ -9,10 +9,11 @@
 import ThirdPartyLib
 import UploadADrawingFeatures
 import FindingTheCharacterFeatures
+import SharedProvider
 
 @Reducer
 public struct MakeADFeature {
-  @Dependency(\.shared.stepBar) var stepBar
+  @Dependency(StepProvider.self) var step
   
   public init() {}
   
@@ -21,15 +22,17 @@ public struct MakeADFeature {
     MainReducer()
     ScopeReducer()
     UpdateReducer()
+    ViewReducer()
   }
 }
 
 public extension MakeADFeature {
   @CasePathable
-  enum Action: Equatable, BindableAction, ScopeAction, UpdateAction {
+  enum Action: Equatable, BindableAction, ScopeAction, UpdateAction, ViewAction {
     case binding(BindingAction<State>)
     case scope(ScopeActions)
     case update(UpdateActions)
+    case view(ViewActions)
   }
   
   func MainReducer() -> some Reducer<State, Action> {

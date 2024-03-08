@@ -67,7 +67,7 @@ public struct UploadADrawingView: View {
         store.send(.view(.initState))
       }
       .task {
-        await store.send(.update(.task)).finish()
+        await store.send(.view(.task)).finish()
       }
     }
   }

@@ -9,6 +9,7 @@
 import ThirdPartyLib
 import CropImageFeatures
 import DomainModel
+import UIKit
 
 public extension FindingTheCharacterFeature {
   @ObservableState
@@ -17,8 +18,8 @@ public extension FindingTheCharacterFeature {
     public var checkList: Bool
     public var cropImageView: Bool
     public var loadingView: Bool
-    var isSuccessUpload: Bool
     public var alert: Alert
+    var cropImageResult: UIImage
     
     public var cropImage: CropImageFeature.State?
     
@@ -27,7 +28,6 @@ public extension FindingTheCharacterFeature {
       checkList: Bool = false,
       cropImageView: Bool = false,
       loadingView: Bool = false,
-      isSuccessUpload: Bool = false,
       alert: Alert = Alert(),
       cropImage: CropImageFeature.State? = nil
     ) {
@@ -35,9 +35,9 @@ public extension FindingTheCharacterFeature {
       self.checkList = checkList
       self.cropImageView = cropImageView
       self.loadingView = loadingView
-      self.isSuccessUpload = isSuccessUpload
       self.alert = alert
       self.cropImage = cropImage
+      self.cropImageResult = UIImage()
     }
   }
   

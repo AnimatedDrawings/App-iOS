@@ -41,7 +41,7 @@ public struct MakeADView: View {
           PageTabView(currentStep: $store.step.currentStep.sending(\.update.setCurrentStep))
             .frame(height: geo.size.height + geo.safeAreaInsets.bottom)
         }
-        .task { await store.send(.update(.task)).finish() }
+        .task { await store.send(.view(.task)).finish() }
         .listStyle(.plain)
         .addADBackground(with: store.step.currentStep)
         .scrollContentBackground(.hidden)

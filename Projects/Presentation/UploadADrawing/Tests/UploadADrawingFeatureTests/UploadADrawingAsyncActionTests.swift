@@ -13,7 +13,7 @@ import ADUIKitResources
 import DomainModel
 import NetworkStorage
 import SharedProvider
-import ImageCompressor
+import ImageTools
 
 @MainActor
 final class UploadADrawingAsyncActionTests: XCTestCase {
@@ -27,7 +27,7 @@ final class UploadADrawingAsyncActionTests: XCTestCase {
     } withDependencies: {
       $0.imageCompressor = ImageCompressorKey.testValue
       $0.makeADProvider = .testValue
-      $0.adInfo = .testValue
+      $0.shared = .testValue
     }
   }
   

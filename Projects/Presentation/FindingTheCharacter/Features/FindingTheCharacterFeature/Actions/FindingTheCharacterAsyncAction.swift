@@ -26,6 +26,7 @@ public extension FindingTheCharacterFeature {
         case .findTheCharacter(let cropResult):
           let cropImage = cropResult.image
           let boundingBox = cropResult.boundingBox
+          state.cropImageResult = cropImage
           
           return .run { send in
             guard let ad_id = await ad_id.get() else { return }
@@ -56,11 +57,15 @@ public extension FindingTheCharacterFeature {
           }
           
         case .downloadMaskImageResponse(.success(let maskImage)):
+          let result = FindingTheCharacterResult(
+            cropImage: state.cropImageResult,
+            maskImage: maskImage
+          )
+          
           return .run { send in
             await send(.inner(.setLoadingView(false)))
             await send(.view(.toggleCropImageView))
-            await send(.delegate(.setMaskImage(maskImage)))
-            await send(.delegate(.moveToSeparatingCharacter))
+            await send(.delegate(.moveToSeparatingCharacter(result)))
           }
           
         case .downloadMaskImageResponse(.failure(let error)):

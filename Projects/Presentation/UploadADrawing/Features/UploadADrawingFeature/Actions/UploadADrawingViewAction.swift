@@ -8,10 +8,12 @@
 
 import ThirdPartyLib
 import UIKit
+import AsyncAlgorithms
 
 public extension UploadADrawingFeature {
   @CasePathable
   enum ViewActions: Equatable {
+    case task
     case check(CheckActions)
     case uploadDrawing(Data?)
     case initState
@@ -30,6 +32,16 @@ public extension UploadADrawingFeature {
       switch action {
       case .view(let viewActions):
         switch viewActions {
+        case .task:
+          return .run { send in
+            let isShowStepBar = await step.isShowStepBar.values()
+            let completeStep = await step.completeStep.values()
+            
+            for await (isShow, complete) in combineLatest(isShowStepBar, completeStep) {
+              await send(.update(.getIsShowstep(isShow)))
+              await send(.update(.getCompleteStep(complete)))
+            }
+          }
         case .check(let checkList):
           switch checkList {
           case .list1(let checkState):
