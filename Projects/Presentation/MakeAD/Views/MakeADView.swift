@@ -38,7 +38,7 @@ public struct MakeADView: View {
             )
           }
           
-          PageTabView(currentStep: $store.step.currentStep.sending(\.update.setCurrentStep))
+          PageTabView(store: store)
             .frame(height: geo.size.height + geo.safeAreaInsets.bottom)
         }
         .task { await store.send(.view(.task)).finish() }
@@ -71,27 +71,39 @@ struct TestReloadView: View {
 
 private extension MakeADView {
   struct PageTabView: View {
-    @Binding var currentStep: MakeADStep
+    @Perception.Bindable var store: StoreOf<MakeADFeature>
     
     var body: some View {
-      TabView(selection: $currentStep) {
-        UploadADrawingView()
+      WithPerceptionTracking {
+        TabView(selection: $store.step.currentStep.sending(\.update.setCurrentStep)) {
+          UploadADrawingView(
+            store: store.scope(
+              state: \.uploadADrawing,
+              action: \.scope.uploadADrawing
+            )
+          )
           .tag(MakeADStep.UploadADrawing)
-        
-        FindingTheCharacterView()
+          
+          FindingTheCharacterView(
+            store: store.scope(
+              state: \.findingTheCharacter,
+              action: \.scope.findingTheCharacter
+            )
+          )
           .tag(MakeADStep.FindingTheCharacter)
-        
-        SeparatingCharacterView()
-          .tag(MakeADStep.SeparatingCharacter)
-        
-        FindingCharacterJointsView()
-          .tag(MakeADStep.FindingCharacterJoints)
+          
+          SeparatingCharacterView()
+            .tag(MakeADStep.SeparatingCharacter)
+          
+          FindingCharacterJointsView()
+            .tag(MakeADStep.FindingCharacterJoints)
+        }
+        .tabViewStyle(.page(indexDisplayMode: .never))
+        .ignoresSafeArea()
+        .listRowSeparator(.hidden)
+        .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+        .listRowBackground(Color.clear)
       }
-      .tabViewStyle(.page(indexDisplayMode: .never))
-      .ignoresSafeArea()
-      .listRowSeparator(.hidden)
-      .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-      .listRowBackground(Color.clear)
     }
   }
 }

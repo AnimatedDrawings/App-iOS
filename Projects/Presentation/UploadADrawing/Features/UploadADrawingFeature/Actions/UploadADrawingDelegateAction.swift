@@ -12,8 +12,7 @@ import DomainModel
 
 public extension UploadADrawingFeature {
   enum DelegateActions: Equatable {
-    case setOriginalImage(UIImage)
-    case moveToFindingTheCharacter(CGRect)
+    case moveToFindingTheCharacter(UploadADrawingResult)
   }
   
   func DelegateReducer() -> some Reducer<State, Action> {
@@ -28,5 +27,15 @@ public extension UploadADrawingFeature {
         return .none
       }
     }
+  }
+}
+
+public struct UploadADrawingResult: Equatable {
+  public let originalImage: UIImage
+  public let boundingBox: CGRect
+  
+  public init(originalImage: UIImage, boundingBox: CGRect) {
+    self.originalImage = originalImage
+    self.boundingBox = boundingBox
   }
 }

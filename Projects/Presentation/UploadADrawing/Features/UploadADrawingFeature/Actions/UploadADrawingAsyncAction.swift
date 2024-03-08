@@ -29,8 +29,9 @@ public extension UploadADrawingFeature {
             return .none
           }
           
+          state.originalImage = compressedInfo.original
+          
           return .run { send in
-            await send(.delegate(.setOriginalImage(compressedInfo.original)))
             await send(.inner(.setLoadingView(true)))
             await send(
               .async(
@@ -42,14 +43,20 @@ public extension UploadADrawingFeature {
               )
             )
           }
-        case .uploadDrawingResponse(.success(let result)):
+        case .uploadDrawingResponse(.success(let response)):
+          let result = UploadADrawingResult(
+            originalImage: state.originalImage,
+            boundingBox: response.boundingBox
+          )
+          
           return .run { send in
-            await ad_id.set(result.ad_id)
+            await ad_id.set(response.ad_id)
             await send(.inner(.setLoadingView(false)))
-            await send(.delegate(.moveToFindingTheCharacter(result.boundingBox)))
+            await send(.delegate(.moveToFindingTheCharacter(result)))
           }
           
         case .uploadDrawingResponse(.failure(let error)):
+          print(error)
           return .run { send in
             await send(.inner(.setLoadingView(false)))
             if let error = error as? NetworkError,

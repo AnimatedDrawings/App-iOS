@@ -17,7 +17,14 @@ public struct MakeADFeature {
   
   public init() {}
   
-  public var body: some Reducer<State, Action> {
+  public var body: some ReducerOf<Self> {
+    Scope(state: \.uploadADrawing, action: \.scope.uploadADrawing) {
+      UploadADrawingFeature()
+    }
+    Scope(state: \.findingTheCharacter, action: \.scope.findingTheCharacter) {
+      FindingTheCharacterFeature()
+    }
+    
     BindingReducer()
     MainReducer()
     ScopeReducer()
@@ -35,7 +42,7 @@ public extension MakeADFeature {
     case view(ViewActions)
   }
   
-  func MainReducer() -> some Reducer<State, Action> {
+  func MainReducer() -> some ReducerOf<Self> {
     Reduce { state, action in
       switch action {
       case .binding:

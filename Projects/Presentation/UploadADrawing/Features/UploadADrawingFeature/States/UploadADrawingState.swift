@@ -8,6 +8,7 @@
 
 import ThirdPartyLib
 import DomainModel
+import UIKit
 
 public extension UploadADrawingFeature {
   @ObservableState
@@ -17,6 +18,8 @@ public extension UploadADrawingFeature {
     public var loadingView: Bool
     public var alert: Alert
     public var step: StepState
+    
+    var originalImage: UIImage
     
     public init(
       check: Check = .init(),
@@ -30,6 +33,7 @@ public extension UploadADrawingFeature {
       self.loadingView = loadingView
       self.alert = alert
       self.step = step
+      self.originalImage = UIImage()
     }
   }
   

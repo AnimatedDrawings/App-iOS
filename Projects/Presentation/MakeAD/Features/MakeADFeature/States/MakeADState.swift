@@ -17,18 +17,18 @@ public extension MakeADFeature {
     public var step: StepState
     public var makeADInfo: MakeADInfo
     public var uploadADrawing: UploadADrawingFeature.State
-    public var findTheCharacter: FindingTheCharacterFeature.State
+    public var findingTheCharacter: FindingTheCharacterFeature.State
     
     public init(
       step: StepState = .init(),
       makeADInfo: MakeADInfo = .init(),
       uploadADrawing: UploadADrawingFeature.State = .init(),
-      findTheCharacter: FindingTheCharacterFeature.State = .init()
+      findingTheCharacter: FindingTheCharacterFeature.State = .init()
     ) {
       self.step = step
       self.makeADInfo = makeADInfo
       self.uploadADrawing = uploadADrawing
-      self.findTheCharacter = findTheCharacter
+      self.findingTheCharacter = findingTheCharacter
     }
   }
   

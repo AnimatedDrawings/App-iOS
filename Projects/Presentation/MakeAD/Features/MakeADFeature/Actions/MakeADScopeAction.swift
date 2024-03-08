@@ -31,19 +31,14 @@ public extension MakeADFeature {
       switch action {
       case .scope(.uploadADrawing(.delegate(let uploadADrawingActions))):
         switch uploadADrawingActions {
-        case .setOriginalImage(let originalImage):
-          state.makeADInfo.originalImage = originalImage
-          return .none
+        case .moveToFindingTheCharacter(let result):
+          state.makeADInfo.originalImage = result.originalImage
+          state.makeADInfo.boundingBox = result.boundingBox
+          state.findingTheCharacter.cropImage = CropImageFeature.State(
+            originalImage: result.originalImage,
+            boundingBox: result.boundingBox
+          )
           
-        case .moveToFindingTheCharacter(let boundingBox):
-          state.makeADInfo.boundingBox = boundingBox
-          if let originalImage = state.makeADInfo.originalImage,
-             let boundingBox = state.makeADInfo.boundingBox {
-            state.findTheCharacter.cropImage = CropImageFeature.State(
-              originalImage: originalImage,
-              boundingBox: boundingBox
-            )
-          }
           return .run { send in
             await step.isShowStepBar.set(true)
             await step.currentStep.set(.FindingTheCharacter)
