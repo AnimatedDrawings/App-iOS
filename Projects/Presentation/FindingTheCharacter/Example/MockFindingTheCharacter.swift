@@ -21,7 +21,7 @@ struct MockFindingTheCharacterView: View {
   
   init() {
     let originalImage = ADUIKitResourcesAsset.SampleDrawing.step1Example1.image
-    let boundingBox = BoundingBoxDTO().toCGRect()
+    let boundingBox = BoundingBoxDTO.mock().toCGRect()
     let cropImageState = CropImageFeature.State(
       originalImage: originalImage,
       boundingBox: boundingBox
