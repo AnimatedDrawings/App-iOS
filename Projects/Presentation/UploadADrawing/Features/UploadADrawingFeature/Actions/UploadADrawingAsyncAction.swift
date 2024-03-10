@@ -50,7 +50,7 @@ public extension UploadADrawingFeature {
           )
           
           return .run { send in
-            await ad_id.set(response.ad_id)
+            await adInfo.id.set(response.ad_id)
             await send(.inner(.setLoadingView(false)))
             await send(.delegate(.moveToFindingTheCharacter(result)))
           }

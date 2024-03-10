@@ -20,12 +20,5 @@ public struct ADInfo {
 
 extension ADInfo: DependencyKey {
   public static var liveValue = ADInfo()
-  public static var testValue = ADInfo()
-}
-
-public extension DependencyValues {
-  var adInfo: ADInfo {
-    get { self[ADInfo.self] }
-    set { self[ADInfo.self] = newValue }
-  }
+  public static var testValue = ADInfo(id: "test")
 }

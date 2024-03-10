@@ -7,8 +7,9 @@
 //
 
 import XCTest
-@testable import ImageCompressor
+@testable import ImageTools
 import DomainModel
+import ImageToolsTestings
 
 final class ImageCropperTests: XCTestCase {
   var imageCropper: ImageCropper!
@@ -19,17 +20,41 @@ final class ImageCropperTests: XCTestCase {
   
   func testCrop() {
     let cropRequest = CropRequest.mock()
+    let cropCGSize = CGSize(
+      width: cropRequest.viewBoundingBox.width * cropRequest.imageScale,
+      height: cropRequest.viewBoundingBox.height * cropRequest.imageScale
+    )
+    let cropCGPoint = CGPoint(
+      x: -cropRequest.viewBoundingBox.minX * cropRequest.imageScale,
+      y: -cropRequest.viewBoundingBox.minY * cropRequest.imageScale
+    )
+    let mockBoundingBox = CGRect(
+      origin: CGPoint(x: -cropCGPoint.x, y: -cropCGPoint.y),
+      size: cropCGSize
+    )
     
     guard let cropResult = try? imageCropper.crop(cropRequest) else {
       XCTFail()
       return
     }
     
-    let croppedImageSize = CGSize(
-      width: cropRequest.viewBoundingBox.width,
-      height: cropRequest.viewBoundingBox.height
+    XCTAssertEqual(cropResult.boundingBox, mockBoundingBox)
+    XCTAssertEqual(cropResult.image.size.trunc(), cropCGSize.trunc())
+  }
+  
+  func testTestCrop() {
+    imageCropper = .testValue
+    let cropRequest = CropRequest.mock()
+    let mockCropResult = CropResult(
+      image: cropRequest.originalImage,
+      boundingBox: cropRequest.viewBoundingBox
     )
-    XCTAssertEqual(cropResult.image.size, croppedImageSize)
-    XCTAssertEqual(cropResult.boundingBox, cropRequest.viewBoundingBox)
+    
+    guard let cropResult = try? imageCropper.crop(cropRequest) else {
+      XCTFail()
+      return
+    }
+    
+    XCTAssertEqual(cropResult, mockCropResult)
   }
 }

@@ -11,7 +11,7 @@ import ThirdPartyLib
 public extension FindingTheCharacterFeature {
   enum InnerActions: Equatable {
     case setLoadingView(Bool)
-    case presentCropImageView
+    case toggleCropImageView
     
     case networkErrorAlert
     case noCropImageErrorAlert
@@ -25,10 +25,10 @@ public extension FindingTheCharacterFeature {
         case .setLoadingView(let isShow):
           state.loadingView = isShow
           return .none
-        case .presentCropImageView:
+        case .toggleCropImageView:
           state.cropImageView.toggle()
-          return .none
           
+          return .none
         case .networkErrorAlert:
           state.alert.networkError.toggle()
           return .none

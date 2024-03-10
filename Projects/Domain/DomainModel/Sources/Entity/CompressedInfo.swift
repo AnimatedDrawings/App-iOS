@@ -23,7 +23,7 @@ public struct CompressedInfo: Equatable {
 
 public extension CompressedInfo {
   static func mock() -> Self {
-    let mockImage = ADUIKitResourcesAsset.TestImages.garlic.image
+    let mockImage = ADUIKitResourcesAsset.SampleDrawing.step1Example2.image
     let mockData = mockImage.pngData() ?? Data()
     
     return Self(data: mockData, image: mockImage, original: mockImage)

@@ -11,11 +11,11 @@ import XCTest
 import ThirdPartyLib
 import DomainModel
 
-@MainActor
 final class UploadADrawingInnerActionTests: XCTestCase {
   var state: UploadADrawingFeature.State!
   var store: TestStoreOf<UploadADrawingFeature>!
   
+  @MainActor
   override func setUp() async throws {
     state = UploadADrawingFeature.State()
     store = TestStore(initialState: state) {

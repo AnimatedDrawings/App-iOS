@@ -12,7 +12,7 @@ import DomainModel
 public extension UploadADrawingFeature {
   @CasePathable
   enum UpdateActions: Equatable {
-    case getIsShowstep(Bool)
+    case getIsShowStepBar(Bool)
     case getCompleteStep(MakeADStep)
     
     case setIsShowStepBar(Bool)
@@ -23,7 +23,7 @@ public extension UploadADrawingFeature {
       switch action {
       case .update(let updateActions):
         switch updateActions {
-        case .getIsShowstep(let isShow):
+        case .getIsShowStepBar(let isShow):
           if state.step.isShowStepBar != isShow {
             state.step.isShowStepBar = isShow
           }

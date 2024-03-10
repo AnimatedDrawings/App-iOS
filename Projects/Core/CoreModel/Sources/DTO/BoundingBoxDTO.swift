@@ -39,15 +39,32 @@ public struct BoundingBoxDTO: Codable, Equatable {
 public extension BoundingBoxDTO {
   static func mock() -> Self {
     let data = """
-    {
-      "bottom": 402,
-      "left": 88,
-      "right": 264,
-      "top": 118
-    }
+        {
+          "bottom": 1386,
+          "left": 94,
+          "right": 852,
+          "top": 108
+        }
 """.data(using: .utf8)!
     
     let decoded = try! JSONDecoder().decode(Self.self, from: data)
     return decoded
   }
 }
+
+
+/*
+{
+  "is_success": true,
+  "message": "",
+  "response": {
+    "ad_id": "78606170928442fa9c62dae49d5d903f_20240308105137",
+    "bounding_box": {
+      "bottom": 1386,
+      "left": 94,
+      "right": 852,
+      "top": 108
+    }
+  }
+}
+*/

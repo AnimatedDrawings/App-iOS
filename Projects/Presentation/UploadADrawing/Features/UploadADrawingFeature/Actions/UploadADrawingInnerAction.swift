@@ -37,9 +37,6 @@ public extension UploadADrawingFeature {
         case .showImageSizeErrorAlert:
           state.alert.imageSizeError.toggle()
           return .none
-          
-        default:
-          return .none
         }
       default:
         return .none

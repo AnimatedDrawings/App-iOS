@@ -20,8 +20,8 @@ struct MockFindingTheCharacterView: View {
   let cropImageState: CropImageFeature.State
   
   init() {
-    let originalImage = ADUIKitResourcesAsset.SampleDrawing.step1Example1.image
-    let boundingBox = BoundingBoxDTO.mock().toCGRect()
+    let originalImage = ADUIKitResourcesAsset.SampleDrawing.step1Example2.image
+    let boundingBox = CGRect.mockExample2BoundingBox()
     let cropImageState = CropImageFeature.State(
       originalImage: originalImage,
       boundingBox: boundingBox
@@ -42,11 +42,6 @@ struct MockFindingTheCharacterView: View {
     FindingTheCharacterView(store: store)
       .task {
         await step.completeStep.set(.UploadADrawing)
-      }
-      .onAppear {
-        if store.cropImage == nil {
-          print("store cropImage nil??")
-        }
       }
   }
 }

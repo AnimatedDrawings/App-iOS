@@ -15,29 +15,28 @@ import NetworkStorage
 import SharedProvider
 import ImageTools
 
-@MainActor
 final class UploadADrawingAsyncActionTests: XCTestCase {
   var state: UploadADrawingFeature.State!
   var store: TestStoreOf<UploadADrawingFeature>!
   
+  @MainActor
   override func setUp() async throws {
     state = UploadADrawingFeature.State()
     store = TestStore(initialState: state) {
       UploadADrawingFeature()
     } withDependencies: {
-      $0.imageCompressor = ImageCompressorKey.testValue
       $0.makeADProvider = .testValue
-      $0.shared = .testValue
     }
   }
   
   func testUploadDrawing() async {
     let mockCompressedInfo = CompressedInfo.mock()
     
-    store.exhaustivity = .off
-    await store.send(.async(.uploadDrawing(mockCompressedInfo.data)))
+    await store.send(.async(.uploadDrawing(mockCompressedInfo.data))) {
+      $0.originalImage = mockCompressedInfo.original
+    }
     
-    await store.receive(.delegate(.setOriginalImage(mockCompressedInfo.original)))
+    store.exhaustivity = .off
     await store.receive(.inner(.setLoadingView(true)))
     await store.receive(
       .async(
@@ -50,25 +49,29 @@ final class UploadADrawingAsyncActionTests: XCTestCase {
   }
   
   func testUploadDrawingResponseSuccess() async {
-    let mockData = UploadDrawingResult.example1Mock()
+    let mockResponse = UploadDrawingResult.example1Mock()
+    let mockUploadADrawingResult = UploadADrawingResult(
+      originalImage: UIImage(),
+      boundingBox: mockResponse.boundingBox
+    )
     
     store.exhaustivity = .off
     await store.send(
       .async(
         .uploadDrawingResponse(
-          .success(mockData)
+          .success(mockResponse)
         )
       )
     )
     
-    guard let id = await ADID.testValue.id.get() else {
+    guard let ad_id = await ADInfo.testValue.id.get() else {
       XCTFail()
       return
     }
-    XCTAssertEqual(id, mockData.ad_id)
-    await store.receive(.delegate(.setBoundingBox(mockData.boundingBox)))
+    
+    XCTAssertEqual(ad_id, mockResponse.ad_id)
     await store.receive(.inner(.setLoadingView(false)))
-    await store.receive(.delegate(.moveToFindingTheCharacter))
+    await store.receive(.delegate(.moveToFindingTheCharacter(mockUploadADrawingResult)))
   }
   
   func testUploadDrawingResponseFail() async {

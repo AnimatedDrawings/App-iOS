@@ -1,5 +1,5 @@
 //
-//  ImageCompressor.swift
+//  ImageCompressorImpl.swift
 //  ImageCompressor
 //
 //  Created by chminii on 2/26/24.
@@ -13,7 +13,7 @@ import DomainModel
 import ImageToolsInterfaces
 
 /// Use
-public struct ImageCompressor: ImageCompressorProtocol {
+public struct ImageCompressorImpl: ImageCompressorProtocol {
   public init() {}
   
   public func compress(with data: Data) throws -> CompressedInfo {
@@ -35,7 +35,7 @@ public struct ImageCompressor: ImageCompressorProtocol {
   }
 }
  
-extension ImageCompressor {
+extension ImageCompressorImpl {
   func reduceFileSize(image: UIImage) -> CompressedInfo? {
     let resizedImage = resizeImage(with: image)
     guard let compressedData = compressImage(with: resizedImage),
@@ -93,27 +93,5 @@ extension ImageCompressor {
     }
 
     return renderImage
-  }
-}
-
-public extension DependencyValues {
-  var imageCompressor: any ImageCompressorProtocol {
-    get { self[ImageCompressorKey.self] }
-    set { self[ImageCompressorKey.self] = newValue }
-  }
-}
-
-public enum ImageCompressorKey: DependencyKey {
-  public static let liveValue: any ImageCompressorProtocol = ImageCompressor()
-  public static let testValue: any ImageCompressorProtocol = TestImageCompressor()
-}
-
-struct TestImageCompressor: ImageCompressorProtocol {
-  func compress(with data: Data) throws -> CompressedInfo {
-    return CompressedInfo.mock()
-  }
-  
-  func compress(with image: UIImage) throws -> CompressedInfo {
-    return CompressedInfo.mock()
   }
 }

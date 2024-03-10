@@ -16,7 +16,6 @@ public extension UploadADrawingFeature {
     case task
     case check(CheckActions)
     case uploadDrawing(Data?)
-    case initState
   }
   
   @CasePathable
@@ -38,10 +37,11 @@ public extension UploadADrawingFeature {
             let completeStep = await step.completeStep.values()
             
             for await (isShow, complete) in combineLatest(isShowStepBar, completeStep) {
-              await send(.update(.getIsShowstep(isShow)))
+              await send(.update(.getIsShowStepBar(isShow)))
               await send(.update(.getCompleteStep(complete)))
             }
           }
+          
         case .check(let checkList):
           switch checkList {
           case .list1(let checkState):
@@ -58,10 +58,6 @@ public extension UploadADrawingFeature {
           
         case .uploadDrawing(let imageData):
           return .send(.async(.uploadDrawing(imageData)))
-          
-        case .initState:
-          state = State()
-          return .none
         }
         
       default:

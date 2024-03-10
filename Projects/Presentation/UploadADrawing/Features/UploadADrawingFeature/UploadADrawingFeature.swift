@@ -16,9 +16,9 @@ public struct UploadADrawingFeature: Reducer {
   public init() {}
   
   @Dependency(\.makeADProvider) var makeADProvider
-  @Dependency(\.imageCompressor) var imageCompressor
+  @Dependency(ImageCompressor.self) var imageCompressor
   @Dependency(StepProvider.self) var step
-  @Dependency(\.adInfo.id) var ad_id
+  @Dependency(ADInfo.self) var adInfo
   
   public var body: some ReducerOf<Self> {
     BindingReducer()

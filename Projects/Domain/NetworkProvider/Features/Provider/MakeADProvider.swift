@@ -31,9 +31,9 @@ extension MakeADProvider: DependencyKey {
         )
       )
       let ad_id = response.ad_id
-      let cgRect = response.boundingBoxDTO.toCGRect()
+      let boundingBox = response.boundingBoxDTO.toCGRect()
       
-      return UploadDrawingResult(ad_id: ad_id, boundingBox: cgRect)
+      return UploadDrawingResult(ad_id: ad_id, boundingBox: boundingBox)
     },
     
     findTheCharacter: { ad_id, cgRect in

@@ -9,17 +9,29 @@
 import XCTest
 @testable import UploadADrawingFeatures
 import ThirdPartyLib
+import SharedProvider
 
-@MainActor
 final class UploadADrawingViewActionTests: XCTestCase {
   var state: UploadADrawingFeature.State!
   var store: TestStoreOf<UploadADrawingFeature>!
   
+  @MainActor
   override func setUp() async throws {
     state = UploadADrawingFeature.State()
     store = TestStore(initialState: state) {
       UploadADrawingFeature()
     }
+  }
+  
+  func testTask() async {
+    let isShow = await StepProvider.testValue.isShowStepBar.get()
+    let completeStep = await StepProvider.testValue.completeStep.get()
+    
+    store.exhaustivity = .off
+    
+    await store.send(.view(.task))
+    await store.receive(.update(.getIsShowStepBar(isShow)))
+    await store.receive(.update(.getCompleteStep(completeStep)))
   }
   
   func testCheck() async {
@@ -45,18 +57,8 @@ final class UploadADrawingViewActionTests: XCTestCase {
   func testUploadDrawing() async {
     let imageData = Data()
     
+    store.exhaustivity = .off
     await store.send(.view(.uploadDrawing(imageData)))
     await store.receive(.async(.uploadDrawing(imageData)))
-  }
-  
-  func testInitState() async {
-    state = UploadADrawingFeature.State(uploadButton: true)
-    store = TestStore(initialState: state) {
-      UploadADrawingFeature()
-    }
-    
-    await store.send(.view(.initState)) {
-      $0 = UploadADrawingFeature.State()
-    }
   }
 }

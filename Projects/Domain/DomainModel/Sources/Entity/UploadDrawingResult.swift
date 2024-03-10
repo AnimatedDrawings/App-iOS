@@ -26,7 +26,7 @@ import CoreModel
 public extension UploadDrawingResult {
   static func example1Mock() -> Self {
     UploadDrawingResult(
-      ad_id: "ad_id",
+      ad_id: "example1",
       boundingBox: CGRect(
         x: 88.0,
         y: 118.0,
