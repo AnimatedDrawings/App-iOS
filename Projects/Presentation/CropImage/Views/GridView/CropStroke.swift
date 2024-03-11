@@ -9,8 +9,6 @@
 import SwiftUI
 
 struct CropStroke: View {
-//  @Binding var curPoint: CGPoint
-//  @Binding var curSize: CGSize
   @Binding var curRect: CGRect
   let strokeColor: Color
   let lineWidth: CGFloat

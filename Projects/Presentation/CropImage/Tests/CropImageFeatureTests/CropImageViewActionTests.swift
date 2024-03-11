@@ -15,30 +15,21 @@ import ImageTools
 import CoreModel
 
 final class CropImageViewActionTests: XCTestCase {
-  var state: CropImageFeature.State!
   var store: TestStoreOf<CropImageFeature>!
   
   @MainActor
   override func setUp() async throws {
-    let example1 = ADUIKitResourcesAsset.SampleDrawing.step1Example1.image
-    let boundingBox = BoundingBoxDTO.mock().toCGRect()
-    state = CropImageFeature.State(originalImage: example1, boundingBox: boundingBox)
+    let state = CropImageFeature.State.mock()
     store = TestStore(initialState: state) {
       CropImageFeature()
     }
   }
   
   func testSave() async {
-    let example1 = ADUIKitResourcesAsset.SampleDrawing.step1Example1.image
-    let boundingBox = BoundingBoxDTO.mock().toCGRect()
-    state = CropImageFeature.State(
-      originalImage: example1,
-      boundingBox: boundingBox,
-      viewBoundingBox: boundingBox
-    )
+    var state = CropImageFeature.State.mock()
+    state.viewBoundingBox = state.boundingBox
     store = TestStore(initialState: state) {
       CropImageFeature()
-        .dependency(ImageCropper.testValue)
     }
     let cropResult = CropResult(image: state.originalImage, boundingBox: state.viewBoundingBox)
     

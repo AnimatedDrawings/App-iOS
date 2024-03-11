@@ -11,12 +11,10 @@ import XCTest
 import ThirdPartyLib
 
 final class FindingTheCharacterInnerActionTests: XCTestCase {
-  var state: FindingTheCharacterFeature.State!
   var store: TestStoreOf<FindingTheCharacterFeature>!
   
   @MainActor
   override func setUp() async throws {
-    state = FindingTheCharacterFeature.State()
     store = TestStore(initialState: .init()) {
       FindingTheCharacterFeature()
     }
@@ -33,6 +31,18 @@ final class FindingTheCharacterInnerActionTests: XCTestCase {
   func testToggleCropImageView() async {
     await store.send(.inner(.toggleCropImageView)) {
       $0.cropImageView = !$0.cropImageView
+    }
+  }
+  
+  func testNetworkErrorAlert() async {
+    await store.send(.inner(.networkErrorAlert)) {
+      $0.alert.networkError = !$0.alert.networkError
+    }
+  }
+  
+  func testNoCropImageErrorAlert() async {
+    await store.send(.inner(.noCropImageErrorAlert)) {
+      $0.alert.noCropImage = !$0.alert.noCropImage
     }
   }
 }

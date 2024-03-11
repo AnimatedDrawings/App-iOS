@@ -15,8 +15,6 @@ public extension FindingTheCharacterFeature {
     case task
     case checkList(Bool)
     case toggleCropImageView
-    case onDismissCropImageView
-    case initState
   }
   
   func ViewReducer() -> some Reducer<State, Action> {
@@ -43,11 +41,6 @@ public extension FindingTheCharacterFeature {
             return .send(.inner(.noCropImageErrorAlert))
           }
           state.cropImageView.toggle()
-          return .none
-        case .onDismissCropImageView:
-          return .none
-        case .initState:
-          state = FindingTheCharacterFeature.State()
           return .none
         }
       default:

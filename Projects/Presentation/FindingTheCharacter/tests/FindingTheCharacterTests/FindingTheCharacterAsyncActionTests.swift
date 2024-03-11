@@ -14,12 +14,10 @@ import NetworkStorage
 import ADUIKitResources
 
 final class FindingTheCharacterAsyncActionTests: XCTestCase {
-  var state: FindingTheCharacterFeature.State!
   var store: TestStoreOf<FindingTheCharacterFeature>!
   
   @MainActor
   override func setUp() async throws {
-    state = FindingTheCharacterFeature.State()
     store = TestStore(initialState: .init()) {
       FindingTheCharacterFeature()
     }

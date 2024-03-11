@@ -20,12 +20,7 @@ struct MockFindingTheCharacterView: View {
   let cropImageState: CropImageFeature.State
   
   init() {
-    let originalImage = ADUIKitResourcesAsset.SampleDrawing.step1Example2.image
-    let boundingBox = CGRect.mockExample2BoundingBox()
-    let cropImageState = CropImageFeature.State(
-      originalImage: originalImage,
-      boundingBox: boundingBox
-    )
+    let cropImageState = CropImageFeature.State.mock()
     let store: StoreOf<FindingTheCharacterFeature> = Store(
       initialState: FindingTheCharacterFeature.State(
         cropImage: cropImageState

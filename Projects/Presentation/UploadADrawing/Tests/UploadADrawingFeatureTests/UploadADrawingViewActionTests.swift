@@ -12,13 +12,11 @@ import ThirdPartyLib
 import SharedProvider
 
 final class UploadADrawingViewActionTests: XCTestCase {
-  var state: UploadADrawingFeature.State!
   var store: TestStoreOf<UploadADrawingFeature>!
   
   @MainActor
   override func setUp() async throws {
-    state = UploadADrawingFeature.State()
-    store = TestStore(initialState: state) {
+    store = TestStore(initialState: .init()) {
       UploadADrawingFeature()
     }
   }

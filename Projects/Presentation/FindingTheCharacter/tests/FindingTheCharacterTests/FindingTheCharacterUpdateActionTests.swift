@@ -1,24 +1,24 @@
 //
-//  UploadADrawingUpdateActionTests.swift
-//  UploadADrawingTests
+//  FindingTheCharacterUpdateActionTests.swift
+//  FindingTheCharacterTests
 //
-//  Created by chminii on 3/10/24.
+//  Created by chminii on 3/11/24.
 //  Copyright © 2024 chminipark. All rights reserved.
 //
 
-import ThirdPartyLib
 import XCTest
-@testable import UploadADrawingFeatures
+@testable import FindingTheCharacterFeatures
+import ThirdPartyLib
 import DomainModel
 import SharedProvider
 
-final class UploadADrawingUpdateActionTests: XCTestCase {
-  var store: TestStoreOf<UploadADrawingFeature>!
+final class FindingTheCharacterUpdateActionTests: XCTestCase {
+  var store: TestStoreOf<FindingTheCharacterFeature>!
   
   @MainActor
   override func setUp() async throws {
     store = TestStore(initialState: .init()) {
-      UploadADrawingFeature()
+      FindingTheCharacterFeature()
     }
   }
   
@@ -44,6 +44,6 @@ final class UploadADrawingUpdateActionTests: XCTestCase {
     await store.send(.update(.setIsShowStepBar(isShow)))
     
     let resultIsShow = await StepProvider.testValue.isShowStepBar.get()
-    XCTAssertEqual(resultIsShow, isShow)
+    XCTAssertEqual(isShow, resultIsShow)
   }
 }

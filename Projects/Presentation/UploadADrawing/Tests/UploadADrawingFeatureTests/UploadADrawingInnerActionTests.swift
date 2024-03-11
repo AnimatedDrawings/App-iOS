@@ -12,13 +12,11 @@ import ThirdPartyLib
 import DomainModel
 
 final class UploadADrawingInnerActionTests: XCTestCase {
-  var state: UploadADrawingFeature.State!
   var store: TestStoreOf<UploadADrawingFeature>!
   
   @MainActor
   override func setUp() async throws {
-    state = UploadADrawingFeature.State()
-    store = TestStore(initialState: state) {
+    store = TestStore(initialState: .init()) {
       UploadADrawingFeature()
     }
   }
@@ -30,38 +28,20 @@ final class UploadADrawingInnerActionTests: XCTestCase {
   }
   
   func testShowNetworkErrorAlert() async {
-    let isShow = true
-    state = UploadADrawingFeature.State(alert: .init(networkError: isShow))
-    store = TestStore(initialState: state) {
-      UploadADrawingFeature()
-    }
-    
     await store.send(.inner(.showNetworkErrorAlert)) {
-      $0.alert.networkError = !isShow
+      $0.alert.networkError = !$0.alert.networkError
     }
   }
   
   func testShowFindCharacterErrorAlert() async {
-    let isShow = true
-    state = UploadADrawingFeature.State(alert: .init(findCharacterError: isShow))
-    store = TestStore(initialState: state) {
-      UploadADrawingFeature()
-    }
-    
     await store.send(.inner(.showFindCharacterErrorAlert)) {
-      $0.alert.findCharacterError = !isShow
+      $0.alert.findCharacterError = !$0.alert.findCharacterError
     }
   }
   
   func testShowImageSizeErrorAlert() async {
-    let isShow = true
-    state = UploadADrawingFeature.State(alert: .init(imageSizeError: isShow))
-    store = TestStore(initialState: state) {
-      UploadADrawingFeature()
-    }
-    
     await store.send(.inner(.showImageSizeErrorAlert)) {
-      $0.alert.imageSizeError = !isShow
+      $0.alert.imageSizeError = !$0.alert.imageSizeError
     }
   }
 }

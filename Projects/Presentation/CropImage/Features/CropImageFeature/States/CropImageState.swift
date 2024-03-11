@@ -8,6 +8,7 @@
 
 import ThirdPartyLib
 import UIKit
+import ADUIKitResources
 
 public extension CropImageFeature {
   @ObservableState
@@ -31,5 +32,17 @@ public extension CropImageFeature {
       self.imageScale = imageScale
       self.resetTrigger = resetTrigger
     }
+  }
+}
+
+public extension CropImageFeature.State {
+  static func mock() -> Self {
+    let originalImage = ADUIKitResourcesAsset.SampleDrawing.step1Example2.image
+    let boundingBox = CGRect.mockExample2BoundingBox()
+    
+    return Self(
+      originalImage: originalImage,
+      boundingBox: boundingBox
+    )
   }
 }
