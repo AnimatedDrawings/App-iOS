@@ -27,7 +27,6 @@ public extension FindingTheCharacterFeature {
           return .none
         case .toggleCropImageView:
           state.cropImageView.toggle()
-          
           return .none
         case .networkErrorAlert:
           state.alert.networkError.toggle()

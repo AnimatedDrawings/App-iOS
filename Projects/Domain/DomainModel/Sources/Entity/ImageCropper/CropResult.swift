@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import ADUIKitResources
 
 public struct CropResult: Equatable {
   public let image: UIImage
@@ -15,5 +16,15 @@ public struct CropResult: Equatable {
   public init(image: UIImage, boundingBox: CGRect) {
     self.image = image
     self.boundingBox = boundingBox
+  }
+}
+
+public extension CropResult {
+  static func mock() -> Self {
+    let image = ADUIKitResourcesAsset.SampleDrawing.step1Example2.image
+    return Self(
+      image: image,
+      boundingBox: .init(x: 1, y: 1, width: 100, height: 100)
+    )
   }
 }

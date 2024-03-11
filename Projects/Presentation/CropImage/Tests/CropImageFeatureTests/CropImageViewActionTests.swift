@@ -14,11 +14,11 @@ import DomainModel
 import ImageTools
 import CoreModel
 
-@MainActor
 final class CropImageViewActionTests: XCTestCase {
   var state: CropImageFeature.State!
   var store: TestStoreOf<CropImageFeature>!
   
+  @MainActor
   override func setUp() async throws {
     let example1 = ADUIKitResourcesAsset.SampleDrawing.step1Example1.image
     let boundingBox = BoundingBoxDTO.mock().toCGRect()
@@ -56,5 +56,3 @@ final class CropImageViewActionTests: XCTestCase {
     }
   }
 }
-
-

@@ -29,7 +29,7 @@ public extension FindingTheCharacterFeature {
           state.cropImageResult = cropImage
           
           return .run { send in
-            guard let ad_id = await ad_id.get() else { return }
+            guard let ad_id = await adInfo.id.get() else { return }
             await send(.inner(.setLoadingView(true)))
             await send(.async(.findTheCharacterResponse(
               TaskResult.empty {
@@ -49,7 +49,7 @@ public extension FindingTheCharacterFeature {
           
         case .downloadMaskImage:
           return .run { send in
-            guard let ad_id = await ad_id.get() else { return }
+            guard let ad_id = await adInfo.id.get() else { return }
             await send(.async(.downloadMaskImageResponse(
               TaskResult {
                 try await makeADProvider.downloadMaskImage(ad_id)

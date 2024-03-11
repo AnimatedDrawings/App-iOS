@@ -11,6 +11,7 @@ import NetworkStorage
 import UIKit
 import DomainModel
 import Shared
+import ADUIKitResources
 
 public struct MakeADProvider {
   public var uploadDrawing: @Sendable (Data) async throws -> UploadDrawingResult
@@ -80,11 +81,11 @@ extension MakeADProvider: DependencyKey {
   
   public static let testValue = Self(
     uploadDrawing: { _ in
-//      return UploadDrawingResult(ad_id: "test", boundingBox: CGRect())
       return UploadDrawingResult.example1Mock()
     },
     findTheCharacter: { _, _ in },
     downloadMaskImage: { _ in
+      logPrint()
       return UIImage()
     },
     separateCharacter: { _, _ in

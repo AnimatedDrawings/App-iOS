@@ -24,8 +24,6 @@ final class UploadADrawingAsyncActionTests: XCTestCase {
     state = UploadADrawingFeature.State()
     store = TestStore(initialState: state) {
       UploadADrawingFeature()
-    } withDependencies: {
-      $0.makeADProvider = .testValue
     }
   }
   
