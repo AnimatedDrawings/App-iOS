@@ -10,7 +10,7 @@ import Foundation
 import SharedStorage
 import DomainModel
 import UIKit
-import ComposableArchitecture
+import ADComposableArchitecture
 
 public struct Shared {
   public var ad_id: CombineNotifier<String?>

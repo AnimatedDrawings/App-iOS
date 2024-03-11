@@ -1,12 +1,12 @@
 //
-//  ThirdPartyLib.swift
+//  AsyncAlgorithms.swift
 //  ProjectEnvironment
 //
-//  Created by minii on 2023/09/19.
+//  Created by chminii on 3/11/24.
 //
 
 import Foundation
 
-public struct ThirdPartyLib: Module {
+public struct ADAsyncAlgorithms: Module {
   public static var prefixPathString: String = Shared.prefixPathString
 }

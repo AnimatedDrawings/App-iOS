@@ -9,7 +9,7 @@ import SwiftUI
 import ADUIKitSources
 import ADUIKitResources
 import DomainModel
-import ThirdPartyLib
+import ADComposableArchitecture
 import ModifyJointsFeatures
 
 public struct ModifyJointsView: ADUI {
@@ -134,25 +134,3 @@ extension ModifyJointsView {
   }
 }
 
-
-// MARK: - Preview
-
-#Preview {
-  Previews_ModifyJointsView()
-}
-
-public struct Previews_ModifyJointsView: View {
-  let croppedImage: UIImage = ADUIKitResourcesAsset.TestImages.croppedImage.image
-  let mockJoints = Joints.mockData()!
-  
-  public init () {}
-  
-  public var body: some View {
-    ModifyJointsView(
-      croppedImage: croppedImage,
-      joints: mockJoints,
-      save: { _ in },
-      cancel: {}
-    )
-  }
-}

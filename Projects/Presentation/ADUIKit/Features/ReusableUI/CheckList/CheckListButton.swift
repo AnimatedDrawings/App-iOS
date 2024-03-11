@@ -9,7 +9,7 @@
 import SwiftUI
 import DomainModel
 import SharedProvider
-import ThirdPartyLib
+import ADComposableArchitecture
 import ADUIKitResources
 
 public struct CheckListButton: View {

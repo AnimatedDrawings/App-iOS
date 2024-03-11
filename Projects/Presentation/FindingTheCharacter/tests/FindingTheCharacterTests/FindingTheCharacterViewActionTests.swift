@@ -9,7 +9,7 @@
 import XCTest
 @testable import FindingTheCharacterFeatures
 @testable import CropImageFeatures
-import ThirdPartyLib
+import ADComposableArchitecture
 import SharedProvider
 
 final class FindingTheCharacterViewActionTests: XCTestCase {

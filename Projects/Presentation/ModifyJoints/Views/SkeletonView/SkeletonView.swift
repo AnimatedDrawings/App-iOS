@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import ThirdPartyLib
+import ADComposableArchitecture
 import ModifyJointsFeatures
 
 struct SkeletonView: View {
@@ -46,11 +46,5 @@ struct SkeletonView: View {
             .padding()
         }
     }
-  }
-}
-
-struct DraggingPointsView_Previews: PreviewProvider {
-  static var previews: some View {
-    Previews_ModifyJointsView()
   }
 }

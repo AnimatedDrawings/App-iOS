@@ -8,7 +8,7 @@
 
 import XCTest
 @testable import FindingTheCharacterFeatures
-import ThirdPartyLib
+import ADComposableArchitecture
 
 final class FindingTheCharacterInnerActionTests: XCTestCase {
   var store: TestStoreOf<FindingTheCharacterFeature>!

@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import ThirdPartyLib
+import ADComposableArchitecture
 import Photos
 import LocalFileProvider
 import SharedProvider

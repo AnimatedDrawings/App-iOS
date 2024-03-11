@@ -7,7 +7,7 @@
 
 import SwiftUI
 import ADUIKitResources
-import ThirdPartyLib
+import ADComposableArchitecture
 import MaskingImageFeatures
 
 struct MaskToolView: View {

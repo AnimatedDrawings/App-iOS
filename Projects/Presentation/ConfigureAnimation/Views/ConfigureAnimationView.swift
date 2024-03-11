@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import ThirdPartyLib
+import ADComposableArchitecture
 import ConfigureAnimationFeatures
 import ADUIKitSources
 import ADUIKitResources

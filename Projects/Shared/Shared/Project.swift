@@ -19,7 +19,8 @@ let project: Project = .makeProject(
           target: ADUIKit.resources,
           path: .relativeToRoot(Shared.prefixPathString + "/\(ADUIKit.projectName)")
         ),
-        ThirdPartyLib.projectDepedency
+        ADComposableArchitecture.projectDepedency,
+        ADAsyncAlgorithms.projectDepedency
       ]
     )
   ]

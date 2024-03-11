@@ -9,13 +9,13 @@ import ProjectDescription
 import ProjectEnvironment
 
 let project: Project = .makeProject(
-  name: ThirdPartyLib.projectName,
-  packages: [.ComposableArchitecture, .AsyncAlgorithms],
+  name: ADComposableArchitecture.projectName,
+  packages: [.ComposableArchitecture],
   targets: [
     .makeTarget(
-      name: ThirdPartyLib.projectName,
+      name: ADComposableArchitecture.projectName,
       product: .staticLibrary,
-      dependencies: [.ComposableArchitecture, .AsyncAlgorithms]
+      dependencies: [.ComposableArchitecture]
     )
   ]
 )

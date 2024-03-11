@@ -7,7 +7,7 @@
 //
 
 import XCTest
-import ThirdPartyLib
+import ADComposableArchitecture
 @testable import ConfigureAnimationFeatures
 import SharedStorage
 import DomainModel

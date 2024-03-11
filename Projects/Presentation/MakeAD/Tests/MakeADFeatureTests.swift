@@ -8,7 +8,7 @@
 
 import XCTest
 @testable import MakeADFeatures
-import ThirdPartyLib
+import ADComposableArchitecture
 import ADUIKitResources
 import DomainModel
 

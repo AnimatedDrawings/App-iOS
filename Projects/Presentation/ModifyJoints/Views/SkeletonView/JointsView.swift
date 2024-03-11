@@ -8,7 +8,7 @@
 import SwiftUI
 import DomainModel
 import ADUIKitResources
-import ThirdPartyLib
+import ADComposableArchitecture
 import ModifyJointsFeatures
 
 struct JointsView: View {

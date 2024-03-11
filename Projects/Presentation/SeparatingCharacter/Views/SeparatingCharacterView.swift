@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import ThirdPartyLib
+import ADComposableArchitecture
 import MaskingImage
 import ADUIKitSources
 import ADUIKitResources
@@ -81,9 +81,6 @@ public struct SeparatingCharacterView: ADUI {
         }
       }
     )
-//    .resetMakeADView(.SeparatingCharacter) {
-//      viewStore.send(.initState)
-//    }
   }
 }
 
@@ -162,26 +159,4 @@ private extension SeparatingCharacterView {
       )
     }
   }
-}
-
-
-// MARK: - Preview
-
-struct Preview_SeparatingCharacterView: View {
-  @SharedValue(\.shared.stepBar.completeStep) var completeStep
-  @SharedValue(\.shared.makeAD.croppedImage) var croppedImage
-  @SharedValue(\.shared.makeAD.initMaskImage) var initMaskImage
-  
-  var body: some View {
-    SeparatingCharacterView()
-      .onAppear {
-        completeStep = .FindingTheCharacter
-        croppedImage = ADUIKitResourcesAsset.TestImages.croppedImage.image
-        initMaskImage = ADUIKitResourcesAsset.TestImages.maskedImage.image
-      }
-  }
-}
-
-#Preview {
-  Preview_SeparatingCharacterView()
 }

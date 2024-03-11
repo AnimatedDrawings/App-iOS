@@ -6,7 +6,7 @@
 //  Copyright © 2024 chminipark. All rights reserved.
 //
 
-import ThirdPartyLib
+import ADComposableArchitecture
 import CropImageFeatures
 
 public extension FindingTheCharacterFeature {

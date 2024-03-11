@@ -8,7 +8,7 @@
 
 import XCTest
 @testable import FindingTheCharacterFeatures
-import ThirdPartyLib
+import ADComposableArchitecture
 import DomainModel
 import NetworkStorage
 import ADUIKitResources

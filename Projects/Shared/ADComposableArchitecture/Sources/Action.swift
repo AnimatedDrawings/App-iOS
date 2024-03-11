@@ -1,50 +1,12 @@
 //
-//  Extension+TCA.swift
-//  ThirdPartyLib
+//  Action.swift
+//  ADComposableArchitecture
 //
-//  Created by minii on 2023/09/14.
-//  Copyright © 2023 chminipark. All rights reserved.
+//  Created by chminii on 3/11/24.
+//  Copyright © 2024 chminipark. All rights reserved.
 //
 
-import SwiftUI
-import ComposableArchitecture
-
-public protocol ADUI: View {
-  associatedtype MyFeature: Reducer
-  associatedtype MyViewStore = ViewStoreOf<MyFeature>
-  associatedtype MyStore = StoreOf<MyFeature>
-}
-
-public typealias TaskEmptyResult = TaskResult<TaskEmptyResultValue>
-
-public struct TaskEmptyResultValue: Equatable, Sendable {
-  public init() {}
-}
-
-public extension TaskResult {
-  static func empty(
-    _ body: @Sendable () async throws -> ()
-  ) async -> TaskResult<TaskEmptyResultValue> where Success == TaskEmptyResultValue {
-    do {
-      try await body()
-      return .success(TaskEmptyResultValue())
-    } catch {
-      return .failure(error)
-    }
-  }
-}
-
-public extension ViewStore {
-  func action(_ action: ViewAction) -> (() -> Void) {
-    return { self.send(action) }
-  }
-}
-
-public extension Store {
-  func action(_ action: Action) -> (() -> Void) {
-    return { self.send(action) }
-  }
-}
+import Foundation
 
 // NOTE: view 에서 사용되는 Action 을 정의합니다.
 public protocol ViewAction {

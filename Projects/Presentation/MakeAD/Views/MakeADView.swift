@@ -12,7 +12,7 @@ import UploadADrawing
 import FindingTheCharacter
 import SeparatingCharacter
 import FindingCharacterJoints
-import ThirdPartyLib
+import ADComposableArchitecture
 import MakeADFeatures
 
 public struct MakeADView: View {

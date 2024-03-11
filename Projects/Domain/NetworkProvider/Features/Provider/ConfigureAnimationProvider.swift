@@ -6,7 +6,7 @@
 //  Copyright © 2023 chminipark. All rights reserved.
 //
 
-import ThirdPartyLib
+import ADComposableArchitecture
 import NetworkStorage
 import UIKit
 import DomainModel

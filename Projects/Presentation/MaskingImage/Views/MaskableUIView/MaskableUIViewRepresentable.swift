@@ -8,7 +8,7 @@
 import SwiftUI
 import Combine
 import MaskingImageFeatures
-import ThirdPartyLib
+import ADComposableArchitecture
 
 struct MaskableUIViewRepresentable: UIViewRepresentable {
   typealias UIViewType = MaskableUIView

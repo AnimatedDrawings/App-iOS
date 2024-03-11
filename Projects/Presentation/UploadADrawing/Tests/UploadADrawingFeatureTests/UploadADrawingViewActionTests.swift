@@ -8,7 +8,7 @@
 
 import XCTest
 @testable import UploadADrawingFeatures
-import ThirdPartyLib
+import ADComposableArchitecture
 import SharedProvider
 
 final class UploadADrawingViewActionTests: XCTestCase {

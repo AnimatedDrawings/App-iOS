@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import ThirdPartyLib
+import ADComposableArchitecture
 import FindingTheCharacterFeatures
 import CropImageFeatures
 import ADUIKitResources

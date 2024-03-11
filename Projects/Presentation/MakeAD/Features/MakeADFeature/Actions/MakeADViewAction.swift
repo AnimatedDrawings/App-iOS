@@ -6,8 +6,8 @@
 //  Copyright © 2024 chminipark. All rights reserved.
 //
 
-import ThirdPartyLib
-import AsyncAlgorithms
+import ADComposableArchitecture
+import ADAsyncAlgorithms
 
 public extension MakeADFeature {
   enum ViewActions: Equatable {

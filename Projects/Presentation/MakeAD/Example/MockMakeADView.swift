@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import ThirdPartyLib
+import ADComposableArchitecture
 import MakeADFeatures
 
 struct MockMakeADView: View {

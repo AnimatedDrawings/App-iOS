@@ -8,7 +8,7 @@
 
 import DomainModel
 import UIKit
-import ThirdPartyLib
+import ADComposableArchitecture
 
 public struct ImageCropper {
   public var crop: @Sendable (CropRequest) throws -> CropResult

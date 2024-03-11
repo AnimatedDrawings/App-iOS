@@ -6,9 +6,9 @@
 //  Copyright © 2024 chminipark. All rights reserved.
 //
 
-import ThirdPartyLib
+import ADComposableArchitecture
 import CropImageFeatures
-import AsyncAlgorithms
+import ADAsyncAlgorithms
 
 public extension FindingTheCharacterFeature {
   enum ViewActions: Equatable {

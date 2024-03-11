@@ -9,7 +9,7 @@
 import SwiftUI
 import ADUIKitSources
 import ADUIKitResources
-import ThirdPartyLib
+import ADComposableArchitecture
 import UploadADrawingFeatures
 import PhotosUI
 import DomainModel

@@ -8,7 +8,7 @@
 
 import XCTest
 @testable import FindingCharacterJointsFeatures
-import ThirdPartyLib
+import ADComposableArchitecture
 import DomainModel
 import SharedProvider
 import NetworkProvider

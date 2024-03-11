@@ -9,7 +9,7 @@
 import SwiftUI
 import ADUIKitResources
 import CoreModel
-import ThirdPartyLib
+import ADComposableArchitecture
 import CropImageFeatures
 
 struct MockCropImageView: View {

@@ -8,7 +8,7 @@
 
 import SwiftUI
 import FindingCharacterJointsFeatures
-import ThirdPartyLib
+import ADComposableArchitecture
 import ModifyJoints
 import ADUIKitSources
 import ADUIKitResources

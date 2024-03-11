@@ -9,7 +9,7 @@
 import Foundation
 import SharedStorage
 import DomainModel
-import ThirdPartyLib
+import ADComposableArchitecture
 
 public struct StepProvider {
   public var isShowStepBar: CombineNotifier<Bool>

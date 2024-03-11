@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import ThirdPartyLib
+import ADComposableArchitecture
 import MaskingImageFeatures
 import ADUIKitResources
 
@@ -58,39 +58,4 @@ struct MaskableView: View {
       .padding()
       .padding(.bottom)
   }
-}
-
-
-// MARK: - Preview
-
-struct Preview_MaskableView: View {
-  let croppedImage: UIImage = ADUIKitResourcesAsset.TestImages.croppedImage.image
-  let initMaskImage: UIImage = ADUIKitResourcesAsset.TestImages.maskedImage.image
-  @State var maskedImage: UIImage? = nil
-  
-  @StateObject var viewStore: ViewStoreOf<MaskingImageFeature>
-  
-  init() {
-    let store: StoreOf<MaskingImageFeature> = Store(
-      initialState: MaskingImageFeature.State(
-        drawingState: .erase,
-        circleRadius: 20
-      )
-    ) {
-      MaskingImageFeature()
-    }
-    self._viewStore = StateObject(wrappedValue: ViewStore(store, observe: { $0 }))
-  }
-  
-  var body: some View {
-    MaskableView(
-      croppedImage: croppedImage,
-      initMaskImage: initMaskImage,
-      viewStore: viewStore
-    )
-  }
-}
-
-#Preview {
-  Preview_MaskableView()
 }

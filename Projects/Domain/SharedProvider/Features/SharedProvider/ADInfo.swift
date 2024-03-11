@@ -8,7 +8,7 @@
 
 import Foundation
 import SharedStorage
-import ThirdPartyLib
+import ADComposableArchitecture
 
 public struct ADInfo {
   public var id: CombineNotifier<String?>

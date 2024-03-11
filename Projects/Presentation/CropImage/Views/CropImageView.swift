@@ -10,7 +10,7 @@ import SwiftUI
 import ADUIKitSources
 import ADUIKitResources
 import CropImageFeatures
-import ThirdPartyLib
+import ADComposableArchitecture
 
 public struct CropImageView: View {
   @Perception.Bindable var store: StoreOf<CropImageFeature>

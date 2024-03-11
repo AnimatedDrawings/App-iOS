@@ -8,7 +8,7 @@
 
 import XCTest
 @testable import CropImageFeatures
-import ThirdPartyLib
+import ADComposableArchitecture
 import ADUIKitResources
 import DomainModel
 import ImageTools

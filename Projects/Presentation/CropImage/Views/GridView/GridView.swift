@@ -8,7 +8,7 @@
 
 import SwiftUI
 import ADUIKitResources
-import ThirdPartyLib
+import ADComposableArchitecture
 import CropImageFeatures
 
 struct GridView: View {
