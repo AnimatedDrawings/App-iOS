@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import CoreModel
 
 public struct FindCharacterJointsRequest {
   public let ad_id: String

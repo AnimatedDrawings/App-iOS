@@ -1,38 +1,18 @@
 //
-//  TargetType.swift
+//  Extension+TargetType.swift
 //  NetworkStorage
 //
-//  Created by minii on 2023/10/10.
-//  Copyright © 2023 chminipark. All rights reserved.
+//  Created by chminii on 3/11/24.
+//  Copyright © 2024 chminipark. All rights reserved.
 //
 
 import Foundation
-
-protocol TargetType {
-  var baseURL: String { get }
-  var path: String { get }
-  var method: HttpMethod { get }
-  var queryParameters: [String : String]? { get }
-  var task: NetworkTask { get }
-}
-
-extension Data {
-  func convertUploadMultiPartData(uniqString: String) -> Data {
-    var body = Data()
-    body.append("--\(uniqString)\r\n".data(using: .utf8)!)
-    body.append("Content-Disposition: form-data; name=\"file\"; filename=\"file\"\r\n".data(using: .utf8)!)
-    body.append("Content-Type: image/png\r\n\r\n".data(using: .utf8)!)
-    body.append(self)
-    body.append("\r\n".data(using: .utf8)!)
-    body.append("--\(uniqString)--\r\n".data(using: .utf8)!)
-    return body
-  }
-}
+import NetworkStorageInterfaces
 
 extension TargetType {
   var baseURL: String { "https://miniiad.duckdns.org" }
   
-  func getUrlRequest(uniqString: String = UUID().uuidString) throws -> URLRequest {
+  public func getUrlRequest(uniqString: String = UUID().uuidString) throws -> URLRequest {
     let url = try url()
     var urlRequest = URLRequest(url: url)
     
@@ -70,12 +50,18 @@ extension TargetType {
     return urlRequest
   }
   
-  func url() throws -> URL {
-    // baseURL + path
+  public func url() throws -> URL {
+    let urlComponenets = try makeURLComponents()
+    guard let url = urlComponenets.url else {
+      throw NetworkError.makeURL
+    }
+    return url
+  }
+  
+  func makeURLComponents() throws -> URLComponents {
     let fullPath = "\(baseURL)\(path)"
     guard var urlComponents = URLComponents(string: fullPath) else { throw NetworkError.makeUrlComponent }
     
-    // (baseURL + path) + queryParameters
     var urlQueryItems = [URLQueryItem]()
     if let queryParameters = queryParameters {
       queryParameters.forEach { key, value in
@@ -84,7 +70,19 @@ extension TargetType {
     }
     urlComponents.queryItems = !urlQueryItems.isEmpty ? urlQueryItems : nil
     
-    guard let url = urlComponents.url else { throw NetworkError.makeURL }
-    return url
+    return urlComponents
+  }
+}
+
+extension Data {
+  func convertUploadMultiPartData(uniqString: String) -> Data {
+    var body = Data()
+    body.append("--\(uniqString)\r\n".data(using: .utf8)!)
+    body.append("Content-Disposition: form-data; name=\"file\"; filename=\"file\"\r\n".data(using: .utf8)!)
+    body.append("Content-Type: image/png\r\n\r\n".data(using: .utf8)!)
+    body.append(self)
+    body.append("\r\n".data(using: .utf8)!)
+    body.append("--\(uniqString)--\r\n".data(using: .utf8)!)
+    return body
   }
 }

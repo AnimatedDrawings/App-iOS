@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import NetworkStorageInterfaces
 
 enum ConfigureAnimationTargetType {
   case add(AddAnimationRequest)

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import CoreModel
+import NetworkStorageInterfaces
 
 public struct SeparateCharacterReponse: Responsable {
   public let jointsDTO: JointsDTO

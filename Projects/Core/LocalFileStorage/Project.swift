@@ -16,7 +16,7 @@ let project: Project = .makeProject(
       dependencies: [.features]
     ),
     LocalFileStorage.features(
-      dependencies: [CoreModel.projectDepedency]
+      dependencies: [Shared.projectDepedency]
     )
   ]
 )

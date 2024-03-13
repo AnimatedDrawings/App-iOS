@@ -7,8 +7,7 @@
 //
 
 import Foundation
-
-public protocol Responsable: Decodable {}
+import NetworkStorageInterfaces
 
 public struct EmptyResponse: Responsable {}
 

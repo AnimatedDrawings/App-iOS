@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import CoreModel
 
 public extension CGRect {
   static func mockExample2BoundingBox() -> Self {

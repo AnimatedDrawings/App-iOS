@@ -7,22 +7,7 @@
 //
 
 import Foundation
-
-protocol URLSessionable {
-  func data(
-    for request: URLRequest,
-    delegate: (URLSessionTaskDelegate)?
-  ) async throws -> (Data, URLResponse)
-}
-
-extension URLSession: URLSessionable {}
-
-struct Asserter<T> {
-  func generic(_ val: Any) -> Bool {
-    let type = type(of: val)
-    return T.self == type
-  }
-}
+import NetworkStorageInterfaces
 
 class NetworkStorage<T: TargetType> {
   let session: URLSessionable

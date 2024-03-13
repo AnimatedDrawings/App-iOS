@@ -16,7 +16,7 @@ let project: Project = .makeProject(
       dependencies: [.features]
     ),
     SharedStorage.features(
-      dependencies: [CoreModel.projectDepedency]
+      dependencies: [Shared.projectDepedency]
     )
   ]
 )
