@@ -6,22 +6,21 @@
 //  Copyright © 2024 chminipark. All rights reserved.
 //
 
+import NetworkStorageInterfaces
 import Foundation
 
-//class MockURLSesson: URLSessionable {
-//  var responseData: Data
-//  var result: Result<Data, Error> {
-//    return Result<Data, Error>.success(responseData)
-//  }
-//  
-//  init(responseData: Data) {
-//    self.responseData = responseData
-//  }
-//  
-//  func data(
-//    for request: URLRequest,
-//    delegate: (URLSessionTaskDelegate)?
-//  ) async throws -> (Data, URLResponse) {
-//    try (result.get(), URLResponse())
-//  }
-//}
+public class MockURLSesson: URLSessionable {
+  let mockData: Data
+  
+  public init(responseJsonData: Data) {
+    self.mockData = responseJsonData
+  }
+  
+  public func data(
+    for request: URLRequest,
+    delegate: (any URLSessionTaskDelegate)?)
+  async throws -> (Data, URLResponse)
+  {
+    return (mockData, URLResponse())
+  }
+}

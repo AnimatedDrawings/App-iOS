@@ -12,6 +12,6 @@ let project: Project = .makeProject(
   name: OnBoarding.projectName,
   targets: [
     OnBoarding.example(dependencies: [.views]),
-    OnBoarding.views(dependencies: [ADUIKit.projectDepedency])
+    OnBoarding.views(dependencies: [Domain.projectDepedency])
   ]
 )

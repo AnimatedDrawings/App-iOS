@@ -12,5 +12,7 @@ let project: Project = .makeProject(
   name: ModifyJoints.projectName,
   options: .enableCodeCoverage,
   targets: ModifyJoints
-    .uPresentationTargets(dependencies: [ADUIKit.projectDepedency])
+    .uPresentationTargets(
+      dependencies: [Domain.projectDepedency]
+    )
 )

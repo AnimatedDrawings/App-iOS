@@ -13,6 +13,6 @@ let project: Project = .makeProject(
   options: .enableCodeCoverage,
   targets: CropImage
     .uPresentationTargets(
-      dependencies: [ADUIKit.projectDepedency]
+      dependencies: [Domain.projectDepedency]
     )
 )

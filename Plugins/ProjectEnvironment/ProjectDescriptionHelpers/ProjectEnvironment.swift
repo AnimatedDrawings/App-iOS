@@ -33,7 +33,7 @@ public extension Target {
     name: String,
     product: ProjectDescription.Product,
     infoPlist: ProjectDescription.InfoPlist = .default,
-    sources: ProjectDescription.SourceFilesList? = ["Sources/**"],
+    sources: ProjectDescription.SourceFilesList? = ["Features/**"],
     resources: ProjectDescription.ResourceFileElements? = nil,
     dependencies: [TargetDependency]
   ) -> Target {

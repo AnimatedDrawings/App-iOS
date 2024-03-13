@@ -15,10 +15,7 @@ let project: Project = .makeProject(
       name: Shared.projectName,
       product: .staticLibrary,
       dependencies: [
-        .project(
-          target: ADUIKit.resources,
-          path: .relativeToRoot(Shared.prefixPathString + "/\(ADUIKit.projectName)")
-        ),
+        ADUIKit.projectDepedency,
         ADComposableArchitecture.projectDepedency,
         ADAsyncAlgorithms.projectDepedency
       ]

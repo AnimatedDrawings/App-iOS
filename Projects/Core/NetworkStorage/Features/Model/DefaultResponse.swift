@@ -6,12 +6,11 @@
 //  Copyright © 2023 chminipark. All rights reserved.
 //
 
-import Foundation
 import NetworkStorageInterfaces
 
-public struct EmptyResponse: Responsable {}
+public struct EmptyResponse: Responsable, Equatable {}
 
-public struct DefaultResponse<R: Responsable>: Decodable {
+public struct DefaultResponse<R: Responsable>: Codable {
   public let isSuccess: Bool
   public let message: String
   public let response: R?

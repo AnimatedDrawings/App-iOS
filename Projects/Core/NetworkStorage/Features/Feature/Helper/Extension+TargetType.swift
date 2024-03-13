@@ -8,6 +8,7 @@
 
 import Foundation
 import NetworkStorageInterfaces
+import ADErrors
 
 extension TargetType {
   var baseURL: String { "https://miniiad.duckdns.org" }
@@ -16,14 +17,13 @@ extension TargetType {
     let url = try url()
     var urlRequest = URLRequest(url: url)
     
-    // httpBody
     var httpBody: Data?
     switch task {
     case .requestPlain:
       httpBody = nil
     case .requestJSONEncodable(let jsonObject):
       guard let body = try? JSONEncoder().encode(jsonObject) else {
-        throw NetworkError.requestJSONEncodable
+        throw URLRequestError.requestJSONEncodable
       }
       httpBody = body
     case .uploadMultipart(let imageData):
@@ -34,10 +34,8 @@ extension TargetType {
       urlRequest.httpBody = httpBody
     }
 
-    // httpMethod
     urlRequest.httpMethod = method.rawValue
     
-    // header
     switch task {
     case .requestJSONEncodable:
       urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -53,14 +51,14 @@ extension TargetType {
   public func url() throws -> URL {
     let urlComponenets = try makeURLComponents()
     guard let url = urlComponenets.url else {
-      throw NetworkError.makeURL
+      throw URLRequestError.makeURL
     }
     return url
   }
   
   func makeURLComponents() throws -> URLComponents {
     let fullPath = "\(baseURL)\(path)"
-    guard var urlComponents = URLComponents(string: fullPath) else { throw NetworkError.makeUrlComponent }
+    guard var urlComponents = URLComponents(string: fullPath) else { throw URLRequestError.makeUrlComponent }
     
     var urlQueryItems = [URLQueryItem]()
     if let queryParameters = queryParameters {

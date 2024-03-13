@@ -14,5 +14,3 @@ public protocol URLSessionable {
     delegate: (URLSessionTaskDelegate)?
   ) async throws -> (Data, URLResponse)
 }
-
-extension URLSession: URLSessionable {}

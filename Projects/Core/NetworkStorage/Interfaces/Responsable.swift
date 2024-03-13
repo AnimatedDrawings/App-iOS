@@ -8,4 +8,4 @@
 
 import Foundation
 
-public protocol Responsable: Decodable {}
+public protocol Responsable: Codable {}
