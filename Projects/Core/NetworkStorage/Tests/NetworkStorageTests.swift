@@ -23,7 +23,7 @@ final class NetworkStorageTests: XCTestCase {
     do {
       let response: MockResponse = try await networkStorage.request(.test)
     } catch let error {
-      if let error = error as? NetworkError,
+      if let error = error as? NetworkStorageError,
          error == .jsonDecode 
       {
         return
@@ -45,7 +45,7 @@ final class NetworkStorageTests: XCTestCase {
     do {
       let response: MockResponse = try await networkStorage.request(.test)
     } catch let error {
-      if let error = error as? NetworkError,
+      if let error = error as? NetworkStorageError,
          error == .server
       {
         return
@@ -87,7 +87,7 @@ final class NetworkStorageTests: XCTestCase {
     do {
       let response: MockResponse = try await networkStorage.request(.test)
     } catch let error {
-      if let error = error as? NetworkError,
+      if let error = error as? NetworkStorageError,
          error == .emptyResponse
       {
         return

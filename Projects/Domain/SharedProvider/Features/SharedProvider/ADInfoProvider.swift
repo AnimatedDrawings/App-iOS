@@ -1,5 +1,5 @@
 //
-//  ADInfo.swift
+//  ADInfoProvider.swift
 //  SharedProvider
 //
 //  Created by chminii on 2/6/24.
@@ -7,10 +7,9 @@
 //
 
 import Foundation
-import SharedStorage
 import ADComposableArchitecture
 
-public struct ADInfo {
+public struct ADInfoProvider {
   public var id: CombineNotifier<String?>
   
   public init(id: String? = nil) {
@@ -18,7 +17,7 @@ public struct ADInfo {
   }
 }
 
-extension ADInfo: DependencyKey {
-  public static var liveValue = ADInfo()
-  public static var testValue = ADInfo(id: "test")
+extension ADInfoProvider: DependencyKey {
+  public static var liveValue = ADInfoProvider()
+  public static var testValue = ADInfoProvider(id: "test")
 }

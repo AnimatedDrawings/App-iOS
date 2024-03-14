@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import NetworkStorage
 
 public extension CGRect {
   static func mockExample2BoundingBox() -> Self {

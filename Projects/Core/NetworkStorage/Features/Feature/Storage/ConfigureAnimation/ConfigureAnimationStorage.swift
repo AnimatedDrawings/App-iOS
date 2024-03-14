@@ -13,13 +13,11 @@ public class ConfigureAnimationStorage {
   
   public static let shared = ConfigureAnimationStorage()
   
-  @Sendable
   public func add(request: AddAnimationRequest) async throws -> EmptyResponse {
     let response: EmptyResponse = try await storage.request(.add(request))
     return response
   }
   
-  @Sendable
   public func download(request: DownloadAnimationRequest) async throws -> Data {
     let response: Data = try await storage.download(.download(request))
     return response

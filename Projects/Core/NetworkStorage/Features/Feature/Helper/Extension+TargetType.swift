@@ -23,7 +23,7 @@ extension TargetType {
       httpBody = nil
     case .requestJSONEncodable(let jsonObject):
       guard let body = try? JSONEncoder().encode(jsonObject) else {
-        throw URLRequestError.requestJSONEncodable
+        throw TargetTypeError.requestJSONEncodable
       }
       httpBody = body
     case .uploadMultipart(let imageData):
@@ -51,14 +51,14 @@ extension TargetType {
   public func url() throws -> URL {
     let urlComponenets = try makeURLComponents()
     guard let url = urlComponenets.url else {
-      throw URLRequestError.makeURL
+      throw TargetTypeError.makeURL
     }
     return url
   }
   
   func makeURLComponents() throws -> URLComponents {
     let fullPath = "\(baseURL)\(path)"
-    guard var urlComponents = URLComponents(string: fullPath) else { throw URLRequestError.makeUrlComponent }
+    guard var urlComponents = URLComponents(string: fullPath) else { throw TargetTypeError.makeUrlComponent }
     
     var urlQueryItems = [URLQueryItem]()
     if let queryParameters = queryParameters {

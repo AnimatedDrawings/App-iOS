@@ -1,5 +1,5 @@
 //
-//  ADViewState.swift
+//  ADViewProvider.swift
 //  SharedProvider
 //
 //  Created by chminii on 2/6/24.
@@ -7,11 +7,10 @@
 //
 
 import Foundation
-import SharedStorage
 import DomainModel
 import ADComposableArchitecture
 
-public struct ADViewState {
+public struct ADViewProvider {
   public var currentView: CombineNotifier<ADViewCase>
   
   public init(currentView: ADViewCase = .OnBoarding) {
@@ -19,14 +18,14 @@ public struct ADViewState {
   }
 }
 
-extension ADViewState: DependencyKey {
-  public static var liveValue = ADViewState()
-  public static var testValue = ADViewState()
+extension ADViewProvider: DependencyKey {
+  public static var liveValue = ADViewProvider()
+  public static var testValue = ADViewProvider()
 }
 
 public extension DependencyValues {
-  var adViewState: ADViewState {
-    get { self[ADViewState.self] }
-    set { self[ADViewState.self] = newValue }
+  var adViewState: ADViewProvider {
+    get { self[ADViewProvider.self] }
+    set { self[ADViewProvider.self] = newValue }
   }
 }

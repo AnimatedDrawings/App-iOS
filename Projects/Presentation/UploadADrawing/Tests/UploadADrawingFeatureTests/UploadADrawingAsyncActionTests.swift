@@ -60,7 +60,7 @@ final class UploadADrawingAsyncActionTests: XCTestCase {
       )
     )
     
-    guard let ad_id = await ADInfo.testValue.id.get() else {
+    guard let ad_id = await ADInfoProvider.testValue.id.get() else {
       XCTFail()
       return
     }

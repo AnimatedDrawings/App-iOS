@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import SharedStorage
 
 class SharedObservable<Output: Equatable>: ObservableObject {
   var value: Output {

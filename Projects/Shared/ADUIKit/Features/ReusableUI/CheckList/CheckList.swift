@@ -8,9 +8,6 @@
 
 import SwiftUI
 import ADResources
-//import SharedProvider
-//import DomainModel
-//import ADUIKitResources
 
 public struct CheckList<C: View>: View {
   let CheckListContent: C

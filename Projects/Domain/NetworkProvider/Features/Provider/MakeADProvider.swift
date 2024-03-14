@@ -10,8 +10,8 @@ import ADComposableArchitecture
 import NetworkStorage
 import UIKit
 import DomainModel
-import Shared
-import ADUIKitResources
+import ADUIKit
+import ADErrors
 
 public struct MakeADProvider {
   public var uploadDrawing: @Sendable (Data) async throws -> UploadDrawingResult
@@ -53,7 +53,7 @@ extension MakeADProvider: DependencyKey {
         )
       )
       guard let uiImage = UIImage(data: response) else {
-        throw DomainError.maskDataToImage
+        throw MakeADProviderError.maskDataToImage
       }
       return uiImage
     },
@@ -114,11 +114,4 @@ extension MakeADProvider: DependencyKey {
       logPrint()
     }
   )
-}
-
-public extension DependencyValues {
-  var makeADProvider: MakeADProvider {
-    get { self[MakeADProvider.self] }
-    set { self[MakeADProvider.self] = newValue }
-  }
 }

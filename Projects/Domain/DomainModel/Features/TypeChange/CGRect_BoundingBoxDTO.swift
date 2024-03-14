@@ -6,7 +6,7 @@
 //  Copyright © 2023 chminipark. All rights reserved.
 //
 
-import CoreModel
+import NetworkStorage
 import UIKit
 
 public extension BoundingBoxDTO {

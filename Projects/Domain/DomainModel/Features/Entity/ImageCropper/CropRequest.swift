@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import ADUIKitResources
+import ADResources
 
 public struct CropRequest {
   public let imageScale: CGFloat
@@ -24,7 +24,7 @@ public struct CropRequest {
 public extension CropRequest {
   static func mock() -> Self {
     let imageScale: CGFloat = 1
-    let example1: UIImage = ADUIKitResourcesAsset.SampleDrawing.step1Example1.image
+    let example1: UIImage = ADResourcesAsset.SampleDrawing.step1Example1.image
     let viewBoundingBox = CGRect(x: 10, y: 10, width: 100, height: 100)
     
     return Self(

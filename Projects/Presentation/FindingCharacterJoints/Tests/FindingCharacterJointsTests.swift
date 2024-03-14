@@ -118,7 +118,7 @@ final class FindingCharacterJointsTests: XCTestCase {
   
   func testOnDismissModifyJointsView() async {
     let testStepBarStorage = Shared.testValue.stepBar
-    let mockADViewState = ADViewState.testValue(currentView: .MakeAD)
+    let mockADViewState = ADViewProvider.testValue(currentView: .MakeAD)
     let state = FindingCharacterJointsFeature.State(
       isSuccessFindCharacterJoints: true
     )

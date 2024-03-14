@@ -18,7 +18,7 @@ public struct FindingTheCharacterFeature {
   public init() {}
 
   @Dependency(\.makeADProvider) var makeADProvider
-  @Dependency(ADInfo.self) var adInfo
+  @Dependency(ADInfoProvider.self) var adInfo
   @Dependency(StepProvider.self) var step
   
   public var body: some Reducer<State, Action> {

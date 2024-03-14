@@ -1,5 +1,5 @@
 //
-//  URLRequestError.swift
+//  TargetTypeError.swift
 //  ADErrors
 //
 //  Created by chminii on 3/13/24.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum URLRequestError: Error {
+public enum TargetTypeError: Error {
   case makeUrlComponent
   case makeURL
   case requestJSONEncodable

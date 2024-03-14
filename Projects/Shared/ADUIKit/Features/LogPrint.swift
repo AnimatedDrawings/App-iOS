@@ -1,8 +1,8 @@
 //
 //  LogPrint.swift
-//  Shared
+//  ADUIKit
 //
-//  Created by chminii on 1/31/24.
+//  Created by chminii on 3/14/24.
 //  Copyright © 2024 chminipark. All rights reserved.
 //
 

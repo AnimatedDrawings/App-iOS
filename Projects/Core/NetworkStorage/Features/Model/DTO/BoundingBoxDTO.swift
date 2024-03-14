@@ -51,20 +51,3 @@ public extension BoundingBoxDTO {
     return decoded
   }
 }
-
-
-/*
-{
-  "is_success": true,
-  "message": "",
-  "response": {
-    "ad_id": "78606170928442fa9c62dae49d5d903f_20240308105137",
-    "bounding_box": {
-      "bottom": 1386,
-      "left": 94,
-      "right": 852,
-      "top": 108
-    }
-  }
-}
-*/

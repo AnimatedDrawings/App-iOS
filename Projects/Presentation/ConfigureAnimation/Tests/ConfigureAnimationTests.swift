@@ -38,7 +38,7 @@ final class ConfigureAnimationTests: XCTestCase {
   }
   
   func testFixMakeAD() async {
-    let mockADViewState = ADViewState.testValue(currentView: .ConfigureAnimation)
+    let mockADViewState = ADViewProvider.testValue(currentView: .ConfigureAnimation)
     let store = TestStore(initialState: .init()) {
       ConfigureAnimationFeature()
     } withDependencies: {

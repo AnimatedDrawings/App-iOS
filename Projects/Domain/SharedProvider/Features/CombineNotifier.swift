@@ -1,9 +1,9 @@
 //
 //  CombineNotifier.swift
-//  Presentation_Shared
+//  SharedProvider
 //
-//  Created by minii on 2023/09/25.
-//  Copyright © 2023 chminipark. All rights reserved.
+//  Created by chminii on 3/13/24.
+//  Copyright © 2024 chminipark. All rights reserved.
 //
 
 import Combine
@@ -28,10 +28,8 @@ public actor CombineNotifier<Output: Equatable> {
     subject.value
   }
   
-  public func values() -> AsyncStream<Output> {
+  public func values(id: UUID = UUID()) -> AsyncStream<Output> {
     AsyncStream { continuation in
-      let id = UUID()
-      
       cancellables[id] = subject
         .removeDuplicates()
         .sink { _ in

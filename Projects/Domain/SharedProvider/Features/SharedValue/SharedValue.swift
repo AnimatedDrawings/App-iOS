@@ -9,7 +9,6 @@
 import ADComposableArchitecture
 import SwiftUI
 import Combine
-import SharedStorage
 
 @propertyWrapper
 public struct SharedValue<Output: Equatable>: DynamicProperty {

@@ -46,10 +46,3 @@ extension ConfigureAnimationProvider: DependencyKey {
     download: { _, _ in Data() }
   )
 }
-
-public extension DependencyValues {
-  var configureAnimationProvider: ConfigureAnimationProvider {
-    get { self[ConfigureAnimationProvider.self] }
-    set { self[ConfigureAnimationProvider.self] = newValue }
-  }
-}

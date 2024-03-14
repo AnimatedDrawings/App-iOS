@@ -8,8 +8,13 @@
 
 import SwiftUI
 
-// Use
-// UIScreen.current?.bounds.size
+/// Use
+/// UIScreen.current?.bounds.size
+public extension UIScreen {
+  static var current: UIScreen? {
+    UIWindow.current?.screen
+  }
+}
 
 public extension UIWindow {
   static var current: UIWindow? {
@@ -20,11 +25,5 @@ public extension UIWindow {
       }
     }
     return nil
-  }
-}
-
-public extension UIScreen {
-  static var current: UIScreen? {
-    UIWindow.current?.screen
   }
 }

@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import ADUIKitResources
+import ADResources
 
 public struct CompressedInfo: Equatable {
   public let data: Data
@@ -23,7 +23,7 @@ public struct CompressedInfo: Equatable {
 
 public extension CompressedInfo {
   static func mock() -> Self {
-    let mockImage = ADUIKitResourcesAsset.SampleDrawing.step1Example2.image
+    let mockImage = ADResourcesAsset.SampleDrawing.step1Example2.image
     let mockData = mockImage.pngData() ?? Data()
     
     return Self(data: mockData, image: mockImage, original: mockImage)

@@ -16,7 +16,6 @@ let project: Project = .makeProject(
       product: .staticLibrary,
       dependencies: [
         LocalFileStorage.projectDepedency,
-        SharedStorage.projectDepedency,
         NetworkStorage.projectDepedency
       ]
     )
