@@ -37,15 +37,15 @@ final class UploadADrawingAsyncActionTests: XCTestCase {
     await store.receive(
       .async(
         .uploadDrawingResponse(
-          TaskResult<UploadDrawingResult>
-            .success(UploadDrawingResult.example1Mock())
+          TaskResult<UploadADrawingResult>
+            .success(UploadADrawingResult.example1Mock())
         )
       )
     )
   }
   
   func testUploadDrawingResponseSuccess() async {
-    let mockResponse = UploadDrawingResult.example1Mock()
+    let mockResponse = UploadADrawingResult.example1Mock()
     let mockUploadADrawingResult = UploadADrawingResult(
       originalImage: UIImage(),
       boundingBox: mockResponse.boundingBox

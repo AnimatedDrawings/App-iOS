@@ -11,5 +11,7 @@ import ProjectEnvironment
 let project: Project = .makeProject(
   name: SharedProvider.projectName,
   options: .enableCodeCoverage,
-  targets: SharedProvider.uFeatureTargets(dependencies: [DomainModel.projectDepedency])
+  targets: SharedProvider.uFeatureTargets(
+    dependencies: [DomainModels.projectDepedency]
+  )
 )

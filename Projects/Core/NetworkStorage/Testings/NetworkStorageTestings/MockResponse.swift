@@ -6,8 +6,8 @@
 //  Copyright © 2024 chminipark. All rights reserved.
 //
 
-import NetworkStorageInterfaces
+import Foundation
 
-public struct MockResponse: Responsable, Equatable {
+public struct MockResponse: Codable, Equatable {
   public init() {}
 }

@@ -10,9 +10,8 @@ import ProjectEnvironment
 
 let project: Project = .makeProject(
   name: NetworkProvider.projectName,
-  targets: [
-    NetworkProvider.features(
-      dependencies: [DomainModel.projectDepedency]
-    )
-  ]
+  options: .enableCodeCoverage,
+  targets: NetworkProvider.uFeatureTargets(
+    dependencies: [DomainModels.projectDepedency]
+  )
 )

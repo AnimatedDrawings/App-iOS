@@ -12,7 +12,7 @@ let project: Project = .makeProject(
   name: LocalFileProvider.projectName,
   targets: [
     LocalFileProvider.features(
-      dependencies: [DomainModel.projectDepedency]
+      dependencies: [DomainModels.projectDepedency]
     )
   ]
 )

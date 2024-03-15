@@ -12,6 +12,6 @@ let project: Project = .makeProject(
   name: ImageTools.projectName,
   options: .enableCodeCoverage,
   targets: ImageTools.uFeatureTargets(
-    dependencies: [DomainModel.projectDepedency]
+    dependencies: [DomainModels.projectDepedency]
   )
 )

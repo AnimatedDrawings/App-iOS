@@ -14,7 +14,7 @@ import NetworkStorage
 public extension UploadADrawingFeature {
   enum AsyncActions: Equatable {
     case uploadDrawing(Data?)
-    case uploadDrawingResponse(TaskResult<UploadDrawingResult>)
+    case uploadDrawingResponse(TaskResult<UploadADrawingResult>)
   }
   
   func AsyncReducer() -> some Reducer<State, Action> {
