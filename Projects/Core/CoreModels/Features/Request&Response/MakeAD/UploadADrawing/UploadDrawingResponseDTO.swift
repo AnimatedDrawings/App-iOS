@@ -1,5 +1,5 @@
 //
-//  UploadADrawingResposne.swift
+//  UploadDrawingResponseDTO.swift
 //  AD_Feature
 //
 //  Created by minii on 2023/07/27.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct UploadADrawingResponse: Codable {
+public struct UploadDrawingResponseDTO: Codable {
   public let ad_id: String
   public let boundingBoxDTO: BoundingBoxDTO
   

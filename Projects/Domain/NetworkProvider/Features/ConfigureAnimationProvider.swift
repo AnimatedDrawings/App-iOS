@@ -9,7 +9,7 @@
 import ADComposableArchitecture
 import NetworkStorage
 import UIKit
-import DomainModel
+import DomainModels
 
 public struct ConfigureAnimationProvider {
   public var add: @Sendable (String, ADAnimation) async throws -> ()

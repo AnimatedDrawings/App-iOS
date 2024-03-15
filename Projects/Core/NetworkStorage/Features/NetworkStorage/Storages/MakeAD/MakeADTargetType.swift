@@ -11,7 +11,7 @@ import NetworkStorageInterfaces
 import CoreModels
 
 enum MakeADTargetType {
-  case uploadDrawing(UploadADrawingRequest)
+  case uploadDrawing(UploadDrawingRequest)
   
   case findTheCharacter(FindTheCharacterRequest)
   case downloadMaskImage(DownloadMaskImageRequest)

@@ -7,21 +7,30 @@
 //
 
 import ADComposableArchitecture
-import NetworkStorage
-import UIKit
-import DomainModel
-import ADUIKit
-import ADErrors
+import NetworkProviderInterfaces
 
-
-
-public struct MakeADProvider {
-  public var uploadDrawing: @Sendable (Data) async throws -> UploadADrawingResult
-  public var findTheCharacter: @Sendable (String, CGRect) async throws -> ()
-  public var downloadMaskImage: @Sendable (String) async throws -> (UIImage)
-  public var separateCharacter: @Sendable (String, Data) async throws -> (Joints)
-  public var findCharacterJoints: @Sendable (String, Joints) async throws -> ()
+public enum MakeADProvider: DependencyKey {
+  public static let liveValue: any MakeADProviderProtocol = MakeADProviderImpl()
+  public static let testValue: any MakeADProviderProtocol = TestMakeADProviderImpl()
 }
+
+
+//import ADComposableArchitecture
+//import NetworkStorage
+//import UIKit
+//import DomainModel
+//import ADUIKit
+//import ADErrors
+//
+//
+//
+//public struct MakeADProvider {
+//  public var uploadDrawing: @Sendable (Data) async throws -> UploadADrawingResult
+//  public var findTheCharacter: @Sendable (String, CGRect) async throws -> ()
+//  public var downloadMaskImage: @Sendable (String) async throws -> (UIImage)
+//  public var separateCharacter: @Sendable (String, Data) async throws -> (Joints)
+//  public var findCharacterJoints: @Sendable (String, Joints) async throws -> ()
+//}
 //
 //extension MakeADProvider: DependencyKey {
 ////  private static let storage = MakeADStorage.shared

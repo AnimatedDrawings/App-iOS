@@ -37,7 +37,7 @@ public struct BoundingBoxDTO: Codable, Equatable {
 }
 
 public extension BoundingBoxDTO {
-  static func mock() -> Self {
+  static func mockExample2() -> Self {
     let data = """
         {
           "bottom": 1386,

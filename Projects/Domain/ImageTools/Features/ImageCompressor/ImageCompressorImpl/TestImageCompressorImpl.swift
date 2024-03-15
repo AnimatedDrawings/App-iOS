@@ -7,7 +7,7 @@
 //
 
 import ImageToolsInterfaces
-import DomainModel
+import DomainModels
 import UIKit
 
 public struct TestImageCompressorImpl: ImageCompressorProtocol {

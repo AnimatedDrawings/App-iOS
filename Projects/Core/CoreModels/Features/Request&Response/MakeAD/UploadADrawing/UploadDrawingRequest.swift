@@ -1,5 +1,5 @@
 //
-//  UploadADrawingRequest.swift
+//  UploadDrawingRequest.swift
 //  AD_Feature
 //
 //  Created by minii on 2023/07/30.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct UploadADrawingRequest {
+public struct UploadDrawingRequest {
   public let convertedPNG: Data
   
   public init(convertedPNG: Data) {

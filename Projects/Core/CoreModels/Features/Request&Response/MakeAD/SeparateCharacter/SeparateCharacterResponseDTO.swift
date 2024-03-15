@@ -1,5 +1,5 @@
 //
-//  SeparateCharacterReponse.swift
+//  SeparateCharacterResponseDTO.swift
 //  AD_Feature
 //
 //  Created by minii on 2023/07/30.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct SeparateCharacterReponse: Codable {
+public struct SeparateCharacterResponseDTO: Codable {
   public let jointsDTO: JointsDTO
   
   public init(jointsDTO: JointsDTO) {

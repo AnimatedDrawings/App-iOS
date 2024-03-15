@@ -45,20 +45,13 @@ public struct SkeletonDTO: Codable, Equatable {
 }
 
 extension JointsDTO {
-  public static func mockJointsDTO() -> JointsDTO? {
-    do {
-      guard let jsonData = makeMockData() else {
-        return nil
-      }
-      let jointsModel = try JSONDecoder().decode(JointsDTO.self, from: jsonData)
-      return jointsModel
-    } catch let error {
-      print("JointsDTO.mockJointsDTO Error : \(error)")
-      return nil
-    }
+  public static func example2Mock() -> JointsDTO {
+    let data = mockData()
+    let dto = try! JSONDecoder().decode(Self.self, from: data)
+    return dto
   }
 
-  private static func makeMockData() -> Data? {
+  private static func mockData() -> Data {
     return """
     {
       "height": 614,
@@ -194,7 +187,7 @@ extension JointsDTO {
       ],
       "width": 498
     }
-    """.data(using: .utf8)
+    """.data(using: .utf8)!
   }
 }
 

@@ -15,8 +15,8 @@ public class MakeADStorage: MakeADStorageProtocol {
   
   public init() {}
 
-  public func uploadDrawing(request: UploadADrawingRequest) async throws -> UploadADrawingResponse {
-    let response: UploadADrawingResponse = try await storage.request(.uploadDrawing(request))
+  public func uploadDrawing(request: UploadDrawingRequest) async throws -> UploadDrawingResponseDTO {
+    let response: UploadDrawingResponseDTO = try await storage.request(.uploadDrawing(request))
     return response
   }
   
@@ -30,8 +30,8 @@ public class MakeADStorage: MakeADStorageProtocol {
     return response
   }
   
-  public func separateCharacter(request: SeparateCharacterRequest) async throws -> SeparateCharacterReponse {
-    let response: SeparateCharacterReponse = try await storage.request(.separateCharacter(request))
+  public func separateCharacter(request: SeparateCharacterRequest) async throws -> SeparateCharacterResponseDTO {
+    let response: SeparateCharacterResponseDTO = try await storage.request(.separateCharacter(request))
     return response
   }
   

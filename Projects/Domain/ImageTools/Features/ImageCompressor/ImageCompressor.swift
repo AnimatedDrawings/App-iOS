@@ -1,5 +1,5 @@
 //
-//  DependencyKey+ImageCompressor.swift
+//  ImageCompressor.swift
 //  ImageTools
 //
 //  Created by chminii on 3/10/24.
