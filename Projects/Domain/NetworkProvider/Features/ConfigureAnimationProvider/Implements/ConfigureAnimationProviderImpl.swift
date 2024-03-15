@@ -21,7 +21,7 @@ public final class ConfigureAnimationProviderImpl: ConfigureAnimationProviderPro
   
   public func add(ad_id: String, animation: ADAnimation) async throws {
     let request = AddAnimationRequest(ad_id: ad_id, adAnimationDTO: animation.toDTO())
-    let response = try await storage.add(request: request)
+    let _ = try await storage.add(request: request)
   }
   
   public func download(ad_id: String, animation: ADAnimation) async throws -> (DownloadAnimationResponse) {

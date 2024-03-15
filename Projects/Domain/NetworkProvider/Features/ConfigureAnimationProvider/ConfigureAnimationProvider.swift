@@ -7,6 +7,7 @@
 //
 
 import ADComposableArchitecture
+import NetworkProviderInterfaces
 
 public enum ConfigureAnimationProvider: DependencyKey {
   public static let liveValue: any ConfigureAnimationProviderProtocol = ConfigureAnimationProviderImpl()
