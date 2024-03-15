@@ -10,9 +10,8 @@ import ProjectEnvironment
 
 let project: Project = .makeProject(
   name: LocalFileProvider.projectName,
-  targets: [
-    LocalFileProvider.features(
-      dependencies: [DomainModels.projectDepedency]
-    )
-  ]
+  options: .enableCodeCoverage,
+  targets: LocalFileProvider.uFeatureTargets(
+    dependencies: [DomainModels.projectDepedency]
+  )
 )

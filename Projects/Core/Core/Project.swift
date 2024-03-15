@@ -15,7 +15,6 @@ let project: Project = .makeProject(
       name: Core.featureName,
       product: .staticLibrary,
       dependencies: [
-        LocalFileStorage.projectDepedency,
         NetworkStorage.projectDepedency
       ]
     )
