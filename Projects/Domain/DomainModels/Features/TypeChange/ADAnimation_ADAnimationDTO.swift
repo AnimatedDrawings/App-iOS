@@ -8,8 +8,8 @@
 
 import NetworkStorage
 
-public extension ADAnimation {
-  func toDTO() -> ADAnimationDTO {
-    ADAnimationDTO(name: self.rawValue)
-  }
-}
+//public extension ADAnimation {
+//  func toDTO() -> ADAnimationDTO {
+//    ADAnimationDTO(name: self.rawValue)
+//  }
+//}

@@ -10,8 +10,8 @@ import DomainModels
 import NetworkStorage
 import NetworkStorageInterfaces
 import NetworkProviderInterfaces
-import UIKit
 import ADErrors
+import UIKit
 
 final public class MakeADProviderImpl: MakeADProviderProtocol {
   let storage: MakeADStorageProtocol
@@ -37,14 +37,14 @@ final public class MakeADProviderImpl: MakeADProviderProtocol {
   public func downloadMaskImage(ad_id: String) async throws -> DownloadMaskImageResponse {
     let request = DownloadMaskImageRequest(ad_id: ad_id)
     let response = try await storage.downloadMaskImage(request: request)
-    guard let image = UIImage(data: response) else {
+    guard let image = UIImage(data: response.image) else {
       throw MakeADProviderError.maskDataToImage
     }
     
     return DownloadMaskImageResponse(image: image)
   }
   
-  public func separateCharacter(ad_id: String,maskedImage: Data) async throws -> SeparateCharacterResponse {
+  public func separateCharacter(ad_id: String, maskedImage: Data) async throws -> SeparateCharacterResponse {
     let request = SeparateCharacterRequest(ad_id: ad_id, maskedImageData: maskedImage)
     let response = try await storage.separateCharacter(request: request)
     let joints = Joints(dto: response.jointsDTO)
@@ -52,7 +52,7 @@ final public class MakeADProviderImpl: MakeADProviderProtocol {
     return SeparateCharacterResponse(joints: joints)
   }
   
-  public func findCharacterJoints(ad_id: String,joints: Joints) async throws {
+  public func findCharacterJoints(ad_id: String, joints: Joints) async throws {
     let request = FindCharacterJointsRequest(ad_id: ad_id, jointsDTO: joints.toDTO())
     let response = try await storage.findCharacterJoints(request: request)
   }

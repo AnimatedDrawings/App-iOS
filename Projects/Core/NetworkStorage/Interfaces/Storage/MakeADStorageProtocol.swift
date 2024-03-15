@@ -12,7 +12,7 @@ import CoreModels
 public protocol MakeADStorageProtocol {
   func uploadDrawing(request: UploadDrawingRequest) async throws -> UploadDrawingResponseDTO
   func findTheCharacter(request: FindTheCharacterRequest) async throws -> EmptyResponse
-  func downloadMaskImage(request: DownloadMaskImageRequest) async throws -> Data
+  func downloadMaskImage(request: DownloadMaskImageRequest) async throws -> DownloadMaskImageResponseDTO
   func separateCharacter(request: SeparateCharacterRequest) async throws -> SeparateCharacterResponseDTO
   func findCharacterJoints(request: FindCharacterJointsRequest) async throws -> EmptyResponse
 }

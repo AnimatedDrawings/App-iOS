@@ -9,17 +9,11 @@
 import NetworkProviderInterfaces
 import NetworkStorageInterfaces
 import NetworkStorage
-import UIKit
 import DomainModels
 import ADResources
+import Foundation
 
 final public class TestMakeADProviderImpl: MakeADProviderProtocol {
-  let storage: MakeADStorageProtocol
-  
-  public init(storage: MakeADStorageProtocol = MakeADStorage()) {
-    self.storage = storage
-  }
-  
   public func uploadDrawing(image: Data) async throws -> UploadDrawingResponse {
     return .init(
       ad_id: "example2",
@@ -34,7 +28,7 @@ final public class TestMakeADProviderImpl: MakeADProviderProtocol {
     return .init(image: image)
   }
   
-  public func separateCharacter(ad_id: String,maskedImage: Data) async throws -> SeparateCharacterResponse {
+  public func separateCharacter(ad_id: String, maskedImage: Data) async throws -> SeparateCharacterResponse {
     return .init(joints: Joints.mockExample2())
   }
   

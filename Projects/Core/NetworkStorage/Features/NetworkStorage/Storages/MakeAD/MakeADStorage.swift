@@ -25,9 +25,9 @@ public class MakeADStorage: MakeADStorageProtocol {
     return response
   }
   
-  public func downloadMaskImage(request: DownloadMaskImageRequest) async throws -> Data {
+  public func downloadMaskImage(request: DownloadMaskImageRequest) async throws -> DownloadMaskImageResponseDTO {
     let response: Data = try await storage.download(.downloadMaskImage(request))
-    return response
+    return .init(image: response)
   }
   
   public func separateCharacter(request: SeparateCharacterRequest) async throws -> SeparateCharacterResponseDTO {
