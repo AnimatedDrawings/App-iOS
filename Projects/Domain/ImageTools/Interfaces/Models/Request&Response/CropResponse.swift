@@ -1,13 +1,14 @@
 //
 //  CropResponse.swift
-//  ImageCompressor
+//  ImageToolsInterfaces
 //
-//  Created by chminii on 3/5/24.
+//  Created by chminii on 3/16/24.
 //  Copyright © 2024 chminipark. All rights reserved.
 //
 
 import UIKit
 import ADResources
+import DomainModels
 
 public struct CropResponse: Equatable {
   public let image: UIImage

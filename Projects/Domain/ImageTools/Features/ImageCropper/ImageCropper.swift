@@ -6,9 +6,9 @@
 //  Copyright © 2024 chminipark. All rights reserved.
 //
 
-import DomainModels
 import UIKit
 import ADComposableArchitecture
+import ImageToolsInterfaces
 
 public struct ImageCropper {
   public var crop: @Sendable (CropRequest) throws -> CropResponse

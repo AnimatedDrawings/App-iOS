@@ -8,8 +8,8 @@
 
 import XCTest
 @testable import ImageTools
-import ADUIKitResources
-import DomainModel
+import ADResources
+import DomainModels
 import ImageToolsTestings
 
 final class ImageCompressorImplTests: XCTestCase {
@@ -17,7 +17,7 @@ final class ImageCompressorImplTests: XCTestCase {
   var imageCompressorImpl: ImageCompressorImpl!
   
   override func setUp() async throws {
-    example2 = ADUIKitResourcesAsset.SampleDrawing.step1Example2.image
+    example2 = ADResourcesAsset.TestImages.example2.image
     imageCompressorImpl = ImageCompressorImpl()
   }
   

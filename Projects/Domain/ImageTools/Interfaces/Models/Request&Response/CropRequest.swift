@@ -1,8 +1,8 @@
 //
 //  CropRequest.swift
-//  ImageCompressor
+//  ImageToolsInterfaces
 //
-//  Created by chminii on 3/5/24.
+//  Created by chminii on 3/16/24.
 //  Copyright © 2024 chminipark. All rights reserved.
 //
 
@@ -24,13 +24,13 @@ public struct CropRequest {
 public extension CropRequest {
   static func mock() -> Self {
     let imageScale: CGFloat = 1
-    let example1: UIImage = ADResourcesAsset.SampleDrawing.step1Example1.image
-    let viewBoundingBox = CGRect(x: 10, y: 10, width: 100, height: 100)
+    let viewBoundingBox: CGRect = .init(x: 1, y: 1, width: 100, height: 100)
+    let originalImage: UIImage = ADResourcesAsset.TestImages.example2.image
     
     return Self(
       imageScale: imageScale,
       viewBoundingBox: viewBoundingBox,
-      originalImage: example1
+      originalImage: originalImage
     )
   }
 }

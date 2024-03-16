@@ -8,8 +8,9 @@
 
 import XCTest
 @testable import ImageTools
-import DomainModel
+import DomainModels
 import ImageToolsTestings
+import ImageToolsInterfaces
 
 final class ImageCropperTests: XCTestCase {
   var imageCropper: ImageCropper!
@@ -33,28 +34,24 @@ final class ImageCropperTests: XCTestCase {
       size: cropCGSize
     )
     
-    guard let cropResult = try? imageCropper.crop(cropRequest) else {
+    guard let cropResponse = try? imageCropper.crop(cropRequest) else {
       XCTFail()
       return
     }
     
-    XCTAssertEqual(cropResult.boundingBox, mockBoundingBox)
-    XCTAssertEqual(cropResult.image.size.trunc(), cropCGSize.trunc())
+    XCTAssertEqual(cropResponse.boundingBox, mockBoundingBox)
+    XCTAssertEqual(cropResponse.image.size.trunc(), cropCGSize.trunc())
   }
   
   func testTestCrop() {
     imageCropper = .testValue
-    let cropRequest = CropRequest.mock()
-    let mockCropResult = CropResult(
-      image: cropRequest.originalImage,
-      boundingBox: cropRequest.viewBoundingBox
-    )
     
-    guard let cropResult = try? imageCropper.crop(cropRequest) else {
+    let mockCropResponse: CropResponse = .mock()
+    guard let cropResponse = try? imageCropper.crop(.mock()) else {
       XCTFail()
       return
     }
     
-    XCTAssertEqual(cropResult, mockCropResult)
+    XCTAssertEqual(cropResponse, mockCropResponse)
   }
 }
