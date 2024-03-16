@@ -6,7 +6,7 @@
 //  Copyright © 2024 chminipark. All rights reserved.
 //
 
-import Foundation
+import DomainModels
 
 public struct UploadDrawingResponse: Equatable {
   public let ad_id: String

@@ -9,7 +9,6 @@
 import XCTest
 @testable import UploadDrawingFeatures
 import ADComposableArchitecture
-import DomainModels
 
 final class UploadDrawingInnerActionTests: XCTestCase {
   var store: TestStoreOf<UploadDrawingFeature>!

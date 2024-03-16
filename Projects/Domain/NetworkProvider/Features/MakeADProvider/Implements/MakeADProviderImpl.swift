@@ -8,8 +8,8 @@
 
 import DomainModels
 import NetworkStorage
-import NetworkStorageInterfaces
 import NetworkProviderInterfaces
+import CoreModels
 import ADErrors
 import UIKit
 
@@ -31,7 +31,7 @@ final public class MakeADProviderImpl: MakeADProviderProtocol {
   
   public func findTheCharacter(ad_id: String, boundingBox: BoundingBox) async throws {
     let request = FindTheCharacterRequest(ad_id: ad_id, boundingBoxDTO: boundingBox.toDTO())
-    let response = try await storage.findTheCharacter(request: request)
+    let _ = try await storage.findTheCharacter(request: request)
   }
   
   public func downloadMaskImage(ad_id: String) async throws -> DownloadMaskImageResponse {
@@ -54,7 +54,7 @@ final public class MakeADProviderImpl: MakeADProviderProtocol {
   
   public func findCharacterJoints(ad_id: String, joints: Joints) async throws {
     let request = FindCharacterJointsRequest(ad_id: ad_id, jointsDTO: joints.toDTO())
-    let response = try await storage.findCharacterJoints(request: request)
+    let _ = try await storage.findCharacterJoints(request: request)
   }
   
 }

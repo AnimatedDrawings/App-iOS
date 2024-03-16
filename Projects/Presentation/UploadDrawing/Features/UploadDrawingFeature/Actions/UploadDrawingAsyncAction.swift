@@ -7,10 +7,10 @@
 //
 
 import ADComposableArchitecture
-import UIKit
-import DomainModels
-import NetworkStorage
 import ADErrors
+import NetworkProviderInterfaces
+import UploadDrawingInterfaces
+import Foundation
 
 public extension UploadDrawingFeature {
   enum AsyncActions: Equatable {

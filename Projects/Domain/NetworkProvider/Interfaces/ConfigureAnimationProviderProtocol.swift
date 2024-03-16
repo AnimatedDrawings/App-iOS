@@ -8,6 +8,7 @@
 
 import Foundation
 import DomainModels
+import NetworkStorageInterfaces
 
 public protocol ConfigureAnimationProviderProtocol {
   func add(ad_id: String, animation: ADAnimation) async throws -> Void

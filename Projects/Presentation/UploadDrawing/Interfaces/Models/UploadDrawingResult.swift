@@ -1,6 +1,6 @@
 //
 //  UploadDrawingResult.swift
-//  UploadDrawingFeatures
+//  UploadDrawingInterfaces
 //
 //  Created by chminii on 3/16/24.
 //  Copyright © 2024 chminipark. All rights reserved.
@@ -18,4 +18,3 @@ public struct UploadDrawingResult: Equatable {
     self.boundingBox = boundingBox
   }
 }
-

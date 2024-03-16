@@ -9,7 +9,6 @@
 import Foundation
 import NetworkProviderInterfaces
 import DomainModels
-import NetworkStorageInterfaces
 import NetworkStorage
 
 public final class ConfigureAnimationProviderImpl: ConfigureAnimationProviderProtocol {
@@ -20,19 +19,13 @@ public final class ConfigureAnimationProviderImpl: ConfigureAnimationProviderPro
   }
   
   public func add(ad_id: String, animation: ADAnimation) async throws {
-    let request = AddAnimationRequest(ad_id: ad_id, adAnimationDTO: animation.toDTO())
+    let request = AddAnimationRequest(ad_id: ad_id, animationInfo: .init(name: animation.rawValue))
     let _ = try await storage.add(request: request)
   }
   
   public func download(ad_id: String, animation: ADAnimation) async throws -> (DownloadAnimationResponse) {
-    let request = DownloadAnimationRequest(ad_id: ad_id, adAnimationDTO: animation.toDTO())
+    let request = DownloadAnimationRequest(ad_id: ad_id, animationInfo: .init(name: animation.rawValue))
     let response = try await storage.download(request: request)
     return .init(animation: response.animation)
-  }
-}
-
-extension ADAnimation {
-  func toDTO() -> ADAnimationDTO {
-    return .init(name: self.rawValue)
   }
 }

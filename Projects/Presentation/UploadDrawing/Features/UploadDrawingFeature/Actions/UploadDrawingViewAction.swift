@@ -7,8 +7,8 @@
 //
 
 import ADComposableArchitecture
-import UIKit
 import ADAsyncAlgorithms
+import Foundation
 
 public extension UploadDrawingFeature {
   @CasePathable

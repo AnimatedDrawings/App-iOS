@@ -8,8 +8,8 @@
 
 import Foundation
 import NetworkStorageInterfaces
-import DomainModels
 import ADResources
+import CoreModels
 
 public final class MockMakeADStorage: MakeADStorageProtocol {
   var downloadMaskImage: Data

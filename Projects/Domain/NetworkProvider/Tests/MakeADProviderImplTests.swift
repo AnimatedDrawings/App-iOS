@@ -11,9 +11,10 @@ import XCTest
 import NetworkStorage
 import ADComposableArchitecture
 import NetworkProviderTestings
-import DomainModels
 import ADErrors
 import ADResources
+import DomainModels
+import CoreModels
 
 final class MakeADProviderImplTests: XCTestCase {
   var makeADProviderImpl: MakeADProviderImpl!

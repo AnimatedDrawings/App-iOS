@@ -7,8 +7,7 @@
 //
 
 import ADComposableArchitecture
-import UIKit
-import DomainModels
+import UploadDrawingInterfaces
 
 public extension UploadDrawingFeature {
   enum DelegateActions: Equatable {

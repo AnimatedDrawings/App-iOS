@@ -7,7 +7,6 @@
 //
 
 import ADComposableArchitecture
-import DomainModels
 
 public extension UploadDrawingFeature {
   enum InnerActions: Equatable {

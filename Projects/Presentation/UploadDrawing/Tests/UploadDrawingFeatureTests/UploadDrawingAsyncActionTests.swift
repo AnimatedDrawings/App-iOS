@@ -9,12 +9,11 @@
 import XCTest
 @testable import UploadDrawingFeatures
 import ADComposableArchitecture
-import ADResources
-import DomainModels
-import NetworkStorage
-import SharedProvider
-import ImageTools
 import ADErrors
+import ImageToolsInterfaces
+import NetworkProviderInterfaces
+import UploadDrawingInterfaces
+import SharedProvider
 
 final class UploadDrawingAsyncActionTests: XCTestCase {
   var store: TestStoreOf<UploadDrawingFeature>!
@@ -27,10 +26,10 @@ final class UploadDrawingAsyncActionTests: XCTestCase {
   }
   
   func testUploadDrawing() async {
-    let compressedInfo = CompressedInfo.mock()
+    let compressResponse = CompressResponse.mock()
     
-    await store.send(.async(.uploadDrawing(compressedInfo.data))) {
-      $0.originalImage = compressedInfo.original
+    await store.send(.async(.uploadDrawing(compressResponse.data))) {
+      $0.originalImage = compressResponse.original
     }
     
     store.exhaustivity = .off
