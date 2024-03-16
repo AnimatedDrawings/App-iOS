@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreModels
 
 public struct SeparateCharacterResponseDTO: Codable {
   public let jointsDTO: JointsDTO

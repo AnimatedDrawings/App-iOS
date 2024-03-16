@@ -43,9 +43,9 @@ extension ConfigureAnimationTargetType: TargetType {
   var task: NetworkTask {
     switch self {
     case .add(let request):
-      return .requestJSONEncodable(request.adAnimationDTO)
+      return .requestJSONEncodable(request.animationInfo)
     case .download(let request):
-      return .requestJSONEncodable(request.adAnimationDTO)
+      return .requestJSONEncodable(request.animationInfo)
     }
   }
 }

@@ -10,10 +10,10 @@ import Foundation
 
 public struct AddAnimationRequest {
   public let ad_id: String
-  public let adAnimationDTO: ADAnimationDTO
+  public let animationInfo: ADAnimationRequestInfo
   
-  public init(ad_id: String, adAnimationDTO: ADAnimationDTO) {
+  public init(ad_id: String, animationInfo: ADAnimationRequestInfo) {
     self.ad_id = ad_id
-    self.adAnimationDTO = adAnimationDTO
+    self.animationInfo = animationInfo
   }
 }
