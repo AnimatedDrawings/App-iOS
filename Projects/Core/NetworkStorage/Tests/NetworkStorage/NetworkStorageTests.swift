@@ -11,6 +11,7 @@ import XCTest
 import NetworkStorageTestings
 import ADErrors
 import CoreModels
+import NetworkStorageInterfaces
 
 final class NetworkStorageTests: XCTestCase {
   var networkStorage: NetworkStorage<MockStorageTargetType>!
@@ -22,7 +23,7 @@ final class NetworkStorageTests: XCTestCase {
   
   func testRequestThrowJsonDecode() async {
     do {
-      let response: MockResponse = try await networkStorage.request(.test)
+      let _: MockResponse = try await networkStorage.request(.test)
     } catch let error {
       if let error = error as? NetworkStorageError,
          error == .jsonDecode 
@@ -36,7 +37,8 @@ final class NetworkStorageTests: XCTestCase {
   
   func testRequestThrowServer() async {
     let mockResponse = MockResponse()
-    guard let responseJsonData = defaultResponseToJsonData(isSuccess: false, response: mockResponse) else {
+    let defaultResponse = DefaultResponse(isSuccess: false, message: "", response: mockResponse)
+    guard let responseJsonData = defaultResponse.toJsonData() else {
       XCTFail()
       return
     }
@@ -44,7 +46,7 @@ final class NetworkStorageTests: XCTestCase {
     networkStorage = NetworkStorage(session: mockURLSession)
     
     do {
-      let response: MockResponse = try await networkStorage.request(.test)
+      let _: MockResponse = try await networkStorage.request(.test)
     } catch let error {
       if let error = error as? NetworkStorageError,
          error == .server
@@ -58,7 +60,8 @@ final class NetworkStorageTests: XCTestCase {
   
   func testRequestReturnEmptyResponse() async {
     let mockResponse = EmptyResponse()
-    guard let responseJsonData = defaultResponseToJsonData(response: mockResponse) else {
+    let defaultResponse = DefaultResponse(isSuccess: true, message: "", response: mockResponse)
+    guard let responseJsonData = defaultResponse.toJsonData() else {
       XCTFail()
       return
     }
@@ -78,7 +81,8 @@ final class NetworkStorageTests: XCTestCase {
   
   func testRequestThrowEmptyResponse() async {
     let mockResponse: MockResponse? = nil
-    guard let responseJsonData = defaultResponseToJsonData(response: mockResponse) else {
+    let defaultResponse = DefaultResponse(isSuccess: true, message: "", response: mockResponse)
+    guard let responseJsonData = defaultResponse.toJsonData() else {
       XCTFail()
       return
     }
@@ -86,7 +90,7 @@ final class NetworkStorageTests: XCTestCase {
     networkStorage = NetworkStorage(session: mockURLSession)
     
     do {
-      let response: MockResponse = try await networkStorage.request(.test)
+      let _: MockResponse = try await networkStorage.request(.test)
     } catch let error {
       if let error = error as? NetworkStorageError,
          error == .emptyResponse
@@ -100,7 +104,8 @@ final class NetworkStorageTests: XCTestCase {
   
   func testRequestReturnActualResponse() async {
     let mockResponse = MockResponse()
-    guard let responseJsonData = defaultResponseToJsonData(response: mockResponse) else {
+    let defaultResponse = DefaultResponse(isSuccess: true, message: "", response: mockResponse)
+    guard let responseJsonData = defaultResponse.toJsonData() else {
       XCTFail()
       return
     }
@@ -128,22 +133,5 @@ final class NetworkStorageTests: XCTestCase {
     }
     
     XCTAssertEqual(responseData, Data())
-  }
-}
-
-extension NetworkStorageTests {
-  func defaultResponseToJsonData<R: Codable>(
-    isSuccess: Bool = true,
-    message: String = "message",
-    response: R?
-  ) -> Data?
-  {
-    let defaultResponse = DefaultResponse(
-      isSuccess: isSuccess,
-      message: message,
-      response: response
-    )
-    
-    return try? JSONEncoder().encode(defaultResponse)
   }
 }

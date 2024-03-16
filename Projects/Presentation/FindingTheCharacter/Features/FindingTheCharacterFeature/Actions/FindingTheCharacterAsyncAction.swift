@@ -12,7 +12,7 @@ import UIKit
 
 public extension FindingTheCharacterFeature {
   enum AsyncActions: Equatable {
-    case findTheCharacter(CropResponse)
+    case findTheCharacter(CropImage)
     case findTheCharacterResponse(TaskEmptyResult)
     case downloadMaskImage
     case downloadMaskImageResponse(TaskResult<UIImage>)
@@ -23,7 +23,7 @@ public extension FindingTheCharacterFeature {
       switch action {
       case .async(let asyncActions):
         switch asyncActions {
-        case .findTheCharacter(let cropResult):
+        case .findTheCharacter(let cropImage):
           let cropImage = cropResult.image
           let boundingBox = cropResult.boundingBox
           state.cropImageResult = cropImage

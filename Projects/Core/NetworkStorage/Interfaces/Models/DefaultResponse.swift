@@ -1,9 +1,9 @@
 //
 //  DefaultResponse.swift
-//  AD_Feature
+//  NetworkStorageInterfaces
 //
-//  Created by minii on 2023/08/07.
-//  Copyright © 2023 chminipark. All rights reserved.
+//  Created by chminii on 3/16/24.
+//  Copyright © 2024 chminipark. All rights reserved.
 //
 
 import Foundation

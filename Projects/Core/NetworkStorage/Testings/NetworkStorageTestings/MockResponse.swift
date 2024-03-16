@@ -7,7 +7,14 @@
 //
 
 import Foundation
+import NetworkStorageInterfaces
 
 public struct MockResponse: Codable, Equatable {
   public init() {}
+}
+
+public extension DefaultResponse {
+  func toJsonData() -> Data? {
+    return try? JSONEncoder().encode(self)
+  }
 }

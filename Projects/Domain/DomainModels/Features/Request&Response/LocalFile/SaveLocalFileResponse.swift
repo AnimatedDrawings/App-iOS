@@ -15,7 +15,3 @@ public struct SaveLocalFileResponse {
     self.fileURL = fileURL
   }
 }
-
-public enum FileExtension: String {
-  case gif
-}
