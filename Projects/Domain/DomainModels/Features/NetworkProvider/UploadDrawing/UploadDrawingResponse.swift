@@ -20,3 +20,12 @@ public struct UploadDrawingResponse: Equatable {
     self.boundingBox = boundingBox
   }
 }
+
+public extension UploadDrawingResponse {
+  static func mock() -> Self {
+    return Self(
+      ad_id: String(describing: Self.self),
+      boundingBox: BoundingBox.mockExample2()
+    )
+  }
+}

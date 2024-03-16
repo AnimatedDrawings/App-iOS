@@ -1,5 +1,5 @@
 //
-//  SaveLocalFile.swift
+//  SaveLocalFileResponse.swift
 //  DomainModels
 //
 //  Created by chminii on 3/15/24.
@@ -7,16 +7,6 @@
 //
 
 import Foundation
-
-public struct SaveLocalFileRequest {
-  public let data: Data
-  public let fileExtension: FileExtension
-  
-  public init(data: Data, fileExtension: FileExtension = .gif) {
-    self.data = data
-    self.fileExtension = fileExtension
-  }
-}
 
 public struct SaveLocalFileResponse {
   public let fileURL: URL

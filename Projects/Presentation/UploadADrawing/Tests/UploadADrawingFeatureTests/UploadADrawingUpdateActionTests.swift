@@ -9,7 +9,7 @@
 import ADComposableArchitecture
 import XCTest
 @testable import UploadADrawingFeatures
-import DomainModel
+import DomainModels
 import SharedProvider
 
 final class UploadADrawingUpdateActionTests: XCTestCase {

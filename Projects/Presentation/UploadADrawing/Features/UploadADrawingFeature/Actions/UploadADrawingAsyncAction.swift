@@ -8,13 +8,14 @@
 
 import ADComposableArchitecture
 import UIKit
-import DomainModel
+import DomainModels
 import NetworkStorage
+import ADErrors
 
 public extension UploadADrawingFeature {
   enum AsyncActions: Equatable {
     case uploadDrawing(Data?)
-    case uploadDrawingResponse(TaskResult<UploadADrawingResult>)
+    case uploadDrawingResponse(TaskResult<UploadDrawingResponse>)
   }
   
   func AsyncReducer() -> some Reducer<State, Action> {
@@ -37,14 +38,14 @@ public extension UploadADrawingFeature {
               .async(
                 .uploadDrawingResponse(
                   TaskResult {
-                    try await makeADProvider.uploadDrawing(compressedInfo.data)
+                    try await makeADProvider.uploadDrawing(image: compressedInfo.data)
                   }
                 )
               )
             )
           }
         case .uploadDrawingResponse(.success(let response)):
-          let result = UploadADrawingResult(
+          let result = UploadDrawingResult(
             originalImage: state.originalImage,
             boundingBox: response.boundingBox
           )
@@ -59,8 +60,8 @@ public extension UploadADrawingFeature {
           print(error)
           return .run { send in
             await send(.inner(.setLoadingView(false)))
-            if let error = error as? NetworkError,
-               error == .ADServerError
+            if let error = error as? NetworkStorageError,
+               error == .server
             {
               await send(.inner(.showFindCharacterErrorAlert))
             } else {

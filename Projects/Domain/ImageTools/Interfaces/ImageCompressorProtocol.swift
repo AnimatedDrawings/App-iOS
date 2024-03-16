@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import DomainModel
+import DomainModels
 
 public protocol ImageCompressorProtocol {
   func compress(with data: Data) throws -> CompressedInfo

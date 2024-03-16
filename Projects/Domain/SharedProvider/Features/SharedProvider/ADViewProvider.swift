@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import DomainModel
+import DomainModels
 import ADComposableArchitecture
 
 public struct ADViewProvider {

@@ -7,12 +7,12 @@
 //
 
 import SwiftUI
-import ADUIKitSources
-import ADUIKitResources
+import ADUIKit
+import ADResources
 import ADComposableArchitecture
 import UploadADrawingFeatures
 import PhotosUI
-import DomainModel
+import DomainModels
 import SharedProvider
 
 public struct UploadADrawingView: View {
@@ -33,8 +33,8 @@ public struct UploadADrawingView: View {
           Title()
           
           CheckList(
-            myStep: .UploadADrawing,
-            completeStep: store.step.completeStep
+            myStep: MakeADStep.UploadADrawing.rawValue,
+            completeStep: store.step.completeStep.rawValue
           ) {
             CheckListContent(store: store)
           }
@@ -111,12 +111,13 @@ private extension UploadADrawingView {
     let left = "Upload a drawing of"
     let one = " ONE "
     let right = "character, where the arms and legs don’t overlap the body (see examples below)."
+    let color = ADResourcesAsset.Color.blue2.swiftUIColor
     
     var body: some View {
       VStack(alignment: .leading, spacing: 20) {
         Text(title)
           .font(.system(.title, weight: .semibold))
-          .foregroundColor(ADUIKitResourcesAsset.Color.blue2.swiftUIColor)
+          .foregroundColor(color)
         
         Text(left) + Text(one).fontWeight(.bold) + Text(right)
       }
@@ -240,11 +241,11 @@ private extension UploadADrawingView {
     struct Samples: View {
       let tapCardAction: (Data?) -> ()
       
-      typealias sample = ADUIKitResourcesAsset.SampleDrawing
-      let example1: ADUIKitResourcesImages = sample.step1Example1
-      let example2: ADUIKitResourcesImages = sample.step1Example2
-      let example3: ADUIKitResourcesImages = sample.step1Example3
-      let example4: ADUIKitResourcesImages = sample.step1Example4
+      typealias sample = ADResourcesAsset.SampleDrawing
+      let example1: ADResourcesImages = sample.step1Example1
+      let example2: ADResourcesImages = sample.step1Example2
+      let example3: ADResourcesImages = sample.step1Example3
+      let example4: ADResourcesImages = sample.step1Example4
       
       var body: some View {
         VStack(spacing: 20) {
@@ -261,7 +262,7 @@ private extension UploadADrawingView {
       }
       
       @ViewBuilder
-      func ImageCardButton(image sample: ADUIKitResourcesImages) -> some View {
+      func ImageCardButton(image sample: ADResourcesImages) -> some View {
         Button {
           tapCardAction(sample.image.pngData())
         } label: {

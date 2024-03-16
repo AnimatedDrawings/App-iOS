@@ -1,5 +1,5 @@
 //
-//  ReadLocalFile.swift
+//  ReadLocalFileResponse.swift
 //  DomainModels
 //
 //  Created by chminii on 3/15/24.
@@ -7,14 +7,6 @@
 //
 
 import Foundation
-
-public struct ReadLocalFileRequest {
-  public let url: URL
-  
-  public init(url: URL) {
-    self.url = url
-  }
-}
 
 public struct ReadLocalFileResponse {
   public let data: Data

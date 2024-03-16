@@ -15,10 +15,7 @@ import Foundation
 
 final public class TestMakeADProviderImpl: MakeADProviderProtocol {
   public func uploadDrawing(image: Data) async throws -> UploadDrawingResponse {
-    return .init(
-      ad_id: "example2",
-      boundingBox: BoundingBox.mockExample2()
-    )
+    return .mock()
   }
   
   public func findTheCharacter(ad_id: String, boundingBox: BoundingBox) async throws {}

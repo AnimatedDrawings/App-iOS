@@ -9,11 +9,12 @@
 import XCTest
 @testable import UploadADrawingFeatures
 import ADComposableArchitecture
-import ADUIKitResources
-import DomainModel
+import ADResources
+import DomainModels
 import NetworkStorage
 import SharedProvider
 import ImageTools
+import ADErrors
 
 final class UploadADrawingAsyncActionTests: XCTestCase {
   var store: TestStoreOf<UploadADrawingFeature>!
@@ -26,36 +27,33 @@ final class UploadADrawingAsyncActionTests: XCTestCase {
   }
   
   func testUploadDrawing() async {
-    let mockCompressedInfo = CompressedInfo.mock()
+    let compressedInfo = CompressedInfo.mock()
     
-    await store.send(.async(.uploadDrawing(mockCompressedInfo.data))) {
-      $0.originalImage = mockCompressedInfo.original
+    await store.send(.async(.uploadDrawing(compressedInfo.data))) {
+      $0.originalImage = compressedInfo.original
     }
     
     store.exhaustivity = .off
     await store.receive(.inner(.setLoadingView(true)))
     await store.receive(
       .async(
-        .uploadDrawingResponse(
-          TaskResult<UploadADrawingResult>
-            .success(UploadADrawingResult.example1Mock())
-        )
+        .uploadDrawingResponse(.success(.mock()))
       )
     )
   }
   
   func testUploadDrawingResponseSuccess() async {
-    let mockResponse = UploadADrawingResult.example1Mock()
-    let mockUploadADrawingResult = UploadADrawingResult(
+    let response = UploadDrawingResponse.mock()
+    let result = UploadDrawingResult(
       originalImage: UIImage(),
-      boundingBox: mockResponse.boundingBox
+      boundingBox: response.boundingBox
     )
     
     store.exhaustivity = .off
     await store.send(
       .async(
         .uploadDrawingResponse(
-          .success(mockResponse)
+          .success(.mock())
         )
       )
     )
@@ -65,13 +63,13 @@ final class UploadADrawingAsyncActionTests: XCTestCase {
       return
     }
     
-    XCTAssertEqual(ad_id, mockResponse.ad_id)
+    XCTAssertEqual(ad_id, response.ad_id)
     await store.receive(.inner(.setLoadingView(false)))
-    await store.receive(.delegate(.moveToFindingTheCharacter(mockUploadADrawingResult)))
+    await store.receive(.delegate(.moveToFindingTheCharacter(result)))
   }
   
   func testUploadDrawingResponseFail() async {
-    let findCharacterError = NetworkError.ADServerError
+    let findCharacterError = NetworkStorageError.server
     store.exhaustivity = .off
     await store.send(
       .async(
@@ -82,7 +80,7 @@ final class UploadADrawingAsyncActionTests: XCTestCase {
     )
     await store.receive(.inner(.showFindCharacterErrorAlert))
     
-    let networkError = NetworkError.convertResponseModel
+    let networkError = NetworkStorageError.jsonDecode
     await store.send(
       .async(
         .uploadDrawingResponse(

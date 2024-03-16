@@ -7,9 +7,9 @@
 //
 
 import ADComposableArchitecture
-import ADUIKitResources
+import ADResources
 import UIKit
-import DomainModel
+import DomainModels
 import ImageToolsInterfaces
 
 /// Use

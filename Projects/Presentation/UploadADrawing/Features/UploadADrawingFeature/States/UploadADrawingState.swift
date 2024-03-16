@@ -7,7 +7,7 @@
 //
 
 import ADComposableArchitecture
-import DomainModel
+import DomainModels
 import UIKit
 
 public extension UploadADrawingFeature {
