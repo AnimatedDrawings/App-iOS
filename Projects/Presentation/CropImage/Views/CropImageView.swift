@@ -7,8 +7,8 @@
 //
 
 import SwiftUI
-import ADUIKitSources
-import ADUIKitResources
+import ADUIKit
+import ADResources
 import CropImageFeatures
 import ADComposableArchitecture
 
@@ -53,7 +53,7 @@ extension CropImageView {
   struct ResetButton: View {
     let size: CGFloat = 60
     let imageName = "arrow.uturn.backward"
-    let strokeColor = ADUIKitResourcesAsset.Color.blue1.swiftUIColor
+    let strokeColor = ADResourcesAsset.Color.blue1.swiftUIColor
     let action: () -> ()
     
     var body: some View {

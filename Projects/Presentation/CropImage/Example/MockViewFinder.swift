@@ -7,12 +7,12 @@
 //
 
 import SwiftUI
-import ADUIKitResources
-import CoreModel
+import ADResources
+import DomainModels
 
 struct MockViewFinder: View {
-  let example1: UIImage = ADUIKitResourcesAsset.SampleDrawing.step1Example1.image
-  let boundingBox: CGRect = BoundingBoxDTO.mock().toCGRect()
+  let example1: UIImage = ADResourcesAsset.TestImages.example2.image
+  let boundingBox: BoundingBox = .mockExample2()
   @State var viewBoundingBox: CGRect = .init()
   @State var imageScale: CGFloat = 1
   

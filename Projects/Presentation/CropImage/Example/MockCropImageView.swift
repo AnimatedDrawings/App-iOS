@@ -7,8 +7,8 @@
 //
 
 import SwiftUI
-import ADUIKitResources
-import CoreModel
+import ADResources
+import DomainModels
 import ADComposableArchitecture
 import CropImageFeatures
 
@@ -17,8 +17,8 @@ struct MockCropImageView: View {
   @State var isPresentedCropResultView = false
   
   init() {
-    let originalImage: UIImage = ADUIKitResourcesAsset.SampleDrawing.step1Example1.image
-    let boundingBox: CGRect = BoundingBoxDTO.mock().toCGRect()
+    let originalImage: UIImage = ADResourcesAsset.TestImages.example2.image
+    let boundingBox: BoundingBox = .mockExample2()
     self.store = Store(
       initialState: .init(
         originalImage: originalImage,

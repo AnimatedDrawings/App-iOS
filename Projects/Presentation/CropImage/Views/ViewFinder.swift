@@ -7,10 +7,11 @@
 //
 
 import SwiftUI
+import DomainModels
 
 struct ViewFinder: View {
   let image: UIImage
-  let boundingBox: CGRect
+  let boundingBox: BoundingBox
   @Binding var viewBoundingBox: CGRect
   @Binding var imageScale: CGFloat
   
@@ -62,12 +63,12 @@ extension ViewFinder {
   func updateFrameGridView(_ viewSize: CGSize) {
     imageScale = calImageScale(viewSize: viewSize)
     let boundingOrigin = CGPoint(
-      x: boundingBox.minX * imageScale,
-      y: boundingBox.minY * imageScale
+      x: boundingBox.cgRect.minX * imageScale,
+      y: boundingBox.cgRect.minY * imageScale
     )
     let boundingSize = CGSize(
-      width: boundingBox.width * imageScale,
-      height: boundingBox.height * imageScale
+      width: boundingBox.cgRect.width * imageScale,
+      height: boundingBox.cgRect.height * imageScale
     )
     
     initalBoundingBox = CGRect(origin: boundingOrigin, size: boundingSize)

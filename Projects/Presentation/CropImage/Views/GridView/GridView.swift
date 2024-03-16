@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import ADUIKitResources
+import ADResources
 import ADComposableArchitecture
 import CropImageFeatures
 
@@ -18,7 +18,7 @@ struct GridView: View {
   
   @State var curRect: CGRect = .init()
   @State var lastRect: CGRect = .init()
-  let strokeColor: Color = ADUIKitResourcesAsset.Color.blue3.swiftUIColor
+  let strokeColor: Color = ADResourcesAsset.Color.blue3.swiftUIColor
   let lineWidth: CGFloat = 3
   
   init(

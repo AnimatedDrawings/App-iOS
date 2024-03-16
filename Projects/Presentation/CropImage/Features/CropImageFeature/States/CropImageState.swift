@@ -8,20 +8,21 @@
 
 import ADComposableArchitecture
 import UIKit
-import ADUIKitResources
+import ADResources
+import DomainModels
 
 public extension CropImageFeature {
   @ObservableState
   struct State: Equatable {
     public var originalImage: UIImage
-    public var boundingBox: CGRect
+    public var boundingBox: BoundingBox
     public var viewBoundingBox: CGRect
     public var imageScale: CGFloat
     public var resetTrigger: Bool
     
     public init(
       originalImage: UIImage,
-      boundingBox: CGRect,
+      boundingBox: BoundingBox,
       viewBoundingBox: CGRect = .init(),
       imageScale: CGFloat = 1,
       resetTrigger: Bool = true
@@ -37,8 +38,8 @@ public extension CropImageFeature {
 
 public extension CropImageFeature.State {
   static func mock() -> Self {
-    let originalImage = ADUIKitResourcesAsset.SampleDrawing.step1Example2.image
-    let boundingBox = CGRect.mockExample2BoundingBox()
+    let originalImage = ADResourcesAsset.TestImages.example2.image
+    let boundingBox = BoundingBox.mockExample2()
     
     return Self(
       originalImage: originalImage,

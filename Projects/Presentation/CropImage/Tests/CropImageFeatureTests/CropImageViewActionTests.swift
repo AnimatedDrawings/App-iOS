@@ -9,10 +9,8 @@
 import XCTest
 @testable import CropImageFeatures
 import ADComposableArchitecture
-import ADUIKitResources
-import DomainModel
-import ImageTools
-import CoreModel
+import ADResources
+import DomainModels
 
 final class CropImageViewActionTests: XCTestCase {
   var store: TestStoreOf<CropImageFeature>!
@@ -27,7 +25,7 @@ final class CropImageViewActionTests: XCTestCase {
   
   func testSave() async {
     var state = CropImageFeature.State.mock()
-    state.viewBoundingBox = state.boundingBox
+    state.viewBoundingBox = state.boundingBox.cgRect
     store = TestStore(initialState: state) {
       CropImageFeature()
     }
