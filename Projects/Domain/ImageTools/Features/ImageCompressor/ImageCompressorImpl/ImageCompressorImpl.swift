@@ -9,14 +9,13 @@
 import ADComposableArchitecture
 import ADResources
 import UIKit
-import DomainModels
 import ImageToolsInterfaces
 
 /// Use
 public struct ImageCompressorImpl: ImageCompressorProtocol {
   public init() {}
   
-  public func compress(with data: Data) throws -> CompressedInfo {
+  public func compress(with data: Data) throws -> CompressResponse {
     guard let image = UIImage(data: data),
           let result = reduceFileSize(image: image)
     else {
@@ -26,7 +25,7 @@ public struct ImageCompressorImpl: ImageCompressorProtocol {
     return result
   }
   
-  public func compress(with image: UIImage) throws -> CompressedInfo {
+  public func compress(with image: UIImage) throws -> CompressResponse {
     guard let result = reduceFileSize(image: image)
     else {
       throw NSError()
@@ -36,7 +35,7 @@ public struct ImageCompressorImpl: ImageCompressorProtocol {
 }
  
 extension ImageCompressorImpl {
-  func reduceFileSize(image: UIImage) -> CompressedInfo? {
+  func reduceFileSize(image: UIImage) -> CompressResponse? {
     let resizedImage = resizeImage(with: image)
     guard let compressedData = compressImage(with: resizedImage),
           let compressedImage = UIImage(data: compressedData)
@@ -44,7 +43,7 @@ extension ImageCompressorImpl {
       return nil
     }
     
-    return CompressedInfo(data: compressedData, image: compressedImage, original: image)
+    return CompressResponse(data: compressedData, image: compressedImage, original: image)
   }
   
   func compressImage(

@@ -9,8 +9,8 @@
 import XCTest
 @testable import ImageTools
 import ADResources
-import DomainModels
 import ImageToolsTestings
+import ImageToolsInterfaces
 
 final class ImageCompressorImplTests: XCTestCase {
   var example2: UIImage!
@@ -94,7 +94,7 @@ final class TestImageCompressorTests: XCTestCase {
   }
   
   func testCompress() {
-    let mockCompressedInfo = CompressedInfo.mock()
+    let mockCompressResponse = CompressResponse.mock()
     
     guard let compressWithData = try? testImageCompressorImpl.compress(with: Data()),
           let compressWithImage = try? testImageCompressorImpl.compress(with: UIImage())
@@ -103,7 +103,7 @@ final class TestImageCompressorTests: XCTestCase {
       return
     }
     
-    XCTAssertEqual(compressWithData, mockCompressedInfo)
-    XCTAssertEqual(compressWithImage, mockCompressedInfo)
+    XCTAssertEqual(compressWithData, mockCompressResponse)
+    XCTAssertEqual(compressWithImage, mockCompressResponse)
   }
 }

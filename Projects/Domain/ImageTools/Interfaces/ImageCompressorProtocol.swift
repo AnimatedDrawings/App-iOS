@@ -10,6 +10,6 @@ import UIKit
 import DomainModels
 
 public protocol ImageCompressorProtocol {
-  func compress(with data: Data) throws -> CompressedInfo
-  func compress(with image: UIImage) throws -> CompressedInfo
+  func compress(with data: Data) throws -> CompressResponse
+  func compress(with image: UIImage) throws -> CompressResponse
 }

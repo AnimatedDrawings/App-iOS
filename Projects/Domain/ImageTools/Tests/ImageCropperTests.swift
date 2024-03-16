@@ -8,7 +8,6 @@
 
 import XCTest
 @testable import ImageTools
-import DomainModels
 import ImageToolsTestings
 import ImageToolsInterfaces
 

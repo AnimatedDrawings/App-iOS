@@ -8,7 +8,6 @@
 
 import ADErrors
 import LocalFileProviderInterfaces
-import DomainModels
 import Foundation
 
 public class LocalFileProviderImpl: LocalFileProviderProtocol {

@@ -7,7 +7,6 @@
 //
 
 import LocalFileProviderInterfaces
-import DomainModels
 import Foundation
 
 public class TestLocalFileProviderImpl: LocalFileProviderProtocol {

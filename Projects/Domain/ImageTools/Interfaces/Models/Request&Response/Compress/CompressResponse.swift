@@ -1,15 +1,15 @@
 //
-//  CompressedInfo.swift
-//  DomainModel
+//  CompressResponse.swift
+//  ImageToolsInterfaces
 //
-//  Created by chminii on 2/26/24.
+//  Created by chminii on 3/16/24.
 //  Copyright © 2024 chminipark. All rights reserved.
 //
 
 import UIKit
 import ADResources
 
-public struct CompressedInfo: Equatable {
+public struct CompressResponse: Equatable {
   public let data: Data
   public let image: UIImage
   public let original: UIImage
@@ -21,7 +21,7 @@ public struct CompressedInfo: Equatable {
   }
 }
 
-public extension CompressedInfo {
+public extension CompressResponse {
   static func mock() -> Self {
     let mockImage = ADResourcesAsset.SampleDrawing.step1Example2.image
     let mockData = mockImage.pngData() ?? Data()
