@@ -11,7 +11,7 @@ import UIKit
 import ADComposableArchitecture
 
 public struct ImageCropper {
-  public var crop: @Sendable (CropRequest) throws -> CropResult
+  public var crop: @Sendable (CropRequest) throws -> CropResponse
 }
 
 extension ImageCropper: DependencyKey {
@@ -40,14 +40,12 @@ extension ImageCropper: DependencyKey {
         size: cropCGSize
       )
       
-      let cropResult = CropResult(image: image, boundingBox: boundingBox)
+      let cropResult = CropResponse(image: image, boundingBox: boundingBox)
       return cropResult
     }
   )
   
   public static let testValue = Self(
-    crop: { request in
-      CropResult(image: request.originalImage, boundingBox: request.viewBoundingBox)
-    }
+    crop: { _ in return .mock() }
   )
 }

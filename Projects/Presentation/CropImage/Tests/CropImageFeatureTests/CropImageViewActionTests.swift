@@ -29,10 +29,11 @@ final class CropImageViewActionTests: XCTestCase {
     store = TestStore(initialState: state) {
       CropImageFeature()
     }
-    let cropResult = CropResult(image: state.originalImage, boundingBox: state.viewBoundingBox)
     
+    let cropResponse = CropResponse.mock()
+    let cropImageResult = CropImageResult(image: cropResponse.image, boundingBox: .init(cgRect: cropResponse.boundingBox))
     await store.send(.view(.save))
-    await store.receive(.delegate(.cropResult(cropResult)))
+    await store.receive(.delegate(.cropImageResult(cropImageResult)))
   }
   
   func testCancel() async {

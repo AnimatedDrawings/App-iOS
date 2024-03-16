@@ -7,12 +7,12 @@
 //
 
 import ADComposableArchitecture
-import DomainModel
+import DomainModels
 import UIKit
 
 public extension FindingTheCharacterFeature {
   enum AsyncActions: Equatable {
-    case findTheCharacter(CropResult)
+    case findTheCharacter(CropResponse)
     case findTheCharacterResponse(TaskEmptyResult)
     case downloadMaskImage
     case downloadMaskImageResponse(TaskResult<UIImage>)
@@ -33,7 +33,8 @@ public extension FindingTheCharacterFeature {
             await send(.inner(.setLoadingView(true)))
             await send(.async(.findTheCharacterResponse(
               TaskResult.empty {
-                try await makeADProvider.findTheCharacter(ad_id, boundingBox)
+//                try await makeADProvider.findTheCharacter(ad_id, boundingBox)
+                try await makeADProvider.findTheCharacter(ad_id: ad_id, boundingBox: boundingBox)
               }
             )))
           }

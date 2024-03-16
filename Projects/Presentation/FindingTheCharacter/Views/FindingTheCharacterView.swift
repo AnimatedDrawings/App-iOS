@@ -9,9 +9,9 @@
 import SwiftUI
 import ADComposableArchitecture
 import FindingTheCharacterFeatures
-import ADUIKitSources
-import ADUIKitResources
-import DomainModel
+import ADUIKit
+import ADResources
+import DomainModels
 import CropImage
 
 public struct FindingTheCharacterView: View {
@@ -33,7 +33,10 @@ public struct FindingTheCharacterView: View {
         VStack(alignment: .leading, spacing: 20) {
           Title()
           
-          CheckList(myStep: .FindingTheCharacter, completeStep: store.step.completeStep) {
+          CheckList(
+            myStep: MakeADStep.FindingTheCharacter.rawValue,
+            completeStep: store.step.completeStep.rawValue
+          ) {
             CheckListContent(state: $store.checkList)
           }
           
@@ -85,12 +88,13 @@ private extension FindingTheCharacterView {
   struct Title: View {
     let title = "FINDING THE CHARACTER"
     let description = "We’ve identified the character, and put a box around it."
+    let color = ADResourcesAsset.Color.blue2.swiftUIColor
     
     var body: some View {
       VStack(alignment: .leading, spacing: 20) {
         Text(title)
           .font(.system(.title, weight: .semibold))
-          .foregroundColor(ADUIKitResourcesAsset.Color.blue2.swiftUIColor)
+          .foregroundColor(color)
         
         Text(description)
       }
@@ -111,8 +115,8 @@ private extension FindingTheCharacterView {
         )
         
         HStack {
-          GIFImage(sample: ADUIKitResourcesAsset.Gifs.step2Gif1)
-          GIFImage(sample: ADUIKitResourcesAsset.Gifs.step2Gif2)
+          GIFImage(sample: ADResourcesAsset.Gifs.step2Gif1)
+          GIFImage(sample: ADResourcesAsset.Gifs.step2Gif2)
         }
         .frame(height: 250)
       }

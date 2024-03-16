@@ -1,5 +1,5 @@
 //
-//  CropResult.swift
+//  CropResponse.swift
 //  ImageCompressor
 //
 //  Created by chminii on 3/5/24.
@@ -9,7 +9,7 @@
 import UIKit
 import ADResources
 
-public struct CropResult: Equatable {
+public struct CropResponse: Equatable {
   public let image: UIImage
   public let boundingBox: CGRect
   
@@ -19,12 +19,12 @@ public struct CropResult: Equatable {
   }
 }
 
-public extension CropResult {
+public extension CropResponse {
   static func mock() -> Self {
-    let image = ADResourcesAsset.SampleDrawing.step1Example2.image
+    let image = ADResourcesAsset.TestImages.example2.image
     return Self(
       image: image,
-      boundingBox: .init(x: 1, y: 1, width: 100, height: 100)
+      boundingBox: BoundingBox.mockExample2().cgRect
     )
   }
 }

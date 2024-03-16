@@ -32,7 +32,12 @@ public extension CropImageFeature {
             return .none
           }
           
-          return .send(.delegate(.cropResult(cropResult)))
+          let cropImageResult = CropImageResult(
+            image: cropResult.image,
+            boundingBox: BoundingBox(cgRect: cropResult.boundingBox)
+          )
+          
+          return .send(.delegate(.cropImageResult(cropImageResult)))
           
         case .cancel:
           return .send(.delegate(.cancel))

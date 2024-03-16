@@ -11,7 +11,7 @@ import DomainModels
 
 public extension CropImageFeature {
   enum DelegateActions: Equatable {
-    case cropResult(CropResult)
+    case cropImageResult(CropImageResult)
     case cancel
   }
   
@@ -20,7 +20,7 @@ public extension CropImageFeature {
       switch action {
       case .delegate(let delegateActions):
         switch delegateActions {
-        case .cropResult:
+        case .cropImageResult:
           return .none
         case .cancel:
           return .none

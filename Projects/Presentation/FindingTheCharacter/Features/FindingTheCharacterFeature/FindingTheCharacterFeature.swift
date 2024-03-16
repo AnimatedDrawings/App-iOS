@@ -9,7 +9,7 @@
 import ADComposableArchitecture
 import SwiftUI
 import SharedProvider
-import DomainModel
+import DomainModels
 import NetworkProvider
 import CropImageFeatures
 
@@ -17,7 +17,7 @@ import CropImageFeatures
 public struct FindingTheCharacterFeature {
   public init() {}
 
-  @Dependency(\.makeADProvider) var makeADProvider
+  @Dependency(MakeADProvider.self) var makeADProvider
   @Dependency(ADInfoProvider.self) var adInfo
   @Dependency(StepProvider.self) var step
   

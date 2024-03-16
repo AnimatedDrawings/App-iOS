@@ -8,7 +8,7 @@
 
 import ADComposableArchitecture
 import CropImageFeatures
-import DomainModel
+import DomainModels
 import UIKit
 
 public extension FindingTheCharacterFeature {
