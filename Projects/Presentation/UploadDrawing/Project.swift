@@ -9,9 +9,9 @@ import ProjectDescription
 import ProjectEnvironment
 
 let project: Project = .makeProject(
-  name: UploadADrawing.projectName,
+  name: UploadDrawing.projectName,
   options: .enableCodeCoverage,
-  targets: UploadADrawing
+  targets: UploadDrawing
     .uPresentationTargets(
       dependencies: [Domain.projectDepedency]
     )

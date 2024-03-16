@@ -1,6 +1,6 @@
 //
-//  UploadADrawingDelegateAction.swift
-//  UploadADrawingFeatures
+//  UploadDrawingDelegateAction.swift
+//  UploadDrawingFeatures
 //
 //  Created by chminii on 2/22/24.
 //  Copyright © 2024 chminipark. All rights reserved.
@@ -10,7 +10,7 @@ import ADComposableArchitecture
 import UIKit
 import DomainModels
 
-public extension UploadADrawingFeature {
+public extension UploadDrawingFeature {
   enum DelegateActions: Equatable {
     case moveToFindingTheCharacter(UploadDrawingResult)
   }

@@ -48,7 +48,7 @@ public struct MakeADView: View {
         .animation(.default, value: store.step.isShowStepBar)
       }
     }
-    .fullScreenOverlayPresentationSpace(.named("UploadADrawingView"))
+    .fullScreenOverlayPresentationSpace(.named("UploadDrawingView"))
   }
 }
 

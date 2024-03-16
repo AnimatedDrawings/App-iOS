@@ -1,5 +1,5 @@
 //
-//  UploadADrawingView.swift
+//  UploadDrawingView.swift
 //  AD_OnBoarding
 //
 //  Created by minii on 2023/05/26.
@@ -10,17 +10,17 @@ import SwiftUI
 import ADUIKit
 import ADResources
 import ADComposableArchitecture
-import UploadADrawingFeatures
+import UploadDrawingFeatures
 import PhotosUI
 import DomainModels
 import SharedProvider
 
-public struct UploadADrawingView: View {
-  @Perception.Bindable var store: StoreOf<UploadADrawingFeature>
+public struct UploadDrawingView: View {
+  @Perception.Bindable var store: StoreOf<UploadDrawingFeature>
 
   public init(
-    store: StoreOf<UploadADrawingFeature> = Store(initialState: .init()) {
-      UploadADrawingFeature()
+    store: StoreOf<UploadDrawingFeature> = Store(initialState: .init()) {
+      UploadDrawingFeature()
     }
   ) {
     self.store = store
@@ -54,7 +54,7 @@ public struct UploadADrawingView: View {
       .alertNetworkError(isPresented: $store.alert.networkError)
       .alertFindCharacterError(isPresented: $store.alert.findCharacterError)
       .alertimageSizeError(isPresented: $store.alert.imageSizeError)
-      .fullScreenOverlay(presentationSpace: .named("UploadADrawingView")) {
+      .fullScreenOverlay(presentationSpace: .named("UploadDrawingView")) {
         if store.loadingView {
           LoadingView(description: "Uploading Drawing...")
             .transparentBlurBackground(
@@ -105,7 +105,7 @@ extension View {
   }
 }
 
-private extension UploadADrawingView {
+private extension UploadDrawingView {
   struct Title: View {
     let title = "UPLOAD A DRAWING"
     let left = "Upload a drawing of"
@@ -125,9 +125,9 @@ private extension UploadADrawingView {
   }
 }
 
-private extension UploadADrawingView {
+private extension UploadDrawingView {
   struct CheckListContent: View {
-    @Perception.Bindable var store: StoreOf<UploadADrawingFeature>
+    @Perception.Bindable var store: StoreOf<UploadDrawingFeature>
     
     let description1 = "Make sure the character is drawn on a white piece of paper without lines, wrinkles, or tears"
     let description2 = "Make sure the drawing is well lit. To minimize shadows, hold the camera further away and zoom in on the drawing."
@@ -162,7 +162,7 @@ private extension UploadADrawingView {
   }
 }
 
-private extension UploadADrawingView {
+private extension UploadDrawingView {
   struct UploadButton: View {
     let state: Bool
     let uploadImageAction: (Data?) -> Void
@@ -209,7 +209,7 @@ private extension UploadADrawingView {
   }
 }
 
-private extension UploadADrawingView {
+private extension UploadDrawingView {
   struct SampleDrawings: View {
     let tapCardAction: (Data?) -> ()
     
@@ -278,5 +278,5 @@ private extension UploadADrawingView {
 }
 
 #Preview {
-  UploadADrawingView()
+  UploadDrawingView()
 }

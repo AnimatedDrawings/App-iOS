@@ -1,6 +1,6 @@
 //
-//  UploadADrawingState.swift
-//  UploadADrawingFeatures
+//  UploadDrawingState.swift
+//  UploadDrawingFeatures
 //
 //  Created by chminii on 2/22/24.
 //  Copyright © 2024 chminipark. All rights reserved.
@@ -10,7 +10,7 @@ import ADComposableArchitecture
 import DomainModels
 import UIKit
 
-public extension UploadADrawingFeature {
+public extension UploadDrawingFeature {
   @ObservableState
   struct State: Equatable {
     public var check: Check

@@ -14,7 +14,7 @@ let project: Project = .makeProject(
   targets: MakeAD
     .uPresentationTargets(
       dependencies: [
-        UploadADrawing.projectDepedency,
+        UploadDrawing.projectDepedency,
         FindingTheCharacter.projectDepedency,
         SeparatingCharacter.projectDepedency,
         FindingCharacterJoints.projectDepedency

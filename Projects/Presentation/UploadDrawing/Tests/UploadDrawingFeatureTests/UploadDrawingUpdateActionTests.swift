@@ -1,6 +1,6 @@
 //
-//  UploadADrawingUpdateActionTests.swift
-//  UploadADrawingTests
+//  UploadDrawingUpdateActionTests.swift
+//  UploadDrawingTests
 //
 //  Created by chminii on 3/10/24.
 //  Copyright © 2024 chminipark. All rights reserved.
@@ -8,17 +8,17 @@
 
 import ADComposableArchitecture
 import XCTest
-@testable import UploadADrawingFeatures
+@testable import UploadDrawingFeatures
 import DomainModels
 import SharedProvider
 
-final class UploadADrawingUpdateActionTests: XCTestCase {
-  var store: TestStoreOf<UploadADrawingFeature>!
+final class UploadDrawingUpdateActionTests: XCTestCase {
+  var store: TestStoreOf<UploadDrawingFeature>!
   
   @MainActor
   override func setUp() async throws {
     store = TestStore(initialState: .init()) {
-      UploadADrawingFeature()
+      UploadDrawingFeature()
     }
   }
   

@@ -1,6 +1,6 @@
 //
-//  UploadADrawingFeature.swift
-//  UploadADrawingExample
+//  UploadDrawingFeature.swift
+//  UploadDrawingExample
 //
 //  Created by chminii on 2/26/24.
 //  Copyright © 2024 chminipark. All rights reserved.
@@ -12,7 +12,7 @@ import SharedProvider
 import ImageTools
 
 @Reducer
-public struct UploadADrawingFeature: Reducer {
+public struct UploadDrawingFeature: Reducer {
   public init() {}
   
   @Dependency(MakeADProvider.self) var makeADProvider
@@ -31,7 +31,7 @@ public struct UploadADrawingFeature: Reducer {
   }
 }
 
-public extension UploadADrawingFeature {
+public extension UploadDrawingFeature {
   @CasePathable
   enum Action: Equatable, BindableAction, ViewAction, InnerAction, AsyncAction, DelegateAction, UpdateAction {
     case binding(BindingAction<State>)

@@ -1,6 +1,6 @@
 //
-//  UploadADrawingUpdateAction.swift
-//  UploadADrawingFeatures
+//  UploadDrawingUpdateAction.swift
+//  UploadDrawingFeatures
 //
 //  Created by chminii on 3/6/24.
 //  Copyright © 2024 chminipark. All rights reserved.
@@ -9,7 +9,7 @@
 import ADComposableArchitecture
 import DomainModels
 
-public extension UploadADrawingFeature {
+public extension UploadDrawingFeature {
   @CasePathable
   enum UpdateActions: Equatable {
     case getIsShowStepBar(Bool)
