@@ -11,9 +11,9 @@ import DomainModels
 import ADComposableArchitecture
 
 public struct StepProvider {
-  public var isShowStepBar: CombineNotifier<Bool>
-  public var currentStep: CombineNotifier<MakeADStep>
-  public var completeStep: CombineNotifier<MakeADStep>
+  public var isShowStepBar: GlobalNotifier<Bool>
+  public var currentStep: GlobalNotifier<MakeADStep>
+  public var completeStep: GlobalNotifier<MakeADStep>
   
   public init(
     isShowStepBar: Bool = true,

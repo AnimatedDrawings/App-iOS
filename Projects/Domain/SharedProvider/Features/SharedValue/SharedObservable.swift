@@ -28,9 +28,9 @@ class SharedObservable<Output: Equatable>: ObservableObject {
     }
   }
   
-  let notifier: CombineNotifier<Output>
+  let notifier: GlobalNotifier<Output>
   
-  init(notifier: CombineNotifier<Output>) {
+  init(notifier: GlobalNotifier<Output>) {
     self.notifier = notifier
     self.myValue = notifier.initialValue
     Task {

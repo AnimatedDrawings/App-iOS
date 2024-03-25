@@ -1,5 +1,5 @@
 //
-//  CombineNotifier.swift
+//  GlobalNotifier.swift
 //  SharedProvider
 //
 //  Created by chminii on 3/13/24.
@@ -7,9 +7,9 @@
 //
 
 import Combine
-import SwiftUI
+import Foundation
 
-public actor CombineNotifier<Output: Equatable> {
+public actor GlobalNotifier<Output: Equatable> {
   private let subject: CurrentValueSubject<Output, Never>
   var cancellables: [UUID: AnyCancellable] = [:]
   

@@ -31,7 +31,7 @@ public struct SharedValue<Output: Equatable>: DynamicProperty {
   }
   
   public init(
-    _ keyPath: KeyPath<DependencyValues, CombineNotifier<Output>>
+    _ keyPath: KeyPath<DependencyValues, GlobalNotifier<Output>>
   ) {
     let notifier = DependencyValues._current[keyPath: keyPath]
     self._storage = StateObject(
@@ -40,7 +40,7 @@ public struct SharedValue<Output: Equatable>: DynamicProperty {
   }
   
   public init(
-    _ inject: CombineNotifier<Output>
+    _ inject: GlobalNotifier<Output>
   ) {
     self._storage = StateObject(
       wrappedValue: SharedObservable(notifier: inject)

@@ -11,10 +11,10 @@ import DomainModels
 import ADComposableArchitecture
 
 public struct ADViewProvider {
-  public var currentView: CombineNotifier<ADViewCase>
+  public var currentView: GlobalNotifier<ADViewCase>
   
   public init(currentView: ADViewCase = .OnBoarding) {
-    self.currentView = CombineNotifier(initialValue: currentView)
+    self.currentView = GlobalNotifier(initialValue: currentView)
   }
 }
 

@@ -12,7 +12,7 @@ import XCTest
 final class CombineNotifierTests: XCTestCase {
   func testValues() async {
     let initialValue = 0
-    let noti = CombineNotifier(initialValue: initialValue)
+    let noti = GlobalNotifier(initialValue: initialValue)
     let id = UUID()
     let dupArray: [Int] = [1, 1, 1]
     let numArray: [Int] = Array((1...10))
@@ -41,7 +41,7 @@ final class CombineNotifierTests: XCTestCase {
   
   func testSet() async {
     let initialValue = "initialValue"
-    let noti = CombineNotifier(initialValue: initialValue)
+    let noti = GlobalNotifier(initialValue: initialValue)
     
     let test = "test"
     await noti.set(test)
@@ -53,7 +53,7 @@ final class CombineNotifierTests: XCTestCase {
   
   func testGet() async {
     let initialValue = "initialValue"
-    let noti = CombineNotifier(initialValue: initialValue)
+    let noti = GlobalNotifier(initialValue: initialValue)
     
     let result = await noti.get()
     

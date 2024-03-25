@@ -10,10 +10,10 @@ import Foundation
 import ADComposableArchitecture
 
 public struct ADInfoProvider {
-  public var id: CombineNotifier<String?>
+  public var id: GlobalNotifier<String?>
   
   public init(id: String? = nil) {
-    self.id = CombineNotifier(initialValue: id)
+    self.id = GlobalNotifier(initialValue: id)
   }
 }
 
