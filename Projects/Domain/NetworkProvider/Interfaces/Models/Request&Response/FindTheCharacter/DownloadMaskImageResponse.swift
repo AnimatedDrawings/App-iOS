@@ -8,7 +8,7 @@
 
 import UIKit
 
-public struct DownloadMaskImageResponse {
+public struct DownloadMaskImageResponse: Equatable {
   public let image: UIImage
   
   public init(image: UIImage) {

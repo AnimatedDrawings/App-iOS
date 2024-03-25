@@ -7,7 +7,7 @@
 //
 
 import ADComposableArchitecture
-import DomainModels
+import CropImageInterfaces
 
 public extension CropImageFeature {
   enum DelegateActions: Equatable {

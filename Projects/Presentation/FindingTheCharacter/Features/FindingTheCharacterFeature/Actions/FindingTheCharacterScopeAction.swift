@@ -20,8 +20,8 @@ public extension FindingTheCharacterFeature {
       switch action {
       case .scope(let scopeActions):
         switch scopeActions {
-        case .cropImage(.delegate(.cropResult(let cropResult))):
-          return .send(.async(.findTheCharacter(cropResult)))
+        case .cropImage(.delegate(.cropImageResult(let cropImageResult))):
+          return .send(.async(.findTheCharacter(cropImageResult)))
         case .cropImage(.delegate(.cancel)):
           return .send(.inner(.toggleCropImageView))
         default:

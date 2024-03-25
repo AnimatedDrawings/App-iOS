@@ -9,6 +9,8 @@
 import ADComposableArchitecture
 import UIKit
 import DomainModels
+import ImageToolsInterfaces
+import CropImageInterfaces
 
 public extension CropImageFeature {
   enum ViewActions: Equatable {

@@ -7,15 +7,17 @@
 //
 
 import ADComposableArchitecture
-import DomainModels
 import UIKit
+import CropImageInterfaces
+import NetworkProviderInterfaces
+import FindingTheCharacterInterfaces
 
 public extension FindingTheCharacterFeature {
   enum AsyncActions: Equatable {
-    case findTheCharacter(CropImage)
+    case findTheCharacter(CropImageResult)
     case findTheCharacterResponse(TaskEmptyResult)
     case downloadMaskImage
-    case downloadMaskImageResponse(TaskResult<UIImage>)
+    case downloadMaskImageResponse(TaskResult<DownloadMaskImageResponse>)
   }
   
   func AsyncReducer() -> some Reducer<State, Action> {
@@ -23,9 +25,9 @@ public extension FindingTheCharacterFeature {
       switch action {
       case .async(let asyncActions):
         switch asyncActions {
-        case .findTheCharacter(let cropImage):
-          let cropImage = cropResult.image
-          let boundingBox = cropResult.boundingBox
+        case .findTheCharacter(let cropImageResult):
+          let cropImage = cropImageResult.image
+          let boundingBox = cropImageResult.boundingBox
           state.cropImageResult = cropImage
           
           return .run { send in
@@ -33,7 +35,6 @@ public extension FindingTheCharacterFeature {
             await send(.inner(.setLoadingView(true)))
             await send(.async(.findTheCharacterResponse(
               TaskResult.empty {
-//                try await makeADProvider.findTheCharacter(ad_id, boundingBox)
                 try await makeADProvider.findTheCharacter(ad_id: ad_id, boundingBox: boundingBox)
               }
             )))
@@ -53,15 +54,15 @@ public extension FindingTheCharacterFeature {
             guard let ad_id = await adInfo.id.get() else { return }
             await send(.async(.downloadMaskImageResponse(
               TaskResult {
-                try await makeADProvider.downloadMaskImage(ad_id)
+                try await makeADProvider.downloadMaskImage(ad_id: ad_id)
               }
             )))
           }
           
-        case .downloadMaskImageResponse(.success(let maskImage)):
+        case .downloadMaskImageResponse(.success(let response)):
           let result = FindingTheCharacterResult(
             cropImage: state.cropImageResult,
-            maskImage: maskImage
+            maskImage: response.image
           )
           
           return .run { send in

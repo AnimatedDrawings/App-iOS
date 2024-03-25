@@ -10,7 +10,8 @@ import XCTest
 @testable import CropImageFeatures
 import ADComposableArchitecture
 import ADResources
-import DomainModels
+import ImageToolsInterfaces
+import CropImageInterfaces
 
 final class CropImageViewActionTests: XCTestCase {
   var store: TestStoreOf<CropImageFeature>!
@@ -31,7 +32,10 @@ final class CropImageViewActionTests: XCTestCase {
     }
     
     let cropResponse = CropResponse.mock()
-    let cropImageResult = CropImageResult(image: cropResponse.image, boundingBox: .init(cgRect: cropResponse.boundingBox))
+    let cropImageResult = CropImageResult(
+      image: cropResponse.image,
+      boundingBox: .init(cgRect: cropResponse.boundingBox)
+    )
     await store.send(.view(.save))
     await store.receive(.delegate(.cropImageResult(cropImageResult)))
   }
