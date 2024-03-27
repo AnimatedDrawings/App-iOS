@@ -1,17 +1,17 @@
 //
-//  FindingTheCharacterDelegateAction.swift
-//  FindingTheCharacterFeatures
+//  FindTheCharacterDelegateAction.swift
+//  FindTheCharacterFeatures
 //
 //  Created by chminii on 3/5/24.
 //  Copyright © 2024 chminipark. All rights reserved.
 //
 
 import ADComposableArchitecture
-import FindingTheCharacterInterfaces
+import FindTheCharacterInterfaces
 
-public extension FindingTheCharacterFeature {
+public extension FindTheCharacterFeature {
   enum DelegateActions: Equatable {
-    case moveToSeparatingCharacter(FindingTheCharacterResult)
+    case moveToSeparatingCharacter(FindTheCharacterResult)
   }
   
   func DelegateReducer() -> some Reducer<State, Action> {

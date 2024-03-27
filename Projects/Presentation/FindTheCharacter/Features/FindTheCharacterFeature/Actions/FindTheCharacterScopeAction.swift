@@ -1,6 +1,6 @@
 //
-//  FindingTheCharacterScopeAction.swift
-//  FindingTheCharacterFeatures
+//  FindTheCharacterScopeAction.swift
+//  FindTheCharacterFeatures
 //
 //  Created by chminii on 3/4/24.
 //  Copyright © 2024 chminipark. All rights reserved.
@@ -9,7 +9,7 @@
 import ADComposableArchitecture
 import CropImageFeatures
 
-public extension FindingTheCharacterFeature {
+public extension FindTheCharacterFeature {
   @CasePathable
   enum ScopeActions: Equatable {
     case cropImage(CropImageFeature.Action)

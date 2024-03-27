@@ -1,6 +1,6 @@
 //
-//  FindingTheCharacterAsyncAction.swift
-//  FindingTheCharacterFeatures
+//  FindTheCharacterAsyncAction.swift
+//  FindTheCharacterFeatures
 //
 //  Created by chminii on 3/4/24.
 //  Copyright © 2024 chminipark. All rights reserved.
@@ -10,9 +10,9 @@ import ADComposableArchitecture
 import UIKit
 import CropImageInterfaces
 import NetworkProviderInterfaces
-import FindingTheCharacterInterfaces
+import FindTheCharacterInterfaces
 
-public extension FindingTheCharacterFeature {
+public extension FindTheCharacterFeature {
   enum AsyncActions: Equatable {
     case findTheCharacter(CropImageResult)
     case findTheCharacterResponse(TaskEmptyResult)
@@ -64,7 +64,7 @@ public extension FindingTheCharacterFeature {
             return .none
           }
           
-          let result = FindingTheCharacterResult(
+          let result = FindTheCharacterResult(
             cropImage: croppedUIImage,
             maskImage: response.image
           )

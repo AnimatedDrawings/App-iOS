@@ -9,9 +9,9 @@ import ProjectDescription
 import ProjectEnvironment
 
 let project: Project = .makeProject(
-  name: FindingTheCharacter.projectName,
+  name: FindTheCharacter.projectName,
   options: .enableCodeCoverage,
-  targets: FindingTheCharacter
+  targets: FindTheCharacter
     .uPresentationTargets(
       dependencies: [CropImage.projectDepedency]
     )

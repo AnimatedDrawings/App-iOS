@@ -1,5 +1,5 @@
 //
-//  FindingTheCharacterView.swift
+//  FindTheCharacterView.swift
 //  AD_UI
 //
 //  Created by minii on 2023/06/01.
@@ -8,20 +8,20 @@
 
 import SwiftUI
 import ADComposableArchitecture
-import FindingTheCharacterFeatures
+import FindTheCharacterFeatures
 import ADUIKit
 import ADResources
 import DomainModels
 import CropImage
 
-public struct FindingTheCharacterView: View {
-  @Perception.Bindable var store: StoreOf<FindingTheCharacterFeature>
+public struct FindTheCharacterView: View {
+  @Perception.Bindable var store: StoreOf<FindTheCharacterFeature>
   
   public init(
-    store: StoreOf<FindingTheCharacterFeature> = Store(
+    store: StoreOf<FindTheCharacterFeature> = Store(
       initialState: .init()
     ) {
-      FindingTheCharacterFeature()
+      FindTheCharacterFeature()
     }
   ) {
     self.store = store
@@ -63,7 +63,7 @@ public struct FindingTheCharacterView: View {
   }
 }
 
-private extension FindingTheCharacterView {
+private extension FindTheCharacterView {
   @MainActor
   func IfLetCropImageView() -> some View {
     Group {
@@ -84,7 +84,7 @@ private extension FindingTheCharacterView {
   }
 }
 
-private extension FindingTheCharacterView {
+private extension FindTheCharacterView {
   struct Title: View {
     let title = "FINDING THE CHARACTER"
     let description = "We’ve identified the character, and put a box around it."
@@ -102,7 +102,7 @@ private extension FindingTheCharacterView {
   }
 }
 
-private extension FindingTheCharacterView {
+private extension FindTheCharacterView {
   struct CheckListContent: View {
     @Binding var state: Bool
     let description = "Resize the box to ensure it tightly fits one character."
@@ -124,7 +124,7 @@ private extension FindingTheCharacterView {
   }
 }
 
-private extension FindingTheCharacterView {
+private extension FindTheCharacterView {
   struct ShowCropImageViewButton: View {
     let viewFinder = "person.fill.viewfinder"
     let text = "Find the Character"

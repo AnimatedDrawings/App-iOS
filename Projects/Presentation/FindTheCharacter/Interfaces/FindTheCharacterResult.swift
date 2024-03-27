@@ -1,5 +1,5 @@
 //
-//  FindingTheCharacterResult.swift
+//  FindTheCharacterResult.swift
 //  FindingTheCharacterInterfaces
 //
 //  Created by chminii on 3/25/24.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-public struct FindingTheCharacterResult: Equatable {
+public struct FindTheCharacterResult: Equatable {
   public let cropImage: UIImage
   public let maskImage: UIImage
   
@@ -18,7 +18,7 @@ public struct FindingTheCharacterResult: Equatable {
   }
 }
 
-public extension FindingTheCharacterResult {
+public extension FindTheCharacterResult {
   static func mock() -> Self {
     return Self(cropImage: UIImage(), maskImage: UIImage())
   }

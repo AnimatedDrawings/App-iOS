@@ -1,6 +1,6 @@
 //
-//  FindingTheCharacterViewAction.swift
-//  FindingTheCharacter
+//  FindTheCharacterViewAction.swift
+//  FindTheCharacter
 //
 //  Created by chminii on 2/27/24.
 //  Copyright © 2024 chminipark. All rights reserved.
@@ -10,7 +10,7 @@ import ADComposableArchitecture
 import CropImageFeatures
 import ADAsyncAlgorithms
 
-public extension FindingTheCharacterFeature {
+public extension FindTheCharacterFeature {
   enum ViewActions: Equatable {
     case task
     case checkList(Bool)

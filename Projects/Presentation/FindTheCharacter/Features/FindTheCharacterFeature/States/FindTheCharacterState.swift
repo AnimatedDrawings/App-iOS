@@ -1,6 +1,6 @@
 //
-//  FindingTheCharacterState.swift
-//  FindingTheCharacter
+//  FindTheCharacterState.swift
+//  FindTheCharacter
 //
 //  Created by chminii on 2/27/24.
 //  Copyright © 2024 chminipark. All rights reserved.
@@ -11,7 +11,7 @@ import CropImageFeatures
 import DomainModels
 import UIKit
 
-public extension FindingTheCharacterFeature {
+public extension FindTheCharacterFeature {
   @ObservableState
   struct State: Equatable {
     public var step: StepState

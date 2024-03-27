@@ -1,26 +1,26 @@
 //
-//  FindingTheCharacterAsyncActionTests.swift
-//  FindingTheCharacterTests
+//  FindTheCharacterAsyncActionTests.swift
+//  FindTheCharacterTests
 //
 //  Created by chminii on 3/11/24.
 //  Copyright © 2024 chminipark. All rights reserved.
 //
 
 import XCTest
-@testable import FindingTheCharacterFeatures
+@testable import FindTheCharacterFeatures
 import ADComposableArchitecture
 import CropImageInterfaces
 import ADErrors
 import NetworkProviderInterfaces
-import FindingTheCharacterInterfaces
+import FindTheCharacterInterfaces
 
-final class FindingTheCharacterAsyncActionTests: XCTestCase {
-  var store: TestStoreOf<FindingTheCharacterFeature>!
+final class FindTheCharacterAsyncActionTests: XCTestCase {
+  var store: TestStoreOf<FindTheCharacterFeature>!
   
   @MainActor
   override func setUp() async throws {
     store = TestStore(initialState: .init()) {
-      FindingTheCharacterFeature()
+      FindTheCharacterFeature()
     }
   }
   
@@ -66,9 +66,9 @@ final class FindingTheCharacterAsyncActionTests: XCTestCase {
     let cropImage = UIImage()
     let maskImage = UIImage()
     store = TestStore(initialState: .init(croppedUIImage: cropImage)) {
-      FindingTheCharacterFeature()
+      FindTheCharacterFeature()
     }
-    let findingTheCharacterResult = FindingTheCharacterResult(
+    let findingTheCharacterResult = FindTheCharacterResult(
       cropImage: cropImage,
       maskImage: maskImage
     )

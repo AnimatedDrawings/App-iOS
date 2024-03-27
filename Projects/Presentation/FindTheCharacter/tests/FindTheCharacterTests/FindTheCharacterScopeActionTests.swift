@@ -1,26 +1,26 @@
 //
-//  FindingTheCharacterScopeActionTests.swift
-//  FindingTheCharacterTests
+//  FindTheCharacterScopeActionTests.swift
+//  FindTheCharacterTests
 //
 //  Created by chminii on 3/11/24.
 //  Copyright © 2024 chminipark. All rights reserved.
 //
 
 import XCTest
-@testable import FindingTheCharacterFeatures
+@testable import FindTheCharacterFeatures
 @testable import CropImageFeatures
 import ADComposableArchitecture
 import CropImageInterfaces
 
-final class FindingTheCharacterScopeActionTests: XCTestCase {
-  var store: TestStoreOf<FindingTheCharacterFeature>!
+final class FindTheCharacterScopeActionTests: XCTestCase {
+  var store: TestStoreOf<FindTheCharacterFeature>!
   
   @MainActor
   override func setUp() async throws {
     let cropImageState = CropImageFeature.State.mock()
-    let state = FindingTheCharacterFeature.State(cropImage: cropImageState)
+    let state = FindTheCharacterFeature.State(cropImage: cropImageState)
     store = TestStore(initialState: state) {
-      FindingTheCharacterFeature()
+      FindTheCharacterFeature()
     }
   }
   

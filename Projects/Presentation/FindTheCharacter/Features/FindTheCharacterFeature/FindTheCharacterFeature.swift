@@ -1,5 +1,5 @@
 //
-//  FindingTheCharacterFeature.swift
+//  FindTheCharacterFeature.swift
 //  AD_Feature
 //
 //  Created by minii on 2023/06/08.
@@ -14,7 +14,7 @@ import NetworkProvider
 import CropImageFeatures
 
 @Reducer
-public struct FindingTheCharacterFeature {
+public struct FindTheCharacterFeature {
   public init() {}
 
   @Dependency(MakeADProvider.self) var makeADProvider
@@ -33,7 +33,7 @@ public struct FindingTheCharacterFeature {
   }
 }
 
-public extension FindingTheCharacterFeature {
+public extension FindTheCharacterFeature {
   @CasePathable
   enum Action: Equatable, BindableAction, ViewAction, InnerAction, AsyncAction, ScopeAction, DelegateAction, UpdateAction {
     case binding(BindingAction<State>)
@@ -46,7 +46,7 @@ public extension FindingTheCharacterFeature {
   }
 }
 
-extension FindingTheCharacterFeature {
+extension FindTheCharacterFeature {
   func MainReducer() -> some Reducer<State, Action> {
     Reduce { state, action in
       switch action {

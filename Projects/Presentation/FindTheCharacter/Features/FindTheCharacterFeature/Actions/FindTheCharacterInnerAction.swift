@@ -1,6 +1,6 @@
 //
-//  FindingTheCharacterInnerAction.swift
-//  FindingTheCharacterFeatures
+//  FindTheCharacterInnerAction.swift
+//  FindTheCharacterFeatures
 //
 //  Created by chminii on 3/4/24.
 //  Copyright © 2024 chminipark. All rights reserved.
@@ -8,7 +8,7 @@
 
 import ADComposableArchitecture
 
-public extension FindingTheCharacterFeature {
+public extension FindTheCharacterFeature {
   enum InnerActions: Equatable {
     case setLoadingView(Bool)
     case toggleCropImageView

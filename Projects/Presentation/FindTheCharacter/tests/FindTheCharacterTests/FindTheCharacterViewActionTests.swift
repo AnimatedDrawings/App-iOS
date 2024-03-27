@@ -1,24 +1,24 @@
 //
-//  FindingTheCharacterViewActionTests.swift
-//  FindingTheCharacterTests
+//  FindTheCharacterViewActionTests.swift
+//  FindTheCharacterTests
 //
 //  Created by chminii on 3/11/24.
 //  Copyright © 2024 chminipark. All rights reserved.
 //
 
 import XCTest
-@testable import FindingTheCharacterFeatures
+@testable import FindTheCharacterFeatures
 @testable import CropImageFeatures
 import ADComposableArchitecture
 import SharedProvider
 
-final class FindingTheCharacterViewActionTests: XCTestCase {
-  var store: TestStoreOf<FindingTheCharacterFeature>!
+final class FindTheCharacterViewActionTests: XCTestCase {
+  var store: TestStoreOf<FindTheCharacterFeature>!
   
   @MainActor
   override func setUp() async throws {
     store = TestStore(initialState: .init()) {
-      FindingTheCharacterFeature()
+      FindTheCharacterFeature()
     }
   }
   
@@ -50,9 +50,9 @@ final class FindingTheCharacterViewActionTests: XCTestCase {
   
   func testToggleCropImageViewNoAlert() async {
     let cropImageState = CropImageFeature.State.mock()
-    let state = FindingTheCharacterFeature.State(cropImage: cropImageState)
+    let state = FindTheCharacterFeature.State(cropImage: cropImageState)
     store = TestStore(initialState: state) {
-      FindingTheCharacterFeature()
+      FindTheCharacterFeature()
     }
     
     await store.send(.view(.toggleCropImageView)) {

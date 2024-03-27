@@ -1,22 +1,22 @@
 //
-//  FindingTheCharacterInnerActionTests.swift
-//  FindingTheCharacterTests
+//  FindTheCharacterInnerActionTests.swift
+//  FindTheCharacterTests
 //
 //  Created by chminii on 3/11/24.
 //  Copyright © 2024 chminipark. All rights reserved.
 //
 
 import XCTest
-@testable import FindingTheCharacterFeatures
+@testable import FindTheCharacterFeatures
 import ADComposableArchitecture
 
-final class FindingTheCharacterInnerActionTests: XCTestCase {
-  var store: TestStoreOf<FindingTheCharacterFeature>!
+final class FindTheCharacterInnerActionTests: XCTestCase {
+  var store: TestStoreOf<FindTheCharacterFeature>!
   
   @MainActor
   override func setUp() async throws {
     store = TestStore(initialState: .init()) {
-      FindingTheCharacterFeature()
+      FindTheCharacterFeature()
     }
   }
   
