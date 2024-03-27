@@ -8,6 +8,7 @@
 
 import DomainModels
 import UIKit
+import ADResources
 
 public struct CropImageResult: Equatable {
   public let image: UIImage
@@ -16,5 +17,12 @@ public struct CropImageResult: Equatable {
   public init(image: UIImage, boundingBox: BoundingBox) {
     self.image = image
     self.boundingBox = boundingBox
+  }
+}
+
+public extension CropImageResult {
+  static func mock() -> Self {
+    let image = ADResourcesAsset.TestImages.example2.image
+    return .init(image: image, boundingBox: .mockExample2())
   }
 }

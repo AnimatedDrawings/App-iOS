@@ -10,7 +10,7 @@ import XCTest
 @testable import FindingTheCharacterFeatures
 @testable import CropImageFeatures
 import ADComposableArchitecture
-import DomainModel
+import CropImageInterfaces
 
 final class FindingTheCharacterScopeActionTests: XCTestCase {
   var store: TestStoreOf<FindingTheCharacterFeature>!
@@ -24,13 +24,13 @@ final class FindingTheCharacterScopeActionTests: XCTestCase {
     }
   }
   
-  func testCropResult() async {
-    let cropResult = CropResult.mock()
+  func testCropImageResult() async {
+    let cropImageResult: CropImageResult = .mock()
     
-    await store.send(.scope(.cropImage(.delegate(.cropResult(cropResult)))))
+    await store.send(.scope(.cropImage(.delegate(.cropImageResult(cropImageResult)))))
     
     store.exhaustivity = .off
-    await store.receive(.async(.findTheCharacter(cropResult)))
+    await store.receive(.async(.findTheCharacter(cropImageResult)))
   }
   
   func testCancel() async {

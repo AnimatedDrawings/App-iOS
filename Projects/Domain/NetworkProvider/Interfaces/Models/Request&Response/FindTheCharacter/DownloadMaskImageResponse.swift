@@ -7,11 +7,19 @@
 //
 
 import UIKit
+import ADResources
 
 public struct DownloadMaskImageResponse: Equatable {
   public let image: UIImage
   
   public init(image: UIImage) {
     self.image = image
+  }
+}
+
+public extension DownloadMaskImageResponse {
+  static func mock() -> Self {
+    let image = ADResourcesAsset.TestImages.example2.image
+    return .init(image: image)
   }
 }

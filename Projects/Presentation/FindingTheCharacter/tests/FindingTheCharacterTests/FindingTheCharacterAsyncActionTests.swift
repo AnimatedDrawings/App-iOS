@@ -9,9 +9,10 @@
 import XCTest
 @testable import FindingTheCharacterFeatures
 import ADComposableArchitecture
-import DomainModel
-import NetworkStorage
-import ADUIKitResources
+import CropImageInterfaces
+import ADErrors
+import NetworkProviderInterfaces
+import FindingTheCharacterInterfaces
 
 final class FindingTheCharacterAsyncActionTests: XCTestCase {
   var store: TestStoreOf<FindingTheCharacterFeature>!
@@ -24,10 +25,10 @@ final class FindingTheCharacterAsyncActionTests: XCTestCase {
   }
   
   func testFindTheCharacter() async {
-    let mockCropResult = CropResult.mock()
+    let cropImageResult: CropImageResult = .mock()
     
-    await store.send(.async(.findTheCharacter(mockCropResult))) {
-      $0.cropImageResult = mockCropResult.image
+    await store.send(.async(.findTheCharacter(cropImageResult))) {
+      $0.croppedUIImage = cropImageResult.image
     }
     
     store.exhaustivity = .off
@@ -43,9 +44,9 @@ final class FindingTheCharacterAsyncActionTests: XCTestCase {
   }
   
   func testFindTheCharacterResponseFail() async {
-    let mockError = NetworkError.ADServerError
+    let error = NetworkStorageError.server
     
-    await store.send(.async(.findTheCharacterResponse(.failure(mockError))))
+    await store.send(.async(.findTheCharacterResponse(.failure(error))))
     
     store.exhaustivity = .off
     await store.receive(.inner(.setLoadingView(false)))
@@ -53,31 +54,38 @@ final class FindingTheCharacterAsyncActionTests: XCTestCase {
   }
   
   func testDownloadMaskImage() async {
+    let response: DownloadMaskImageResponse = .mock()
+    
     await store.send(.async(.downloadMaskImage))
     
     store.exhaustivity = .off
-    await store.receive(.async(.downloadMaskImageResponse(.success(UIImage()))))
+    await store.receive(.async(.downloadMaskImageResponse(.success(response))))
   }
   
   func testDownloadMaskImageResponseSuccess() async {
-    let mockCropImage = UIImage()
-    let mockMaskImage = UIImage()
-    let mockFindingTheCharacterResult = FindingTheCharacterResult(
-      cropImage: mockCropImage,
-      maskImage: mockMaskImage
+    let cropImage = UIImage()
+    let maskImage = UIImage()
+    store = TestStore(initialState: .init(croppedUIImage: cropImage)) {
+      FindingTheCharacterFeature()
+    }
+    let findingTheCharacterResult = FindingTheCharacterResult(
+      cropImage: cropImage,
+      maskImage: maskImage
     )
-    await store.send(.async(.downloadMaskImageResponse(.success(mockMaskImage))))
+    let downloadMaskImageResponse: DownloadMaskImageResponse = .init(image: maskImage)
+    
+    await store.send(.async(.downloadMaskImageResponse(.success(downloadMaskImageResponse))))
     
     store.exhaustivity = .off
     await store.receive(.inner(.setLoadingView(false)))
     await store.receive(.view(.toggleCropImageView))
-    await store.receive(.delegate(.moveToSeparatingCharacter(mockFindingTheCharacterResult)))
+    await store.receive(.delegate(.moveToSeparatingCharacter(findingTheCharacterResult)))
   }
   
   func testDownloadMaskImageResponseFail() async {
-    let mockError = NetworkError.ADServerError
+    let error = NetworkStorageError.server
     
-    await store.send(.async(.downloadMaskImageResponse(.failure(mockError))))
+    await store.send(.async(.downloadMaskImageResponse(.failure(error))))
     
     store.exhaustivity = .off
     await store.receive(.inner(.setLoadingView(false)))

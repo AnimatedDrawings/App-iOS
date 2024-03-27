@@ -26,9 +26,9 @@ public extension FindingTheCharacterFeature {
       case .async(let asyncActions):
         switch asyncActions {
         case .findTheCharacter(let cropImageResult):
-          let cropImage = cropImageResult.image
+          let croppedUIImage = cropImageResult.image
           let boundingBox = cropImageResult.boundingBox
-          state.cropImageResult = cropImage
+          state.croppedUIImage = croppedUIImage
           
           return .run { send in
             guard let ad_id = await adInfo.id.get() else { return }
@@ -60,8 +60,12 @@ public extension FindingTheCharacterFeature {
           }
           
         case .downloadMaskImageResponse(.success(let response)):
+          guard let croppedUIImage = state.croppedUIImage else {
+            return .none
+          }
+          
           let result = FindingTheCharacterResult(
-            cropImage: state.cropImageResult,
+            cropImage: croppedUIImage,
             maskImage: response.image
           )
           

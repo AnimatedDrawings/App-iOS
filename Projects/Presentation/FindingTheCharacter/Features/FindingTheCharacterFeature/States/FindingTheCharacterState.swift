@@ -19,7 +19,7 @@ public extension FindingTheCharacterFeature {
     public var cropImageView: Bool
     public var loadingView: Bool
     public var alert: Alert
-    var cropImageResult: UIImage
+    var croppedUIImage: UIImage?
     
     public var cropImage: CropImageFeature.State?
     
@@ -29,6 +29,7 @@ public extension FindingTheCharacterFeature {
       cropImageView: Bool = false,
       loadingView: Bool = false,
       alert: Alert = Alert(),
+      croppedUIImage: UIImage? = nil,
       cropImage: CropImageFeature.State? = nil
     ) {
       self.step = step
@@ -37,7 +38,7 @@ public extension FindingTheCharacterFeature {
       self.loadingView = loadingView
       self.alert = alert
       self.cropImage = cropImage
-      self.cropImageResult = UIImage()
+      self.croppedUIImage = croppedUIImage
     }
   }
   

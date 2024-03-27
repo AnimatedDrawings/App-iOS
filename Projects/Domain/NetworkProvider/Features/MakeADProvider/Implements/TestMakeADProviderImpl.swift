@@ -21,8 +21,7 @@ final public class TestMakeADProviderImpl: MakeADProviderProtocol {
   public func findTheCharacter(ad_id: String, boundingBox: BoundingBox) async throws {}
   
   public func downloadMaskImage(ad_id: String) async throws -> DownloadMaskImageResponse {
-    let image = ADResourcesAsset.TestImages.example2.image
-    return .init(image: image)
+    return .mock()
   }
   
   public func separateCharacter(ad_id: String, maskedImage: Data) async throws -> SeparateCharacterResponse {

@@ -9,7 +9,7 @@
 import XCTest
 @testable import FindingTheCharacterFeatures
 import ADComposableArchitecture
-import DomainModel
+import DomainModels
 import SharedProvider
 
 final class FindingTheCharacterUpdateActionTests: XCTestCase {

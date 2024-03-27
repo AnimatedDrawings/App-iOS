@@ -17,3 +17,9 @@ public struct FindingTheCharacterResult: Equatable {
     self.maskImage = maskImage
   }
 }
+
+public extension FindingTheCharacterResult {
+  static func mock() -> Self {
+    return Self(cropImage: UIImage(), maskImage: UIImage())
+  }
+}
