@@ -2,17 +2,17 @@
 //  Project.swift
 //  Config
 //
-//  Created by minii on 2023/10/03.
+//  Created by minii on 2023/09/19.
 //
 
 import ProjectDescription
 import ProjectEnvironment
 
 let project: Project = .makeProject(
-  name: SeparatingCharacter.projectName,
+  name: MaskImage.projectName,
   options: .enableCodeCoverage,
-  targets: SeparatingCharacter
+  targets: MaskImage
     .uPresentationTargets(
-      dependencies: [MaskImage.projectDepedency]
+      dependencies: [Domain.projectDepedency]
     )
 )

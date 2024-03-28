@@ -19,7 +19,7 @@ public struct DownloadMaskImageResponse: Equatable {
 
 public extension DownloadMaskImageResponse {
   static func mock() -> Self {
-    let image = ADResourcesAsset.TestImages.example2.image
+    let image: UIImage = ADResourcesAsset.TestImages.maskedImage.image
     return .init(image: image)
   }
 }

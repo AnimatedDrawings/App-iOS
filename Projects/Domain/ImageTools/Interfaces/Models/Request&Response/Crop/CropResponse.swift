@@ -22,7 +22,7 @@ public struct CropResponse: Equatable {
 
 public extension CropResponse {
   static func mock() -> Self {
-    let image = ADResourcesAsset.TestImages.example2.image
+    let image: UIImage = ADResourcesAsset.TestImages.croppedImage.image
     return Self(
       image: image,
       boundingBox: BoundingBox.mockExample2().cgRect

@@ -25,7 +25,7 @@ public extension CropRequest {
   static func mock() -> Self {
     let imageScale: CGFloat = 1
     let viewBoundingBox: CGRect = .init(x: 1, y: 1, width: 100, height: 100)
-    let originalImage: UIImage = ADResourcesAsset.TestImages.example2.image
+    let originalImage: UIImage = ADResourcesAsset.TestImages.originalImage.image
     
     return Self(
       imageScale: imageScale,
