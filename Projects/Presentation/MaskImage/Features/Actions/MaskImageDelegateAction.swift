@@ -1,17 +1,17 @@
 //
-//  CropImageDelegateAction.swift
-//  CropImageFeatures
+//  MaskImageDelegateAction.swift
+//  MaskImageFeatures
 //
-//  Created by chminii on 3/4/24.
+//  Created by chminii on 3/28/24.
 //  Copyright © 2024 chminipark. All rights reserved.
 //
 
 import ADComposableArchitecture
-import CropImageInterfaces
+import MaskImageInterfaces
 
-public extension CropImageFeature {
+public extension MaskImageFeature {
   enum DelegateActions: Equatable {
-    case cropImageResult(CropImageResult)
+    case maskImageResult(MaskImageResult)
     case cancel
   }
   
@@ -20,11 +20,12 @@ public extension CropImageFeature {
       switch action {
       case .delegate(let delegateActions):
         switch delegateActions {
-        case .cropImageResult:
+        case .maskImageResult:
           return .none
         case .cancel:
           return .none
         }
+        
       default:
         return .none
       }

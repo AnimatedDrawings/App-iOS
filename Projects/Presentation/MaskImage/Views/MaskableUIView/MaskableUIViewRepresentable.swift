@@ -55,6 +55,7 @@ extension MaskableUIViewRepresentable {
     var maskableUIView: MaskableUIView?
     private var cancellable = Set<AnyCancellable>()
     
+    
 //    var viewStore: ViewStoreOf<MaskingImageFeature>? {
 //      didSet {
 //        viewStore?.publisher.drawingState

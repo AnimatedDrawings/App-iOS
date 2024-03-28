@@ -17,7 +17,7 @@ public extension FindTheCharacterFeature {
     case noCropImageErrorAlert
   }
   
-  func InnerReducer() -> some Reducer<State, Action> {
+  func InnerReducer() -> some ReducerOf<Self> {
     Reduce { state, action in
       switch action {
       case .inner(let innerActions):

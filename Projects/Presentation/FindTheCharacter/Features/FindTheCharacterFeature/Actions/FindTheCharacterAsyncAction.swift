@@ -20,7 +20,7 @@ public extension FindTheCharacterFeature {
     case downloadMaskImageResponse(TaskResult<DownloadMaskImageResponse>)
   }
   
-  func AsyncReducer() -> some Reducer<State, Action> {
+  func AsyncReducer() -> some ReducerOf<Self> {
     Reduce { state, action in
       switch action {
       case .async(let asyncActions):

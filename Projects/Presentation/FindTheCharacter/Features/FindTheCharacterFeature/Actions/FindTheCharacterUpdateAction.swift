@@ -18,7 +18,7 @@ public extension FindTheCharacterFeature {
     case setIsShowStepBar(Bool)
   }
   
-  func UpdateReducer() -> some Reducer<State, Action> {
+  func UpdateReducer() -> some ReducerOf<Self> {
     Reduce { state, action in
       switch action {
       case .update(let updateActions):

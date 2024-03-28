@@ -8,12 +8,27 @@
 
 import SwiftUI
 import ADResources
+import ADComposableArchitecture
+import MaskImageFeatures
 
 struct MockMaskImageView: View {
-  let croppedImage: UIImage = ADResourcesAsset.TestImages.croppedImage.image
-  let initMaskImage: UIImage = ADResourcesAsset.TestImages.maskedImage.image
+  @Perception.Bindable var store: StoreOf<MaskImageFeature>
+  
+  init() {
+    let croppedImage: UIImage = ADResourcesAsset.TestImages.croppedImage.image
+    let maskedImage: UIImage = ADResourcesAsset.TestImages.maskedImage.image
+    
+    self.store = Store(
+      initialState: .init(
+        croppedImage: croppedImage,
+        maskedImage: maskedImage
+      )
+    ) {
+      MaskImageFeature()
+    }
+  }
   
   var body: some View {
-    MaskImageView(croppedImage: croppedImage, initMaskImage: initMaskImage)
+    MaskImageView(store: store)
   }
 }

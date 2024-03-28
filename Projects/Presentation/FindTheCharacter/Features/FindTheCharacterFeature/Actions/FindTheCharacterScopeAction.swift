@@ -15,7 +15,7 @@ public extension FindTheCharacterFeature {
     case cropImage(CropImageFeature.Action)
   }
   
-  func ScopeReducer() -> some Reducer<State, Action> {
+  func ScopeReducer() -> some ReducerOf<Self> {
     Reduce { state, action in
       switch action {
       case .scope(let scopeActions):

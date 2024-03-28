@@ -98,13 +98,34 @@
 //
 
 
-public enum DrawingToolState: Equatable {
-  case draw
-  case erase
+
+import ADComposableArchitecture
+
+@Reducer
+public struct MaskImageFeature {
+  public init() {}
+  
+  public var body: some ReducerOf<Self> {
+    MainReducer()
+    ViewReducer()
+    DelegateReducer()
+  }
 }
 
-public enum MaskToolState: Equatable {
-//  case drawingTool(DrawingToolState)
-  case undo
-  case reset
+public extension MaskImageFeature {
+  enum Action: Equatable, ViewAction, DelegateAction {
+    case view(ViewActions)
+    case delegate(DelegateActions)
+  }
+}
+
+public extension MaskImageFeature {
+  func MainReducer() -> some ReducerOf<Self> {
+    Reduce { state, action in
+      switch action {
+      default:
+        return .none
+      }
+    }
+  }
 }

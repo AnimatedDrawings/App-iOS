@@ -21,7 +21,7 @@ public struct FindTheCharacterFeature {
   @Dependency(ADInfoProvider.self) var adInfo
   @Dependency(StepProvider.self) var step
   
-  public var body: some Reducer<State, Action> {
+  public var body: some ReducerOf<Self> {
     BindingReducer()
     MainReducer()
     ViewReducer()
@@ -47,7 +47,7 @@ public extension FindTheCharacterFeature {
 }
 
 extension FindTheCharacterFeature {
-  func MainReducer() -> some Reducer<State, Action> {
+  func MainReducer() -> some ReducerOf<Self> {
     Reduce { state, action in
       switch action {
       case .binding:

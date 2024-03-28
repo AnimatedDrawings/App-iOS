@@ -14,7 +14,7 @@ public extension FindTheCharacterFeature {
     case moveToSeparatingCharacter(FindTheCharacterResult)
   }
   
-  func DelegateReducer() -> some Reducer<State, Action> {
+  func DelegateReducer() -> some ReducerOf<Self> {
     Reduce { state, action in
       switch action {
       case .delegate:

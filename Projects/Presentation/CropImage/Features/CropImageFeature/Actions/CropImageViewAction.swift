@@ -19,7 +19,7 @@ public extension CropImageFeature {
     case reset
   }
   
-  func ViewReducer() -> some Reducer<State, Action> {
+  func ViewReducer() -> some ReducerOf<Self> {
     Reduce { state, action in
       switch action {
       case .view(let viewActions):

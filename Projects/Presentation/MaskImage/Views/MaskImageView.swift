@@ -59,11 +59,20 @@
 //}
 
 import SwiftUI
+import ADComposableArchitecture
 import ADUIKit
+import MaskImageFeatures
 
 public struct MaskImageView: View {
-  let croppedImage: UIImage
-  let initMaskImage: UIImage
+  @Perception.Bindable var store: StoreOf<MaskImageFeature>
+  
+  public init(store: StoreOf<MaskImageFeature>) {
+    self.store = store
+  }
+  
+  
+//  let croppedImage: UIImage
+//  let initMaskImage: UIImage
   
   public var body: some View {
     VStack(spacing: 20) {
@@ -76,8 +85,8 @@ public struct MaskImageView: View {
       Spacer()
       
       MaskableView(
-        croppedImage: croppedImage,
-        initMaskImage: initMaskImage
+        croppedImage: store.croppedImage,
+        initMaskImage: store.maskedImage
       )
       
       Spacer()
