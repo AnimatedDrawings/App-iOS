@@ -31,16 +31,20 @@ struct MaskToolPanel: View {
       )
       .overlay {
         HStack(alignment: .bottom) {
-          MarkerButton(
-            drawingTool: $store.triggerState.drawingTool,
-            strokeColor: strokeColor,
-            action: store.action(.view(.maskToolAction(.setDrawingTool(.draw))))
-          )
-          EraserButton(
-            drawingTool: $store.triggerState.drawingTool,
-            strokeColor: strokeColor,
-            action: store.action(.view(.maskToolAction(.setDrawingTool(.erase))))
-          )
+          WithPerceptionTracking {
+            MarkerButton(
+              drawingTool: $store.triggerState.drawingTool,
+              strokeColor: strokeColor,
+              action: store.action(.view(.maskToolAction(.setDrawingTool(.draw))))
+            )
+          }
+          WithPerceptionTracking {
+            EraserButton(
+              drawingTool: $store.triggerState.drawingTool,
+              strokeColor: strokeColor,
+              action: store.action(.view(.maskToolAction(.setDrawingTool(.erase))))
+            )
+          }
           Spacer()
             .frame(width: toolSizerSize * 1.2)
           ResetButton(
