@@ -12,23 +12,24 @@ import ADComposableArchitecture
 
 struct MaskableUIViewRepresentable: UIViewRepresentable {
   typealias UIViewType = MaskableUIView
-  let myFrame: CGRect
+  
+  @Binding var imageFrame: CGRect
   let croppedImage: UIImage
   let initMaskImage: UIImage
   
   init(
-    myFrame: CGRect,
+    imageFrame: Binding<CGRect>,
     croppedImage: UIImage,
     initMaskImage: UIImage
   ) {
-    self.myFrame = myFrame
+    self._imageFrame = imageFrame
     self.croppedImage = croppedImage
     self.initMaskImage = initMaskImage
   }
   
   func makeUIView(context: Context) -> MaskableUIView {
     let maskableUIView = MaskableUIView(
-      myFrame: myFrame,
+      myFrame: imageFrame,
       croppedImage: croppedImage,
       initMaskImage: initMaskImage,
       curDrawingState: .draw,
@@ -42,7 +43,7 @@ struct MaskableUIViewRepresentable: UIViewRepresentable {
   }
   
   func updateUIView(_ uiView: MaskableUIView, context: Context) {
-    uiView.updateBounds(myFrame: myFrame)
+//    uiView.updateBounds(myFrame: imageFrame)
   }
 }
 
@@ -52,8 +53,10 @@ extension MaskableUIViewRepresentable {
   }
   
   class Coordinator {
+    var maskableView: MaskableView?
     var maskableUIView: MaskableUIView?
     private var cancellable = Set<AnyCancellable>()
+    
     
     
 //    var viewStore: ViewStoreOf<MaskingImageFeature>? {

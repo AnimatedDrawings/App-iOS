@@ -15,7 +15,15 @@ struct MaskableView: View {
   @State private var imageFrame: CGRect = .init()
   private let backgroundImage: UIImage = ADResourcesAsset.SampleDrawing.checkerboard.image
   let croppedImage: UIImage
-  let initMaskImage: UIImage
+  let maskedImage: UIImage
+  
+  init(
+    croppedImage: UIImage,
+    maskedImage: UIImage
+  ) {
+    self.croppedImage = croppedImage
+    self.maskedImage = maskedImage
+  }
   
   var body: some View {
     RoundedRectangle(cornerRadius: 15)
@@ -26,9 +34,9 @@ struct MaskableView: View {
           .resizable()
           .overlay {
             MaskableUIViewRepresentable(
-              myFrame: imageFrame,
+              imageFrame: $imageFrame,
               croppedImage: croppedImage,
-              initMaskImage: initMaskImage
+              initMaskImage: maskedImage
             )
           }
           .background(

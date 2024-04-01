@@ -28,7 +28,7 @@ class MaskableUIView: UIView {
   private var cache: [CacheContent] = []
   
   // MARK: - Public Property
-  var curDrawingState: DrawingToolState
+  var curDrawingState: DrawingTool
   var curCircleRadius: CGFloat
   var maskedImage: UIImage? {
     guard let renderer = renderer else { return nil}
@@ -44,7 +44,7 @@ class MaskableUIView: UIView {
     myFrame: CGRect,
     croppedImage: UIImage,
     initMaskImage: UIImage,
-    curDrawingState: DrawingToolState,
+    curDrawingState: DrawingTool,
     curCircleRadius: CGFloat
   ) {
     self.croppedImageView.image = croppedImage

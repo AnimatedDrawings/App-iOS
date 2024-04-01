@@ -15,37 +15,50 @@ public extension MaskImageFeature {
   struct State: Equatable {
     public let croppedImage: UIImage
     public let maskedImage: UIImage
-    public var drawingToolState: DrawingToolState
+    public var toolCircleSize: CGFloat
+    public var triggerState: TriggerState
     
-    public init(croppedImage: UIImage, maskedImage: UIImage, drawingToolState: DrawingToolState = .erase) {
+    public init(
+      croppedImage: UIImage,
+      maskedImage: UIImage,
+      toolCircleSize: CGFloat = 15,
+      triggerState: TriggerState = .init()
+    ) {
       self.croppedImage = croppedImage
       self.maskedImage = maskedImage
-      self.drawingToolState = drawingToolState
+      self.toolCircleSize = toolCircleSize
+      self.triggerState = triggerState
     }
+  }
+  
+  @ObservableState
+  struct TriggerState: Equatable {
+    public var drawingTool: DrawingTool
+    public var maskTool: MaskTool
+    public var save: Bool
+    public var reset: Bool
     
-//    public var drawingState: DrawingTool
-//    @BindingState public var circleRadius: CGFloat
-//
-//    public var undoTrigger = false
-//    public var resetTrigger = false
-//    public var saveTrigger = false
-//
-//    public init(
-//      drawingState: DrawingTool = .erase,
-//      circleRadius: CGFloat = 0
-//    ) {
-//      self.drawingState = drawingState
-//      self.circleRadius = circleRadius
-//    }
+    public init(
+      drawingTool: DrawingTool = .erase,
+      maskTool: MaskTool = .undo,
+      save: Bool = false,
+      reset: Bool = false
+    ) {
+      self.drawingTool = drawingTool
+      self.maskTool = maskTool
+      self.save = save
+      self.reset = reset
+    }
   }
 }
 
-public enum DrawingToolState: Equatable {
+
+public enum DrawingTool: Equatable {
   case draw
   case erase
 }
 
-public enum MaskToolState: Equatable {
+public enum MaskTool: Equatable {
   case undo
   case reset
 }

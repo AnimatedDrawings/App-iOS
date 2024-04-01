@@ -70,10 +70,6 @@ public struct MaskImageView: View {
     self.store = store
   }
   
-  
-//  let croppedImage: UIImage
-//  let initMaskImage: UIImage
-  
   public var body: some View {
     VStack(spacing: 20) {
       ToolNaviBar(
@@ -86,12 +82,13 @@ public struct MaskImageView: View {
       
       MaskableView(
         croppedImage: store.croppedImage,
-        initMaskImage: store.maskedImage
+        maskedImage: store.maskedImage
       )
       
       Spacer()
       
-      MaskToolView()
+//      MaskToolView(toolCircleSize: $store.curCircleRadius)
+      MaskToolView(store: store)
     }
   }
 }

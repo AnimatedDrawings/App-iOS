@@ -8,14 +8,14 @@
 
 import SwiftUI
 import MaskImageFeatures
+import ADComposableArchitecture
 
 struct MaskToolPanel: View {
+  @Perception.Bindable var store: StoreOf<MaskImageFeature>
   @Binding var toolSizerSize: CGFloat
   @Binding var toolSizerPadding: CGFloat
+  
   let strokeColor: Color
-  
-  @State var drawingToolState: DrawingToolState = .draw
-  
   private let heightPanel: CGFloat = 65
   
   var body: some View {
@@ -32,24 +32,24 @@ struct MaskToolPanel: View {
       .overlay {
         HStack(alignment: .bottom) {
           MarkerButton(
-            drawingToolState: $drawingToolState,
+            drawingTool: $store.triggerState.drawingTool,
             strokeColor: strokeColor,
-            action: {}
+            action: store.action(.view(.maskToolAction(.setDrawingTool(.draw))))
           )
           EraserButton(
-            drawingToolState: $drawingToolState,
+            drawingTool: $store.triggerState.drawingTool,
             strokeColor: strokeColor,
-            action: {}
+            action: store.action(.view(.maskToolAction(.setDrawingTool(.erase))))
           )
           Spacer()
             .frame(width: toolSizerSize * 1.2)
           ResetButton(
             strokeColor: strokeColor,
-            action: {}
+            action: store.action(.view(.maskToolAction(.setMaskTool(.reset))))
           )
           UndoButton(
             strokeColor: strokeColor,
-            action: {}
+            action: store.action(.view(.maskToolAction(.setMaskTool(.undo))))
           )
         }
         .padding(.horizontal)
@@ -61,12 +61,12 @@ struct MaskToolPanel: View {
 
 extension MaskToolPanel {
   struct MarkerButton: View {
-    @Binding var drawingToolState: DrawingToolState
+    @Binding var drawingTool: DrawingTool
     let strokeColor: Color
     let action: () -> ()
     
     var imageName: String {
-      drawingToolState == .draw ?
+      drawingTool == .draw ?
       "pencil.circle.fill" :
       "pencil.circle"
     }
@@ -82,12 +82,12 @@ extension MaskToolPanel {
   }
   
   struct EraserButton: View {
-    @Binding var drawingToolState: DrawingToolState
+    @Binding var drawingTool: DrawingTool
     let strokeColor: Color
     let action: () -> ()
     
     var imageName: String {
-      drawingToolState == .erase ?
+      drawingTool == .erase ?
       "eraser.fill" :
       "eraser"
     }

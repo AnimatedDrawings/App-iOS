@@ -8,17 +8,17 @@
 import SwiftUI
 
 struct ToolSizerButton: View {
-  @Binding var curCircleRadius: CGFloat
+  @Binding var toolCircleSize: CGFloat
   @State var selectedCircle: Int = 0
   let strokeColor: Color
   let buttonSize: CGFloat
   
   init(
-    curCircleRadius: Binding<CGFloat>,
+    toolCircleSize: Binding<CGFloat>,
     buttonSize: CGFloat,
     strokeColor: Color
   ) {
-    self._curCircleRadius = curCircleRadius
+    self._toolCircleSize = toolCircleSize
     self.buttonSize = buttonSize
     self.strokeColor = strokeColor
   }
@@ -47,14 +47,14 @@ struct ToolSizerButton: View {
         }
     }
     .onAppear {
-      curCircleRadius = toolSizes[0]
+      toolCircleSize = toolSizes[0]
     }
   }
   
   func action() {
     let tmpIndex: Int = self.selectedCircle + 1
     let nexIndex: Int = tmpIndex >= 4 ? 0 : tmpIndex
-    self.curCircleRadius = toolSizes[nexIndex]
+    self.toolCircleSize = toolSizes[nexIndex]
     withAnimation {
       self.selectedCircle = nexIndex
     }
