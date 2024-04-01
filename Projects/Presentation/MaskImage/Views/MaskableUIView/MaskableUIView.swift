@@ -28,8 +28,8 @@ class MaskableUIView: UIView {
   private var cache: [CacheContent] = []
   
   // MARK: - Public Property
-  var curDrawingState: DrawingTool
-  var curCircleRadius: CGFloat
+  var curDrawingTool: DrawingTool = .erase
+  var curToolCircleSize: CGFloat = 15
   var maskedImage: UIImage? {
     guard let renderer = renderer else { return nil}
     let result = renderer.image {
@@ -43,14 +43,10 @@ class MaskableUIView: UIView {
   init(
     myFrame: CGRect,
     croppedImage: UIImage,
-    initMaskImage: UIImage,
-    curDrawingState: DrawingTool,
-    curCircleRadius: CGFloat
+    initMaskImage: UIImage
   ) {
     self.croppedImageView.image = croppedImage
     self.initMaskImage = initMaskImage
-    self.curDrawingState = curDrawingState
-    self.curCircleRadius = curCircleRadius
     super.init(frame: CGRect(origin: .zero, size: myFrame.size))
     addMaskGesture()
     setupLayout()
@@ -122,13 +118,13 @@ extension MaskableUIView {
       if let maskImage = maskImage {
         maskImage.draw(in: self.bounds)
         let rect = CGRect(origin: cgPoint, size: .zero)
-          .insetBy(dx: -curCircleRadius/2, dy: -curCircleRadius/2)
+          .insetBy(dx: -curToolCircleSize/2, dy: -curToolCircleSize/2)
         let color = UIColor.black.cgColor
         context.cgContext.setFillColor(color)
         let blendMode: CGBlendMode
         let alpha: CGFloat
         
-        if curDrawingState == .erase {
+        if curDrawingTool == .erase {
           blendMode = .sourceIn
           alpha = 0
         } else {

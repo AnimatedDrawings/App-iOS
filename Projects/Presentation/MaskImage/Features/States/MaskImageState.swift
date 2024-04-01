@@ -36,18 +36,15 @@ public extension MaskImageFeature {
     public var drawingTool: DrawingTool
     public var maskTool: MaskTool
     public var save: Bool
-    public var reset: Bool
     
     public init(
       drawingTool: DrawingTool = .erase,
       maskTool: MaskTool = .undo,
-      save: Bool = false,
-      reset: Bool = false
+      save: Bool = false
     ) {
       self.drawingTool = drawingTool
       self.maskTool = maskTool
       self.save = save
-      self.reset = reset
     }
   }
 }

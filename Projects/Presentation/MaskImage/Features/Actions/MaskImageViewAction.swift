@@ -29,8 +29,8 @@ public extension MaskImageFeature {
       case .view(let viewActions):
         switch viewActions {
         case .save:
-          let maskImageResult = MaskImageResult.mock()
-          return .send(.delegate(.maskImageResult(maskImageResult)))
+          state.triggerState.save.toggle()
+          return .none
         case .cancel:
           return .send(.delegate(.cancel))
           

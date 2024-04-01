@@ -9,41 +9,28 @@ import SwiftUI
 import Combine
 import MaskImageFeatures
 import ADComposableArchitecture
+import MaskImageInterfaces
 
 struct MaskableUIViewRepresentable: UIViewRepresentable {
   typealias UIViewType = MaskableUIView
   
+  @Perception.Bindable var store: StoreOf<MaskImageFeature>
   @Binding var imageFrame: CGRect
-  let croppedImage: UIImage
-  let initMaskImage: UIImage
-  
-  init(
-    imageFrame: Binding<CGRect>,
-    croppedImage: UIImage,
-    initMaskImage: UIImage
-  ) {
-    self._imageFrame = imageFrame
-    self.croppedImage = croppedImage
-    self.initMaskImage = initMaskImage
-  }
   
   func makeUIView(context: Context) -> MaskableUIView {
     let maskableUIView = MaskableUIView(
       myFrame: imageFrame,
-      croppedImage: croppedImage,
-      initMaskImage: initMaskImage,
-      curDrawingState: .draw,
-      curCircleRadius: 10
+      croppedImage: store.croppedImage,
+      initMaskImage: store.maskedImage
     )
     
     context.coordinator.maskableUIView = maskableUIView
-//    context.coordinator.viewStore = viewStore
-    
+    context.coordinator.store = store
     return maskableUIView
   }
   
   func updateUIView(_ uiView: MaskableUIView, context: Context) {
-//    uiView.updateBounds(myFrame: imageFrame)
+    uiView.updateBounds(myFrame: imageFrame)
   }
 }
 
@@ -53,45 +40,45 @@ extension MaskableUIViewRepresentable {
   }
   
   class Coordinator {
-    var maskableView: MaskableView?
     var maskableUIView: MaskableUIView?
     private var cancellable = Set<AnyCancellable>()
     
-    
-    
-//    var viewStore: ViewStoreOf<MaskingImageFeature>? {
-//      didSet {
-//        viewStore?.publisher.drawingState
-//          .sink { curDrawingState in
-//            self.maskableUIView?.curDrawingState = curDrawingState
-//          }
-//          .store(in: &cancellable)
-//        
-//        viewStore?.publisher.circleRadius
-//          .sink { curCircleRadius in
-//            self.maskableUIView?.curCircleRadius = curCircleRadius
-//          }
-//          .store(in: &cancellable)
-//        
-//        viewStore?.publisher.undoTrigger
-//          .sink { _ in
-//            self.maskableUIView?.undo()
-//          }
-//          .store(in: &cancellable)
-//        
-//        viewStore?.publisher.resetTrigger
-//          .sink { _ in
-//            self.maskableUIView?.reset()
-//          }
-//          .store(in: &cancellable)
-//        
-//        viewStore?.publisher.saveTrigger
-//          .sink { _ in
-//            let maskedImage = self.maskableUIView?.maskedImage
-//            self.viewStore?.send(.saveMaskedImage(maskedImage))
-//          }
-//          .store(in: &cancellable)
-//      }
-//    }
+    var store: StoreOf<MaskImageFeature>? {
+      didSet {
+        store?.publisher.triggerState.drawingTool
+          .sink { curDrawingTool in
+            self.maskableUIView?.curDrawingTool = curDrawingTool
+          }
+          .store(in: &cancellable)
+        
+        store?.publisher.toolCircleSize
+          .sink { curToolCircleSize in
+            self.maskableUIView?.curToolCircleSize = curToolCircleSize
+          }
+          .store(in: &cancellable)
+        
+        store?.publisher.triggerState.maskTool
+          .sink { curMaskTool in
+            switch curMaskTool {
+            case .undo:
+              self.maskableUIView?.undo()
+            case .reset:
+              self.maskableUIView?.reset()
+            }
+          }
+          .store(in: &cancellable)
+        
+        store?.publisher.triggerState.save
+          .sink { _ in
+            guard let maskedImage = self.maskableUIView?.maskedImage else {
+              return
+            }
+            
+            let maskImageResult: MaskImageResult = .init(image: maskedImage)
+            self.store?.send(.delegate(.maskImageResult(maskImageResult)))
+          }
+          .store(in: &cancellable)
+      }
+    }
   }
 }

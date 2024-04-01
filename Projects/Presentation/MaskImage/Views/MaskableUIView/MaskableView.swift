@@ -12,18 +12,10 @@ import MaskImageFeatures
 import ADResources
 
 struct MaskableView: View {
+  @Perception.Bindable var store: StoreOf<MaskImageFeature>
+  
   @State private var imageFrame: CGRect = .init()
   private let backgroundImage: UIImage = ADResourcesAsset.SampleDrawing.checkerboard.image
-  let croppedImage: UIImage
-  let maskedImage: UIImage
-  
-  init(
-    croppedImage: UIImage,
-    maskedImage: UIImage
-  ) {
-    self.croppedImage = croppedImage
-    self.maskedImage = maskedImage
-  }
   
   var body: some View {
     RoundedRectangle(cornerRadius: 15)
@@ -34,9 +26,8 @@ struct MaskableView: View {
           .resizable()
           .overlay {
             MaskableUIViewRepresentable(
-              imageFrame: $imageFrame,
-              croppedImage: croppedImage,
-              initMaskImage: maskedImage
+              store: store,
+              imageFrame: $imageFrame
             )
           }
           .background(

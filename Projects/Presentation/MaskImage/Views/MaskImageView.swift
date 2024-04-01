@@ -73,21 +73,17 @@ public struct MaskImageView: View {
   public var body: some View {
     VStack(spacing: 20) {
       ToolNaviBar(
-        cancelAction: {},
-        saveAction: {}
+        cancelAction: store.action(.view(.cancel)),
+        saveAction: store.action(.view(.save))
       )
       .padding()
       
       Spacer()
       
-      MaskableView(
-        croppedImage: store.croppedImage,
-        maskedImage: store.maskedImage
-      )
+      MaskableView(store: store)
       
       Spacer()
       
-//      MaskToolView(toolCircleSize: $store.curCircleRadius)
       MaskToolView(store: store)
     }
   }
