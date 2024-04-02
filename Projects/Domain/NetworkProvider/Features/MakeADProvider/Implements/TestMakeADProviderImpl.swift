@@ -25,7 +25,7 @@ final public class TestMakeADProviderImpl: MakeADProviderProtocol {
   }
   
   public func separateCharacter(ad_id: String, maskedImage: Data) async throws -> SeparateCharacterResponse {
-    return .init(joints: Joints.mockExample2())
+    return .mock()
   }
   
   public func findCharacterJoints(ad_id: String,joints: Joints) async throws {}

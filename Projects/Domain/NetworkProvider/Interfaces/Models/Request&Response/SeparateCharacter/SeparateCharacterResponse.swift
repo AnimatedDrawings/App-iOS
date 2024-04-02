@@ -8,10 +8,16 @@
 
 import DomainModels
 
-public struct SeparateCharacterResponse {
+public struct SeparateCharacterResponse: Equatable {
   public let joints: Joints
   
   public init(joints: Joints) {
     self.joints = joints
+  }
+}
+
+public extension SeparateCharacterResponse {
+  static func mock() -> Self {
+    .init(joints: Joints.mock())
   }
 }

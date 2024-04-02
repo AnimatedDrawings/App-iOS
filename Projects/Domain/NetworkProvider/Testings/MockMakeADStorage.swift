@@ -31,7 +31,7 @@ public final class MockMakeADStorage: MakeADStorageProtocol {
   }
   
   public func separateCharacter(request: SeparateCharacterRequest) async throws -> SeparateCharacterResponseDTO {
-    return .init(jointsDTO: .example2Mock())
+    return .init(jointsDTO: .mock())
   }
   
   public func findCharacterJoints(request: FindCharacterJointsRequest) async throws -> EmptyResponse {

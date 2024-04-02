@@ -1,20 +1,21 @@
 //
-//  FindTheCharacterInnerAction.swift
-//  FindTheCharacterFeatures
+//  SeparateCharacterInnerAction.swift
+//  SeparateCharacterFeatures
 //
-//  Created by chminii on 3/4/24.
+//  Created by chminii on 4/2/24.
 //  Copyright © 2024 chminipark. All rights reserved.
 //
 
 import ADComposableArchitecture
 
-public extension FindTheCharacterFeature {
+public extension SeparateCharacterFeature {
+  @CasePathable
   enum InnerActions: Equatable {
     case setLoadingView(Bool)
-    case popCropImageView
     
+    case noMaskImageErrorAlert
     case networkErrorAlert
-    case noCropImageErrorAlert
+    case popMaskImageView
   }
   
   func InnerReducer() -> some ReducerOf<Self> {
@@ -25,14 +26,17 @@ public extension FindTheCharacterFeature {
         case .setLoadingView(let isShow):
           state.loadingView = isShow
           return .none
-        case .popCropImageView:
-          state.cropImageView.toggle()
+          
+        case .noMaskImageErrorAlert:
+          state.alert.noMaskImage.toggle()
           return .none
+          
         case .networkErrorAlert:
           state.alert.networkError.toggle()
           return .none
-        case .noCropImageErrorAlert:
-          state.alert.noCropImage.toggle()
+          
+        case .popMaskImageView:
+          state.maskImageView.toggle()
           return .none
         }
         
@@ -42,4 +46,3 @@ public extension FindTheCharacterFeature {
     }
   }
 }
-

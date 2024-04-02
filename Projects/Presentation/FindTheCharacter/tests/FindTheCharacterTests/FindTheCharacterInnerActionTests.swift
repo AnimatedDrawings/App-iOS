@@ -29,7 +29,7 @@ final class FindTheCharacterInnerActionTests: XCTestCase {
   }
   
   func testToggleCropImageView() async {
-    await store.send(.inner(.toggleCropImageView)) {
+    await store.send(.inner(.popCropImageView)) {
       $0.cropImageView = !$0.cropImageView
     }
   }

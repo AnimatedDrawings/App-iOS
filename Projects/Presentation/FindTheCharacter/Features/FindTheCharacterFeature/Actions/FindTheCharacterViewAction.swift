@@ -14,7 +14,7 @@ public extension FindTheCharacterFeature {
   enum ViewActions: Equatable {
     case task
     case checkList(Bool)
-    case toggleCropImageView
+    case pushCropImageView
   }
   
   func ViewReducer() -> some ReducerOf<Self> {
@@ -36,7 +36,7 @@ public extension FindTheCharacterFeature {
         case .checkList(let checkState):
           state.checkList = checkState
           return .none
-        case .toggleCropImageView:
+        case .pushCropImageView:
           if state.cropImage == nil {
             return .send(.inner(.noCropImageErrorAlert))
           }

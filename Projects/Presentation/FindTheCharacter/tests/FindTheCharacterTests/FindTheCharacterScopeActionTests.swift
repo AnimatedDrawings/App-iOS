@@ -37,6 +37,6 @@ final class FindTheCharacterScopeActionTests: XCTestCase {
     await store.send(.scope(.cropImage(.delegate(.cancel))))
     
     store.exhaustivity = .off
-    await store.receive(.inner(.toggleCropImageView))
+    await store.receive(.inner(.popCropImageView))
   }
 }

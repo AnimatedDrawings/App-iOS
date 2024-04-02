@@ -80,7 +80,7 @@ final class MakeADProviderImplTests: XCTestCase {
   }
   
   func testSeparateCharacter() async {
-    let joints = Joints(dto: JointsDTO.example2Mock())
+    let joints = Joints(dto: JointsDTO.mock())
     guard let response = try? await makeADProviderImpl.separateCharacter(
       ad_id: "",
       maskedImage: Data()
@@ -97,7 +97,7 @@ final class MakeADProviderImplTests: XCTestCase {
     do {
       let _ = try await makeADProviderImpl.findCharacterJoints(
         ad_id: "", 
-        joints: Joints.mockExample2()
+        joints: Joints.mock()
       )
     } catch {
       XCTFail()

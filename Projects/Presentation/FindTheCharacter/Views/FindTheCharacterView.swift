@@ -43,7 +43,7 @@ public struct FindTheCharacterView: View {
           Spacer()
           
           ShowCropImageViewButton(store.checkList) {
-            store.send(.view(.toggleCropImageView))
+            store.send(.view(.pushCropImageView))
           }
           
           Spacer().frame(height: 1)
@@ -163,7 +163,7 @@ private extension View {
         Button("OK", action: {})
       },
       message: {
-        Text("There is no image data. Please proceed from step 1 again")
+        Text("There is no crop image data. Please proceed from step 1 again")
       }
     )
   }

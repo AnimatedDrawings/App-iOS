@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import ADComposableArchitecture
+import ADResources
 
 public extension MaskImageFeature {
   @ObservableState
@@ -46,6 +47,14 @@ public extension MaskImageFeature {
       self.maskTool = maskTool
       self.save = save
     }
+  }
+}
+
+public extension MaskImageFeature.State {
+  static func mock() -> Self {
+    let croppedImage: UIImage = ADResourcesAsset.TestImages.croppedImage.image
+    let maskedImage: UIImage = ADResourcesAsset.TestImages.maskedImage.image
+    return .init(croppedImage: croppedImage, maskedImage: maskedImage)
   }
 }
 

@@ -45,7 +45,7 @@ public struct SkeletonDTO: Codable, Equatable {
 }
 
 extension JointsDTO {
-  public static func example2Mock() -> JointsDTO {
+  public static func mock() -> JointsDTO {
     let data = mockData()
     let dto = try! JSONDecoder().decode(Self.self, from: data)
     return dto

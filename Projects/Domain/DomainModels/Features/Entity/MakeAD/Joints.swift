@@ -69,7 +69,7 @@ public struct RatioPoint: Equatable, Decodable {
 }
 
 public extension Joints {
-  static func mockExample2() -> Self {
-    return Self(dto: JointsDTO.example2Mock())
+  static func mock() -> Self {
+    return Self(dto: JointsDTO.mock())
   }
 }

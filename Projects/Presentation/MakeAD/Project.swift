@@ -16,7 +16,7 @@ let project: Project = .makeProject(
       dependencies: [
         UploadDrawing.projectDepedency,
         FindTheCharacter.projectDepedency,
-        SeparatingCharacter.projectDepedency,
+        SeparateCharacter.projectDepedency,
         FindingCharacterJoints.projectDepedency
       ]
     )

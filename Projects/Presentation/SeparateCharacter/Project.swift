@@ -9,9 +9,9 @@ import ProjectDescription
 import ProjectEnvironment
 
 let project: Project = .makeProject(
-  name: SeparatingCharacter.projectName,
+  name: SeparateCharacter.projectName,
   options: .enableCodeCoverage,
-  targets: SeparatingCharacter
+  targets: SeparateCharacter
     .uPresentationTargets(
       dependencies: [MaskImage.projectDepedency]
     )

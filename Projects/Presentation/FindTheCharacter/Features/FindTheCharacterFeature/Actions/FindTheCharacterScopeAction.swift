@@ -23,7 +23,7 @@ public extension FindTheCharacterFeature {
         case .cropImage(.delegate(.cropImageResult(let cropImageResult))):
           return .send(.async(.findTheCharacter(cropImageResult)))
         case .cropImage(.delegate(.cancel)):
-          return .send(.inner(.toggleCropImageView))
+          return .send(.inner(.popCropImageView))
         default:
           return .none
         }

@@ -41,21 +41,21 @@ final class FindTheCharacterViewActionTests: XCTestCase {
     }
   }
   
-  func testToggleCropImageViewAlertNoCropImageError() async {
-    await store.send(.view(.toggleCropImageView))
+  func testPushCropImageViewAlertNoCropImageError() async {
+    await store.send(.view(.showCropImageView))
     
     store.exhaustivity = .off
     await store.receive(.inner(.noCropImageErrorAlert))
   }
   
-  func testToggleCropImageViewNoAlert() async {
+  func testPushCropImageViewNoAlert() async {
     let cropImageState = CropImageFeature.State.mock()
     let state = FindTheCharacterFeature.State(cropImage: cropImageState)
     store = TestStore(initialState: state) {
       FindTheCharacterFeature()
     }
     
-    await store.send(.view(.toggleCropImageView)) {
+    await store.send(.view(.showCropImageView)) {
       $0.cropImageView = !$0.cropImageView
     }
   }

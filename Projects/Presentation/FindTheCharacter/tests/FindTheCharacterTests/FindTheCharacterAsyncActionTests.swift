@@ -78,8 +78,8 @@ final class FindTheCharacterAsyncActionTests: XCTestCase {
     
     store.exhaustivity = .off
     await store.receive(.inner(.setLoadingView(false)))
-    await store.receive(.view(.toggleCropImageView))
-    await store.receive(.delegate(.moveToSeparatingCharacter(findingTheCharacterResult)))
+    await store.receive(.view(.showCropImageView))
+    await store.receive(.delegate(.moveToSeparateCharacter(findingTheCharacterResult)))
   }
   
   func testDownloadMaskImageResponseFail() async {

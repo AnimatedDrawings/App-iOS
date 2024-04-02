@@ -40,7 +40,6 @@ struct MockParentFeatue {
         case .delegate(.maskImageResult(let maskImageResult)):
           state.showResultView.toggle()
           state.maskedImage = maskImageResult.image
-          
           print("efefawfwe")
           return .none
         default:
@@ -55,9 +54,7 @@ struct MockParentView: View {
   @Perception.Bindable var store: StoreOf<MockParentFeatue>
   
   init() {
-    let croppedImage: UIImage = ADResourcesAsset.TestImages.croppedImage.image
-    let maskedImage: UIImage = ADResourcesAsset.TestImages.maskedImage.image
-    let maskImageState: MaskImageFeature.State = .init(croppedImage: croppedImage, maskedImage: maskedImage)
+    let maskImageState: MaskImageFeature.State = .mock()
     self.store = Store(initialState: MockParentFeatue.State(maskImage: maskImageState)) {
       MockParentFeatue()
     }

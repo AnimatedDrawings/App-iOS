@@ -71,8 +71,8 @@ public extension FindTheCharacterFeature {
           
           return .run { send in
             await send(.inner(.setLoadingView(false)))
-            await send(.view(.toggleCropImageView))
-            await send(.delegate(.moveToSeparatingCharacter(result)))
+            await send(.inner(.popCropImageView))
+            await send(.delegate(.moveToSeparateCharacter(result)))
           }
           
         case .downloadMaskImageResponse(.failure(let error)):
