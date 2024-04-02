@@ -10,6 +10,7 @@ import ADComposableArchitecture
 import XCTest
 @testable import SeparateCharacterFeatures
 import MaskImageFeatures
+import MaskImageInterfaces
 
 final class SeparateCharacterScopeActionTests: XCTestCase {
   var store: TestStoreOf<SeparateCharacterFeature>!
@@ -23,7 +24,12 @@ final class SeparateCharacterScopeActionTests: XCTestCase {
   }
   
   func testMaskImageResult() async {
+    let maskingImageResult: MaskImageResult = .mock()
     
+    await store.send(.scope(.maskImage(.delegate(.maskImageResult(maskingImageResult)))))
+    
+    store.exhaustivity = .off
+    await store.receive(.async(.separateCharacter(maskingImageResult)))
   }
   
   func testCancel() async {

@@ -43,28 +43,30 @@ public struct SeparateCharacterView: View {
     .alertNoMaskImageError(isPresented: $store.alert.noMaskImage)
     .fullScreenCover(
       isPresented: $store.maskImageView,
-      content: {
-//        if let croppedImage = croppedImage,
-//           let initMaskImage = initMaskImage
-//        {
-//          MaskingImageView(
-//            store: self.store.scope(
-//              state: \.maskingImage,
-//              action: MyFeature.Action.maskingImage
-//            ),
-//            croppedImage: croppedImage,
-//            initMaskImage: initMaskImage
-//          )
-//          .transparentBlurBackground()
-//          .addLoadingView(
-//            isShow: viewStore.state.isShowLoadingView,
-//            description: "Separating Character..."
-//          )
-//          .alertNetworkError(isPresented: viewStore.$isShowNetworkErrorAlert)
-//        }
-      }
+      content: { IfLetMaskImageView() }
     )
     .task { await store.send(.view(.task)).finish() }
+  }
+}
+
+private extension SeparateCharacterView {
+  @MainActor
+  func IfLetMaskImageView() -> some View {
+    Group {
+      if let maskImageStore = self.store.scope(state: \.maskImage, action: \.scope.maskImage) {
+        WithPerceptionTracking {
+          MaskImageView(store: maskImageStore)
+            .transparentBlurBackground()
+            .addLoadingView(
+              isShow: store.loadingView,
+              description: "Masking Image..."
+            )
+            .alertNetworkError(isPresented: $store.alert.networkError)
+        }
+      } else {
+        Text("No MaskImage...")
+      }
+    }
   }
 }
 

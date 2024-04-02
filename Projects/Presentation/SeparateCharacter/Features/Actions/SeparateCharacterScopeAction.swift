@@ -21,9 +21,11 @@ public extension SeparateCharacterFeature {
       case .scope(let scopeActions):
         switch scopeActions {
         case .maskImage(.delegate(.maskImageResult(let maskImageResult))):
-          return .none
+          return .send(.async(.separateCharacter(maskImageResult)))
+          
         case .maskImage(.delegate(.cancel)):
           return .send(.inner(.popMaskImageView))
+          
         default:
           return .none
         }
