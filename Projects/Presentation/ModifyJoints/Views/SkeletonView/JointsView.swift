@@ -6,20 +6,20 @@
 //
 
 import SwiftUI
-import DomainModel
-import ADUIKitResources
+import ADResources
+import DomainModels
 import ADComposableArchitecture
-import ModifyJointsFeatures
 
 struct JointsView: View {
+  @Binding var skeletons: [String : Skeleton]
+  @Binding var currentJointName: String?
   let viewSize: CGSize
-  let color: Color = ADUIKitResourcesAsset.Color.blue1.swiftUIColor
+  let color: Color = ADResourcesAsset.Color.blue1.swiftUIColor
   let jointCircleSize: CGFloat = 15
-  @ObservedObject var viewStore: ViewStoreOf<ModifyJointsFeature>
   
   var body: some View {
-    ForEach(Array(viewStore.skeletons.keys), id: \.self) { name in
-      if let mySkeleton = viewStore.skeletons[name] {
+    ForEach(Array(skeletons.keys), id: \.self) { name in
+      if let mySkeleton = skeletons[name] {
         JointCircle()
           .offset(calJointOffset(mySkeleton))
           .gesture(
@@ -63,7 +63,7 @@ extension JointsView {
   }
   
   func updateCurrentJoint(_ skeleton: Skeleton) {
-    viewStore.send(.updateCurrentJoint(skeleton.name))
+    currentJointName = skeleton.name
   }
   
   func dragOnChanged(_ value: DragGesture.Value, skeleton: Skeleton) {
@@ -80,11 +80,11 @@ extension JointsView {
     
     let nexRatioPoint = RatioPoint(x: nexX / widthView, y: nexY / heightView)
     let newSkeleton = skeleton.updatePoint(with: nexRatioPoint)
-    viewStore.send(.updateSkeleton(newSkeleton))
+    skeletons[newSkeleton.name] = newSkeleton
   }
   
   func dragOnEnded(_ value: DragGesture.Value) {
-    viewStore.send(.updateCurrentJoint(nil))
+    currentJointName = nil
   }
 }
 
