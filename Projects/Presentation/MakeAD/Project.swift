@@ -17,7 +17,7 @@ let project: Project = .makeProject(
         UploadDrawing.projectDepedency,
         FindTheCharacter.projectDepedency,
         SeparateCharacter.projectDepedency,
-        FindingCharacterJoints.projectDepedency
+        FindCharacterJoints.projectDepedency
       ]
     )
 )

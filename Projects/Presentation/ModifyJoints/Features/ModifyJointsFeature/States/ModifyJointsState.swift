@@ -13,27 +13,11 @@ import ADComposableArchitecture
 public extension ModifyJointsFeature {
   @ObservableState
   struct State: Equatable {
-//    public var skeletons: [String : Skeleton]
-//    public var currentJoint: String?
-//    public let imageWidth: CGFloat
-//    public let imageHeight: CGFloat
-//    public let originSkeletons: [String : Skeleton]
-//    
-//    public init(joints: Joints) {
-//      self.skeletons = joints.skeletons
-//      self.originSkeletons = joints.skeletons
-//      self.imageWidth = joints.imageWidth
-//      self.imageHeight = joints.imageHeight
-//    }
-    
-    public let originSkeletons: [String : Skeleton]
+    public let originJoints: Joints
     public let croppedImage: UIImage
     
-    public init(
-      skeletons: [String : Skeleton],
-      croppedImage: UIImage
-    ) {
-      self.originSkeletons = skeletons
+    public init(originJoints: Joints, croppedImage: UIImage) {
+      self.originJoints = originJoints
       self.croppedImage = croppedImage
     }
   }

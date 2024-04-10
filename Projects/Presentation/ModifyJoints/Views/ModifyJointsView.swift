@@ -21,14 +21,14 @@ public struct ModifyJointsView: View {
   public init(store: StoreOf<ModifyJointsFeature>) {
     self.store = store
     self.croppedImage = store.croppedImage
-    self._skeletons = State(initialValue: store.originSkeletons)
+    self._skeletons = State(initialValue: store.originJoints.skeletons)
   }
   
   public var body: some View {
     VStack(spacing: 40) {
       ToolNaviBar(
         cancelAction: store.action(.view(.cancel)),
-        saveAction: store.action(.view(.save))
+        saveAction: store.action(.view(.save(skeletons)))
       )
       
       Spacer()
@@ -84,7 +84,7 @@ extension ModifyJointsView {
 
 extension ModifyJointsView {
   func resetAction() {
-    skeletons = store.originSkeletons
+    skeletons = store.originJoints.skeletons
   }
   
   struct ResetButton: View {

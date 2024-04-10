@@ -7,10 +7,11 @@
 //
 
 import ADComposableArchitecture
+import DomainModels
 
 public extension ModifyJointsFeature {
   enum DelegateActions: Equatable {
-    case modifyJointsResult
+    case modifyJointsResult(Joints)
     case cancel
   }
   

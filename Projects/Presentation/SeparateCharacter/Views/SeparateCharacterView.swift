@@ -18,7 +18,7 @@ public struct SeparateCharacterView: View {
   @Perception.Bindable var store: StoreOf<SeparateCharacterFeature>
   
   public var body: some View {
-    ADScrollView(.constant(true)) {
+    ADScrollView($store.step.isShowStepBar.sending(\.update.setIsShowStepBar)) {
       VStack(alignment: .leading, spacing: 20) {
         Title()
         

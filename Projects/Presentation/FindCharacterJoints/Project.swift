@@ -9,9 +9,9 @@ import ProjectDescription
 import ProjectEnvironment
 
 let project: Project = .makeProject(
-  name: FindingCharacterJoints.projectName,
+  name: FindCharacterJoints.projectName,
   options: .enableCodeCoverage,
-  targets: FindingCharacterJoints
+  targets: FindCharacterJoints
     .uPresentationTargets(
       dependencies: [ModifyJoints.projectDepedency]
     )

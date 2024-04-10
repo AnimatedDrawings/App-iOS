@@ -7,10 +7,11 @@
 //
 
 import ADComposableArchitecture
+import DomainModels
 
 public extension ModifyJointsFeature {
   enum ViewActions: Equatable {
-    case save
+    case save([String : Skeleton])
     case cancel
   }
   
@@ -19,8 +20,10 @@ public extension ModifyJointsFeature {
       switch action {
       case .view(let viewActions):
         switch viewActions {
-        case .save:
-          return .send(.delegate(.modifyJointsResult))
+        case .save(let skeletons):
+          var newJoints = state.originJoints
+          newJoints.skeletons = skeletons
+          return .send(.delegate(.modifyJointsResult(newJoints)))
         case .cancel:
           return .send(.delegate(.cancel))
         }
