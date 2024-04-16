@@ -34,7 +34,7 @@ public extension FindCharacterJointsFeature {
         case .findCharacterJointsResponse(.success):
           return .run { send in
             await send(.inner(.setLoadingView(false)))
-            // delegate
+            await send(.delegate(.findCharacterJointsResult))
           }
           
         case .findCharacterJointsResponse(.failure(let error)):

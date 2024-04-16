@@ -9,6 +9,8 @@
 import ADComposableArchitecture
 import UploadDrawingFeatures
 import FindTheCharacterFeatures
+import SeparateCharacterFeatures
+import FindCharacterJointsFeatures
 import SharedProvider
 
 @Reducer
@@ -24,7 +26,12 @@ public struct MakeADFeature {
     Scope(state: \.findTheCharacter, action: \.scope.findTheCharacter) {
       FindTheCharacterFeature()
     }
-    
+    Scope(state: \.separateCharacter, action: \.scope.separateCharacter) {
+      SeparateCharacterFeature()
+    }
+    Scope(state: \.findCharacterJoints, action: \.scope.findCharacterJoints) {
+      FindCharacterJointsFeature()
+    }
     BindingReducer()
     MainReducer()
     ScopeReducer()

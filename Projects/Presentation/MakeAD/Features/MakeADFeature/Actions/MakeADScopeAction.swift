@@ -9,7 +9,8 @@
 import ADComposableArchitecture
 import UploadDrawingFeatures
 import FindTheCharacterFeatures
-import CropImageFeatures
+import SeparateCharacterFeatures
+import FindCharacterJointsFeatures
 import DomainModels
 
 public extension MakeADFeature {
@@ -17,12 +18,16 @@ public extension MakeADFeature {
   enum ScopeActions: Equatable {
     case uploadDrawing(UploadDrawingFeature.Action)
     case findTheCharacter(FindTheCharacterFeature.Action)
+    case separateCharacter(SeparateCharacterFeature.Action)
+    case findCharacterJoints(FindCharacterJointsFeature.Action)
   }
   
   func ScopeReducer() -> some ReducerOf<Self> {
     CombineReducers {
       UploadADrawingReducer()
       FindTheCharacterReducer()
+      SeparateCharacterReducer()
+      FindCharacterJointsReducer()
     }
   }
   
@@ -34,7 +39,7 @@ public extension MakeADFeature {
         case .moveToFindingTheCharacter(let result):
           state.makeADInfo.originalImage = result.originalImage
           state.makeADInfo.boundingBox = result.boundingBox.cgRect
-          state.findTheCharacter.cropImage = CropImageFeature.State(
+          state.findTheCharacter.cropImage = .init(
             originalImage: result.originalImage,
             boundingBox: result.boundingBox
           )
@@ -60,6 +65,10 @@ public extension MakeADFeature {
         case .delegate(.moveToSeparateCharacter(let result)):
           state.makeADInfo.croppedImage = result.cropImage
           state.makeADInfo.maskedImage = result.maskImage
+          state.separateCharacter.maskImage = .init(
+            croppedImage: result.cropImage,
+            maskedImage: result.maskImage
+          )
           return .run { send in
             await step.isShowStepBar.set(true)
             await step.currentStep.set(.SeparateCharacter)
@@ -68,6 +77,56 @@ public extension MakeADFeature {
         default:
           return .none
         }
+      default:
+        return .none
+      }
+    }
+  }
+  
+  func SeparateCharacterReducer() -> some ReducerOf<Self> {
+    Reduce { state, action in
+      switch action {
+      case .scope(.separateCharacter(let separateCharacterActions)):
+        switch separateCharacterActions {
+        case .delegate(.moveToFindCharacterJoints(let result)):
+          guard let croppedImage = state.makeADInfo.croppedImage else {
+            return .none
+          }
+          
+          state.makeADInfo.joints = result.joints
+          state.makeADInfo.maskedImage = result.maskedImage
+          state.findCharacterJoints.modifyJoints = .init(
+            originJoints: result.joints,
+            croppedImage: croppedImage
+          )
+          return .run { send in
+            await step.isShowStepBar.set(true)
+            await step.currentStep.set(.FindCharacterJoints)
+            await step.completeStep.set(.SeparateCharacter)
+          }
+          
+        default:
+          return .none
+        }
+        
+      default:
+        return .none
+      }
+    }
+  }
+  
+  func FindCharacterJointsReducer() -> some ReducerOf<Self> {
+    Reduce { state, action in
+      switch action {
+      case .scope(.findCharacterJoints(let findCharacterJointsActions)):
+        switch findCharacterJointsActions {
+        case .delegate(.findCharacterJointsResult):
+          return .none
+        default:
+          return .none
+        }
+        return .none
+        
       default:
         return .none
       }

@@ -10,25 +10,34 @@ import ADComposableArchitecture
 import DomainModels
 import UploadDrawingFeatures
 import FindTheCharacterFeatures
+import SeparateCharacterFeatures
+import FindCharacterJointsFeatures
 
 public extension MakeADFeature {
   @ObservableState
   struct State: Equatable {
     public var step: StepState
     public var makeADInfo: MakeADInfo
+    
     public var uploadDrawing: UploadDrawingFeature.State
     public var findTheCharacter: FindTheCharacterFeature.State
+    public var separateCharacter: SeparateCharacterFeature.State
+    public var findCharacterJoints: FindCharacterJointsFeature.State
     
     public init(
       step: StepState = .init(),
       makeADInfo: MakeADInfo = .init(),
       uploadDrawing: UploadDrawingFeature.State = .init(),
-      findTheCharacter: FindTheCharacterFeature.State = .init()
+      findTheCharacter: FindTheCharacterFeature.State = .init(),
+      separateCharacter: SeparateCharacterFeature.State = .init(),
+      findCharacterJoints: FindCharacterJointsFeature.State = .init()
     ) {
       self.step = step
       self.makeADInfo = makeADInfo
       self.uploadDrawing = uploadDrawing
       self.findTheCharacter = findTheCharacter
+      self.separateCharacter = separateCharacter
+      self.findCharacterJoints = findCharacterJoints
     }
   }
   

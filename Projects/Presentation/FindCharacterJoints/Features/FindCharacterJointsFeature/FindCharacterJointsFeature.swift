@@ -26,18 +26,20 @@ public struct FindCharacterJointsFeature {
     ScopeReducer()
     InnerReducer()
     AsyncReducer()
+    DelegateReducer()
     UpdateReducer()
   }
 }
 
 public extension FindCharacterJointsFeature {
   @CasePathable
-  enum Action: Equatable, BindableAction, ViewAction, ScopeAction, InnerAction, AsyncAction, UpdateAction {
+  enum Action: Equatable, BindableAction, ViewAction, ScopeAction, InnerAction, AsyncAction, UpdateAction, DelegateAction {
     case binding(BindingAction<State>)
     case view(ViewActions)
     case scope(ScopeActions)
     case inner(InnerActions)
     case async(AsyncActions)
+    case delegate(DelegateActions)
     case update(UpdateActions)
   }
 }
