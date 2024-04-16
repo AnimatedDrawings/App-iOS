@@ -31,7 +31,6 @@ final class MaskImageViewActionTests: XCTestCase {
   
   func testCancel() async {
     await store.send(.view(.cancel))
-    
     await store.receive(.delegate(.cancel))
   }
   
@@ -42,10 +41,13 @@ final class MaskImageViewActionTests: XCTestCase {
     }
   }
   
-  func testSetMaskTool() async {
-    let maskTool: MaskTool = .reset
-    await store.send(.view(.maskToolAction(.setMaskTool(maskTool)))) {
-      $0.triggerState.maskTool = maskTool
+  func testSetMaskCache() async {
+    await store.send(.view(.maskToolAction(.setMaskCache(.undo)))) {
+      $0.triggerState.maskCache.undo = !$0.triggerState.maskCache.undo
+    }
+    
+    await store.send(.view(.maskToolAction(.setMaskCache(.reset)))) {
+      $0.triggerState.maskCache.reset = !$0.triggerState.maskCache.reset
     }
   }
   

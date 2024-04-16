@@ -25,7 +25,7 @@ public extension UploadDrawingResponse {
   static func mock() -> Self {
     return Self(
       ad_id: String(describing: Self.self),
-      boundingBox: BoundingBox.mockExample2()
+      boundingBox: BoundingBox.mock()
     )
   }
 }

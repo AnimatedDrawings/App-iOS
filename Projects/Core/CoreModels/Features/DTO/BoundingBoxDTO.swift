@@ -21,13 +21,6 @@ public struct BoundingBoxDTO: Codable, Equatable {
     self.right = right
   }
   
-  public init() {
-    self.top = 0
-    self.bottom = 0
-    self.left = 0
-    self.right = 0
-  }
-  
   enum CodingKeys: String, CodingKey {
     case top
     case bottom
@@ -37,13 +30,13 @@ public struct BoundingBoxDTO: Codable, Equatable {
 }
 
 public extension BoundingBoxDTO {
-  static func mockExample2() -> Self {
+  static func mock() -> Self {
     let data = """
         {
-          "bottom": 1386,
-          "left": 94,
-          "right": 852,
-          "top": 108
+          "bottom": 987,
+          "left": 104,
+          "right": 835,
+          "top": 105
         }
 """.data(using: .utf8)!
     

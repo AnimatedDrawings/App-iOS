@@ -7,16 +7,16 @@
 //
 
 import ADComposableArchitecture
-import UploadADrawingFeatures
-import FindingTheCharacterFeatures
+import UploadDrawingFeatures
+import FindTheCharacterFeatures
 import CropImageFeatures
-import DomainModel
+import DomainModels
 
 public extension MakeADFeature {
   @CasePathable
   enum ScopeActions: Equatable {
-    case uploadADrawing(UploadADrawingFeature.Action)
-    case findingTheCharacter(FindingTheCharacterFeature.Action)
+    case uploadDrawing(UploadDrawingFeature.Action)
+    case findTheCharacter(FindTheCharacterFeature.Action)
   }
   
   func ScopeReducer() -> some ReducerOf<Self> {
@@ -29,20 +29,20 @@ public extension MakeADFeature {
   func UploadADrawingReducer() -> some ReducerOf<Self> {
     Reduce { state, action in
       switch action {
-      case .scope(.uploadADrawing(.delegate(let uploadADrawingActions))):
-        switch uploadADrawingActions {
+      case .scope(.uploadDrawing(.delegate(let uploadDrawingActions))):
+        switch uploadDrawingActions {
         case .moveToFindingTheCharacter(let result):
           state.makeADInfo.originalImage = result.originalImage
-          state.makeADInfo.boundingBox = result.boundingBox
-          state.findingTheCharacter.cropImage = CropImageFeature.State(
+          state.makeADInfo.boundingBox = result.boundingBox.cgRect
+          state.findTheCharacter.cropImage = CropImageFeature.State(
             originalImage: result.originalImage,
             boundingBox: result.boundingBox
           )
           
           return .run { send in
             await step.isShowStepBar.set(true)
-            await step.currentStep.set(.FindingTheCharacter)
-            await step.completeStep.set(.UploadADrawing)
+            await step.currentStep.set(.FindTheCharacter)
+            await step.completeStep.set(.UploadDrawing)
           }
         }
         
@@ -55,15 +55,15 @@ public extension MakeADFeature {
   func FindTheCharacterReducer() -> some ReducerOf<Self> {
     Reduce { state, action in
       switch action {
-      case .scope(.findingTheCharacter(let findingTheCharacterActions)):
-        switch findingTheCharacterActions {
-        case .delegate(.moveToSeparatingCharacter(let result)):
+      case .scope(.findTheCharacter(let findTheCharacterActions)):
+        switch findTheCharacterActions {
+        case .delegate(.moveToSeparateCharacter(let result)):
           state.makeADInfo.croppedImage = result.cropImage
           state.makeADInfo.maskedImage = result.maskImage
           return .run { send in
             await step.isShowStepBar.set(true)
-            await step.currentStep.set(.SeparatingCharacter)
-            await step.completeStep.set(.FindingTheCharacter)
+            await step.currentStep.set(.SeparateCharacter)
+            await step.completeStep.set(.FindTheCharacter)
           }
         default:
           return .none

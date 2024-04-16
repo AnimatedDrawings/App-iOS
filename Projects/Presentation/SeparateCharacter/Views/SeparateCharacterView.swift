@@ -17,34 +17,43 @@ import DomainModels
 public struct SeparateCharacterView: View {
   @Perception.Bindable var store: StoreOf<SeparateCharacterFeature>
   
-  public var body: some View {
-    ADScrollView($store.step.isShowStepBar.sending(\.update.setIsShowStepBar)) {
-      VStack(alignment: .leading, spacing: 20) {
-        Title()
-        
-        CheckList(
-          myStep: MakeADStep.SeparatingCharacter.rawValue,
-          completeStep: MakeADStep.SeparatingCharacter.rawValue
-        ) {
-          CheckListContent(
-            checkState1: $store.check.list1,
-            checkState2: $store.check.list2
-          )
-        }
-        
-        MaskImageButton(state: store.maskImageButton) {
-          store.send(.view(.pushMaskImageView))
-        }
-        
-        Spacer().frame(height: 20)
-      }
-      .padding()
+  public init(
+    store: StoreOf<SeparateCharacterFeature> = Store(
+      initialState: .init()
+    ) {
+      SeparateCharacterFeature()
     }
-    .alertNoMaskImageError(isPresented: $store.alert.noMaskImage)
-    .fullScreenCover(
-      isPresented: $store.maskImageView,
-      content: { IfLetMaskImageView() }
-    )
+  ) {
+    self.store = store
+  }
+  
+  public var body: some View {
+    WithPerceptionTracking {
+      ADScrollView($store.step.isShowStepBar.sending(\.update.setIsShowStepBar)) {
+        VStack(alignment: .leading, spacing: 20) {
+          Title()
+          
+          CheckList(
+            myStep: MakeADStep.SeparateCharacter.rawValue,
+            completeStep: store.step.completeStep.rawValue
+          ) {
+            CheckListContent(store: store)
+          }
+          
+          MaskImageButton(state: store.maskImageButton) {
+            store.send(.view(.pushMaskImageView))
+          }
+          
+          Spacer().frame(height: 20)
+        }
+        .padding()
+      }
+      .alertNoMaskImageError(isPresented: $store.alert.noMaskImage)
+      .fullScreenCover(
+        isPresented: $store.maskImageView,
+        content: { IfLetMaskImageView() }
+      )
+    }
     .task { await store.send(.view(.task)).finish() }
   }
 }
@@ -89,32 +98,33 @@ private extension SeparateCharacterView {
 
 private extension SeparateCharacterView {
   struct CheckListContent: View {
-    @Binding var checkState1: Bool
-    @Binding var checkState2: Bool
+    @Perception.Bindable var store: StoreOf<SeparateCharacterFeature>
     
     let description1 = "If the body parts of your character are not highlighted, use the pen and eraser tools to fix it."
     let description2 = "If the arms or legs are stuck together, use the eraser tool to separate them"
-    let myStep: MakeADStep = .SeparatingCharacter
+    let myStep: MakeADStep = .SeparateCharacter
     
     var body: some View {
-      VStack(alignment: .leading, spacing: 15) {
-        CheckListButton(
-          description: description1,
-          state: $checkState1
-        )
-        
-        GIFImage(sample: ADResourcesAsset.Gifs.step3Gif1)
-          .frame(height: 250)
-          .frame(maxWidth: .infinity, alignment: .center)
-        
-        CheckListButton(
-          description: description2,
-          state: $checkState2
-        )
-        
-        GIFImage(sample: ADResourcesAsset.Gifs.step3Gif2)
-          .frame(height: 250, alignment: .center)
-          .frame(maxWidth: .infinity, alignment: .center)
+      WithPerceptionTracking {
+        VStack(alignment: .leading, spacing: 15) {
+          CheckListButton(
+            description: description1,
+            state: $store.check.list1.sending(\.view.check.list1)
+          )
+          
+          GIFImage(sample: ADResourcesAsset.Gifs.step3Gif1)
+            .frame(height: 250)
+            .frame(maxWidth: .infinity, alignment: .center)
+          
+          CheckListButton(
+            description: description2,
+            state: $store.check.list2.sending(\.view.check.list2)
+          )
+          
+          GIFImage(sample: ADResourcesAsset.Gifs.step3Gif2)
+            .frame(height: 250, alignment: .center)
+            .frame(maxWidth: .infinity, alignment: .center)
+        }
       }
     }
   }

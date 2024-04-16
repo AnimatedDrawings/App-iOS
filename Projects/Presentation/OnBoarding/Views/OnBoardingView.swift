@@ -6,8 +6,8 @@
 //
 
 import SwiftUI
-import ADUIKitSources
-import ADUIKitResources
+import ADUIKit
+import ADResources
 import SharedProvider
 
 public struct OnBoardingView: View {
@@ -62,15 +62,15 @@ private extension OnBoardingView {
         HStack {
           Text(left)
             .font(.system(titleSize, weight: .semibold))
-            .foregroundColor(ADUIKitResourcesAsset.Color.blue1.swiftUIColor)
+            .foregroundColor(ADResourcesAsset.Color.blue1.swiftUIColor)
           Text(right)
             .font(.system(titleSize, weight: .semibold))
-            .foregroundColor(ADUIKitResourcesAsset.Color.blue3.swiftUIColor)
+            .foregroundColor(ADResourcesAsset.Color.blue3.swiftUIColor)
         }
         
         Text(subTitle)
           .font(.system(.caption, weight: .semibold))
-          .foregroundColor(ADUIKitResourcesAsset.Color.blue2.swiftUIColor)
+          .foregroundColor(ADResourcesAsset.Color.blue2.swiftUIColor)
         
         Spacer().frame(height: 20)
         
@@ -92,7 +92,7 @@ private extension OnBoardingView {
         RoundedRectangle(cornerRadius: 10)
           .padding([.leading, .bottom], 20)
           .frame(height: 300)
-          .foregroundColor(ADUIKitResourcesAsset.Color.blue1.swiftUIColor)
+          .foregroundColor(ADResourcesAsset.Color.blue1.swiftUIColor)
         
         RoundedRectangle(cornerRadius: 10)
           .overlay {

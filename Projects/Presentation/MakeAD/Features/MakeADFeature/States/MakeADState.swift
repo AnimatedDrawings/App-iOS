@@ -7,28 +7,28 @@
 //
 
 import ADComposableArchitecture
-import DomainModel
-import UploadADrawingFeatures
-import FindingTheCharacterFeatures
+import DomainModels
+import UploadDrawingFeatures
+import FindTheCharacterFeatures
 
 public extension MakeADFeature {
   @ObservableState
   struct State: Equatable {
     public var step: StepState
     public var makeADInfo: MakeADInfo
-    public var uploadADrawing: UploadADrawingFeature.State
-    public var findingTheCharacter: FindingTheCharacterFeature.State
+    public var uploadDrawing: UploadDrawingFeature.State
+    public var findTheCharacter: FindTheCharacterFeature.State
     
     public init(
       step: StepState = .init(),
       makeADInfo: MakeADInfo = .init(),
-      uploadADrawing: UploadADrawingFeature.State = .init(),
-      findingTheCharacter: FindingTheCharacterFeature.State = .init()
+      uploadDrawing: UploadDrawingFeature.State = .init(),
+      findTheCharacter: FindTheCharacterFeature.State = .init()
     ) {
       self.step = step
       self.makeADInfo = makeADInfo
-      self.uploadADrawing = uploadADrawing
-      self.findingTheCharacter = findingTheCharacter
+      self.uploadDrawing = uploadDrawing
+      self.findTheCharacter = findTheCharacter
     }
   }
   
@@ -40,7 +40,7 @@ public extension MakeADFeature {
     
     public init(
       isShowStepBar: Bool = true,
-      currentStep: MakeADStep = .UploadADrawing,
+      currentStep: MakeADStep = .UploadDrawing,
       completeStep: MakeADStep = .None
     ) {
       self.isShowStepBar = isShowStepBar

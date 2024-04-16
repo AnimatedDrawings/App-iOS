@@ -35,16 +35,16 @@ public extension MaskImageFeature {
   @ObservableState
   struct TriggerState: Equatable {
     public var drawingTool: DrawingTool
-    public var maskTool: MaskTool
+    public var maskCache: MaskCache
     public var save: Bool
     
     public init(
       drawingTool: DrawingTool = .erase,
-      maskTool: MaskTool = .undo,
+      maskCache: MaskCache = .init(),
       save: Bool = false
     ) {
       self.drawingTool = drawingTool
-      self.maskTool = maskTool
+      self.maskCache = maskCache
       self.save = save
     }
   }
@@ -64,7 +64,15 @@ public enum DrawingTool: Equatable {
   case erase
 }
 
-public enum MaskTool: Equatable {
-  case undo
-  case reset
+public struct MaskCache: Equatable {
+  public var undo: Bool
+  public var reset: Bool
+  
+  public init(
+    undo: Bool = false,
+    reset: Bool = false
+  ) {
+    self.undo = undo
+    self.reset = reset
+  }
 }

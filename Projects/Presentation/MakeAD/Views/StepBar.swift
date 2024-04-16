@@ -7,16 +7,16 @@
 //
 
 import SwiftUI
-import ADUIKitResources
-import DomainModel
+import ADResources
+import DomainModels
 
 extension MakeADView {
   struct StepBar: View {
     @State var statusBarWidth: CGFloat = 0
     let statusBarSpacing: CGFloat = 4
-    let activeColor: Color = ADUIKitResourcesAsset.Color.blue1.swiftUIColor
+    let activeColor: Color = ADResourcesAsset.Color.blue1.swiftUIColor
     let inActiveColor: Color = .gray
-    let completeColor: Color = ADUIKitResourcesAsset.Color.green1.swiftUIColor
+    let completeColor: Color = ADResourcesAsset.Color.green1.swiftUIColor
     
     let currentStep: MakeADStep
     let completeStep: MakeADStep

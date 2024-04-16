@@ -17,7 +17,7 @@ public struct StepProvider {
   
   public init(
     isShowStepBar: Bool = true,
-    currentStep: MakeADStep = .UploadADrawing,
+    currentStep: MakeADStep = .UploadDrawing,
     completeStep: MakeADStep = .None
   ) {
     self.isShowStepBar = .init(initialValue: isShowStepBar)

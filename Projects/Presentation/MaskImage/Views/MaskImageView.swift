@@ -71,20 +71,22 @@ public struct MaskImageView: View {
   }
   
   public var body: some View {
-    VStack(spacing: 20) {
-      ToolNaviBar(
-        cancelAction: store.action(.view(.cancel)),
-        saveAction: store.action(.view(.save))
-      )
-      .padding()
-      
-      Spacer()
-      
-      MaskableView(store: store)
-      
-      Spacer()
-      
-      MaskToolView(store: store)
+    WithPerceptionTracking {
+      VStack(spacing: 20) {
+        ToolNaviBar(
+          cancelAction: store.action(.view(.cancel)),
+          saveAction: store.action(.view(.save))
+        )
+        .padding()
+        
+        Spacer()
+        
+        MaskableView(store: store)
+        
+        Spacer()
+        
+        MaskToolView(store: store)
+      }      
     }
   }
 }

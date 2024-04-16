@@ -27,7 +27,7 @@ public struct BoundingBox: Equatable {
 }
 
 public extension BoundingBox {
-  static func mockExample2() -> Self {
-    return Self(dto: BoundingBoxDTO.mockExample2())
+  static func mock() -> Self {
+    return Self(dto: BoundingBoxDTO.mock())
   }
 }

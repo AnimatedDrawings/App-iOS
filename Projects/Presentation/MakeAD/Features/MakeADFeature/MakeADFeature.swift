@@ -7,8 +7,8 @@
 //
 
 import ADComposableArchitecture
-import UploadADrawingFeatures
-import FindingTheCharacterFeatures
+import UploadDrawingFeatures
+import FindTheCharacterFeatures
 import SharedProvider
 
 @Reducer
@@ -18,11 +18,11 @@ public struct MakeADFeature {
   public init() {}
   
   public var body: some ReducerOf<Self> {
-    Scope(state: \.uploadADrawing, action: \.scope.uploadADrawing) {
-      UploadADrawingFeature()
+    Scope(state: \.uploadDrawing, action: \.scope.uploadDrawing) {
+      UploadDrawingFeature()
     }
-    Scope(state: \.findingTheCharacter, action: \.scope.findingTheCharacter) {
-      FindingTheCharacterFeature()
+    Scope(state: \.findTheCharacter, action: \.scope.findTheCharacter) {
+      FindTheCharacterFeature()
     }
     
     BindingReducer()

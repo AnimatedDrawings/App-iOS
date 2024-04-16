@@ -9,6 +9,7 @@
 import DomainModels
 import UIKit
 import ADComposableArchitecture
+import ADResources
 
 public extension ModifyJointsFeature {
   @ObservableState
@@ -20,5 +21,14 @@ public extension ModifyJointsFeature {
       self.originJoints = originJoints
       self.croppedImage = croppedImage
     }
+  }
+}
+
+public extension ModifyJointsFeature.State {
+  static func mock() -> Self {
+    return Self(
+      originJoints: .mock(),
+      croppedImage: ADResourcesAsset.TestImages.croppedImage.image
+    )
   }
 }

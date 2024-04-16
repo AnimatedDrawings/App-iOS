@@ -19,7 +19,7 @@ public final class MockMakeADStorage: MakeADStorageProtocol {
   }
   
   public func uploadDrawing(request: UploadDrawingRequest) async throws -> UploadDrawingResponseDTO {
-    return .init(ad_id: "uploadDrawing", boundingBoxDTO: BoundingBoxDTO.mockExample2())
+    return .init(ad_id: "uploadDrawing", boundingBoxDTO: BoundingBoxDTO.mock())
   }
   
   public func findTheCharacter(request: FindTheCharacterRequest) async throws -> EmptyResponse {

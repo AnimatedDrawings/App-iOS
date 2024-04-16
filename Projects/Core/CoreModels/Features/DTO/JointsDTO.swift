@@ -54,140 +54,139 @@ extension JointsDTO {
   private static func mockData() -> Data {
     return """
     {
-      "height": 614,
+      "height": 882,
       "skeleton": [
         {
           "loc": [
-            278,
-            446
+            399,
+            641
           ],
           "name": "root",
           "parent": null
         },
         {
           "loc": [
-            278,
-            446
+            399,
+            641
           ],
           "name": "hip",
           "parent": "root"
         },
         {
           "loc": [
-            275,
-            187
+            404,
+            265
           ],
           "name": "torso",
           "parent": "hip"
         },
         {
           "loc": [
-            278,
-            258
+            399,
+            370
           ],
           "name": "neck",
           "parent": "torso"
         },
         {
           "loc": [
-            142,
-            200
+            208,
+            284
           ],
           "name": "right_shoulder",
           "parent": "torso"
         },
         {
           "loc": [
-            97,
-            155
+            142,
+            227
           ],
           "name": "right_elbow",
           "parent": "right_shoulder"
         },
         {
           "loc": [
-            51,
-            122
+            75,
+            170
           ],
           "name": "right_hand",
           "parent": "right_elbow"
         },
         {
           "loc": [
-            408,
-            174
+            599,
+            246
           ],
           "name": "left_shoulder",
           "parent": "torso"
         },
         {
           "loc": [
-            434,
-            129
+            637,
+            179
           ],
           "name": "left_elbow",
           "parent": "left_shoulder"
         },
         {
           "loc": [
-            460,
-            83
+            665,
+            113
           ],
           "name": "left_hand",
           "parent": "left_elbow"
         },
         {
           "loc": [
-            194,
-            446
+            275,
+            646
           ],
           "name": "right_hip",
           "parent": "root"
         },
         {
           "loc": [
-            181,
-            511
+            266,
+            741
           ],
           "name": "right_knee",
           "parent": "right_hip"
         },
         {
           "loc": [
-            168,
-            583
+            247,
+            846
           ],
           "name": "right_foot",
           "parent": "right_knee"
         },
         {
           "loc": [
-            362,
-            446
+            523,
+            636
           ],
           "name": "left_hip",
           "parent": "root"
         },
         {
           "loc": [
-            375,
-            505
+            542,
+            731
           ],
           "name": "left_knee",
           "parent": "left_hip"
         },
         {
           "loc": [
-            395,
-            570
+            570,
+            817
           ],
           "name": "left_foot",
           "parent": "left_knee"
         }
       ],
-      "width": 498
+      "width": 731
     }
     """.data(using: .utf8)!
   }
 }
-

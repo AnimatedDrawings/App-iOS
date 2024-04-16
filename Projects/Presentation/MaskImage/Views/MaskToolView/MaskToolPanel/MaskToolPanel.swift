@@ -49,11 +49,11 @@ struct MaskToolPanel: View {
             .frame(width: toolSizerSize * 1.2)
           ResetButton(
             strokeColor: strokeColor,
-            action: store.action(.view(.maskToolAction(.setMaskTool(.reset))))
+            action: store.action(.view(.maskToolAction(.setMaskCache(.reset))))
           )
           UndoButton(
             strokeColor: strokeColor,
-            action: store.action(.view(.maskToolAction(.setMaskTool(.undo))))
+            action: store.action(.view(.maskToolAction(.setMaskCache(.undo))))
           )
         }
         .padding(.horizontal)

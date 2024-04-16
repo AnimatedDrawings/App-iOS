@@ -7,11 +7,11 @@
 //
 
 import SwiftUI
-import DomainModel
-import UploadADrawing
-import FindingTheCharacter
-import SeparatingCharacter
-import FindingCharacterJoints
+import DomainModels
+import UploadDrawing
+import FindTheCharacter
+import SeparateCharacter
+import FindCharacterJoints
 import ADComposableArchitecture
 import MakeADFeatures
 
@@ -52,23 +52,6 @@ public struct MakeADView: View {
   }
 }
 
-struct TestReloadView: View {
-  var body: some View {
-    let _ = Self._printChanges()
-    Rectangle()
-      .frame(width: 200, height: 200)
-      .foregroundStyle(randomColor)
-  }
-  
-  var randomColor: Color {
-    Color(
-      red: .random(in: 0...1),
-      green: .random(in: 0...1),
-      blue: .random(in: 0...1)
-    )
-  }
-}
-
 private extension MakeADView {
   struct PageTabView: View {
     @Perception.Bindable var store: StoreOf<MakeADFeature>
@@ -76,27 +59,27 @@ private extension MakeADView {
     var body: some View {
       WithPerceptionTracking {
         TabView(selection: $store.step.currentStep.sending(\.update.setCurrentStep)) {
-          UploadADrawingView(
+          UploadDrawingView(
             store: store.scope(
-              state: \.uploadADrawing,
-              action: \.scope.uploadADrawing
+              state: \.uploadDrawing,
+              action: \.scope.uploadDrawing
             )
           )
-          .tag(MakeADStep.UploadADrawing)
+          .tag(MakeADStep.UploadDrawing)
           
-          FindingTheCharacterView(
+          FindTheCharacterView(
             store: store.scope(
-              state: \.findingTheCharacter,
-              action: \.scope.findingTheCharacter
+              state: \.findTheCharacter,
+              action: \.scope.findTheCharacter
             )
           )
-          .tag(MakeADStep.FindingTheCharacter)
+          .tag(MakeADStep.FindTheCharacter)
           
-          SeparatingCharacterView()
-            .tag(MakeADStep.SeparatingCharacter)
+          SeparateCharacterView()
+            .tag(MakeADStep.SeparateCharacter)
           
           FindingCharacterJointsView()
-            .tag(MakeADStep.FindingCharacterJoints)
+            .tag(MakeADStep.FindCharacterJoints)
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
         .ignoresSafeArea()

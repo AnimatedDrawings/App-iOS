@@ -17,6 +17,16 @@ import ModifyJoints
 public struct FindingCharacterJointsView: View {
   @Perception.Bindable var store: StoreOf<FindCharacterJointsFeature>
   
+  public init(
+    store: StoreOf<FindCharacterJointsFeature> = Store(
+      initialState: .init()
+    ) {
+      FindCharacterJointsFeature()
+    }
+  ) {
+    self.store = store
+  }
+  
   public var body: some View {
     WithPerceptionTracking {
       ADScrollView($store.step.isShowStepBar.sending(\.update.setIsShowStepBar)) {
@@ -24,8 +34,8 @@ public struct FindingCharacterJointsView: View {
           Title()
           
           CheckList(
-            myStep: MakeADStep.FindingCharacterJoints.rawValue,
-            completeStep: MakeADStep.SeparatingCharacter.rawValue
+            myStep: MakeADStep.FindCharacterJoints.rawValue,
+            completeStep: MakeADStep.SeparateCharacter.rawValue
           ) {
             CheckListContent(checkState: $store.checkState)
           }
@@ -84,7 +94,7 @@ private extension FindingCharacterJointsView {
   struct CheckListContent: View {
     @Binding var checkState: Bool
     let description = "If your character doesn't have any arms, drag the elbows and wrist joints far away from the character and it can still be animated"
-    let myStep: MakeADStep = .FindingCharacterJoints
+    let myStep: MakeADStep = .FindCharacterJoints
     
     var body: some View {
       VStack(alignment: .leading, spacing: 15) {

@@ -10,12 +10,14 @@ import ADComposableArchitecture
 import ADAsyncAlgorithms
 
 public extension SeparateCharacterFeature {
+  @CasePathable
   enum ViewActions: Equatable {
     case task
     case check(CheckActions)
     case pushMaskImageView
   }
   
+  @CasePathable
   enum CheckActions: Equatable {
     case list1(Bool)
     case list2(Bool)

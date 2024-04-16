@@ -10,8 +10,8 @@ import Foundation
 
 public enum MakeADStep: Int {
   case None = 0
-  case UploadADrawing = 1
-  case FindingTheCharacter = 2
-  case SeparatingCharacter = 3
-  case FindingCharacterJoints = 4
+  case UploadDrawing = 1
+  case FindTheCharacter = 2
+  case SeparateCharacter = 3
+  case FindCharacterJoints = 4
 }

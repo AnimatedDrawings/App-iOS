@@ -19,8 +19,13 @@ public extension MaskImageFeature {
   
   enum MaskToolActions: Equatable {
     case setDrawingTool(DrawingTool)
-    case setMaskTool(MaskTool)
+    case setMaskCache(MaskCacheActions)
     case changeToolCircleSize(CGFloat)
+  }
+  
+  enum MaskCacheActions: Equatable {
+    case undo
+    case reset
   }
   
   func ViewReducer() -> some ReducerOf<Self> {
@@ -39,8 +44,13 @@ public extension MaskImageFeature {
           case .setDrawingTool(let drawingTool):
             state.triggerState.drawingTool = drawingTool
             return .none
-          case .setMaskTool(let maskTool):
-            state.triggerState.maskTool = maskTool
+          case .setMaskCache(let maskCaches):
+            switch maskCaches {
+            case .undo:
+              state.triggerState.maskCache.undo.toggle()
+            case .reset:
+              state.triggerState.maskCache.reset.toggle()
+            }
             return .none
           case .changeToolCircleSize(let toolCircleSize):
             state.toolCircleSize = toolCircleSize

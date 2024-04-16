@@ -33,7 +33,7 @@ public struct UploadDrawingView: View {
           Title()
           
           CheckList(
-            myStep: MakeADStep.UploadADrawing.rawValue,
+            myStep: MakeADStep.UploadDrawing.rawValue,
             completeStep: store.step.completeStep.rawValue
           ) {
             CheckListContent(store: store)

@@ -57,14 +57,15 @@ extension MaskableUIViewRepresentable {
           }
           .store(in: &cancellable)
         
-        store?.publisher.triggerState.maskTool
-          .sink { curMaskTool in
-            switch curMaskTool {
-            case .undo:
-              self.maskableUIView?.undo()
-            case .reset:
-              self.maskableUIView?.reset()
-            }
+        store?.publisher.triggerState.maskCache.undo
+          .sink { _ in
+            self.maskableUIView?.undo()
+          }
+          .store(in: &cancellable)
+        
+        store?.publisher.triggerState.maskCache.reset
+          .sink { _ in
+            self.maskableUIView?.reset()
           }
           .store(in: &cancellable)
         

@@ -12,7 +12,7 @@ import SwiftUI
 struct MaskImageExample: App {
   var body: some Scene {
     WindowGroup {
-      MockParentView()
+      MockMaskParentView()
     }
   }
 }

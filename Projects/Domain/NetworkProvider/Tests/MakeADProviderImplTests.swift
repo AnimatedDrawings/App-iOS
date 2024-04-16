@@ -25,7 +25,7 @@ final class MakeADProviderImplTests: XCTestCase {
   }
   
   func testUploadDrawing() async {
-    let boundingBox = BoundingBox(dto: BoundingBoxDTO.mockExample2())
+    let boundingBox = BoundingBox(dto: BoundingBoxDTO.mock())
     guard let response = try? await makeADProviderImpl.uploadDrawing(image: Data()) else {
       XCTFail()
       return

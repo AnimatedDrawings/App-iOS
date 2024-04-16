@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "maskedImage.png",
+      "filename" : "cropped_image.png",
       "idiom" : "universal",
       "scale" : "1x"
     },

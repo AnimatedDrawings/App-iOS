@@ -25,7 +25,7 @@ public extension CropResponse {
     let image: UIImage = ADResourcesAsset.TestImages.croppedImage.image
     return Self(
       image: image,
-      boundingBox: BoundingBox.mockExample2().cgRect
+      boundingBox: BoundingBox.mock().cgRect
     )
   }
 }

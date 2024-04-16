@@ -11,7 +11,7 @@ import ADComposableArchitecture
 import Photos
 import LocalFileProvider
 import SharedProvider
-import DomainModel
+import DomainModels
 import NetworkProvider
 
 public struct ConfigureAnimationFeature: Reducer {

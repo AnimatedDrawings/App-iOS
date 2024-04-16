@@ -12,7 +12,7 @@ import SwiftUI
 struct SeparateCharacterExample: App {
   var body: some Scene {
     WindowGroup {
-      Text("")
+      MockSeparateCharacter()
     }
   }
 }

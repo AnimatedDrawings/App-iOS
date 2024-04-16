@@ -14,17 +14,21 @@ import MaskImageFeatures
 // MARK: - ParentView
 
 @Reducer
-struct MockParentFeatue {
+struct MockMaskParentFeatue {
   @ObservableState
   struct State: Equatable {
-    var showResultView: Bool = false
-    var maskedImage: UIImage = .init()
+    var resultView: Bool = false
+    var maskImageView: Bool = false
+    var resultImage: UIImage? = nil
     var maskImage: MaskImageFeature.State
   }
   
+  @CasePathable
   enum Action: Equatable, BindableAction {
     case binding(BindingAction<State>)
     case maskImage(MaskImageFeature.Action)
+    case pushMaskImageView
+    case showResultView
   }
   
   var body: some ReducerOf<Self> {
@@ -38,36 +42,54 @@ struct MockParentFeatue {
       case .maskImage(let maskImageActions):
         switch maskImageActions {
         case .delegate(.maskImageResult(let maskImageResult)):
-          state.showResultView.toggle()
-          state.maskedImage = maskImageResult.image
-          print("efefawfwe")
+          state.resultImage = maskImageResult.image
+          state.maskImageView.toggle()
+          return .none
+        case .delegate(.cancel):
+          state.maskImageView.toggle()
           return .none
         default:
           return .none
         }
+        
+      case .pushMaskImageView:
+        state.maskImageView.toggle()
+        return .none
+        
+      case .showResultView:
+        state.resultView.toggle()
+        return .none
       }
     }
   }
 }
 
-struct MockParentView: View {
-  @Perception.Bindable var store: StoreOf<MockParentFeatue>
+struct MockMaskParentView: View {
+  @Perception.Bindable var store: StoreOf<MockMaskParentFeatue>
   
   init() {
-    let maskImageState: MaskImageFeature.State = .mock()
-    self.store = Store(initialState: MockParentFeatue.State(maskImage: maskImageState)) {
-      MockParentFeatue()
+    self.store = Store(initialState: MockMaskParentFeatue.State(maskImage: .mock())) {
+      MockMaskParentFeatue()
     }
   }
   
   var body: some View {
-    NavigationStack {
-      WithPerceptionTracking {
-        MockMaskImageView(store: store.scope(state: \.maskImage, action: \.maskImage))
-          .navigationDestination(isPresented: $store.showResultView) {
-            MockResultView(maskedImage: store.maskedImage)
-          }
+    WithPerceptionTracking {
+      NavigationStack {
+        Button("push MaskImageView") {
+          store.send(.pushMaskImageView)
+        }
+        .navigationDestination(isPresented: $store.resultView) {
+          MockMaskResultView(maskedImage: store.resultImage)
+        }
       }
+      .fullScreenCover(
+        isPresented: $store.maskImageView,
+        onDismiss: { store.send(.showResultView) },
+        content: {
+          MockMaskImageView(store: store.scope(state: \.maskImage, action: \.maskImage))
+        }
+      )
     }
   }
 }
@@ -75,13 +97,22 @@ struct MockParentView: View {
 
 // MARK: - ResultView
 
-struct MockResultView: View {
-  let maskedImage: UIImage
+struct MockMaskResultView: View {
+  let maskedImage: UIImage?
   
   var body: some View {
-    Image(uiImage: maskedImage)
-      .resizable()
-      .padding()
+    if let maskedImage = maskedImage {
+      Image(uiImage: maskedImage)
+        .resizable()
+        .aspectRatio(contentMode: .fit)
+        .overlay {
+          Rectangle()
+            .strokeBorder(.red, lineWidth: 3)
+        }
+        .padding()
+    } else {
+      Text("Fail")
+    }
   }
 }
 

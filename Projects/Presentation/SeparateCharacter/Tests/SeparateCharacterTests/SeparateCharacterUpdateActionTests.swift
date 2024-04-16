@@ -30,7 +30,7 @@ class SeparateCharacterUpdateActionTests: XCTestCase {
   }
   
   func testGetCompleteStep() async {
-    let step: MakeADStep = .SeparatingCharacter
+    let step: MakeADStep = .SeparatCharacter
     
     await store.send(.update(.getCompleteStep(step))) {
       $0.step.completeStep = step

@@ -38,8 +38,8 @@ public extension CropImageFeature {
 
 public extension CropImageFeature.State {
   static func mock() -> Self {
-    let originalImage = ADResourcesAsset.TestImages.example2.image
-    let boundingBox = BoundingBox.mockExample2()
+    let originalImage = ADResourcesAsset.TestImages.originalImage.image
+    let boundingBox = BoundingBox.mock()
     
     return Self(
       originalImage: originalImage,

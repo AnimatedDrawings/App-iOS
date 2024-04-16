@@ -34,7 +34,7 @@ public struct FindTheCharacterView: View {
           Title()
           
           CheckList(
-            myStep: MakeADStep.FindingTheCharacter.rawValue,
+            myStep: MakeADStep.FindTheCharacter.rawValue,
             completeStep: store.step.completeStep.rawValue
           ) {
             CheckListContent(state: $store.checkList)

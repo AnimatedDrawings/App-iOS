@@ -12,7 +12,7 @@ import SwiftUI
 struct FindingTheCharacterExample: App {
   var body: some Scene {
     WindowGroup {
-      Text("")
+      MockFindTheCharacterView()
     }
   }
 }
