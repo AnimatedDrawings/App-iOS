@@ -9,27 +9,19 @@
 import SwiftUI
 import ADComposableArchitecture
 import ConfigureAnimationFeatures
-import ADUIKitSources
-import ADUIKitResources
+import ADUIKit
+import ADResources
 
-public struct ConfigureAnimationView: ADUI {
-  public typealias MyFeature = ConfigureAnimationFeature
+public struct ConfigureAnimationView: View {
+  @Perception.Bindable var store: StoreOf<ConfigureAnimationFeature>
   
   public init(
-    store: MyStore = Store(
-      initialState: .init()
-    ) {
-      MyFeature()
+    store: StoreOf<ConfigureAnimationFeature> = Store(initialState: .init()) {
+      ConfigureAnimationFeature()
     }
   ) {
     self.store = store
-    self._viewStore = StateObject(
-      wrappedValue: ViewStore(store, observe: { $0 })
-    )
   }
-  
-  let store: MyStore
-  @StateObject var viewStore: MyViewStore
   
   public var body: some View {
     VStack(spacing: 0) {
@@ -37,55 +29,52 @@ public struct ConfigureAnimationView: ADUI {
       
       Spacer().frame(height: 50)
       
-      MyAnimationView(viewStore: viewStore)
+      MyAnimationView(gifData: nil)
       
       Spacer().frame(height: 50)
       
-      TabBar(viewStore: viewStore)
+      TabBar(store: store)
       
       Spacer().frame(height: 20)
     }
     .padding()
-//    .addADBackground(withStepBar: false)
     .addADBackground()
-    .alertSaveGIFInPhotosResult(
-      isPresented: viewStore.$isShowSaveGIFInPhotosResultAlert,
-      isSuccess: viewStore.saveGIFInPhotosResult
-    )
     .alertTrashMakeAD(
-      isPresented: viewStore.$isShowTrashMakeADAlert,
-      resetAction: {
-        viewStore.send(.resetMakeADData)
-      }
+      isPresented: $store.alert.trash,
+      resetAction: store.action(.view(.tabBar(.trash(.confirmTrash))))
     )
-    .alertNoAnimationFile(isPresented: viewStore.$isShowNoAnimationFileAlert)
-    .confirmationDialog("", isPresented: viewStore.$isShowActionSheet) {
+    .alertSaveGIFInPhotosResult(
+      isPresented: $store.alert.saveGif.toggle,
+      isSuccess: store.alert.saveGif.isSuccess
+    )
+    .alertNoAnimationFile(isPresented: $store.alert.noAnimation)
+    .confirmationDialog("", isPresented: $store.isShowActionSheet) {
       Button("Save GIF In Photos") {
-        if let gifURL = viewStore.myAnimationURL {
-          viewStore.send(.saveGIFInPhotos(gifURL))
+        if let gifURL = store.myAnimationURL {
+          store.send(.saveGIFInPhotos(gifURL))
         }
       }
       Button("Share") {
-        if viewStore.myAnimationURL != nil {
-          viewStore.send(.toggleIsShowShareView)
+        if store.myAnimationURL != nil {
+          store.send(.toggleIsShowShareView)
         }
       }
     }
-    .sheet(isPresented: viewStore.$isShowShareView) {
-      if let myAnimationURL = viewStore.myAnimationURL {
+    .sheet(isPresented: $store.isShowShareView) {
+      if let myAnimationURL = store.myAnimationURL {
         ShareView(gifURL: myAnimationURL)
           .presentationDetents([.medium, .large])
       }
     }
     .fullScreenCover(
-      isPresented: viewStore.$isShowAnimationListView,
-      onDismiss: { viewStore.send(.onDismissAnimationListView) },
+      isPresented: $store.isShowAnimationListView,
+      onDismiss: { store.send(.onDismissAnimationListView) },
       content: {
-        AnimationListView(isShow: viewStore.$isShowAnimationListView) { selectedAnimation in
-          viewStore.send(.selectAnimation(selectedAnimation))
+        AnimationListView(isShow: $store.isShowAnimationListView) { selectedAnimation in
+          store.send(.selectAnimation(selectedAnimation))
         }
-        .addLoadingView(isShow: viewStore.isShowLoadingView, description: "Add Animation...")
-        .alertNetworkError(isPresented: viewStore.$isShowNetworkErrorAlert)
+        .addLoadingView(isShow: store.isShowLoadingView, description: "Add Animation...")
+        .alertNetworkError(isPresented: $store.isShowNetworkErrorAlert)
       }
     )
   }
@@ -156,7 +145,7 @@ private extension ConfigureAnimationView {
       VStack(alignment: .leading, spacing: 20) {
         Text(title)
           .font(.system(.title, weight: .semibold))
-          .foregroundColor(ADUIKitResourcesAsset.Color.blue2.swiftUIColor)
+          .foregroundColor(ADResourcesAsset.Color.blue2.swiftUIColor)
         
         Text(description)
           .frame(maxWidth: .infinity)
@@ -167,14 +156,14 @@ private extension ConfigureAnimationView {
 
 private extension ConfigureAnimationView {
   struct MyAnimationView: View {
-    @ObservedObject var viewStore: MyViewStore
+    let gifData: Data?
     
     var body: some View {
       RoundedRectangle(cornerRadius: 15)
         .foregroundColor(.white)
         .shadow(radius: 10)
         .overlay(alignment: .center) {
-          if let gifData = viewStore.state.myAnimationData {
+          if let gifData = gifData {
             GIFImage(gifData: gifData)
           }
         }
@@ -184,13 +173,13 @@ private extension ConfigureAnimationView {
 
 private extension ConfigureAnimationView {
   struct TabBar: View {
+    @Perception.Bindable var store: StoreOf<ConfigureAnimationFeature>
+    
     let trash = "trash"
     let fix = "arrowshape.turn.up.backward"
     let share = "square.and.arrow.up"
     let animation = "figure.dance"
-    let strokeColor: Color = ADUIKitResourcesAsset.Color.blue2.swiftUIColor
-    
-    @ObservedObject var viewStore: MyViewStore
+    let strokeColor: Color = ADResourcesAsset.Color.blue2.swiftUIColor
     
     var body: some View {
       RoundedRectangle(cornerRadius: 35)
@@ -205,16 +194,16 @@ private extension ConfigureAnimationView {
         .overlay {
           HStack(spacing: 0) {
             TabBarButton(imageName: fix) {
-              viewStore.send(.fixMakeAD)
+              store.send(.view(.tabBar(.fix)))
             }
             TabBarButton(imageName: trash) {
-              viewStore.send(.showTrashMakeADAlert)
+              store.send(.view(.tabBar(.trash(.showAlert))))
             }
             TabBarButton(imageName: share) {
-              viewStore.send(.toggleIsShowShareActionSheet)
+              store.send(.view(.tabBar(.share)))
             }
             TabBarButton(imageName: animation) {
-              viewStore.send(.toggleIsShowAnimationListView)
+              store.send(.view(.tabBar(.animation)))
             }
           }
         }
@@ -234,12 +223,5 @@ private extension ConfigureAnimationView {
           .foregroundColor(strokeColor)
       }
     }
-  }
-}
-
-// MARK: - Previews
-struct ConfigureAnimationView_Previews: PreviewProvider {
-  static var previews: some View {
-    ConfigureAnimationView()
   }
 }

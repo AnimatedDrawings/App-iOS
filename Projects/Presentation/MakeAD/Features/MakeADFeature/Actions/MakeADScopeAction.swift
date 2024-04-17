@@ -121,12 +121,13 @@ public extension MakeADFeature {
       case .scope(.findCharacterJoints(let findCharacterJointsActions)):
         switch findCharacterJointsActions {
         case .delegate(.findCharacterJointsResult):
-          return .none
+          return .run { send in
+            await step.completeStep.set(.FindCharacterJoints)
+            await adViewState.currentView.set(.ConfigureAnimation)
+          }
         default:
           return .none
         }
-        return .none
-        
       default:
         return .none
       }

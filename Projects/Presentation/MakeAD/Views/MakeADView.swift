@@ -75,11 +75,21 @@ private extension MakeADView {
           )
           .tag(MakeADStep.FindTheCharacter)
           
-          SeparateCharacterView()
-            .tag(MakeADStep.SeparateCharacter)
+          SeparateCharacterView(
+            store: store.scope(
+              state: \.separateCharacter,
+              action: \.scope.separateCharacter
+            )
+          )
+          .tag(MakeADStep.SeparateCharacter)
           
-          FindingCharacterJointsView()
-            .tag(MakeADStep.FindCharacterJoints)
+          FindingCharacterJointsView(
+            store: store.scope(
+              state: \.findCharacterJoints,
+              action: \.scope.findCharacterJoints
+            )
+          )
+          .tag(MakeADStep.FindCharacterJoints)
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
         .ignoresSafeArea()

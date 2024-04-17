@@ -7,9 +7,9 @@
 //
 
 import SwiftUI
-import ADUIKitSources
-import ADUIKitResources
-import DomainModel
+import ADUIKit
+import ADResources
+import DomainModels
 
 struct AnimationListView: View {
   @Binding var isShowMyView: Bool
@@ -58,7 +58,7 @@ struct AnimationListView: View {
 private extension AnimationListView {
   struct CancelButton: View {
     let imageName = "x.circle"
-    let strokeColor: Color = ADUIKitResourcesAsset.Color.blue1.swiftUIColor
+    let strokeColor: Color = ADResourcesAsset.Color.blue1.swiftUIColor
     
     let action: () -> ()
     
@@ -79,7 +79,7 @@ private extension AnimationListView {
   struct Title: View {
     let title = "ADD ANIMATION"
     let description = "Choose one of the motions by tapping human button to see your character perform it!"
-    let strokeColor: Color = ADUIKitResourcesAsset.Color.blue1.swiftUIColor
+    let strokeColor: Color = ADResourcesAsset.Color.blue1.swiftUIColor
     
     var body: some View {
       VStack(alignment: .leading, spacing: 20) {
@@ -116,7 +116,7 @@ private extension AnimationListView {
     @Binding var selectedCategory: AnimationCategory
     
     @State var myWidth: CGFloat = 0
-    let strokeColor: Color = ADUIKitResourcesAsset.Color.blue1.swiftUIColor
+    let strokeColor: Color = ADResourcesAsset.Color.blue1.swiftUIColor
     
     var body: some View {
       Button {
@@ -150,7 +150,7 @@ private extension AnimationListView {
 
 private extension AnimationListView {
   struct AnimationGridView: View {
-    let strokeColor: Color = ADUIKitResourcesAsset.Color.blue1.swiftUIColor
+    let strokeColor: Color = ADResourcesAsset.Color.blue1.swiftUIColor
     let columns: [GridItem] = .init(repeating: .init(.flexible()), count: 3)
     @State var gridItemSize: CGFloat = 1
     
@@ -177,8 +177,8 @@ private extension AnimationListView {
           .cornerRadius(15)
           .frame(height: self.gridItemSize)
           .overlay {
-            GIFImage(gifData: adAnimation.gifData)
-              .frame(width: gifViewSize)
+//            GIFImage(gifData: adAnimation.gifData)
+//              .frame(width: gifViewSize)
           }
       }
     }
