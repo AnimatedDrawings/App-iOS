@@ -10,7 +10,9 @@ import ADComposableArchitecture
 
 public extension ConfigureAnimationFeature {
   enum InnerActions: Equatable {
-    case none
+    case alertNoAnimationFile
+    case alertSaveGifResult(Bool)
+    case sheetShareFile
   }
   
   func InnerReducer() -> some ReducerOf<Self> {
@@ -18,7 +20,17 @@ public extension ConfigureAnimationFeature {
       switch action {
       case .inner(let innerActions):
         switch innerActions {
-        case .none:
+        case .alertNoAnimationFile:
+          state.share.alertNoAnimation.toggle()
+          return .none
+          
+        case .alertSaveGifResult(let isSuccess):
+          state.share.saveResult.isSuccess = isSuccess
+          state.share.saveResult.alert.toggle()
+          return .none
+          
+        case .sheetShareFile:
+          state.share.sheetShareFile.toggle()
           return .none
         }
         

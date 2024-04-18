@@ -40,104 +40,14 @@ public struct ConfigureAnimationView: View {
       }
       .padding()
       .addADBackground()
-      .alertTrashMakeAD(
-        isPresented: $store.alert.trash,
-        resetAction: store.action(.view(.tabBar(.trash(.confirmTrash))))
-      )
-      .alertSaveGIFInPhotosResult(
-        isPresented: $store.alert.saveGif.toggle,
-        isSuccess: store.alert.saveGif.isSuccess
-      )
-      .alertNoAnimationFile(isPresented: $store.alert.noAnimation)
-      .confirmationDialog("", isPresented: $store.isShowActionSheet) {
-        Button("Save GIF In Photos") {
-          if let gifURL = store.myAnimationURL {
-            store.send(.saveGIFInPhotos(gifURL))
-          }
-        }
-        Button("Share") {
-          if store.myAnimationURL != nil {
-            store.send(.toggleIsShowShareView)
-          }
-        }
-      }
-      .sheet(isPresented: $store.isShowShareView) {
-        if let myAnimationURL = store.myAnimationURL {
-          ShareView(gifURL: myAnimationURL)
-            .presentationDetents([.medium, .large])
-        }
-      }
-      .fullScreenCover(
-        isPresented: $store.isShowAnimationListView,
-        onDismiss: { store.send(.onDismissAnimationListView) },
-        content: {
-          AnimationListView(isShow: $store.isShowAnimationListView) { selectedAnimation in
-            store.send(.selectAnimation(selectedAnimation))
-          }
-          .addLoadingView(isShow: store.isShowLoadingView, description: "Add Animation...")
-          .alertNetworkError(isPresented: $store.isShowNetworkErrorAlert)
-        }
-      )
+      .trashDialogs(store: store)
+      .shareDialogs(store: store)
+      .animationListDialogs(store: store)
     }
   }
 }
 
-extension View {
-  func alertSaveGIFInPhotosResult(
-    isPresented: Binding<Bool>,
-    isSuccess: Bool
-  ) -> some View {
-    let title = isSuccess ? "Save Success!" : "Save GIF Error"
-    let description = isSuccess ? "" : "Cannot Save GIF.. Try again"
-    
-    return self.alert(
-      title,
-      isPresented: isPresented,
-      actions: {
-        Button("OK", action: {})
-      },
-      message: {
-        Text(description)
-      }
-    )
-  }
-  
-  func alertTrashMakeAD(
-    isPresented: Binding<Bool>,
-    resetAction: @escaping () -> ()
-  ) -> some View {
-    return self.alert(
-      "Reset Animated Drawing",
-      isPresented: isPresented,
-      actions: {
-        Button("Cancel", action: {})
-        Button(action: resetAction) {
-          Text("Reset")
-            .foregroundColor(.red)
-        }
-      },
-      message: {
-        Text("Are you sure to reset making animation all step?")
-      }
-    )
-  }
-  
-  func alertNoAnimationFile(
-    isPresented: Binding<Bool>
-  ) -> some View {
-    self.alert(
-      "No Animated Drawings File",
-      isPresented: isPresented,
-      actions: {
-        Button("Cancel", action: {})
-      },
-      message: {
-        Text("The file does not exist. Make a Animation First")
-      }
-    )
-  }
-}
-
+// MARK: - Component
 private extension ConfigureAnimationView {
   struct Title: View {
     let title = "ADD ANIMATION"
@@ -196,16 +106,16 @@ private extension ConfigureAnimationView {
         .overlay {
           HStack(spacing: 0) {
             TabBarButton(imageName: fix) {
-              store.send(.view(.tabBar(.fix)))
+              store.send(.view(.fix))
             }
             TabBarButton(imageName: trash) {
-              store.send(.view(.tabBar(.trash(.showAlert))))
+              store.send(.view(.trash(.showAlert)))
             }
             TabBarButton(imageName: share) {
-              store.send(.view(.tabBar(.share)))
+              store.send(.view(.share(.showShareSheet)))
             }
             TabBarButton(imageName: animation) {
-              store.send(.view(.tabBar(.animation)))
+              store.send(.view(.animation))
             }
           }
         }
@@ -223,6 +133,198 @@ private extension ConfigureAnimationView {
           .padding(.vertical)
           .frame(maxWidth: .infinity, maxHeight: .infinity)
           .foregroundColor(strokeColor)
+      }
+    }
+  }
+}
+
+// MARK: - Trash Dialogs
+fileprivate extension View {
+  func trashDialogs(
+    store: StoreOf<ConfigureAnimationFeature>
+  ) -> some View {
+    self.modifier(
+      ConfigureAnimationView.TrashAlertModifier(store: store)
+    )
+  }
+}
+
+fileprivate extension ConfigureAnimationView {
+  struct TrashAlertModifier: ViewModifier {
+    @Perception.Bindable var store: StoreOf<ConfigureAnimationFeature>
+    
+    func body(content: Content) -> some View {
+      WithPerceptionTracking {
+        content
+          .alert(
+            "Reset Animated Drawing",
+            isPresented: $store.trash.alert,
+            actions: {
+              Button("Cancel", action: {})
+              Button(
+                action: store.action(.view(.trash(.trashAlertActions(.confirm)))),
+                label: {
+                  Text("Reset")
+                    .foregroundColor(.red)
+                }
+              )
+            },
+            message: {
+              Text("Are you sure to reset making animation all step?")
+            }
+          )
+      }
+    }
+  }
+}
+
+// MARK: - Share Dialogs
+fileprivate extension View {
+  func shareDialogs(
+    store: StoreOf<ConfigureAnimationFeature>
+  ) -> some View {
+    self
+      .modifier(
+        ConfigureAnimationView.SaveGifResultModifier(store: store)
+      )
+      .modifier(
+        ConfigureAnimationView.NoAnimationFileModifier(store: store)
+      )
+      .modifier(
+        ConfigureAnimationView.ShareSheetModifier(store: store)
+      )
+      .modifier(
+        ConfigureAnimationView.ShareFileModifier(store: store)
+      )
+  }
+}
+
+fileprivate extension ConfigureAnimationView {
+  struct SaveGifResultModifier: ViewModifier {
+    @Perception.Bindable var store: StoreOf<ConfigureAnimationFeature>
+    
+    var title: String {
+      store.share.saveResult.isSuccess ?
+      "Save Success!" :
+      "Save GIF Error"
+    }
+    
+    var description: String {
+      store.share.saveResult.isSuccess ?
+      "" :
+      "Cannot Save GIF.. Try again"
+    }
+    
+    func body(content: Content) -> some View {
+      WithPerceptionTracking {
+        content
+          .alert(
+            title,
+            isPresented: $store.share.saveResult.alert,
+            actions: {
+              Button("OK", action: {})
+            },
+            message: {
+              Text(description)
+            }
+          )
+      }
+    }
+  }
+}
+
+fileprivate extension ConfigureAnimationView {
+  struct NoAnimationFileModifier: ViewModifier {
+    @Perception.Bindable var store: StoreOf<ConfigureAnimationFeature>
+    
+    func body(content: Content) -> some View {
+      WithPerceptionTracking {
+        content
+          .alert(
+            "No Animated Drawings File",
+            isPresented: $store.share.alertNoAnimation,
+            actions: {
+              Button("Cancel", action: {})
+            },
+            message: {
+              Text("The file does not exist. Make a Animation First")
+            }
+          )
+      }
+    }
+  }
+}
+
+fileprivate extension ConfigureAnimationView {
+  struct ShareSheetModifier: ViewModifier {
+    @Perception.Bindable var store: StoreOf<ConfigureAnimationFeature>
+    
+    func body(content: Content) -> some View {
+      WithPerceptionTracking {
+        content
+          .confirmationDialog("", isPresented: $store.share.sheetShare) {
+            Button("Save GIF In Photos") {
+              store.send(.view(.share(.shareSheetActions(.save))))
+            }
+            Button("Share GIF") {
+              store.send(.view(.share(.shareSheetActions(.share))))
+            }
+          }
+      }
+    }
+  }
+}
+
+fileprivate extension ConfigureAnimationView {
+  struct ShareFileModifier: ViewModifier {
+    @Perception.Bindable var store: StoreOf<ConfigureAnimationFeature>
+    
+    func body(content: Content) -> some View {
+      WithPerceptionTracking {
+        content
+          .sheet(isPresented: $store.share.sheetShareFile) {
+            if let currentAnimation = store.currentAnimation {
+              ShareView(gifURL: currentAnimation.url)
+            } else {
+              Text("No Animation File")
+            }
+          }
+      }
+    }
+  }
+}
+
+// MARK: - AnimationList Dialogs
+fileprivate extension View {
+  func animationListDialogs(
+    store: StoreOf<ConfigureAnimationFeature>
+  ) -> some View {
+    self
+      .modifier(
+        ConfigureAnimationView.AnimationListModifier(store: store)
+      )
+  }
+}
+
+
+fileprivate extension ConfigureAnimationView {
+  struct AnimationListModifier: ViewModifier {
+    @Perception.Bindable var store: StoreOf<ConfigureAnimationFeature>
+    
+    func body(content: Content) -> some View {
+      WithPerceptionTracking {
+        content
+          .fullScreenCover(
+            isPresented: $store.isShowAnimationListView,
+            onDismiss: { store.send(.onDismissAnimationListView) },
+            content: {
+              AnimationListView(isShow: $store.isShowAnimationListView) { selectedAnimation in
+                store.send(.selectAnimation(selectedAnimation))
+              }
+              .addLoadingView(isShow: store.isShowLoadingView, description: "Add Animation...")
+              .alertNetworkError(isPresented: $store.isShowNetworkErrorAlert)
+            }
+          )
       }
     }
   }

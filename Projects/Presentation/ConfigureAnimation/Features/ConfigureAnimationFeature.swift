@@ -26,7 +26,7 @@ public struct ConfigureAnimationFeature {
   
   public init() {}
   
-  public enum Action: Equatable, BindableAction, ViewAction, InnerAction, DelegateAction {
+  public enum Action: Equatable, BindableAction, ViewAction, InnerAction, DelegateAction, AsyncAction {
     case binding(BindingAction<State>)
     
     case fixMakeAD
@@ -60,6 +60,7 @@ public struct ConfigureAnimationFeature {
     case view(ViewActions)
     case inner(InnerActions)
     case delegate(DelegateActions)
+    case async(AsyncActions)
   }
   
   public var body: some ReducerOf<Self> {

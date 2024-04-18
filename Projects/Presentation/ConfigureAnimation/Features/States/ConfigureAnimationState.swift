@@ -32,7 +32,12 @@ public extension ConfigureAnimationFeature {
     public var isShowTrashMakeADAlert: Bool
     
     
-    public var alert: Alert
+    
+    
+    public var currentAnimation: ADAnimationFile?
+    
+    public var trash: ConfigureAnimationFeature.Trash
+    public var share: ConfigureAnimationFeature.Share
     
     public init(
       isShowAnimationListView: Bool = false,
@@ -49,7 +54,11 @@ public extension ConfigureAnimationFeature {
       isShowSaveGIFInPhotosResultAlert: Bool = false,
       isShowTrashMakeADAlert: Bool = false,
       
-      alert: Alert = .init()
+      
+      currentAnimation: ADAnimationFile? = nil,
+      
+      trash: ConfigureAnimationFeature.Trash = .init(),
+      share: ConfigureAnimationFeature.Share = .init()
     ) {
       self.isShowAnimationListView = isShowAnimationListView
       self.isShowLoadingView = isShowLoadingView
@@ -66,43 +75,78 @@ public extension ConfigureAnimationFeature {
       self.isShowTrashMakeADAlert = isShowTrashMakeADAlert
       
       
+      
+      self.currentAnimation = currentAnimation
+      self.trash = trash
+      self.share = share
+    }
+  }
+}
+
+public extension ConfigureAnimationFeature {
+  @ObservableState
+  struct Trash: Equatable {
+    public var alert: Bool
+    
+    public init(
+      alert: Bool = false
+    ) {
       self.alert = alert
     }
   }
-  
+}
+
+public extension ConfigureAnimationFeature {
   @ObservableState
-  struct Alert: Equatable {
-    public var trash: Bool
-    public var saveGif: SaveGifAlertState
-    public var noAnimation: Bool
+  struct Share: Equatable {
+    public var saveResult: SaveResult
+    public var alertNoAnimation: Bool
+    public var sheetShare: Bool
+    public var sheetShareFile: Bool
     
     public init(
-      trash: Bool = false,
-      saveGif: SaveGifAlertState = .init(),
-      noAnimation: Bool = false
+      saveResult: SaveResult = .init(),
+      alertNoAnimation: Bool = false,
+      sheetShare: Bool = false,
+      sheetShareFile: Bool = false
     ) {
-      self.trash = trash
-      self.saveGif = saveGif
-      self.noAnimation = noAnimation
+      self.saveResult = saveResult
+      self.alertNoAnimation = alertNoAnimation
+      self.sheetShare = sheetShare
+      self.sheetShareFile = sheetShareFile
     }
   }
   
   @ObservableState
-  struct SaveGifAlertState: Equatable {
-    public var toggle: Bool
+  struct SaveResult: Equatable {
+    public var alert: Bool
     public var isSuccess: Bool
     
     public init(
-      toggle: Bool = false,
+      alert: Bool = false,
       isSuccess: Bool = false
     ) {
-      self.toggle = toggle
+      self.alert = alert
       self.isSuccess = isSuccess
     }
   }
 }
 
-
+public extension ConfigureAnimationFeature {
+  @ObservableState
+  struct ADAnimationFile: Equatable {
+    public var data: Data
+    public var url: URL
+    
+    public init(
+      data: Data = .init(),
+      url: URL = .init(filePath: "")
+    ) {
+      self.data = data
+      self.url = url
+    }
+  }
+}
 
 public extension ConfigureAnimationFeature.State {
   static func initCache() -> [ADAnimation : URL?] {
