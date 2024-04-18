@@ -24,19 +24,19 @@ public extension MakeADFeature {
   
   func ScopeReducer() -> some ReducerOf<Self> {
     CombineReducers {
-      UploadADrawingReducer()
+      UploadDrawingReducer()
       FindTheCharacterReducer()
       SeparateCharacterReducer()
       FindCharacterJointsReducer()
     }
   }
   
-  func UploadADrawingReducer() -> some ReducerOf<Self> {
+  func UploadDrawingReducer() -> some ReducerOf<Self> {
     Reduce { state, action in
       switch action {
       case .scope(.uploadDrawing(.delegate(let uploadDrawingActions))):
         switch uploadDrawingActions {
-        case .moveToFindingTheCharacter(let result):
+        case .moveToFindTheCharacter(let result):
           state.makeADInfo.originalImage = result.originalImage
           state.makeADInfo.boundingBox = result.boundingBox.cgRect
           state.findTheCharacter.cropImage = .init(
@@ -123,7 +123,7 @@ public extension MakeADFeature {
         case .delegate(.findCharacterJointsResult):
           return .run { send in
             await step.completeStep.set(.FindCharacterJoints)
-            await adViewState.currentView.set(.ConfigureAnimation)
+            await adViewState.adViewState.set(.ConfigureAnimation)
           }
         default:
           return .none

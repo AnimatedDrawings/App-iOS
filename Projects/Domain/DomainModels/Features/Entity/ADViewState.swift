@@ -1,5 +1,5 @@
 //
-//  ADViewCase.swift
+//  ADViewState.swift
 //  Domain_Model
 //
 //  Created by minii on 2023/10/09.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum ADViewCase: Equatable {
+public enum ADViewState: Equatable {
   case OnBoarding
   case MakeAD
   case ConfigureAnimation

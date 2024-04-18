@@ -53,7 +53,7 @@ public extension UploadDrawingFeature {
           return .run { send in
             await adInfo.id.set(response.ad_id)
             await send(.inner(.setLoadingView(false)))
-            await send(.delegate(.moveToFindingTheCharacter(result)))
+            await send(.delegate(.moveToFindTheCharacter(result)))
           }
           
         case .uploadDrawingResponse(.failure(let error)):

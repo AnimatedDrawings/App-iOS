@@ -35,17 +35,17 @@ public extension ConfigureAnimationFeature {
           switch tabBarActions {
           case .fix:
             return .run { send in
-              await adViewState.currentView.set(.MakeAD)
+              await adViewState.adViewState.set(.MakeAD)
             }
             
           case .trash(let trashActions):
             switch trashActions {
             case .showAlert:
               state.alert.trash.toggle()
+              return .none
             case .confirmTrash:
-              return .send(.inner(.resetMakeAD))
+              return .send(.delegate(.resetMakeAD))
             }
-            return .none
             
           case .share:
             return .none

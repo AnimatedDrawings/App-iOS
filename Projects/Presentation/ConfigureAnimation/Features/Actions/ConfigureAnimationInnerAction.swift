@@ -10,7 +10,7 @@ import ADComposableArchitecture
 
 public extension ConfigureAnimationFeature {
   enum InnerActions: Equatable {
-    case resetMakeAD
+    case none
   }
   
   func InnerReducer() -> some ReducerOf<Self> {
@@ -18,7 +18,7 @@ public extension ConfigureAnimationFeature {
       switch action {
       case .inner(let innerActions):
         switch innerActions {
-        case .resetMakeAD:
+        case .none:
           return .none
         }
         

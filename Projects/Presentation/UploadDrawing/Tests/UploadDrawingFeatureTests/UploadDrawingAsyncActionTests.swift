@@ -64,7 +64,7 @@ final class UploadDrawingAsyncActionTests: XCTestCase {
     
     XCTAssertEqual(ad_id, response.ad_id)
     await store.receive(.inner(.setLoadingView(false)))
-    await store.receive(.delegate(.moveToFindingTheCharacter(result)))
+    await store.receive(.delegate(.moveToFindTheCharacter(result)))
   }
   
   func testUploadDrawingResponseFail() async {

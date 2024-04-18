@@ -7,7 +7,7 @@ let project: Project = .makeProject(
     .makeTarget(
       name: Presentation.projectName, 
       product: .staticLibrary,
-      dependencies: [RootView.projectDepedency]
+      dependencies: [Root.projectDepedency]
     )
   ]
 )

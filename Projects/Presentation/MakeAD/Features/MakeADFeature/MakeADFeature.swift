@@ -16,7 +16,7 @@ import SharedProvider
 @Reducer
 public struct MakeADFeature {
   @Dependency(StepProvider.self) var step
-  @Dependency(ADViewProvider.self) var adViewState
+  @Dependency(ADViewStateProvider.self) var adViewState
   
   public init() {}
   

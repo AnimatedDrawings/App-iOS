@@ -22,11 +22,11 @@ public struct ConfigureAnimationFeature {
 //  @Dependency(\.adViewState.currentView) var currentView
 //  @Dependency(\.localFileProvider) var localFileProvider
   
-  @Dependency(ADViewProvider.self) var adViewState
+  @Dependency(ADViewStateProvider.self) var adViewState
   
   public init() {}
   
-  public enum Action: Equatable, BindableAction, ViewAction, InnerAction {
+  public enum Action: Equatable, BindableAction, ViewAction, InnerAction, DelegateAction {
     case binding(BindingAction<State>)
     
     case fixMakeAD
@@ -59,6 +59,7 @@ public struct ConfigureAnimationFeature {
     
     case view(ViewActions)
     case inner(InnerActions)
+    case delegate(DelegateActions)
   }
   
   public var body: some ReducerOf<Self> {
@@ -66,6 +67,7 @@ public struct ConfigureAnimationFeature {
     MainReducer()
     ViewReducer()
     InnerReducer()
+    DelegateReducer()
   }
 }
 

@@ -11,7 +11,7 @@ import ADResources
 import SharedProvider
 
 public struct OnBoardingView: View {
-  @SharedValue(\.adViewState.currentView) var currentView
+  @SharedValue(\.adViewState.adViewState) var currentView
   
   public init() {}
   

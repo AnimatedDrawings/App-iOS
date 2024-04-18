@@ -24,59 +24,61 @@ public struct ConfigureAnimationView: View {
   }
   
   public var body: some View {
-    VStack(spacing: 0) {
-      Title()
-      
-      Spacer().frame(height: 50)
-      
-      MyAnimationView(gifData: nil)
-      
-      Spacer().frame(height: 50)
-      
-      TabBar(store: store)
-      
-      Spacer().frame(height: 20)
-    }
-    .padding()
-    .addADBackground()
-    .alertTrashMakeAD(
-      isPresented: $store.alert.trash,
-      resetAction: store.action(.view(.tabBar(.trash(.confirmTrash))))
-    )
-    .alertSaveGIFInPhotosResult(
-      isPresented: $store.alert.saveGif.toggle,
-      isSuccess: store.alert.saveGif.isSuccess
-    )
-    .alertNoAnimationFile(isPresented: $store.alert.noAnimation)
-    .confirmationDialog("", isPresented: $store.isShowActionSheet) {
-      Button("Save GIF In Photos") {
-        if let gifURL = store.myAnimationURL {
-          store.send(.saveGIFInPhotos(gifURL))
+    WithPerceptionTracking {
+      VStack(spacing: 0) {
+        Title()
+        
+        Spacer().frame(height: 50)
+        
+        MyAnimationView(gifData: nil)
+        
+        Spacer().frame(height: 50)
+        
+        TabBar(store: store)
+        
+        Spacer().frame(height: 20)
+      }
+      .padding()
+      .addADBackground()
+      .alertTrashMakeAD(
+        isPresented: $store.alert.trash,
+        resetAction: store.action(.view(.tabBar(.trash(.confirmTrash))))
+      )
+      .alertSaveGIFInPhotosResult(
+        isPresented: $store.alert.saveGif.toggle,
+        isSuccess: store.alert.saveGif.isSuccess
+      )
+      .alertNoAnimationFile(isPresented: $store.alert.noAnimation)
+      .confirmationDialog("", isPresented: $store.isShowActionSheet) {
+        Button("Save GIF In Photos") {
+          if let gifURL = store.myAnimationURL {
+            store.send(.saveGIFInPhotos(gifURL))
+          }
+        }
+        Button("Share") {
+          if store.myAnimationURL != nil {
+            store.send(.toggleIsShowShareView)
+          }
         }
       }
-      Button("Share") {
-        if store.myAnimationURL != nil {
-          store.send(.toggleIsShowShareView)
+      .sheet(isPresented: $store.isShowShareView) {
+        if let myAnimationURL = store.myAnimationURL {
+          ShareView(gifURL: myAnimationURL)
+            .presentationDetents([.medium, .large])
         }
       }
-    }
-    .sheet(isPresented: $store.isShowShareView) {
-      if let myAnimationURL = store.myAnimationURL {
-        ShareView(gifURL: myAnimationURL)
-          .presentationDetents([.medium, .large])
-      }
-    }
-    .fullScreenCover(
-      isPresented: $store.isShowAnimationListView,
-      onDismiss: { store.send(.onDismissAnimationListView) },
-      content: {
-        AnimationListView(isShow: $store.isShowAnimationListView) { selectedAnimation in
-          store.send(.selectAnimation(selectedAnimation))
+      .fullScreenCover(
+        isPresented: $store.isShowAnimationListView,
+        onDismiss: { store.send(.onDismissAnimationListView) },
+        content: {
+          AnimationListView(isShow: $store.isShowAnimationListView) { selectedAnimation in
+            store.send(.selectAnimation(selectedAnimation))
+          }
+          .addLoadingView(isShow: store.isShowLoadingView, description: "Add Animation...")
+          .alertNetworkError(isPresented: $store.isShowNetworkErrorAlert)
         }
-        .addLoadingView(isShow: store.isShowLoadingView, description: "Add Animation...")
-        .alertNetworkError(isPresented: $store.isShowNetworkErrorAlert)
-      }
-    )
+      )
+    }
   }
 }
 
