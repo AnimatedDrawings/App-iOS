@@ -8,10 +8,16 @@
 
 import Foundation
 
-public struct DownloadAnimationResponse {
+public struct DownloadAnimationResponse: Equatable {
   public let animation: Data
   
   public init(animation: Data) {
     self.animation = animation
+  }
+}
+
+public extension DownloadAnimationResponse {
+  static func mock() -> Self {
+    return Self(animation: .init())
   }
 }

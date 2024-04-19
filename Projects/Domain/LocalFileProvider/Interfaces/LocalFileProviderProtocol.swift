@@ -10,6 +10,7 @@ import Foundation
 import DomainModels
 
 public protocol LocalFileProviderProtocol {
-  func save(file: Data, fileExtension: FileExtension) throws -> SaveLocalFileResponse
+  func saveGIF(fileUrl: URL) async throws
+  func save(data: Data, fileExtension: FileExtension) throws -> SaveLocalFileResponse
   func read(from url: URL) throws -> ReadLocalFileResponse
 }

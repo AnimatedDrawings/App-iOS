@@ -8,13 +8,28 @@
 
 import LocalFileProviderInterfaces
 import Foundation
+import ADErrors
 
 public class TestLocalFileProviderImpl: LocalFileProviderProtocol {
-  public func save(file: Data, fileExtension: FileExtension) throws -> SaveLocalFileResponse {
-    return .init(fileURL: URL(string: "https://www.apple.com/")!)
+  public var isSuccessSaveGIF: Bool
+  
+  public init(isSuccessSaveGIF: Bool = true) {
+    self.isSuccessSaveGIF = isSuccessSaveGIF
+  }
+  
+  public func saveGIF(fileUrl: URL) async throws {
+    if isSuccessSaveGIF {
+      return
+    } else {
+      throw LocalFileProviderError.saveGifInPhotos
+    }
+  }
+  
+  public func save(data: Data, fileExtension: FileExtension) throws -> SaveLocalFileResponse {
+    return .mock()
   }
   
   public func read(from url: URL) throws -> ReadLocalFileResponse {
-    return .init(data: Data())
+    return .mock()
   }
 }

@@ -7,13 +7,14 @@
 //
 
 import ADComposableArchitecture
+import DomainModels
 
 public extension ConfigureAnimationFeature {
   enum ViewActions: Equatable {
     case fix
     case trash(TrashActions)
     case share(ShareActions)
-    case animation
+    case configure(ConfigureActions)
   }
   
   func ViewReducer() -> some ReducerOf<Self> {
@@ -21,10 +22,10 @@ public extension ConfigureAnimationFeature {
       FixReducer()
       TrashReducer()
       ShareReducer()
+      ConfigureReducer()
     }
   }
 }
-
 
 // MARK: - Fix Actions
 
@@ -117,6 +118,34 @@ public extension ConfigureAnimationFeature {
           case .share:
             return .send(.inner(.sheetShareFile))
           }
+        }
+        
+      default:
+        return .none
+      }
+    }
+  }
+}
+
+// MARK: - Configure Actions
+
+public extension ConfigureAnimationFeature {
+  enum ConfigureActions: Equatable {
+    case pushAnimationListView
+    case selectAnimationItem(ADAnimation)
+  }
+  
+  func ConfigureReducer() -> some ReducerOf<Self> {
+    Reduce { state, action in
+      switch action {
+      case .view(.configure(let configureActions)):
+        switch configureActions {
+        case .pushAnimationListView:
+          state.configure.animationListView.toggle()
+          return .none
+          
+        case .selectAnimationItem(let animation):
+          return .send(.async(.selectAnimation(animation)))
         }
         
       default:

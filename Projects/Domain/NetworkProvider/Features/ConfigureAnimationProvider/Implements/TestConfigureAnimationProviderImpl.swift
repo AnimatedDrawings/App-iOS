@@ -14,6 +14,6 @@ public final class TestConfigureAnimationProviderImpl: ConfigureAnimationProvide
   public func add(ad_id: String, animation: ADAnimation) async throws {}
   
   public func download(ad_id: String, animation: ADAnimation) async throws -> (DownloadAnimationResponse) {
-    return .init(animation: Data())
+    return .mock()
   }
 }

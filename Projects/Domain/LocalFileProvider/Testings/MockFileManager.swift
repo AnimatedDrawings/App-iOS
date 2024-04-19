@@ -9,7 +9,7 @@
 import Foundation
 import LocalFileProviderInterfaces
 
-public final class MockFileManagerFailure: FileManagable {
+public final class MockFileManagerFailure: FileManagerProtocol {
   public init() {}
   
   public func createFile(atPath path: String, contents data: Data?, attributes attr: [FileAttributeKey : Any]?) -> Bool {

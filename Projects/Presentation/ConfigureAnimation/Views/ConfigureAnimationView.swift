@@ -30,7 +30,7 @@ public struct ConfigureAnimationView: View {
         
         Spacer().frame(height: 50)
         
-        MyAnimationView(gifData: nil)
+        MyAnimationView(gifData: store.currentAnimation?.data)
         
         Spacer().frame(height: 50)
         
@@ -115,7 +115,7 @@ private extension ConfigureAnimationView {
               store.send(.view(.share(.showShareSheet)))
             }
             TabBarButton(imageName: animation) {
-              store.send(.view(.animation))
+              store.send(.view(.configure(.pushAnimationListView)))
             }
           }
         }
@@ -315,14 +315,19 @@ fileprivate extension ConfigureAnimationView {
       WithPerceptionTracking {
         content
           .fullScreenCover(
-            isPresented: $store.isShowAnimationListView,
-            onDismiss: { store.send(.onDismissAnimationListView) },
+            isPresented: $store.configure.animationListView,
             content: {
-              AnimationListView(isShow: $store.isShowAnimationListView) { selectedAnimation in
-                store.send(.selectAnimation(selectedAnimation))
-              }
-              .addLoadingView(isShow: store.isShowLoadingView, description: "Add Animation...")
-              .alertNetworkError(isPresented: $store.isShowNetworkErrorAlert)
+              AnimationListView(
+                popViewState: $store.configure.animationListView,
+                selectAnimationItem: { selectedAnimation in
+                  store.send(.view(.configure(.selectAnimationItem(selectedAnimation))))
+                }
+              )
+              .addLoadingView(
+                isShow: store.configure.loadingView,
+                description: "Add Animation..."
+              )
+              .alertNetworkError(isPresented: $store.configure.networkError)
             }
           )
       }

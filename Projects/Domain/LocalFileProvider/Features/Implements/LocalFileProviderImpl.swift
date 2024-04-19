@@ -9,20 +9,41 @@
 import ADErrors
 import LocalFileProviderInterfaces
 import Foundation
+import Photos
 
 public class LocalFileProviderImpl: LocalFileProviderProtocol {
-  let fileManager: FileManagable
+  let fileManager: FileManagerProtocol
+  let phPhotoLibrary: PHPhotoLibraryProtocol
   
-  public init(fileManager: FileManagable = FileManager.default) {
+  public init(
+    fileManager: FileManagerProtocol = FileManager.default,
+    phPhotoLibrary: PHPhotoLibraryProtocol = PHPhotoLibrary.shared()
+  ) {
     self.fileManager = fileManager
+    self.phPhotoLibrary = phPhotoLibrary
   }
   
-  public func save(file: Data, fileExtension: FileExtension) throws -> SaveLocalFileResponse {
+  public func saveGIF(fileUrl: URL) async throws {
+    try await withCheckedThrowingContinuation { continuation in
+      phPhotoLibrary.performChanges {
+        let request = PHAssetCreationRequest.forAsset()
+        request.addResource(with: .photo, fileURL: fileUrl, options: nil)
+      } completionHandler: { isSuccess, error in
+        if isSuccess {
+          continuation.resume()
+        } else {
+          continuation.resume(throwing: LocalFileProviderError.saveGifInPhotos)
+        }
+      }
+    }
+  }
+  
+  public func save(data: Data, fileExtension: FileExtension) throws -> SaveLocalFileResponse {
     let fileURL = FileManager.default.temporaryDirectory
       .appendingPathComponent(UUID().uuidString)
       .appendingPathExtension(fileExtension.rawValue)
     
-    guard fileManager.createFile(atPath: fileURL.path(), contents: file, attributes: nil) else {
+    guard fileManager.createFile(atPath: fileURL.path(), contents: data, attributes: nil) else {
       throw LocalFileProviderError.createFile
     }
     

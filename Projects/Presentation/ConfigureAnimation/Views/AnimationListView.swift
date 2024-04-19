@@ -12,15 +12,15 @@ import ADResources
 import DomainModels
 
 struct AnimationListView: View {
-  @Binding var isShowMyView: Bool
-  let tapAnimationItemAction: (ADAnimation) -> ()
+  @Binding var popViewState: Bool
+  let selectAnimationItem: (ADAnimation) -> ()
   
   init(
-    isShow: Binding<Bool>,
-    tapAnimationItemAction: @escaping (ADAnimation) -> Void
+    popViewState: Binding<Bool>,
+    selectAnimationItem: @escaping (ADAnimation) -> Void
   ) {
-    self._isShowMyView = isShow
-    self.tapAnimationItemAction = tapAnimationItemAction
+    self._popViewState = popViewState
+    self.selectAnimationItem = selectAnimationItem
   }
   
   @State var selectedCategory: AnimationCategory = .ALL
@@ -30,7 +30,7 @@ struct AnimationListView: View {
       HStack {
         Spacer()
         CancelButton {
-          self.isShowMyView.toggle()
+          self.popViewState.toggle()
         }
       }
       .padding(.horizontal)
@@ -42,7 +42,7 @@ struct AnimationListView: View {
           Section {
             AnimationGridView(
               selectedCategory: $selectedCategory,
-              tapAnimationItemAction: tapAnimationItemAction
+              tapAnimationItemAction: selectAnimationItem
             )
           } header: {
             SegmentView(selectedCategory: $selectedCategory)
@@ -219,21 +219,5 @@ enum AnimationCategory: String, CaseIterable {
     case .FUNNY:
       return [.zombie]
     }
-  }
-}
-
-struct Previews_AnimationListView: View {
-  @State var isShow = true
-  
-  var body: some View {
-    AnimationListView(isShow: $isShow) { selectedAnimation in
-      print(selectedAnimation)
-    }
-  }
-}
-
-struct AnimationListView_Previews: PreviewProvider {
-  static var previews: some View {
-    Previews_AnimationListView()
   }
 }

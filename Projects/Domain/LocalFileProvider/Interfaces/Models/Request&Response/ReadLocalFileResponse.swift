@@ -15,3 +15,9 @@ public struct ReadLocalFileResponse {
     self.data = data
   }
 }
+
+public extension ReadLocalFileResponse {
+  static func mock() -> Self {
+    return .init(data: .init())
+  }
+}

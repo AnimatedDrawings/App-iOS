@@ -15,3 +15,9 @@ public struct SaveLocalFileResponse {
     self.fileURL = fileURL
   }
 }
+
+public extension SaveLocalFileResponse {
+  static func mock() -> Self {
+    return .init(fileURL: URL.init(filePath: ""))
+  }
+}

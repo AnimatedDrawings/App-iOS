@@ -11,4 +11,5 @@ import Foundation
 public enum LocalFileProviderError: Error {
   case createFile
   case fetchData
+  case saveGifInPhotos
 }

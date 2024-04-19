@@ -1,5 +1,5 @@
 //
-//  FileManagable.swift
+//  FileManagerProtocol.swift
 //  LocalFileProviderInterfaces
 //
 //  Created by chminii on 3/15/24.
@@ -8,6 +8,6 @@
 
 import Foundation
 
-public protocol FileManagable {
+public protocol FileManagerProtocol {
   func createFile(atPath path: String, contents data: Data?, attributes attr: [FileAttributeKey : Any]?) -> Bool
 }
