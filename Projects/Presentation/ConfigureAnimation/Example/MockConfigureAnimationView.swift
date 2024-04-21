@@ -9,12 +9,17 @@
 import SwiftUI
 import ADComposableArchitecture
 import ConfigureAnimationFeatures
+import ADResources
 
 struct MockConfigureAnimationView: View {
   @Perception.Bindable var store: StoreOf<ConfigureAnimationFeature>
   
   init() {
-    store = Store(initialState: .init()) {
+    let gifData = ADResourcesAsset.ADAnimation.dab.data.data
+    let state: ConfigureAnimationFeature.State = .init(
+      currentAnimation: .init(data: gifData, url: .init(filePath: ""))
+    )
+    store = Store(initialState: state) {
       ConfigureAnimationFeature()
     }
   }

@@ -38,6 +38,8 @@ final class FindCharacterJointsAsyncActionTests: XCTestCase {
     store.exhaustivity = .off
     
     await store.receive(.inner(.setLoadingView(false)))
+    await store.receive(.inner(.popModifyJointsView))
+    await store.receive(.delegate(.findCharacterJointsResult))
   }
   
   func testFindCharacterJointsResponseFail() async {

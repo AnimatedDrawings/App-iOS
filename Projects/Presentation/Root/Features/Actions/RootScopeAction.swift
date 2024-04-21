@@ -31,6 +31,9 @@ public extension RootFeature {
         case .resetMakeAD:
           state.makeAD = .init()
           return .run { _ in
+            await step.completeStep.set(.None)
+            await step.currentStep.set(.UploadDrawing)
+            await step.isShowStepBar.set(true)
             await adview.adViewState.set(.MakeAD)
           }
         }

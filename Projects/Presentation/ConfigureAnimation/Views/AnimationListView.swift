@@ -177,8 +177,8 @@ private extension AnimationListView {
           .cornerRadius(15)
           .frame(height: self.gridItemSize)
           .overlay {
-//            GIFImage(gifData: adAnimation.gifData)
-//              .frame(width: gifViewSize)
+            GIFImage(gifData: adAnimation.gifData)
+              .frame(width: gifViewSize)
           }
       }
     }
@@ -218,6 +218,17 @@ enum AnimationCategory: String, CaseIterable {
       return [.dab]
     case .FUNNY:
       return [.zombie]
+    }
+  }
+}
+
+private extension ADAnimation {
+  var gifData: Data {
+    switch self {
+    case .dab:
+      return ADResourcesAsset.ADAnimation.dab.data.data
+    case .zombie:
+      return ADResourcesAsset.ADAnimation.zombie.data.data
     }
   }
 }

@@ -54,9 +54,6 @@ public struct FindingCharacterJointsView: View {
         isPresented: $store.modifyJointsView,
         content: { ifLetModifyJointsView() }
       )
-      //    .resetMakeADView(.FindingCharacterJoints) {
-      //      viewStore.send(.initState)
-      //    }
     }
     .task { await store.send(.view(.task)).finish() }
   }
