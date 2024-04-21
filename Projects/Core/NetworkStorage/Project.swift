@@ -11,15 +11,7 @@ import ProjectEnvironment
 let project: Project = .makeProject(
   name: NetworkStorage.projectName,
   options: .enableCodeCoverage,
-  targets: [
-    .makeTarget(
-      targetName: NetworkStorage.targetName,
-      product: .staticLibrary,
-      resources: nil,
-      dependencies: [
-        CoreModel.projectDepedency
-      ]
-    ),
-    .makeTestTarget(targetName: NetworkStorage.targetName)
-  ]
+  targets: NetworkStorage.uFeatureTargets(
+    dependencies: [CoreModels.projectDepedency]
+  )
 )

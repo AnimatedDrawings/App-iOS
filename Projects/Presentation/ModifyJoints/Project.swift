@@ -13,7 +13,6 @@ let project: Project = .makeProject(
   options: .enableCodeCoverage,
   targets: ModifyJoints
     .uPresentationTargets(
-      resource: false,
-      dependency: ADUIKit.projectDepedency
+      dependencies: [Domain.projectDepedency]
     )
 )

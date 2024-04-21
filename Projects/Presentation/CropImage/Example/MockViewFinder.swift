@@ -7,39 +7,21 @@
 //
 
 import SwiftUI
-import ADUIKitSources
-import ADUIKitResources
-import DomainModel
-import CropImageFeatures
-import SharedProvider
-import ThirdPartyLib
+import ADResources
+import DomainModels
 
-#Preview {
-  MockViewFinder()
-}
-
-struct MockViewFinder: ADUI {
-  typealias MyFeature = CropImageFeature
-  let store: MyStore
-  @StateObject var viewStore: MyViewStore
-  @SharedValue(\.shared.makeAD.originalImage) var originalImage
-  @SharedValue(\.shared.makeAD.boundingBox) var boundingBox
-  
-  init() {
-    let store = Store(initialState: .init()) {
-      MyFeature()
-    }
-    self.store = store
-    self._viewStore = StateObject(
-      wrappedValue: ViewStore(store, observe: { $0 })
-    )
-  }
+struct MockViewFinder: View {
+  let originalImage: UIImage = ADResourcesAsset.TestImages.originalImage.image
+  let imageBoundingBox: BoundingBox = .mock()
+  @State var viewBoundingBox: CGRect = .init()
+  @State var imageScale: CGFloat = 1
   
   var body: some View {
-    ViewFinder(cropImageViewStore: viewStore)
-      .onAppear {
-        originalImage = ADUIKitResourcesAsset.SampleDrawing.step1Example1.image
-        boundingBox = UploadDrawingResult.example1Mock().boundingBox
-      }
+    ViewFinder(
+      image: originalImage,
+      imageBoundingBox: imageBoundingBox,
+      viewBoundingBox: $viewBoundingBox,
+      imageScale: $imageScale
+    )
   }
 }

@@ -7,202 +7,304 @@
 
 import ProjectDescription
 
+public protocol Module {
+  static var prefixPathString: String { get }
+  static var projectName: String { get }
+  static var featureName: String { get }
+  static var projectDepedency: TargetDependency { get }
+}
+
+public extension Module {
+  static var projectName: String {
+    String(describing: Self.self)
+  }
+  
+  static var featureName: String {
+    projectName
+  }
+  
+  static var path: Path {
+    .relativeToRoot(Self.prefixPathString + "/\(Self.projectName)")
+  }
+  
+  static var projectDepedency: TargetDependency {
+    .project(target: Self.featureName, path: path)
+  }
+}
+
 public protocol uFeatureModule: Module {}
 
 public extension uFeatureModule {
   static func uPresentationTargets(
-    resource: Bool,
-    dependency: TargetDependency
-  ) -> [Target] {
-    return resource ?
-    [
-      exampleTarget(),
-      viewsWithResourceTarget(),
-      resourcesTarget(),
-      featuresTarget(name: featuresUPresentationName),
-      testsTarget(dependencyName: featuresUPresentationName),
-      testingsTarget(),
-      interfacesTarget(dependencies: [dependency])
-    ] :
-    [
-      exampleTarget(),
-      viewsTarget(),
-      featuresTarget(name: featuresUPresentationName),
-      testsTarget(dependencyName: featuresUPresentationName),
-      testingsTarget(),
-      interfacesTarget(dependencies: [dependency])
-    ]
-  }
-  
-  static func uPresentationTargets(
-    resource: Bool,
     dependencies: [TargetDependency]
   ) -> [Target] {
-    return resource ?
-    [
-      exampleTarget(),
-      viewsWithResourceTarget(),
-      resourcesTarget(),
-      featuresTarget(name: featuresUPresentationName),
-      testsTarget(dependencyName: featuresUPresentationName),
-      testingsTarget(),
-      interfacesTarget(dependencies: dependencies)
-    ] :
-    [
-      exampleTarget(),
-      viewsTarget(),
-      featuresTarget(name: featuresUPresentationName),
-      testsTarget(dependencyName: featuresUPresentationName),
-      testingsTarget(),
-      interfacesTarget(dependencies: dependencies)
+    return [
+      example(),
+      views(),
+      featuresUPresentation(),
+      testsUPresentation(),
+      testings(),
+      interfaces(dependencies: dependencies)
     ]
   }
   
-  static func uCoreTargets(dependency: TargetDependency) -> [Target] {
+  static func uFeatureTargets(
+    dependencies: [TargetDependency]
+  ) -> [Target] {
     return [
-      testsTarget(dependencyName: featuresUCoreName),
-      testingsTarget(),
-      featuresTarget(name: featuresUCoreName),
-      interfacesTarget(dependencies: [dependency])
-    ]
-  }
-  
-  static func uCoreTargets(dependencies: [TargetDependency]) -> [Target] {
-    return [
-      testsTarget(dependencyName: featuresUCoreName),
-      testingsTarget(),
-      featuresTarget(name: featuresUCoreName),
-      interfacesTarget(dependencies: dependencies)
+      tests(),
+      testings(),
+      features(),
+      interfaces(dependencies: dependencies)
     ]
   }
 }
 
-public extension uFeatureModule {
-  static var exampleName: String {
-    Self.targetName + "Example"
+public enum uFeatureModuleTarget {
+  case example
+  case views
+  case features
+  case featuresUPresentation
+  case tests
+  case testings
+  case interfaces
+  
+  func source() -> String {
+    switch self {
+    case .example:
+      "Example/**"
+    case .views:
+      "Views/**"
+    case .features, .featuresUPresentation:
+      "Features/**"
+    case .tests:
+      "Tests/**"
+    case .testings:
+      "Testings/**"
+    case .interfaces:
+      "Interfaces/**"
+    }
   }
   
-  static var viewsName: String {
-    Self.targetName
-  }
-  
-  static var resourcesName: String {
-    Self.targetName + "Resources"
-  }
-  
-  static var featuresUPresentationName: String {
-    Self.targetName + "Features"
-  }
-  
-  static var featuresUCoreName: String {
-    Self.targetName
-  }
-  
-  static var interfacesName: String {
-    Self.targetName + "Interfaces"
-  }
-  
-  static var testsName: String {
-    Self.targetName + "Tests"
-  }
-  
-  static var testingsName: String {
-    Self.targetName + "Testings"
+  func name(_ featureName: String) -> String {
+    switch self {
+    case .example:
+      featureName + "Example"
+    case .views:
+      featureName
+    case .features:
+      featureName
+    case .featuresUPresentation:
+      featureName + "Features"
+    case .tests:
+      featureName + "Tests"
+    case .testings:
+      featureName + "Testings"
+    case .interfaces:
+      featureName + "Interfaces"
+    }
   }
 }
 
 public extension uFeatureModule {
-  static func exampleTarget() -> Target {
+  static func sourceFilesList(
+    _ targets: [uFeatureModuleTarget]
+  ) -> SourceFilesList {
+    .sourceFilesList(globs: targets.map { $0.source() })
+  }
+  
+  static func targetDependencies(
+    _ targets: [uFeatureModuleTarget]
+  ) -> [TargetDependency] {
+    targets.map { .target(name: $0.name(featureName)) }
+  }
+  
+  static func targetName(
+    _ target: uFeatureModuleTarget
+  ) -> String {
+    target.name(featureName)
+  }
+}
+
+public extension uFeatureModule {
+  static func example(
+    sources: [uFeatureModuleTarget] = [.example, .views],
+    dependencies: [uFeatureModuleTarget] = [.views, .testings]
+  ) -> Target {
     .makeTarget(
-      targetName: exampleName,
+      name: targetName(.example),
       product: .app,
       infoPlist: .AD,
-      sources: ["Example/**", "Views/**"],
-      resources: nil,
-      dependencies: [
-        .target(name: viewsName),
-        .target(name: testingsName)
-      ]
+      sources: sourceFilesList(sources),
+      dependencies: targetDependencies(dependencies)
     )
   }
   
-  static func viewsTarget() -> Target {
+  static func example(
+    sources: [uFeatureModuleTarget] = [.example, .views],
+    dependencies: [TargetDependency]
+  ) -> Target {
+    return .makeTarget(
+      name: targetName(.example),
+      product: .app,
+      infoPlist: .AD,
+      sources: sourceFilesList(sources),
+      dependencies: dependencies
+    )
+  }
+  
+  static func views(
+    sources: [uFeatureModuleTarget] = [.views],
+    dependencies: [uFeatureModuleTarget] = [.featuresUPresentation]
+  ) -> Target {
     .makeTarget(
-      targetName: viewsName,
+      name: targetName(.views),
       product: .staticLibrary,
-      sources: ["Views/**"],
-      resources: nil,
-      dependencies: [
-        .target(name: featuresUPresentationName)
-      ]
+      sources: sourceFilesList(sources),
+      dependencies: targetDependencies(dependencies)
     )
   }
   
-  static func viewsWithResourceTarget() -> Target {
+  static func views(
+    sources: [uFeatureModuleTarget] = [.views],
+    dependencies: [TargetDependency]
+  ) -> Target {
     .makeTarget(
-      targetName: viewsName,
+      name: targetName(.views),
       product: .staticLibrary,
-      sources: ["Views/**"],
-      dependencies: [
-        .target(name: featuresUPresentationName),
-        .target(name: resourcesName)
-      ]
+      sources: sourceFilesList(sources),
+      dependencies: dependencies
     )
   }
   
-  static func resourcesTarget() -> Target {
+  static func featuresUPresentation(
+    sources: [uFeatureModuleTarget] = [.featuresUPresentation],
+    dependencies: [uFeatureModuleTarget] = [.interfaces]
+  ) -> Target {
     .makeTarget(
-      targetName: resourcesName,
+      name: targetName(.featuresUPresentation),
       product: .staticLibrary,
-      sources: nil
+      sources: sourceFilesList(sources),
+      dependencies: targetDependencies(dependencies)
     )
   }
   
-  static func featuresTarget(name: String) -> Target {
+  static func featuresUPresentation(
+    sources: [uFeatureModuleTarget] = [.featuresUPresentation],
+    dependencies: [TargetDependency]
+  ) -> Target {
     .makeTarget(
-      targetName: name,
+      name: targetName(.featuresUPresentation),
       product: .staticLibrary,
-      sources: ["Features/**"],
-      resources: nil,
-      dependencies: [
-        .target(name: interfacesName)
-      ]
+      sources: sourceFilesList(sources),
+      dependencies: dependencies
     )
   }
   
-  static func testsTarget(dependencyName: String) -> Target {
+  static func features(
+    sources: [uFeatureModuleTarget] = [.features],
+    dependencies: [uFeatureModuleTarget] = [.interfaces]
+  ) -> Target {
     .makeTarget(
-      targetName: testsName,
-      platform: .iOS,
+      name: targetName(.features),
+      product: .staticLibrary,
+      sources: sourceFilesList(sources),
+      dependencies: targetDependencies(dependencies)
+    )
+  }
+  
+  static func features(
+    sources: [uFeatureModuleTarget] = [.features],
+    dependencies: [TargetDependency]
+  ) -> Target {
+    .makeTarget(
+      name: targetName(.features),
+      product: .staticLibrary,
+      sources: sourceFilesList(sources),
+      dependencies: dependencies
+    )
+  }
+  
+  static func testsUPresentation(
+    sources: [uFeatureModuleTarget] = [.tests],
+    dependencies: [uFeatureModuleTarget] = [.featuresUPresentation, .testings]
+  ) -> Target {
+    return .makeTarget(
+      name: targetName(.tests),
       product: .unitTests,
-      sources: ["Tests/**"],
-      resources: nil,
-      dependencies: [
-        .target(name: testingsName),
-        .target(name: dependencyName)
-      ]
+      sources: sourceFilesList(sources),
+      dependencies: targetDependencies(dependencies)
     )
   }
   
-  static func testingsTarget() -> Target {
-    .makeTarget(
-      targetName: testingsName,
-      platform: .iOS,
-      product: .staticLibrary,
-      sources: ["Testings/**"],
-      resources: nil,
-      dependencies: [
-        .target(name: interfacesName)
-      ]
+  static func testsUPresentation(
+    sources: [uFeatureModuleTarget] = [.tests],
+    dependencies: [TargetDependency]
+  ) -> Target {
+    return .makeTarget(
+      name: targetName(.tests),
+      product: .unitTests,
+      sources: sourceFilesList(sources),
+      dependencies: dependencies
     )
   }
   
-  static func interfacesTarget(dependencies: [TargetDependency]) -> Target {
+  static func tests(
+    sources: [uFeatureModuleTarget] = [.tests],
+    dependencies: [uFeatureModuleTarget] = [.features, .testings]
+  ) -> Target {
+    return .makeTarget(
+      name: targetName(.tests),
+      product: .unitTests,
+      sources: sourceFilesList(sources),
+      dependencies: targetDependencies(dependencies)
+    )
+  }
+  
+  static func tests(
+    sources: [uFeatureModuleTarget] = [.tests],
+    dependencies: [TargetDependency]
+  ) -> Target {
+    return .makeTarget(
+      name: targetName(.tests),
+      product: .unitTests,
+      sources: sourceFilesList(sources),
+      dependencies: dependencies
+    )
+  }
+  
+  static func testings(
+    sources: [uFeatureModuleTarget] = [.testings],
+    dependencies: [uFeatureModuleTarget] = [.interfaces]
+  ) -> Target {
     .makeTarget(
-      targetName: interfacesName,
+      name: targetName(.testings),
       product: .staticLibrary,
-      sources: ["Interfaces/**"],
-      resources: nil,
+      sources: sourceFilesList(sources),
+      dependencies: targetDependencies(dependencies)
+    )
+  }
+  
+  static func testings(
+    sources: [uFeatureModuleTarget] = [.testings],
+    dependencies: [TargetDependency]
+  ) -> Target {
+    .makeTarget(
+      name: targetName(.testings),
+      product: .staticLibrary,
+      sources: sourceFilesList(sources),
+      dependencies: dependencies
+    )
+  }
+  
+  static func interfaces(
+    sources: [uFeatureModuleTarget] = [.interfaces],
+    dependencies: [TargetDependency]
+  ) -> Target {
+    .makeTarget(
+      name: targetName(.interfaces),
+      product: .staticLibrary,
+      sources: sourceFilesList(sources),
       dependencies: dependencies
     )
   }

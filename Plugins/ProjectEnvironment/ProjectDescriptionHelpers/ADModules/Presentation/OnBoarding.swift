@@ -7,8 +7,6 @@
 
 import Foundation
 
-public struct OnBoarding: PresentationModule {
-  public static var projectName: String = "OnBoarding"
-  public static var targetName: String = "OnBoarding"
+public struct OnBoarding: uFeatureModule {
   public static var prefixPathString: String = Presentation.prefixPathString
 }

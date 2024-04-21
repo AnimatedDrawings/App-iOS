@@ -12,13 +12,13 @@ let project: Project = .makeProject(
   name: Domain.projectName,
   targets: [
     .makeTarget(
-      targetName: Domain.targetName,
+      name: Domain.featureName,
       product: .staticLibrary,
-      resources: nil,
       dependencies: [
         LocalFileProvider.projectDepedency,
         SharedProvider.projectDepedency,
-        NetworkProvider.projectDepedency
+        NetworkProvider.projectDepedency,
+        ImageTools.projectDepedency
       ]
     )
   ]

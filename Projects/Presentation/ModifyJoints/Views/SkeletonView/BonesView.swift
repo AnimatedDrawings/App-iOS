@@ -6,14 +6,13 @@
 //
 
 import SwiftUI
-import DomainModel
-import ADUIKitResources
-import ThirdPartyLib
-import ModifyJointsFeatures
+import DomainModels
+import ADComposableArchitecture
+import ADResources
 
 struct BonesView: View {
+  @Binding var skeletons: [String : Skeleton]
   let viewSize: CGSize
-  @ObservedObject var viewStore: ViewStoreOf<ModifyJointsFeature>
   
   func calPoint(_ ratioPoint: RatioPoint) -> CGPoint {
     let x = (viewSize.width * ratioPoint.x)
@@ -23,10 +22,10 @@ struct BonesView: View {
   }
   
   var body: some View {
-    ForEach(Array(viewStore.skeletons.keys), id: \.self) { myName in
-      if let mySkeleton = viewStore.skeletons[myName] {
+    ForEach(Array(skeletons.keys), id: \.self) { myName in
+      if let mySkeleton = skeletons[myName] {
         if let parentName = mySkeleton.parent,
-           let parentSkeleton = viewStore.skeletons[parentName] {
+           let parentSkeleton = skeletons[parentName] {
           BoneLine(
             myPoint: calPoint(mySkeleton.ratioPoint),
             parentPoint: calPoint(parentSkeleton.ratioPoint),
@@ -43,7 +42,7 @@ extension BonesView {
     let myPoint: CGPoint
     let parentPoint: CGPoint
     let viewSize: CGSize
-    let color: Color = ADUIKitResourcesAsset.Color.blue1.swiftUIColor
+    let color: Color = ADResourcesAsset.Color.blue1.swiftUIColor
     
     init(myPoint: CGPoint, parentPoint: CGPoint, viewSize: CGSize) {
       self.myPoint = myPoint

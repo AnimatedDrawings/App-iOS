@@ -7,145 +7,47 @@
 //
 
 import SwiftUI
-import ThirdPartyLib
+import ADComposableArchitecture
 import ConfigureAnimationFeatures
-import ADUIKitSources
-import ADUIKitResources
+import ADUIKit
+import ADResources
 
-public struct ConfigureAnimationView: ADUI {
-  public typealias MyFeature = ConfigureAnimationFeature
+public struct ConfigureAnimationView: View {
+  @Perception.Bindable var store: StoreOf<ConfigureAnimationFeature>
   
   public init(
-    store: MyStore = Store(
-      initialState: .init()
-    ) {
-      MyFeature()
+    store: StoreOf<ConfigureAnimationFeature> = Store(initialState: .init()) {
+      ConfigureAnimationFeature()
     }
   ) {
     self.store = store
-    self._viewStore = StateObject(
-      wrappedValue: ViewStore(store, observe: { $0 })
-    )
   }
-  
-  let store: MyStore
-  @StateObject var viewStore: MyViewStore
   
   public var body: some View {
-    VStack(spacing: 0) {
-      Title()
-      
-      Spacer().frame(height: 50)
-      
-      MyAnimationView(viewStore: viewStore)
-      
-      Spacer().frame(height: 50)
-      
-      TabBar(viewStore: viewStore)
-      
-      Spacer().frame(height: 20)
+    WithPerceptionTracking {
+      VStack(spacing: 0) {
+        Title()
+        
+        Spacer().frame(height: 50)
+        
+        MyAnimationView(gifData: store.currentAnimation?.data)
+        
+        Spacer().frame(height: 50)
+        
+        TabBar(store: store)
+        
+        Spacer().frame(height: 20)
+      }
+      .padding()
+      .addADBackground()
+      .trashDialogs(store: store)
+      .shareDialogs(store: store)
+      .animationListDialogs(store: store)
     }
-    .padding()
-    .addADBackground(withStepBar: false)
-    .alertSaveGIFInPhotosResult(
-      isPresented: viewStore.$isShowSaveGIFInPhotosResultAlert,
-      isSuccess: viewStore.saveGIFInPhotosResult
-    )
-    .alertTrashMakeAD(
-      isPresented: viewStore.$isShowTrashMakeADAlert,
-      resetAction: {
-        viewStore.send(.resetMakeADData)
-      }
-    )
-    .alertNoAnimationFile(isPresented: viewStore.$isShowNoAnimationFileAlert)
-    .confirmationDialog("", isPresented: viewStore.$isShowActionSheet) {
-      Button("Save GIF In Photos") {
-        if let gifURL = viewStore.myAnimationURL {
-          viewStore.send(.saveGIFInPhotos(gifURL))
-        }
-      }
-      Button("Share") {
-        if viewStore.myAnimationURL != nil {
-          viewStore.send(.toggleIsShowShareView)
-        }
-      }
-    }
-    .sheet(isPresented: viewStore.$isShowShareView) {
-      if let myAnimationURL = viewStore.myAnimationURL {
-        ShareView(gifURL: myAnimationURL)
-          .presentationDetents([.medium, .large])
-      }
-    }
-    .fullScreenCover(
-      isPresented: viewStore.$isShowAnimationListView,
-      onDismiss: { viewStore.send(.onDismissAnimationListView) },
-      content: {
-        AnimationListView(isShow: viewStore.$isShowAnimationListView) { selectedAnimation in
-          viewStore.send(.selectAnimation(selectedAnimation))
-        }
-        .addLoadingView(isShow: viewStore.isShowLoadingView, description: "Add Animation...")
-        .alertNetworkError(isPresented: viewStore.$isShowNetworkErrorAlert)
-      }
-    )
   }
 }
 
-extension View {
-  func alertSaveGIFInPhotosResult(
-    isPresented: Binding<Bool>,
-    isSuccess: Bool
-  ) -> some View {
-    let title = isSuccess ? "Save Success!" : "Save GIF Error"
-    let description = isSuccess ? "" : "Cannot Save GIF.. Try again"
-    
-    return self.alert(
-      title,
-      isPresented: isPresented,
-      actions: {
-        Button("OK", action: {})
-      },
-      message: {
-        Text(description)
-      }
-    )
-  }
-  
-  func alertTrashMakeAD(
-    isPresented: Binding<Bool>,
-    resetAction: @escaping () -> ()
-  ) -> some View {
-    return self.alert(
-      "Reset Animated Drawing",
-      isPresented: isPresented,
-      actions: {
-        Button("Cancel", action: {})
-        Button(action: resetAction) {
-          Text("Reset")
-            .foregroundColor(.red)
-        }
-      },
-      message: {
-        Text("Are you sure to reset making animation all step?")
-      }
-    )
-  }
-  
-  func alertNoAnimationFile(
-    isPresented: Binding<Bool>
-  ) -> some View {
-    self.alert(
-      "No Animated Drawings File",
-      isPresented: isPresented,
-      actions: {
-        Button("Cancel", action: {})
-      },
-      message: {
-        Text("The file does not exist. Make a Animation First")
-      }
-    )
-  }
-}
-
+// MARK: - Component
 private extension ConfigureAnimationView {
   struct Title: View {
     let title = "ADD ANIMATION"
@@ -155,7 +57,7 @@ private extension ConfigureAnimationView {
       VStack(alignment: .leading, spacing: 20) {
         Text(title)
           .font(.system(.title, weight: .semibold))
-          .foregroundColor(ADUIKitResourcesAsset.Color.blue2.swiftUIColor)
+          .foregroundColor(ADResourcesAsset.Color.blue2.swiftUIColor)
         
         Text(description)
           .frame(maxWidth: .infinity)
@@ -166,14 +68,14 @@ private extension ConfigureAnimationView {
 
 private extension ConfigureAnimationView {
   struct MyAnimationView: View {
-    @ObservedObject var viewStore: MyViewStore
+    let gifData: Data?
     
     var body: some View {
       RoundedRectangle(cornerRadius: 15)
         .foregroundColor(.white)
         .shadow(radius: 10)
         .overlay(alignment: .center) {
-          if let gifData = viewStore.state.myAnimationData {
+          if let gifData = gifData {
             GIFImage(gifData: gifData)
           }
         }
@@ -183,13 +85,13 @@ private extension ConfigureAnimationView {
 
 private extension ConfigureAnimationView {
   struct TabBar: View {
+    @Perception.Bindable var store: StoreOf<ConfigureAnimationFeature>
+    
     let trash = "trash"
     let fix = "arrowshape.turn.up.backward"
     let share = "square.and.arrow.up"
     let animation = "figure.dance"
-    let strokeColor: Color = ADUIKitResourcesAsset.Color.blue2.swiftUIColor
-    
-    @ObservedObject var viewStore: MyViewStore
+    let strokeColor: Color = ADResourcesAsset.Color.blue2.swiftUIColor
     
     var body: some View {
       RoundedRectangle(cornerRadius: 35)
@@ -204,16 +106,16 @@ private extension ConfigureAnimationView {
         .overlay {
           HStack(spacing: 0) {
             TabBarButton(imageName: fix) {
-              viewStore.send(.fixMakeAD)
+              store.send(.view(.fix))
             }
             TabBarButton(imageName: trash) {
-              viewStore.send(.showTrashMakeADAlert)
+              store.send(.view(.trash(.showAlert)))
             }
             TabBarButton(imageName: share) {
-              viewStore.send(.toggleIsShowShareActionSheet)
+              store.send(.view(.share(.showShareSheet)))
             }
             TabBarButton(imageName: animation) {
-              viewStore.send(.toggleIsShowAnimationListView)
+              store.send(.view(.configure(.pushAnimationListView)))
             }
           }
         }
@@ -236,9 +138,199 @@ private extension ConfigureAnimationView {
   }
 }
 
-// MARK: - Previews
-struct ConfigureAnimationView_Previews: PreviewProvider {
-  static var previews: some View {
-    ConfigureAnimationView()
+// MARK: - Trash Dialogs
+fileprivate extension View {
+  func trashDialogs(
+    store: StoreOf<ConfigureAnimationFeature>
+  ) -> some View {
+    self.modifier(
+      ConfigureAnimationView.TrashAlertModifier(store: store)
+    )
+  }
+}
+
+fileprivate extension ConfigureAnimationView {
+  struct TrashAlertModifier: ViewModifier {
+    @Perception.Bindable var store: StoreOf<ConfigureAnimationFeature>
+    
+    func body(content: Content) -> some View {
+      WithPerceptionTracking {
+        content
+          .alert(
+            "Reset Animated Drawing",
+            isPresented: $store.trash.alert,
+            actions: {
+              Button("Cancel", action: {})
+              Button(
+                action: store.action(.view(.trash(.trashAlertActions(.confirm)))),
+                label: {
+                  Text("Reset")
+                    .foregroundColor(.red)
+                }
+              )
+            },
+            message: {
+              Text("Are you sure to reset making animation all step?")
+            }
+          )
+      }
+    }
+  }
+}
+
+// MARK: - Share Dialogs
+fileprivate extension View {
+  func shareDialogs(
+    store: StoreOf<ConfigureAnimationFeature>
+  ) -> some View {
+    self
+      .modifier(
+        ConfigureAnimationView.SaveGifResultModifier(store: store)
+      )
+      .modifier(
+        ConfigureAnimationView.NoAnimationFileModifier(store: store)
+      )
+      .modifier(
+        ConfigureAnimationView.ShareSheetModifier(store: store)
+      )
+      .modifier(
+        ConfigureAnimationView.ShareFileModifier(store: store)
+      )
+  }
+}
+
+fileprivate extension ConfigureAnimationView {
+  struct SaveGifResultModifier: ViewModifier {
+    @Perception.Bindable var store: StoreOf<ConfigureAnimationFeature>
+    
+    var title: String {
+      store.share.saveResult.isSuccess ?
+      "Save Success!" :
+      "Save GIF Error"
+    }
+    
+    var description: String {
+      store.share.saveResult.isSuccess ?
+      "" :
+      "Cannot Save GIF.. Try again"
+    }
+    
+    func body(content: Content) -> some View {
+      WithPerceptionTracking {
+        content
+          .alert(
+            title,
+            isPresented: $store.share.saveResult.alert,
+            actions: {
+              Button("OK", action: {})
+            },
+            message: {
+              Text(description)
+            }
+          )
+      }
+    }
+  }
+}
+
+fileprivate extension ConfigureAnimationView {
+  struct NoAnimationFileModifier: ViewModifier {
+    @Perception.Bindable var store: StoreOf<ConfigureAnimationFeature>
+    
+    func body(content: Content) -> some View {
+      WithPerceptionTracking {
+        content
+          .alert(
+            "No Animated Drawings File",
+            isPresented: $store.share.alertNoAnimation,
+            actions: {
+              Button("Cancel", action: {})
+            },
+            message: {
+              Text("The file does not exist. Make a Animation First")
+            }
+          )
+      }
+    }
+  }
+}
+
+fileprivate extension ConfigureAnimationView {
+  struct ShareSheetModifier: ViewModifier {
+    @Perception.Bindable var store: StoreOf<ConfigureAnimationFeature>
+    
+    func body(content: Content) -> some View {
+      WithPerceptionTracking {
+        content
+          .confirmationDialog("", isPresented: $store.share.sheetShare) {
+            Button("Save GIF In Photos") {
+              store.send(.view(.share(.shareSheetActions(.save))))
+            }
+            Button("Share GIF") {
+              store.send(.view(.share(.shareSheetActions(.share))))
+            }
+          }
+      }
+    }
+  }
+}
+
+fileprivate extension ConfigureAnimationView {
+  struct ShareFileModifier: ViewModifier {
+    @Perception.Bindable var store: StoreOf<ConfigureAnimationFeature>
+    
+    func body(content: Content) -> some View {
+      WithPerceptionTracking {
+        content
+          .sheet(isPresented: $store.share.sheetShareFile) {
+            if let currentAnimation = store.currentAnimation {
+              ShareView(gifURL: currentAnimation.url)
+            } else {
+              Text("No Animation File")
+            }
+          }
+      }
+    }
+  }
+}
+
+// MARK: - AnimationList Dialogs
+fileprivate extension View {
+  func animationListDialogs(
+    store: StoreOf<ConfigureAnimationFeature>
+  ) -> some View {
+    self
+      .modifier(
+        ConfigureAnimationView.AnimationListModifier(store: store)
+      )
+  }
+}
+
+
+fileprivate extension ConfigureAnimationView {
+  struct AnimationListModifier: ViewModifier {
+    @Perception.Bindable var store: StoreOf<ConfigureAnimationFeature>
+    
+    func body(content: Content) -> some View {
+      WithPerceptionTracking {
+        content
+          .fullScreenCover(
+            isPresented: $store.configure.animationListView,
+            content: {
+              AnimationListView(
+                popViewState: $store.configure.animationListView,
+                selectAnimationItem: { selectedAnimation in
+                  store.send(.view(.configure(.selectAnimationItem(selectedAnimation))))
+                }
+              )
+              .addLoadingView(
+                isShow: store.configure.loadingView,
+                description: "Add Animation..."
+              )
+              .alertNetworkError(isPresented: $store.configure.networkError)
+            }
+          )
+      }
+    }
   }
 }

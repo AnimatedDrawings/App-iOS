@@ -8,7 +8,5 @@
 import Foundation
 
 public struct ModifyJoints: uFeatureModule {
-  public static var projectName: String = "ModifyJoints"
-  public static var targetName: String = "ModifyJoints"
   public static var prefixPathString: String = Presentation.prefixPathString
 }

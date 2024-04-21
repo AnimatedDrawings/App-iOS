@@ -9,10 +9,12 @@
 import SwiftUI
 
 @main
-struct FindingTheCharacterExample: App {
+struct CropImageExample: App {
   var body: some Scene {
     WindowGroup {
-      Previews_CropImageView()
+      VStack {
+        MockCropImageView()
+      }
     }
   }
 }

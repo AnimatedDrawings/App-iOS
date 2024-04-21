@@ -7,8 +7,6 @@
 
 import Foundation
 
-public struct NetworkProvider: Module {
-  public static var projectName: String = "NetworkProvider"
-  public static var targetName: String = "NetworkProvider"
-  public static var prefixPathString: String = Domain.prefixPathString
+public struct NetworkProvider: uFeatureModule {
+  public static let prefixPathString: String = Domain.prefixPathString
 }

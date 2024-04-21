@@ -6,53 +6,41 @@
 //
 
 import SwiftUI
-import ADUIKitSources
-import ADUIKitResources
-import DomainModel
-import ThirdPartyLib
+import ADUIKit
+import ADComposableArchitecture
+import ADResources
 import ModifyJointsFeatures
+import DomainModels
 
-public struct ModifyJointsView: ADUI {
-  public typealias MyFeature = ModifyJointsFeature
-  @StateObject var viewStore: MyViewStore
-  
+public struct ModifyJointsView: View {
+  @Perception.Bindable var store: StoreOf<ModifyJointsFeature>
+  @State var currentJointName: String? = nil
+  @State var skeletons: [String : Skeleton] = [:]
   let croppedImage: UIImage
-  let save: (Joints) -> ()
-  let cancel: () -> ()
   
-  public init(
-    croppedImage: UIImage,
-    joints: Joints,
-    save: @escaping (Joints) -> (),
-    cancel: @escaping () -> ()
-  ) {
-    self.croppedImage = croppedImage
-    self.save = save
-    self.cancel = cancel
-    let store: MyStore = Store(initialState: .init(joints: joints)) {
-      ModifyJointsFeature()
-    }
-    self._viewStore = StateObject(
-      wrappedValue: ViewStore(store, observe: { $0 })
-    )
+  public init(store: StoreOf<ModifyJointsFeature>) {
+    self.store = store
+    self.croppedImage = store.croppedImage
+    self._skeletons = State(initialValue: store.originJoints.skeletons)
   }
   
   public var body: some View {
     VStack(spacing: 40) {
       ToolNaviBar(
-        cancelAction: cancelAction,
-        saveAction: saveAction
+        cancelAction: store.action(.view(.cancel)),
+        saveAction: store.action(.view(.save(skeletons)))
       )
       
       Spacer()
       
       VStack {
-        JointName(viewStore.currentJoint)
+        JointName(currentJointName)
           .frame(height: 50)
         
         SkeletonView(
-          croppedImage: croppedImage,
-          viewStore: viewStore
+          skeletons: $skeletons,
+          currentJointName: $currentJointName,
+          croppedImage: croppedImage
         )
       }
       
@@ -60,7 +48,7 @@ public struct ModifyJointsView: ADUI {
       
       HStack {
         Spacer()
-        ResetButton(action: viewStore.action(.resetSkeletons))
+        ResetButton(action: resetAction)
       }
     }
     .padding()
@@ -68,25 +56,10 @@ public struct ModifyJointsView: ADUI {
 }
 
 extension ModifyJointsView {
-  func saveAction() {
-    let modifiedJoints = Joints(
-      imageWidth: viewStore.imageWidth,
-      imageHeight: viewStore.imageHeight,
-      skeletons: viewStore.skeletons
-    )
-    self.save(modifiedJoints)
-  }
-  
-  func cancelAction() {
-    self.cancel()
-  }
-}
-
-extension ModifyJointsView {
   struct JointName: View {
-    let jointNameColor: Color = ADUIKitResourcesAsset.Color.jointName.swiftUIColor
-    let textInset: CGFloat = 5
     let name: String?
+    let jointNameColor: Color = ADResourcesAsset.Color.jointName.swiftUIColor
+    let textInset: CGFloat = 5
     
     init(_ name: String?) {
       self.name = name
@@ -110,11 +83,15 @@ extension ModifyJointsView {
 }
 
 extension ModifyJointsView {
+  func resetAction() {
+    skeletons = store.originJoints.skeletons
+  }
+  
   struct ResetButton: View {
-    let color: Color = ADUIKitResourcesAsset.Color.blue1.swiftUIColor
+    let action: () -> ()
+    let color: Color = ADResourcesAsset.Color.blue1.swiftUIColor
     let size: CGFloat = 60
     let imageName = "arrow.uturn.backward"
-    let action: () -> ()
     
     var body: some View {
       Button(action: action) {
@@ -134,25 +111,3 @@ extension ModifyJointsView {
   }
 }
 
-
-// MARK: - Preview
-
-#Preview {
-  Previews_ModifyJointsView()
-}
-
-public struct Previews_ModifyJointsView: View {
-  let croppedImage: UIImage = ADUIKitResourcesAsset.TestImages.croppedImage.image
-  let mockJoints = Joints.mockData()!
-  
-  public init () {}
-  
-  public var body: some View {
-    ModifyJointsView(
-      croppedImage: croppedImage,
-      joints: mockJoints,
-      save: { _ in },
-      cancel: {}
-    )
-  }
-}

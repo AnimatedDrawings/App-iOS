@@ -7,35 +7,49 @@
 //
 
 import SwiftUI
-import SharedProvider
-import ADUIKitResources
+import ADResources
+import DomainModels
 
-struct StepBar: View {
-  @State var statusBarWidth: CGFloat = 0
-  let statusBarSpacing: CGFloat = 4
-  let activeColor: Color = ADUIKitResourcesAsset.Color.blue1.swiftUIColor
-  let inActiveColor: Color = .gray
-  let completeColor: Color = ADUIKitResourcesAsset.Color.green1.swiftUIColor
-  
-  @SharedValue(\.shared.stepBar.currentStep) var currentStep
-  @SharedValue(\.shared.stepBar.completeStep) var completeStep
-  
-  var currentStepIdx: Int {
-    currentStep.rawValue
-  }
-  var completeStepIdx: Int {
-    completeStep.rawValue
-  }
-  
-  var body: some View {
-    VStack(alignment: .leading) {
-      Title()
-      StatusBar()
+extension MakeADView {
+  struct StepBar: View {
+    @State var statusBarWidth: CGFloat = 0
+    let statusBarSpacing: CGFloat = 4
+    let activeColor: Color = ADResourcesAsset.Color.blue1.swiftUIColor
+    let inActiveColor: Color = .gray
+    let completeColor: Color = ADResourcesAsset.Color.green1.swiftUIColor
+    
+    let currentStep: MakeADStep
+    let completeStep: MakeADStep
+    
+    public init(
+      currentStep: MakeADStep,
+      completeStep: MakeADStep
+    ) {
+      self.currentStep = currentStep
+      self.completeStep = completeStep
+    }
+    
+    var currentStepIdx: Int {
+      currentStep.rawValue
+    }
+    var completeStepIdx: Int {
+      completeStep.rawValue
+    }
+    
+    var body: some View {
+      VStack(alignment: .leading) {
+        Title()
+        StatusBar()
+      }
+      .listRowSeparator(.hidden)
+      .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+      .listRowBackground(Color.clear)
+      .padding()
     }
   }
 }
 
-private extension StepBar {
+private extension MakeADView.StepBar {
   @ViewBuilder
   func Title() -> some View {
     HStack(spacing: 20) {
@@ -46,7 +60,7 @@ private extension StepBar {
   }
 }
 
-private extension StepBar {
+private extension MakeADView.StepBar {
   @ViewBuilder
   func StatusBar() -> some View {
     GeometryReader { geo in
@@ -82,19 +96,6 @@ private extension StepBar {
   }
 }
 
-struct Previews_StepBar: View {
-  @SharedValue(\.shared.stepBar.completeStep) var completeStep
-  
-  var body: some View {
-    MakeADView()
-      .onAppear {
-        completeStep = .UploadADrawing
-      }
-  }
-}
-
-struct StepBar_Previews: PreviewProvider {
-  static var previews: some View {
-    Previews_StepBar()
-  }
+#Preview {
+  MakeADView()
 }

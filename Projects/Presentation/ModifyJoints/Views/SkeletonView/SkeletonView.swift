@@ -6,13 +6,14 @@
 //
 
 import SwiftUI
-import ThirdPartyLib
+import ADComposableArchitecture
 import ModifyJointsFeatures
+import DomainModels
 
 struct SkeletonView: View {
+  @Binding var skeletons: [String : Skeleton]
+  @Binding var currentJointName: String?
   let croppedImage: UIImage
-  @ObservedObject var viewStore: ViewStoreOf<ModifyJointsFeature>
-  
   @State var viewSize: CGSize = .init()
   
   var body: some View {
@@ -33,12 +34,14 @@ struct SkeletonView: View {
                     }
                   
                   BonesView(
-                    viewSize: viewSize,
-                    viewStore: viewStore
+                    skeletons: $skeletons,
+                    viewSize: viewSize
                   )
+                  
                   JointsView(
-                    viewSize: viewSize,
-                    viewStore: viewStore
+                    skeletons: $skeletons,
+                    currentJointName: $currentJointName,
+                    viewSize: viewSize
                   )
                 }
               }
@@ -46,11 +49,5 @@ struct SkeletonView: View {
             .padding()
         }
     }
-  }
-}
-
-struct DraggingPointsView_Previews: PreviewProvider {
-  static var previews: some View {
-    Previews_ModifyJointsView()
   }
 }

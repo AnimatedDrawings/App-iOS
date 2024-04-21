@@ -12,11 +12,12 @@ let project: Project = .makeProject(
   name: Shared.projectName,
   targets: [
     .makeTarget(
-      targetName: Shared.targetName,
+      name: Shared.projectName,
       product: .staticLibrary,
-      resources: nil,
       dependencies: [
-        ThirdPartyLib.projectDepedency
+        ADUIKit.projectDepedency,
+        ADComposableArchitecture.projectDepedency,
+        ADAsyncAlgorithms.projectDepedency
       ]
     )
   ]

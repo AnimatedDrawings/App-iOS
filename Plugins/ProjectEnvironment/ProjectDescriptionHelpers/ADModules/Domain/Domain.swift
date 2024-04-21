@@ -8,7 +8,5 @@
 import Foundation
 
 public struct Domain: Module {
-  public static var projectName: String = "Domain"
-  public static var targetName: String = "Domain"
-  public static var prefixPathString: String = "Projects/Domain"
+  public static let prefixPathString: String = "Projects/Domain"
 }
