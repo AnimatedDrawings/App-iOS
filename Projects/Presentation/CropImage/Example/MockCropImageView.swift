@@ -17,12 +17,14 @@ struct MockCropImageView: View {
   @State var isPresentedCropResultView = false
   
   init() {
-    let originalImage: UIImage = ADResourcesAsset.TestImages.example2.image
-    let boundingBox: BoundingBox = .mockExample2()
+    let originalImage: UIImage = ADResourcesAsset.TestImages.originalImage.image
+    let imageBoundingBox: BoundingBox = .mock()
+//    let originalImage: UIImage = ADResourcesAsset.SampleDrawing.step1Example2.image
+//    let imageBoundingBox: BoundingBox = .init(cgRect: .init(x: 178.0, y: 207.0, width: 1464.0, height: 2469.0))
     self.store = Store(
       initialState: .init(
         originalImage: originalImage,
-        boundingBox: boundingBox
+        imageBoundingBox: imageBoundingBox
       )
     ) {
       CropImageFeature()

@@ -41,7 +41,7 @@ public extension MakeADFeature {
           state.makeADInfo.boundingBox = result.boundingBox.cgRect
           state.findTheCharacter.cropImage = .init(
             originalImage: result.originalImage,
-            boundingBox: result.boundingBox
+            imageBoundingBox: result.boundingBox
           )
           
           return .run { send in

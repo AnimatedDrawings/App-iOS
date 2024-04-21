@@ -56,7 +56,7 @@ public struct UploadDrawingView: View {
       .alertimageSizeError(isPresented: $store.alert.imageSizeError)
       .fullScreenOverlay(presentationSpace: .named("UploadDrawingView")) {
         if store.loadingView {
-          LoadingView(description: "Uploading Drawing...")
+          LoadingView(description: "Upload Drawing...")
             .transparentBlurBackground(
               effect: UIBlurEffect(style: .light),
               intensity: 0.3

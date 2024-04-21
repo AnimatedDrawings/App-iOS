@@ -11,7 +11,7 @@ import DomainModels
 
 struct ViewFinder: View {
   let image: UIImage
-  let boundingBox: BoundingBox
+  let imageBoundingBox: BoundingBox
   @Binding var viewBoundingBox: CGRect
   @Binding var imageScale: CGFloat
   
@@ -62,16 +62,19 @@ extension ViewFinder {
 extension ViewFinder {
   func updateFrameGridView(_ viewSize: CGSize) {
     imageScale = calImageScale(viewSize: viewSize)
+    
     let boundingOrigin = CGPoint(
-      x: boundingBox.cgRect.minX * imageScale,
-      y: boundingBox.cgRect.minY * imageScale
+      x: imageBoundingBox.cgRect.minX * imageScale,
+      y: imageBoundingBox.cgRect.minY * imageScale
     )
     let boundingSize = CGSize(
-      width: boundingBox.cgRect.width * imageScale,
-      height: boundingBox.cgRect.height * imageScale
+      width: imageBoundingBox.cgRect.width * imageScale,
+      height: imageBoundingBox.cgRect.height * imageScale
     )
+    let tmpBoundingBox = CGRect(origin: boundingOrigin, size: boundingSize)
     
-    initalBoundingBox = CGRect(origin: boundingOrigin, size: boundingSize)
+    viewBoundingBox = tmpBoundingBox
+    initalBoundingBox = tmpBoundingBox
   }
   
   func calImageScale(viewSize: CGSize) -> CGFloat {

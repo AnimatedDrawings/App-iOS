@@ -43,7 +43,8 @@ extension ImageCompressorImpl {
       return nil
     }
     
-    return CompressResponse(data: compressedData, image: compressedImage, original: image)
+//    return CompressResponse(data: compressedData, image: compressedImage, original: image)
+    return .init(data: compressedData, image: compressedImage)
   }
   
   func compressImage(
@@ -82,7 +83,7 @@ extension ImageCompressorImpl {
     resizeWidth: Double = 600
   ) -> UIImage {
     let scale = resizeWidth / image.size.width
-    if 1 < scale || 0 == scale { return image }
+    if 1 <= scale { return image }
     let resizeHeight = image.size.height * scale
 
     let size = CGSize(width: resizeWidth, height: resizeHeight)

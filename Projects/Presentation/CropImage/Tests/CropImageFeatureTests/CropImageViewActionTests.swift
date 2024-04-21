@@ -26,7 +26,7 @@ final class CropImageViewActionTests: XCTestCase {
   
   func testSave() async {
     var state = CropImageFeature.State.mock()
-    state.viewBoundingBox = state.boundingBox.cgRect
+    state.viewBoundingBox = state.imageBoundingBox.cgRect
     store = TestStore(initialState: state) {
       CropImageFeature()
     }

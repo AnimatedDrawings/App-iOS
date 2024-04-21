@@ -11,15 +11,15 @@ import ADResources
 import DomainModels
 
 struct MockViewFinder: View {
-  let example1: UIImage = ADResourcesAsset.TestImages.example2.image
-  let boundingBox: BoundingBox = .mockExample2()
+  let originalImage: UIImage = ADResourcesAsset.TestImages.originalImage.image
+  let imageBoundingBox: BoundingBox = .mock()
   @State var viewBoundingBox: CGRect = .init()
   @State var imageScale: CGFloat = 1
   
   var body: some View {
     ViewFinder(
-      image: example1,
-      boundingBox: boundingBox,
+      image: originalImage,
+      imageBoundingBox: imageBoundingBox,
       viewBoundingBox: $viewBoundingBox,
       imageScale: $imageScale
     )

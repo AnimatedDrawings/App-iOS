@@ -12,20 +12,29 @@ import ADResources
 public struct CompressResponse: Equatable {
   public let data: Data
   public let image: UIImage
-  public let original: UIImage
+//  public let original: UIImage
   
-  public init(data: Data, image: UIImage, original: UIImage) {
+//  public init(data: Data, image: UIImage, original: UIImage) {
+//    self.data = data
+//    self.image = image
+//    self.original = original
+//  }
+  
+  public init(data: Data, image: UIImage) {
     self.data = data
     self.image = image
-    self.original = original
   }
 }
 
 public extension CompressResponse {
   static func mock() -> Self {
-    let mockImage = ADResourcesAsset.SampleDrawing.step1Example2.image
-    let mockData = mockImage.pngData() ?? Data()
+//    let mockImage = ADResourcesAsset.SampleDrawing.step1Example2.image
+//    let mockData = mockImage.pngData() ?? Data()
     
-    return Self(data: mockData, image: mockImage, original: mockImage)
+//    return Self(data: mockData, image: mockImage, original: mockImage)
+    
+    let image = ADResourcesAsset.TestImages.originalImage.image
+    let data = image.pngData() ?? Data()
+    return Self(data: data, image: image)
   }
 }

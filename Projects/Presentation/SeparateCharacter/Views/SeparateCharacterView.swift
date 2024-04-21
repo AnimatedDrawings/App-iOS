@@ -68,7 +68,7 @@ private extension SeparateCharacterView {
             .transparentBlurBackground()
             .addLoadingView(
               isShow: store.loadingView,
-              description: "Masking Image..."
+              description: "Mask Image..."
             )
             .alertNetworkError(isPresented: $store.alert.networkError)
         }

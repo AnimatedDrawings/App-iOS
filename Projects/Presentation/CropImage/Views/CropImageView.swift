@@ -31,7 +31,7 @@ public struct CropImageView: View {
         
         ViewFinder(
           image: store.originalImage,
-          boundingBox: store.boundingBox,
+          imageBoundingBox: store.imageBoundingBox,
           viewBoundingBox: $store.viewBoundingBox,
           imageScale: $store.imageScale
         )

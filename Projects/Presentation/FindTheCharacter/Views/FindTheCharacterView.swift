@@ -73,7 +73,7 @@ private extension FindTheCharacterView {
             .transparentBlurBackground()
             .addLoadingView(
               isShow: store.loadingView,
-              description: "Cropping Image..."
+              description: "Crop Image..."
             )
             .alertNetworkError(isPresented: $store.alert.networkError)
         }

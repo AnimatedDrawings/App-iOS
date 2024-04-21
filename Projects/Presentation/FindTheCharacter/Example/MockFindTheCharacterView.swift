@@ -14,12 +14,12 @@ import SharedProvider
 
 struct MockFindTheCharacterView: View {
   @Perception.Bindable var store: StoreOf<FindTheCharacterFeature>
-  
+
   init() {
     let state: FindTheCharacterFeature.State = .init(
       cropImage: .init(
-        originalImage: ADResourcesAsset.TestImages.originalImage.image,
-        boundingBox: .mock()
+        originalImage: ADResourcesAsset.SampleDrawing.step1Example2.image,
+        imageBoundingBox: .init(cgRect: .init(x: 178.0, y: 207.0, width: 1464.0, height: 2469.0))
       )
     )
     let store: StoreOf<FindTheCharacterFeature> = Store(initialState: state) {
