@@ -5,10 +5,10 @@ let project: Project = .makeProject(
   name: App.projectName,
   targets: [
     .makeTarget(
-      targetName: App.targetName,
+      name: App.featureName,
       product: .app,
-      productName: "AD",
       infoPlist: .AD,
+      resources: .resource,
       dependencies: [
         Presentation.projectDepedency
       ]

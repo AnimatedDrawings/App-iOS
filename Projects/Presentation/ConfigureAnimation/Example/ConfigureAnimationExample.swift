@@ -11,7 +11,7 @@ import SwiftUI
 struct ConfigureAnimationExample: App {
   var body: some Scene {
     WindowGroup {
-      ConfigureAnimationView()
+      MockConfigureAnimationView()
     }
   }
 }

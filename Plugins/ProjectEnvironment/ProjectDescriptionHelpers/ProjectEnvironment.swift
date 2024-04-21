@@ -3,12 +3,11 @@ import ProjectDescription
 public extension Project {
   static func makeProject(
     name: String,
-    organizationName: String = "chminipark",
-    options: Project.Options = .options(),
-    packages: [Package] = [],
+    options: ProjectDescription.Project.Options = .options(),
+    packages: [ProjectDescription.Package] = [],
     settings: ProjectDescription.Settings? = nil,
-    targets: [Target],
-    schemes: [Scheme] = [],
+    targets: [ProjectDescription.Target] = [],
+    schemes: [ProjectDescription.Scheme] = [],
     fileHeaderTemplate: ProjectDescription.FileHeaderTemplate? = nil,
     additionalFiles: [FileElement] = [],
     resourceSynthesizers: [ProjectDescription.ResourceSynthesizer] = .default
@@ -16,13 +15,13 @@ public extension Project {
   -> Project {
     return Project(
       name: name,
-      organizationName: organizationName,
+      organizationName: .chminipark,
       options: options,
       packages: packages,
       settings: settings,
       targets: targets,
       schemes: schemes,
-      fileHeaderTemplate: nil,
+      fileHeaderTemplate: fileHeaderTemplate,
       additionalFiles: additionalFiles,
       resourceSynthesizers: resourceSynthesizers
     )
@@ -30,101 +29,37 @@ public extension Project {
 }
 
 public extension Target {
-  static func makeTestTarget(
-    targetName: String,
-    platform: Platform = .iOS,
-    organizationName: String = "chminipark",
-    deploymentTarget: DeploymentTarget = .iOS(targetVersion: "16.0", devices: [.iphone]),
-    sources: SourceFilesList = ["Tests/**"]
-  ) -> Target
-  {
-    let name = "\(targetName)Tests"
-    
-    return Target(
-      name: name,
-      platform: platform,
-      product: .unitTests,
-      bundleId: "\(organizationName).\(name)".replaceBar,
-      deploymentTarget: deploymentTarget,
-      infoPlist: .default,
-      sources: sources,
-      dependencies: [.target(name: targetName)]
-    )
-  }
-  
   static func makeTarget(
-    targetName: String,
-    platform: ProjectDescription.Platform = .iOS,
+    name: String,
     product: ProjectDescription.Product,
-    productName: String? = nil,
-    organizationName: String = "chminipark",
-    deploymentTarget: DeploymentTarget? = .iOS(targetVersion: "16.0", devices: [.iphone]),
-    infoPlist: InfoPlist = .default,
-    sources: SourceFilesList = ["Sources/**"],
-    resources: ResourceFileElements? = ["Resources/**"],
-    copyFiles: [ProjectDescription.CopyFilesAction]? = nil,
-    headers: ProjectDescription.Headers? = nil,
-    entitlements: Entitlements? = nil,
-    scripts: [ProjectDescription.TargetScript] = [],
-    dependencies: [TargetDependency] = [],
-    settings: ProjectDescription.Settings? = nil,
-    coreDataModels: [ProjectDescription.CoreDataModel] = [],
-    environment: [String : String] = [:],
-    launchArguments: [ProjectDescription.LaunchArgument] = [],
-    additionalFiles: [ProjectDescription.FileElement] = [],
-    buildRules: [ProjectDescription.BuildRule] = []
-  ) -> Target
-  {
-    return Target(
-      name: targetName,
-      platform: platform,
+    infoPlist: ProjectDescription.InfoPlist = .default,
+    sources: ProjectDescription.SourceFilesList? = ["Features/**"],
+    resources: ProjectDescription.ResourceFileElements? = nil,
+    dependencies: [TargetDependency]
+  ) -> Target {
+    let bundleId = "\(String.chminipark).\(name)".replaceBar
+    
+    return .target(
+      name: name,
+      destinations: .iOS,
       product: product,
-      productName: productName,
-      bundleId: "\(organizationName).\(targetName)".replaceBar,
-      deploymentTarget: deploymentTarget,
+      bundleId: bundleId,
+      deploymentTargets: .iOS("16.0"),
       infoPlist: infoPlist,
       sources: sources,
       resources: resources,
-      copyFiles: copyFiles,
-      headers: headers,
-      entitlements: entitlements,
-      scripts: scripts,
-      dependencies: dependencies,
-      settings: settings,
-      coreDataModels: coreDataModels,
-      environment: environment,
-      launchArguments: launchArguments,
-      additionalFiles: additionalFiles,
-      buildRules: buildRules
+      dependencies: dependencies
     )
   }
 }
 
-public extension Scheme {
-  static func makeTestScheme(
-    targetName: String,
-    target: ConfigurationName
-  ) -> Scheme {
-    let testAction: TestAction = .targets(
-      ["\(targetName)Tests"],
-      configuration: target,
-      options: .options(coverage: true, codeCoverageTargets: ["\(targetName)"])
-    )
-
-    return Scheme(
-      name: targetName,
-      shared: true,
-      buildAction: .buildAction(targets: ["\(targetName)"]),
-      testAction: testAction,
-      runAction: .runAction(configuration: target),
-      archiveAction: .archiveAction(configuration: target),
-      profileAction: .profileAction(configuration: target),
-      analyzeAction: .analyzeAction(configuration: target)
-    )
+public extension ProjectDescription.ResourceFileElements {
+  static var resource: Self {
+    ["Resources/**"]
   }
 }
 
-public extension InfoPlist {
+public extension ProjectDescription.InfoPlist {
   static var AD: Self {
     return .extendingDefault(with: [
       "UIMainStoryboardFile": "",
@@ -149,6 +84,8 @@ public extension Project.Options {
 }
 
 extension String {
+  static let chminipark = "chminipark"
+  
   var replaceBar: String {
     self.replacingOccurrences(of: "_", with: "-")
   }

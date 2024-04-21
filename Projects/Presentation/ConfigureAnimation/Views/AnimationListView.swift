@@ -8,18 +8,19 @@
 
 import SwiftUI
 import ADUIKit
-import DomainModel
+import ADResources
+import DomainModels
 
 struct AnimationListView: View {
-  @Binding var isShowMyView: Bool
-  let tapAnimationItemAction: (ADAnimation) -> ()
+  @Binding var popViewState: Bool
+  let selectAnimationItem: (ADAnimation) -> ()
   
   init(
-    isShow: Binding<Bool>,
-    tapAnimationItemAction: @escaping (ADAnimation) -> Void
+    popViewState: Binding<Bool>,
+    selectAnimationItem: @escaping (ADAnimation) -> Void
   ) {
-    self._isShowMyView = isShow
-    self.tapAnimationItemAction = tapAnimationItemAction
+    self._popViewState = popViewState
+    self.selectAnimationItem = selectAnimationItem
   }
   
   @State var selectedCategory: AnimationCategory = .ALL
@@ -29,7 +30,7 @@ struct AnimationListView: View {
       HStack {
         Spacer()
         CancelButton {
-          self.isShowMyView.toggle()
+          self.popViewState.toggle()
         }
       }
       .padding(.horizontal)
@@ -41,7 +42,7 @@ struct AnimationListView: View {
           Section {
             AnimationGridView(
               selectedCategory: $selectedCategory,
-              tapAnimationItemAction: tapAnimationItemAction
+              tapAnimationItemAction: selectAnimationItem
             )
           } header: {
             SegmentView(selectedCategory: $selectedCategory)
@@ -57,7 +58,7 @@ struct AnimationListView: View {
 private extension AnimationListView {
   struct CancelButton: View {
     let imageName = "x.circle"
-    let strokeColor: Color = ADUIKitAsset.Color.blue1.swiftUIColor
+    let strokeColor: Color = ADResourcesAsset.Color.blue1.swiftUIColor
     
     let action: () -> ()
     
@@ -78,7 +79,7 @@ private extension AnimationListView {
   struct Title: View {
     let title = "ADD ANIMATION"
     let description = "Choose one of the motions by tapping human button to see your character perform it!"
-    let strokeColor: Color = ADUIKitAsset.Color.blue1.swiftUIColor
+    let strokeColor: Color = ADResourcesAsset.Color.blue1.swiftUIColor
     
     var body: some View {
       VStack(alignment: .leading, spacing: 20) {
@@ -115,7 +116,7 @@ private extension AnimationListView {
     @Binding var selectedCategory: AnimationCategory
     
     @State var myWidth: CGFloat = 0
-    let strokeColor: Color = ADUIKitAsset.Color.blue1.swiftUIColor
+    let strokeColor: Color = ADResourcesAsset.Color.blue1.swiftUIColor
     
     var body: some View {
       Button {
@@ -149,7 +150,7 @@ private extension AnimationListView {
 
 private extension AnimationListView {
   struct AnimationGridView: View {
-    let strokeColor: Color = ADUIKitAsset.Color.blue1.swiftUIColor
+    let strokeColor: Color = ADResourcesAsset.Color.blue1.swiftUIColor
     let columns: [GridItem] = .init(repeating: .init(.flexible()), count: 3)
     @State var gridItemSize: CGFloat = 1
     
@@ -221,18 +222,13 @@ enum AnimationCategory: String, CaseIterable {
   }
 }
 
-struct Previews_AnimationListView: View {
-  @State var isShow = true
-  
-  var body: some View {
-    AnimationListView(isShow: $isShow) { selectedAnimation in
-      print(selectedAnimation)
+private extension ADAnimation {
+  var gifData: Data {
+    switch self {
+    case .dab:
+      return ADResourcesAsset.ADAnimation.dab.data.data
+    case .zombie:
+      return ADResourcesAsset.ADAnimation.zombie.data.data
     }
-  }
-}
-
-struct AnimationListView_Previews: PreviewProvider {
-  static var previews: some View {
-    Previews_AnimationListView()
   }
 }

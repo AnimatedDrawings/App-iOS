@@ -5,12 +5,9 @@ let project: Project = .makeProject(
   name: Presentation.projectName,
   targets: [
     .makeTarget(
-      targetName: Presentation.targetName,
+      name: Presentation.projectName, 
       product: .staticLibrary,
-      resources: nil,
-      dependencies: [
-        RootView.projectDepedency
-      ]
+      dependencies: [Root.projectDepedency]
     )
   ]
 )

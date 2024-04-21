@@ -7,75 +7,96 @@
 //
 
 import SwiftUI
-import ADUIKit
-import SharedProvider
-import DomainModel
-
-import UploadADrawing
-import FindingTheCharacter
-import SeparatingCharacter
-import FindingCharacterJoints
+import DomainModels
+import UploadDrawing
+import FindTheCharacter
+import SeparateCharacter
+import FindCharacterJoints
+import ADComposableArchitecture
+import MakeADFeatures
 
 public struct MakeADView: View {
-  public init() {}
+  @Perception.Bindable var store: StoreOf<MakeADFeature>
   
-  @SharedValue(\.shared.stepBar.isShowStepStatusBar) var isShowStepStatusBar
+  public init(
+    store: StoreOf<MakeADFeature> = Store(initialState: .init()) {
+      MakeADFeature()
+    }
+  ) {
+    self.store = store
+  }
   
   public var body: some View {
     GeometryReader { geo in
-      List {
-        // if -> ishidden 사용
-        if isShowStepStatusBar {
-          StepBar()
-            .listRowSeparator(.hidden)
-            .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-            .listRowBackground(Color.clear)
-            .padding()
+      WithPerceptionTracking {
+        List {
+          // if -> ishidden 사용
+          if store.step.isShowStepBar {
+            StepBar(
+              currentStep: store.step.currentStep,
+              completeStep: store.step.completeStep
+            )
+          }
+          
+          PageTabView(store: store)
+            .frame(height: geo.size.height + geo.safeAreaInsets.bottom)
         }
-        
-        PageTabView()
-          .listRowSeparator(.hidden)
-          .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-          .listRowBackground(Color.clear)
-          .frame(height: geo.size.height + geo.safeAreaInsets.bottom)
+        .task { await store.send(.view(.task)).finish() }
+        .listStyle(.plain)
+        .addADBackground(with: store.step.currentStep)
+        .scrollContentBackground(.hidden)
+        .animation(.default, value: store.step.isShowStepBar)
       }
-      .listStyle(.plain)
-      .addBackground()
-      .scrollContentBackground(.hidden)
-      .animation(.default, value: isShowStepStatusBar)
     }
-    .fullScreenOverlayPresentationSpace(.named("UploadADrawingView"))
+    .fullScreenOverlayPresentationSpace(.named("UploadDrawingView"))
   }
 }
 
 private extension MakeADView {
   struct PageTabView: View {
-    @SharedValue(\.shared.stepBar.currentStep) var currentStep
+    @Perception.Bindable var store: StoreOf<MakeADFeature>
     
     var body: some View {
-      TabView(selection: $currentStep) {
-        UploadADrawingView()
-          .tag(Step.UploadADrawing)
-        
-        FindingTheCharacterView()
-          .tag(Step.FindingTheCharacter)
-        
-        SeparatingCharacterView()
-          .tag(Step.SeparatingCharacter)
-        
-        FindingCharacterJointsView()
-          .tag(Step.FindingCharacterJoints)
+      WithPerceptionTracking {
+        TabView(selection: $store.step.currentStep.sending(\.update.setCurrentStep)) {
+          UploadDrawingView(
+            store: store.scope(
+              state: \.uploadDrawing,
+              action: \.scope.uploadDrawing
+            )
+          )
+          .tag(MakeADStep.UploadDrawing)
+          
+          FindTheCharacterView(
+            store: store.scope(
+              state: \.findTheCharacter,
+              action: \.scope.findTheCharacter
+            )
+          )
+          .tag(MakeADStep.FindTheCharacter)
+          
+          SeparateCharacterView(
+            store: store.scope(
+              state: \.separateCharacter,
+              action: \.scope.separateCharacter
+            )
+          )
+          .tag(MakeADStep.SeparateCharacter)
+          
+          FindingCharacterJointsView(
+            store: store.scope(
+              state: \.findCharacterJoints,
+              action: \.scope.findCharacterJoints
+            )
+          )
+          .tag(MakeADStep.FindCharacterJoints)
+        }
+        .tabViewStyle(.page(indexDisplayMode: .never))
+        .ignoresSafeArea()
+        .listRowSeparator(.hidden)
+        .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+        .listRowBackground(Color.clear)
       }
-      .tabViewStyle(.page(indexDisplayMode: .never))
-      .ignoresSafeArea()
     }
-  }
-}
-
-// MARK: - Previews
-
-struct MakeADView_Previews: PreviewProvider {
-  static var previews: some View {
-    MakeADView()
   }
 }

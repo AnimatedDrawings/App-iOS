@@ -10,15 +10,14 @@ import ProjectEnvironment
 
 let project: Project = .makeProject(
   name: MakeAD.projectName,
-  targets: [
-    MakeAD.example(),
-    MakeAD.views(
+  options: .enableCodeCoverage,
+  targets: MakeAD
+    .uPresentationTargets(
       dependencies: [
-        UploadADrawing.projectDepedency,
-        FindingTheCharacter.projectDepedency,
-        SeparatingCharacter.projectDepedency,
-        FindingCharacterJoints.projectDepedency
+        UploadDrawing.projectDepedency,
+        FindTheCharacter.projectDepedency,
+        SeparateCharacter.projectDepedency,
+        FindCharacterJoints.projectDepedency
       ]
-    ),
-  ]
+    )
 )

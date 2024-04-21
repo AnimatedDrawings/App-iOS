@@ -7,8 +7,6 @@
 
 import Foundation
 
-public struct SharedProvider: Module {
-  public static var projectName: String = "SharedProvider"
-  public static var targetName: String = "SharedProvider"
-  public static var prefixPathString: String = Domain.prefixPathString
+public struct SharedProvider: uFeatureModule {
+  public static let prefixPathString: String = Domain.prefixPathString
 }

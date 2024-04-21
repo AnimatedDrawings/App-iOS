@@ -9,6 +9,5 @@ import Foundation
 
 public struct App: Module {
   public static var projectName: String = "AnimatedDrawing"
-  public static var targetName: String = "AnimatedDrawing"
   public static var prefixPathString: String = "Projects/App"
 }

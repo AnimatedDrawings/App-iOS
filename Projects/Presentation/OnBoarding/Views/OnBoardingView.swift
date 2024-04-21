@@ -7,10 +7,11 @@
 
 import SwiftUI
 import ADUIKit
+import ADResources
 import SharedProvider
 
 public struct OnBoardingView: View {
-  @SharedValue(\.shared.adViewCase) var adViewCase
+  @SharedValue(\.adViewState.adViewState) var currentView
   
   public init() {}
   
@@ -24,12 +25,12 @@ public struct OnBoardingView: View {
       
       Spacer()
       
-      StartButton { adViewCase = .MakeAD }
+      StartButton { currentView = .MakeAD }
     }
     .padding()
     .padding(.vertical)
     .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .addBackground()
+    .addADBackground()
   }
 }
 
@@ -61,15 +62,15 @@ private extension OnBoardingView {
         HStack {
           Text(left)
             .font(.system(titleSize, weight: .semibold))
-            .foregroundColor(ADUIKitAsset.Color.blue1.swiftUIColor)
+            .foregroundColor(ADResourcesAsset.Color.blue1.swiftUIColor)
           Text(right)
             .font(.system(titleSize, weight: .semibold))
-            .foregroundColor(ADUIKitAsset.Color.blue3.swiftUIColor)
+            .foregroundColor(ADResourcesAsset.Color.blue3.swiftUIColor)
         }
         
         Text(subTitle)
           .font(.system(.caption, weight: .semibold))
-          .foregroundColor(ADUIKitAsset.Color.blue2.swiftUIColor)
+          .foregroundColor(ADResourcesAsset.Color.blue2.swiftUIColor)
         
         Spacer().frame(height: 20)
         
@@ -91,7 +92,7 @@ private extension OnBoardingView {
         RoundedRectangle(cornerRadius: 10)
           .padding([.leading, .bottom], 20)
           .frame(height: 300)
-          .foregroundColor(ADUIKitAsset.Color.blue1.swiftUIColor)
+          .foregroundColor(ADResourcesAsset.Color.blue1.swiftUIColor)
         
         RoundedRectangle(cornerRadius: 10)
           .overlay {
@@ -117,13 +118,5 @@ private extension OnBoardingView {
     var body: some View {
       ADButton(title: startText, action: action)
     }
-  }
-}
-
-// MARK: - Previews_OnBoardingView
-
-struct OnBoardingView_Previews: PreviewProvider {
-  static var previews: some View {
-    OnBoardingView()
   }
 }

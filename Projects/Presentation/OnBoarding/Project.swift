@@ -11,11 +11,7 @@ import ProjectEnvironment
 let project: Project = .makeProject(
   name: OnBoarding.projectName,
   targets: [
-    OnBoarding.views(
-      dependencies: [
-        PresentationShared.projectDepedency
-      ]
-    ),
-    OnBoarding.example()
+    OnBoarding.example(dependencies: [.views]),
+    OnBoarding.views(dependencies: [Domain.projectDepedency])
   ]
 )

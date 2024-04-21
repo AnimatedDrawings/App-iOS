@@ -10,14 +10,8 @@ import ProjectEnvironment
 
 let project: Project = .makeProject(
   name: SharedProvider.projectName,
-  targets: [
-    .makeTarget(
-      targetName: SharedProvider.targetName,
-      product: .staticLibrary,
-      resources: nil,
-      dependencies: [
-        DomainModel.projectDepedency
-      ]
-    )
-  ]
+  options: .enableCodeCoverage,
+  targets: SharedProvider.uFeatureTargets(
+    dependencies: [DomainModels.projectDepedency]
+  )
 )
