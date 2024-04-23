@@ -13,16 +13,6 @@ import OnBoarding
 import MakeAD
 import ConfigureAnimation
 
-//let onBoardingViewController: UIHostingController<OnBoardingView> = .init(
-//  rootView: OnBoardingView()
-//)
-//let makeADViewController: UIHostingController<MakeADView> = .init(
-//  rootView: MakeADView()
-//)
-//let configureAnimationViewController: UIHostingController<ConfigureAnimationView> = .init(
-//  rootView: ConfigureAnimationView()
-//)
-
 public struct RootView: View {
   @Perception.Bindable var store: StoreOf<RootFeature>
   
@@ -35,25 +25,6 @@ public struct RootView: View {
   }
   
   public var body: some View {
-//    ZStack {
-//      SwitchHostingView(
-//        vc: onBoardingViewController,
-//        switchValue: currentView,
-//        mySwitchValue: ADViewState.OnBoarding
-//      )
-//      SwitchHostingView(
-//        vc: makeADViewController,
-//        switchValue: currentView,
-//        mySwitchValue: ADViewState.MakeAD
-//      )
-//      SwitchHostingView(
-//        vc: configureAnimationViewController,
-//        switchValue: currentView,
-//        mySwitchValue: ADViewState.ConfigureAnimation
-//      )
-//    }
-//    .ignoresSafeArea()
-    
     WithPerceptionTracking {
       ZStack {
         switch store.adViewState {
