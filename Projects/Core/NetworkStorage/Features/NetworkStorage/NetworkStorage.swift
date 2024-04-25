@@ -20,7 +20,7 @@ public class NetworkStorage<T: TargetType> {
   
   public func request<R: Codable>(_ target: T) async throws -> R {
     let urlRequest = try target.getUrlRequest()
-    let (data, urlResponse) = try await session.data(for: urlRequest, delegate: nil)
+    let (data, _) = try await session.data(for: urlRequest, delegate: nil)
     
     guard let decoded = try? JSONDecoder().decode(DefaultResponse<R>.self, from: data) else {
       throw NetworkStorageError.jsonDecode
@@ -42,7 +42,7 @@ public class NetworkStorage<T: TargetType> {
   
   public func download(_ target: T) async throws -> Data {
     let urlRequest = try target.getUrlRequest()
-    let (data, urlResponse) = try await session.data(for: urlRequest, delegate: nil)
+    let (data, _) = try await session.data(for: urlRequest, delegate: nil)
     return data
   }
 }

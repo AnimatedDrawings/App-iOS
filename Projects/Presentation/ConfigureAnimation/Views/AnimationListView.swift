@@ -177,7 +177,7 @@ private extension AnimationListView {
           .cornerRadius(15)
           .frame(height: self.gridItemSize)
           .overlay {
-            GIFImage(gifData: adAnimation.gifData)
+            GIFImage(sample: adAnimation.sample)
               .frame(width: gifViewSize)
           }
       }
@@ -223,12 +223,14 @@ enum AnimationCategory: String, CaseIterable {
 }
 
 private extension ADAnimation {
-  var gifData: Data {
+  var sample: ADResourcesData {
+    let adAnimation = ADResourcesAsset.ADAnimation.self
+    
     switch self {
     case .dab:
-      return ADResourcesAsset.ADAnimation.dab.data.data
+      return adAnimation.dab
     case .zombie:
-      return ADResourcesAsset.ADAnimation.zombie.data.data
+      return adAnimation.zombie
     }
   }
 }

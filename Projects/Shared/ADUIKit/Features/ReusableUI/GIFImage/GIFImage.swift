@@ -19,8 +19,7 @@ public struct GIFImage: View {
     }
     return UIImage()
   }
-  @State private var presentationTask: Task<(), Never>?
-  
+
   private let errorImage: CGImage = ADResourcesAsset.SampleDrawing.checkerboard.image.cgImage!
   
   public init(gifData: Data) {
@@ -37,35 +36,19 @@ public struct GIFImage: View {
     Image(uiImage: convertUIImage)
       .resizable()
       .scaledToFit()
-      .task(id: gifData, load)
+      .task(id: gifData) {
+        await load()
+      }
   }
 }
 
 extension GIFImage {
   @MainActor
-  @Sendable private func changeFrame(_ currentFrame: CGImage) async {
+  private func changeFrame(_ currentFrame: CGImage) {
     self.currentFrame = currentFrame
   }
   
-  @Sendable private func load() {
-    presentationTask?.cancel()
-    presentationTask = Task {
-      await gifPresentationController.start(errorImage: errorImage, changeFrame: changeFrame(_:))
-    }
-  }
-}
-
-// MARK: - Previews_GIFImage
-struct Previews_GIFImage: View {
-  let sampleGIFData: Data = ADResourcesAsset.Gifs.step2Gif1.data.data
-  
-  var body: some View {
-    GIFImage(gifData: sampleGIFData)
-  }
-}
-
-struct GIFImage_Previews: PreviewProvider {
-  static var previews: some View {
-    Previews_GIFImage()
+  private func load() async {
+    await gifPresentationController.start(errorImage: errorImage, changeFrame: changeFrame(_:))
   }
 }

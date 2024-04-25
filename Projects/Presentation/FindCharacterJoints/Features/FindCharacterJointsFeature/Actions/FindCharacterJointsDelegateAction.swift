@@ -20,8 +20,6 @@ public extension FindCharacterJointsFeature {
         switch delegateActions {
         case .findCharacterJointsResult:
           return .none
-        default:
-          return .none
         }
       default:
         return .none

@@ -37,6 +37,7 @@ public extension ConfigureAnimationFeature {
         switch viewActions {
         case .fix:
           return .run { send in
+            await step.isShowStepBar.set(true)
             await adViewState.adViewState.set(.MakeAD)
           }
           
