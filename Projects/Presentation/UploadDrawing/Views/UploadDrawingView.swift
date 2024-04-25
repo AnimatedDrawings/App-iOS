@@ -191,16 +191,17 @@ private extension UploadDrawingView {
         }
       )
       .allowsHitTesting(state)
-      .onChange(of: selectedItem, perform: setImage(from:))
+      .task(id: selectedItem) {
+        await setImage(from: selectedItem)
+      }
     }
     
-    private func setImage(from selectedItem: PhotosPickerItem?) {
+    @MainActor
+    private func setImage(from selectedItem: PhotosPickerItem?) async {
       if let selectedItem = selectedItem {
-        Task {
-          let data = try? await selectedItem.loadTransferable(type: Data.self)
-          uploadImageAction(data)
-          self.selectedItem = nil
-        }
+        let data = try? await selectedItem.loadTransferable(type: Data.self)
+        uploadImageAction(data)
+        self.selectedItem = nil
       }
     }
   }
