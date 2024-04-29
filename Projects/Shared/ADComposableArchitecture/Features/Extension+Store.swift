@@ -8,12 +8,6 @@
 
 import ComposableArchitecture
 
-public extension ViewStore {
-  func action(_ action: ViewAction) -> (() -> Void) {
-    return { self.send(action) }
-  }
-}
-
 public extension Store {
   func action(_ action: Action) -> (() -> Void) {
     return { self.send(action) }
