@@ -27,7 +27,7 @@ struct MockFindCharacterJointsView: View {
           StepProvider.init(
             isShowStepBar: true,
             currentStep: .FindCharacterJoints,
-            completeStep: .SeparateCharacter
+            completeStep: .FindTheCharacter
           )
         )
     }

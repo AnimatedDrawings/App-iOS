@@ -35,7 +35,7 @@ public struct FindingCharacterJointsView: View {
           
           CheckList(
             myStep: MakeADStep.FindCharacterJoints.rawValue,
-            completeStep: MakeADStep.SeparateCharacter.rawValue
+            completeStep: store.step.completeStep.rawValue
           ) {
             CheckListContent(checkState: $store.checkState)
           }
