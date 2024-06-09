@@ -1,0 +1,3 @@
+#include "../XCConfig/shared.xcconfig"
+
+BASE_URL = https://miniiad.duckdns.org

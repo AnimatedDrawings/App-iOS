@@ -11,7 +11,10 @@ import NetworkStorageInterfaces
 import ADErrors
 
 extension TargetType {
-  var baseURL: String { "https://miniiad.duckdns.org" }
+//  var baseURL: String { "https://miniiad.duckdns.org" }
+  var baseURL: String {
+    return Bundle.main.object(forInfoDictionaryKey: "BASE_URL") as? String ?? ""
+  }
   
   public func getUrlRequest(uniqString: String = UUID().uuidString) throws -> URLRequest {
     let url = try url()
