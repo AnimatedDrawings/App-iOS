@@ -8,8 +8,7 @@
 import ProjectDescription
 import ProjectEnvironment
 
-let project: Project = .makeProject(
-  name: ADComposableArchitecture.projectName,
+let project: Project = ADComposableArchitecture.makeProject(
   packages: [.ComposableArchitecture],
   targets: [
     .makeTarget(

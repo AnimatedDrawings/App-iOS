@@ -8,8 +8,7 @@
 import ProjectDescription
 import ProjectEnvironment
 
-let project: Project = .makeProject(
-  name: NetworkStorage.projectName,
+let project: Project = NetworkStorage.makeProject(
   options: .enableCodeCoverage,
   targets: NetworkStorage.uFeatureTargets(
     dependencies: [CoreModels.projectDepedency]

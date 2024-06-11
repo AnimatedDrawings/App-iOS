@@ -3,17 +3,18 @@
 //  ProjectEnvironment
 //
 //  Created by chminii on 6/9/24.
-//
 
 import ProjectDescription
 
 public extension Scheme {
-  static func makeScheme(_ type: BuildTarget) -> Self {
+  static func makeScheme(name: String, targets: [TargetReference], type: BuildTarget) -> Self {
+    let name = "\(name)_\(type.rawValue)"
+    
     switch type {
     case .dev:
       return .scheme(
-        name: type.rawValue,
-        buildAction: .buildAction(targets: .init(arrayLiteral: .init(stringLiteral: type.rawValue))),
+        name: name,
+        buildAction: .buildAction(targets: targets),
         runAction: .runAction(configuration: type.configurationName),
         archiveAction: .archiveAction(configuration: type.configurationName),
         profileAction: .profileAction(configuration: type.configurationName),
@@ -22,8 +23,8 @@ public extension Scheme {
       
     case .prd:
       return .scheme(
-        name: type.rawValue,
-        buildAction: .buildAction(targets: .init(arrayLiteral: .init(stringLiteral: type.rawValue))),
+        name: name,
+        buildAction: .buildAction(targets: targets),
         runAction: .runAction(configuration: type.configurationName),
         archiveAction: .archiveAction(configuration: type.configurationName),
         profileAction: .profileAction(configuration: type.configurationName),

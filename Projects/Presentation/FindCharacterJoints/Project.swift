@@ -8,8 +8,7 @@
 import ProjectDescription
 import ProjectEnvironment
 
-let project: Project = .makeProject(
-  name: FindCharacterJoints.projectName,
+let project: Project = FindCharacterJoints.makeProject(
   options: .enableCodeCoverage,
   targets: FindCharacterJoints
     .uPresentationTargets(

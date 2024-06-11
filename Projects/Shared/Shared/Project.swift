@@ -8,8 +8,7 @@
 import ProjectDescription
 import ProjectEnvironment
 
-let project: Project = .makeProject(
-  name: Shared.projectName,
+let project: Project = Shared.makeProject(
   targets: [
     .makeTarget(
       name: Shared.projectName,

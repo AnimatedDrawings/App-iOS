@@ -8,8 +8,7 @@
 import ProjectDescription
 import ProjectEnvironment
 
-let project: Project = .makeProject(
-  name: SharedProvider.projectName,
+let project: Project = SharedProvider.makeProject(
   options: .enableCodeCoverage,
   targets: SharedProvider.uFeatureTargets(
     dependencies: [DomainModels.projectDepedency]

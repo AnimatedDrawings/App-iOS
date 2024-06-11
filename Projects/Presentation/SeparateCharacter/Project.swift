@@ -8,8 +8,7 @@
 import ProjectDescription
 import ProjectEnvironment
 
-let project: Project = .makeProject(
-  name: SeparateCharacter.projectName,
+let project: Project = SeparateCharacter.makeProject(
   options: .enableCodeCoverage,
   targets: SeparateCharacter
     .uPresentationTargets(

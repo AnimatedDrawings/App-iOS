@@ -8,8 +8,7 @@
 import ProjectDescription
 import ProjectEnvironment
 
-let project: Project = .makeProject(
-  name: ADAsyncAlgorithms.projectName,
+let project: Project = ADAsyncAlgorithms.makeProject(
   packages: [.AsyncAlgorithms],
   targets: [
     .makeTarget(

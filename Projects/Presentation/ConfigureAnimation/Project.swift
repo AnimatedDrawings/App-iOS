@@ -8,8 +8,7 @@
 import ProjectDescription
 import ProjectEnvironment
 
-let project: Project = .makeProject(
-  name: ConfigureAnimation.projectName,
+let project: Project = ConfigureAnimation.makeProject(
   options: .enableCodeCoverage,
   targets: ConfigureAnimation
     .uPresentationTargets(

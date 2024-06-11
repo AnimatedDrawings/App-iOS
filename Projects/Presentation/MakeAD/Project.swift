@@ -8,8 +8,7 @@
 import ProjectDescription
 import ProjectEnvironment
 
-let project: Project = .makeProject(
-  name: MakeAD.projectName,
+let project: Project = MakeAD.makeProject(
   options: .enableCodeCoverage,
   targets: MakeAD
     .uPresentationTargets(

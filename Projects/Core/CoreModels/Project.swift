@@ -8,8 +8,7 @@
 import ProjectDescription
 import ProjectEnvironment
 
-let project: Project = .makeProject(
-  name: CoreModels.projectName,
+let project: Project = CoreModels.makeProject(
   targets: [
     .makeTarget(
       name: CoreModels.featureName,
