@@ -8,12 +8,19 @@
 import ProjectDescription
 
 public extension Configuration {
-  static var dev: Self {
-    return .debug(name: BuildTarget.dev.configurationName)
-  }
-  
-  static var prd: Self {
-    return .debug(name: BuildTarget.prd.configurationName)
+  static func build(_ type: BuildTarget) -> Self {
+    switch type {
+    case .dev:
+      return .debug(
+        name: type.configurationName,
+        xcconfig: type.xcConfigPath
+      )
+    case .prd:
+      return .release(
+        name: type.configurationName,
+        xcconfig: type.xcConfigPath
+      )
+    }
   }
 }
 
@@ -24,10 +31,8 @@ public enum BuildTarget: String {
   public var configurationName: ConfigurationName {
     return .configuration(self.rawValue)
   }
-}
-
-public extension Path {
-  static func relativeToXCConfig(_ type: BuildTarget) -> Self {
-    return .relativeToRoot("./XCConfig/\(type.rawValue.lowercased()).xcconfig")
+  
+  public var xcConfigPath: Path {
+    return .relativeToRoot("XCConfig/\(rawValue.lowercased()).xcconfig")
   }
 }

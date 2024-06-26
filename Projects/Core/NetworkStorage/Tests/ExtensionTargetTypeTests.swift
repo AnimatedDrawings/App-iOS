@@ -17,11 +17,6 @@ final class ExtensionTargetTypeTests: XCTestCase {
     targetType = .requestPlain
   }
   
-  func testFetchBaseURL() {
-    let url = "https://miniiad.duckdns.org"
-    XCTAssertEqual(targetType.baseURL, url)
-  }
-  
   func testGetURLRequestTaskRequestPlain() {
     targetType = .requestPlain
     

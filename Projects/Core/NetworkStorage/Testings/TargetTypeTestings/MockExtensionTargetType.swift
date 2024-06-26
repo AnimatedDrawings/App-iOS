@@ -18,7 +18,6 @@ public enum MockExtensionTargetType {
 extension MockExtensionTargetType: TargetType {
   public var baseURL: String {
     return "https://baseURL"
-//    return Bundle.main.object(forInfoDictionaryKey: "BASE_URL") as? String ?? ""
   }
   
   public var path: String {

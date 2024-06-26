@@ -109,7 +109,7 @@ public extension uFeatureModule {
     .makeTarget(
       name: targetName(.example),
       product: .app,
-      infoPlist: .AD,
+      infoPlist: .forPresentationLayer,
       sources: sourceFilesList(sources),
       dependencies: targetDependencies(dependencies)
     )
@@ -122,7 +122,7 @@ public extension uFeatureModule {
     return .makeTarget(
       name: targetName(.example),
       product: .app,
-      infoPlist: .AD,
+      infoPlist: .forPresentationLayer,
       sources: sourceFilesList(sources),
       dependencies: dependencies
     )

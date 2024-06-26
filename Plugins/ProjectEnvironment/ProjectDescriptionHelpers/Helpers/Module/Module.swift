@@ -19,6 +19,7 @@ public protocol Module {
     packages: [ProjectDescription.Package],
     settings: ProjectDescription.Settings?,
     targets: [ProjectDescription.Target],
+    schemes: [ProjectDescription.Scheme],
     fileHeaderTemplate: ProjectDescription.FileHeaderTemplate?,
     additionalFiles: [FileElement],
     resourceSynthesizers: [ProjectDescription.ResourceSynthesizer]
@@ -47,25 +48,13 @@ public extension Module {
     path: Path = path,
     options: ProjectDescription.Project.Options = .options(),
     packages: [ProjectDescription.Package] = [],
-    settings: ProjectDescription.Settings? = .settings(configurations: [.dev, .prd]),
+    settings: Settings? = nil,
     targets: [ProjectDescription.Target] = [],
+    schemes: [ProjectDescription.Scheme] = [],
     fileHeaderTemplate: ProjectDescription.FileHeaderTemplate? = nil,
     additionalFiles: [FileElement] = [],
     resourceSynthesizers: [ProjectDescription.ResourceSynthesizer] = .default
   ) -> Project {
-    let schemes: [ProjectDescription.Scheme] = [
-      .makeScheme(
-        name: name,
-        targets: targets.map { .project(path: path, target: $0.name) },
-        type: .dev
-      ),
-      .makeScheme(
-        name: name,
-        targets: targets.map { .project(path: path, target: $0.name) },
-        type: .prd
-      )
-    ]
-    
     return Project(
       name: name,
       organizationName: .chminipark,

@@ -6,7 +6,7 @@ let project: Project = App.makeProject(
     .makeTarget(
       name: App.featureName,
       product: .app,
-      infoPlist: .AD,
+      infoPlist: .forPresentationLayer,
       resources: .resource,
       dependencies: [
         Presentation.projectDepedency

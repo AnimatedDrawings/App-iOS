@@ -69,4 +69,5 @@ Derived/
 ### Tuist managed dependencies ###
 Tuist/Dependencies
 
-XCConfig/
+### Environment file
+Env/

@@ -7,14 +7,19 @@
 import ProjectDescription
 
 public extension Scheme {
-  static func makeScheme(name: String, targets: [TargetReference], type: BuildTarget) -> Self {
-    let name = "\(name)_\(type.rawValue)"
+  static func makeScheme(
+    type: BuildTarget,
+    projectName: String,
+    targets: [Target]
+  ) -> Self {
+    let name = "\(projectName)_\(type.rawValue)"
+    let buildAction: BuildAction = .buildAction(targets: targets.map { .target($0.name)} )
     
     switch type {
     case .dev:
       return .scheme(
         name: name,
-        buildAction: .buildAction(targets: targets),
+        buildAction: buildAction,
         runAction: .runAction(configuration: type.configurationName),
         archiveAction: .archiveAction(configuration: type.configurationName),
         profileAction: .profileAction(configuration: type.configurationName),
@@ -24,7 +29,7 @@ public extension Scheme {
     case .prd:
       return .scheme(
         name: name,
-        buildAction: .buildAction(targets: targets),
+        buildAction: buildAction,
         runAction: .runAction(configuration: type.configurationName),
         archiveAction: .archiveAction(configuration: type.configurationName),
         profileAction: .profileAction(configuration: type.configurationName),
