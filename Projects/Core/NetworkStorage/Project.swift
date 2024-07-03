@@ -6,7 +6,7 @@
 //
 
 import ProjectDescription
-import ProjectEnvironment
+import ProjectDescriptionHelpers
 
 let networkStorageFeatures: ProjectDescription.Target = .makeTarget(
   name: NetworkStorage.targetName(.features),

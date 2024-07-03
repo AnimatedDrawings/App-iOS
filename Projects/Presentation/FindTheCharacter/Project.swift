@@ -6,7 +6,7 @@
 //
 
 import ProjectDescription
-import ProjectEnvironment
+import ProjectDescriptionHelpers
 
 let project: Project = FindTheCharacter.makeProject(
   options: .enableCodeCoverage,

@@ -1,5 +1,5 @@
 import ProjectDescription
-import ProjectEnvironment
+import ProjectDescriptionHelpers
 
 let workspace = Workspace(
   name: "AnimatedDrawings",
