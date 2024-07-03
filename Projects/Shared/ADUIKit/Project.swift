@@ -8,8 +8,7 @@
 import ProjectDescription
 import ProjectEnvironment
 
-let project: Project = .makeProject(
-  name: ADUIKit.projectName,
+let project: Project = ADUIKit.makeProject(
   targets: [
     ADUIKit.example(
       sources: [.example, .features],

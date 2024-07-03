@@ -1,8 +1,7 @@
 import ProjectDescription
 import ProjectEnvironment
 
-let project: Project = .makeProject(
-  name: Root.projectName,
+let project: Project = Root.makeProject(
   options: .enableCodeCoverage,
   targets: Root.uPresentationTargets(
     dependencies: [

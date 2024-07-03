@@ -8,8 +8,7 @@
 import ProjectDescription
 import ProjectEnvironment
 
-let project: Project = .makeProject(
-  name: LocalFileProvider.projectName,
+let project: Project = LocalFileProvider.makeProject(
   options: .enableCodeCoverage,
   targets: LocalFileProvider.uFeatureTargets(
     dependencies: [DomainModels.projectDepedency]

@@ -8,8 +8,7 @@
 import ProjectDescription
 import ProjectEnvironment
 
-let project: Project = .makeProject(
-  name: CropImage.projectName,
+let project: Project = CropImage.makeProject(
   options: .enableCodeCoverage,
   targets: CropImage
     .uPresentationTargets(

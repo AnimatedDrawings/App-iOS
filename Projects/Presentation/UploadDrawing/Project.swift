@@ -8,8 +8,7 @@
 import ProjectDescription
 import ProjectEnvironment
 
-let project: Project = .makeProject(
-  name: UploadDrawing.projectName,
+let project: Project = UploadDrawing.makeProject(
   options: .enableCodeCoverage,
   targets: UploadDrawing
     .uPresentationTargets(

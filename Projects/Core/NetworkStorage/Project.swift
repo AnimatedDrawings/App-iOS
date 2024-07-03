@@ -8,10 +8,21 @@
 import ProjectDescription
 import ProjectEnvironment
 
-let project: Project = .makeProject(
-  name: NetworkStorage.projectName,
-  options: .enableCodeCoverage,
-  targets: NetworkStorage.uFeatureTargets(
-    dependencies: [CoreModels.projectDepedency]
-  )
+let networkStorageFeatures: ProjectDescription.Target = .makeTarget(
+  name: NetworkStorage.targetName(.features),
+  product: .staticLibrary,
+  sources: NetworkStorage.sourceFilesList([.features]),
+  resources: ["ENV/**"],
+  dependencies: NetworkStorage.targetDependencies([.interfaces])
+)
+
+let project: Project = NetworkStorage.makeProject(
+  targets: [
+    NetworkStorage.tests(),
+    NetworkStorage.testings(),
+    networkStorageFeatures,
+    NetworkStorage.interfaces(
+      dependencies: [CoreModels.projectDepedency]
+    )
+  ]
 )

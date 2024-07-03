@@ -8,8 +8,7 @@
 import ProjectDescription
 import ProjectEnvironment
 
-let project: Project = .makeProject(
-  name: MaskImage.projectName,
+let project: Project = MaskImage.makeProject(
   options: .enableCodeCoverage,
   targets: MaskImage
     .uPresentationTargets(

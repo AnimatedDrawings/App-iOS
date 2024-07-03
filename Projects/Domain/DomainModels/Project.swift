@@ -8,8 +8,7 @@
 import ProjectDescription
 import ProjectEnvironment
 
-let project: Project = .makeProject(
-  name: DomainModels.projectName,
+let project: Project = DomainModels.makeProject(
   targets: [
     .makeTarget(
       name: DomainModels.featureName,

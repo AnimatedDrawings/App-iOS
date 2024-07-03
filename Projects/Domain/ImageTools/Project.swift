@@ -8,8 +8,7 @@
 import ProjectDescription
 import ProjectEnvironment
 
-let project: Project = .makeProject(
-  name: ImageTools.projectName,
+let project: Project = ImageTools.makeProject(
   options: .enableCodeCoverage,
   targets: ImageTools.uFeatureTargets(
     dependencies: [DomainModels.projectDepedency]

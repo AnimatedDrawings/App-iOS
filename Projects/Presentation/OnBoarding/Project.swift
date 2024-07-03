@@ -8,8 +8,7 @@
 import ProjectDescription
 import ProjectEnvironment
 
-let project: Project = .makeProject(
-  name: OnBoarding.projectName,
+let project: Project = OnBoarding.makeProject(
   targets: [
     OnBoarding.example(dependencies: [.views]),
     OnBoarding.views(dependencies: [Domain.projectDepedency])

@@ -8,8 +8,7 @@
 import ProjectDescription
 import ProjectEnvironment
 
-let project: Project = .makeProject(
-  name: ModifyJoints.projectName,
+let project: Project = ModifyJoints.makeProject(
   options: .enableCodeCoverage,
   targets: ModifyJoints
     .uPresentationTargets(
