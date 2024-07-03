@@ -5,7 +5,7 @@
 //  Created by minii on 2023/09/18.
 //
 
-import Foundation
+import ProjectDescriptionHelpers
 
 public struct App: Module {
   public static var projectName: String = "AnimatedDrawing"
