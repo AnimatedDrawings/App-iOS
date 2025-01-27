@@ -26,14 +26,12 @@ struct MaskToolView: View {
         strokeColor: strokeColor
       )
       
-      WithPerceptionTracking {
-        ToolSizerButton(
-          toolCircleSize: $store.toolCircleSize,
-          buttonSize: toolSizerSize,
-          strokeColor: strokeColor
-        )
-        .offset(y: -((toolSizerSize / 2) + toolSizerPadding))
-      }
+      ToolSizerButton(
+        toolCircleSize: $store.toolCircleSize,
+        buttonSize: toolSizerSize,
+        strokeColor: strokeColor
+      )
+      .offset(y: -((toolSizerSize / 2) + toolSizerPadding))
     }
   }
 }

@@ -25,26 +25,24 @@ public struct RootView: View {
   }
   
   public var body: some View {
-    WithPerceptionTracking {
-      ZStack {
-        switch store.adViewState {
-        case .OnBoarding:
-          OnBoardingView()
-        case .MakeAD:
-          MakeADView(
-            store: store.scope(
-              state: \.makeAD,
-              action: \.scope.makeAD
-            )
+    ZStack {
+      switch store.adViewState {
+      case .OnBoarding:
+        OnBoardingView()
+      case .MakeAD:
+        MakeADView(
+          store: store.scope(
+            state: \.makeAD,
+            action: \.scope.makeAD
           )
-        case .ConfigureAnimation:
-          ConfigureAnimationView(
-            store: store.scope(
-              state: \.configureAnimation,
-              action: \.scope.configureAnimation
-            )
+        )
+      case .ConfigureAnimation:
+        ConfigureAnimationView(
+          store: store.scope(
+            state: \.configureAnimation,
+            action: \.scope.configureAnimation
           )
-        }
+        )
       }
     }
     .task { await store.send(.view(.task)).finish() }

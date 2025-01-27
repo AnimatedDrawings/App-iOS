@@ -9,4 +9,4 @@
 import Foundation
 import LocalFileProviderInterfaces
 
-extension FileManager: FileManagerProtocol {}
+extension FileManager: @retroactive FileManagerProtocol {}

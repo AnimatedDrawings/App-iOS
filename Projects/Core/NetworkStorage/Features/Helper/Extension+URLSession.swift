@@ -9,4 +9,4 @@
 import Foundation
 import NetworkStorageInterfaces
 
-extension URLSession: URLSessionable {}
+extension URLSession: @retroactive URLSessionable {}

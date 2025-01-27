@@ -23,7 +23,7 @@ struct RandomCurve<T: Equatable>: View {
         .onAppear {
           self.randomCurvePoint = RandomCurvePoint(rect: rect)
         }
-        .onChange(of: curveTrigger) { _ in
+        .onChange(of: curveTrigger) {
           randomCurvePoint = RandomCurvePoint(rect: rect)
         }
         .animation(.spring(), value: randomCurvePoint)

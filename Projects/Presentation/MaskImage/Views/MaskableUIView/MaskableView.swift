@@ -18,31 +18,29 @@ struct MaskableView: View {
   private let backgroundImage: UIImage = ADResourcesAsset.SampleDrawing.checkerboard.image
   
   var body: some View {
-    WithPerceptionTracking {
-      RoundedRectangle(cornerRadius: 15)
-        .foregroundColor(.white)
-        .shadow(radius: 10)
-        .overlay {
-          Image(uiImage: backgroundImage)
-            .resizable()
-            .overlay {
-              MaskableUIViewRepresentable(
-                store: store,
-                imageFrame: $imageFrame
-              )
-            }
-            .background(
-              GeometryReader { geo in
-                Color.clear
-                  .onAppear {
-                    self.imageFrame = geo.frame(in: .global)
-                  }
-              }
+    RoundedRectangle(cornerRadius: 15)
+      .foregroundColor(.white)
+      .shadow(radius: 10)
+      .overlay {
+        Image(uiImage: backgroundImage)
+          .resizable()
+          .overlay {
+            MaskableUIViewRepresentable(
+              store: store,
+              imageFrame: $imageFrame
             )
-            .padding()
-        }
-        .padding()
-        .padding(.bottom)
-    }
+          }
+          .background(
+            GeometryReader { geo in
+              Color.clear
+                .onAppear {
+                  self.imageFrame = geo.frame(in: .global)
+                }
+            }
+          )
+          .padding()
+      }
+      .padding()
+      .padding(.bottom)
   }
 }

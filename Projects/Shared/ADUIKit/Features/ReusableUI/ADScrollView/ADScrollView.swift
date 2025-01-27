@@ -76,7 +76,7 @@ extension ADScrollView {
         let tmpTop: CGFloat = geo.frame(in: .named(self.topScrollID)).origin.y
         
         Color.clear
-          .onChange(of: tmpTop) { newValue in
+          .onChange(of: tmpTop) {
             self.curTop = tmpTop
             trackingAction()
           }
@@ -90,7 +90,7 @@ extension ADScrollView {
         let tmpBottom: CGFloat = geo.frame(in: .global).origin.y
         
         Color.clear
-          .onChange(of: tmpBottom) { newValue in
+          .onChange(of: tmpBottom) {
             self.curBottom = tmpBottom - self.scrollViewBottom
           }
       }

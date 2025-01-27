@@ -9,4 +9,4 @@
 import Photos
 import LocalFileProviderInterfaces
 
-extension PHPhotoLibrary: PHPhotoLibraryProtocol {}
+extension PHPhotoLibrary: @retroactive PHPhotoLibraryProtocol {}

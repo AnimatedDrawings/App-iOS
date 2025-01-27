@@ -28,34 +28,32 @@ public struct FindTheCharacterView: View {
   }
   
   public var body: some View {
-    WithPerceptionTracking {
-      ADScrollView($store.step.isShowStepBar.sending(\.update.setIsShowStepBar)) {
-        VStack(alignment: .leading, spacing: 20) {
-          Title()
-          
-          CheckList(
-            myStep: MakeADStep.FindTheCharacter.rawValue,
-            completeStep: store.step.completeStep.rawValue
-          ) {
-            CheckListContent(state: $store.checkList)
-          }
-          
-          Spacer()
-          
-          ShowCropImageViewButton(store.checkList) {
-            store.send(.view(.pushCropImageView))
-          }
-          
-          Spacer().frame(height: 1)
+    ADScrollView($store.step.isShowStepBar.sending(\.update.setIsShowStepBar)) {
+      VStack(alignment: .leading, spacing: 20) {
+        Title()
+        
+        CheckList(
+          myStep: MakeADStep.FindTheCharacter.rawValue,
+          completeStep: store.step.completeStep.rawValue
+        ) {
+          CheckListContent(state: $store.checkList)
         }
-        .padding()
+        
+        Spacer()
+        
+        ShowCropImageViewButton(store.checkList) {
+          store.send(.view(.pushCropImageView))
+        }
+        
+        Spacer().frame(height: 1)
       }
-      .alertNoCropImageError(isPresented: $store.alert.noCropImage)
-      .fullScreenCover(
-        isPresented: $store.cropImageView,
-        content: { IfLetCropImageView() }
-      )
+      .padding()
     }
+    .alertNoCropImageError(isPresented: $store.alert.noCropImage)
+    .fullScreenCover(
+      isPresented: $store.cropImageView,
+      content: { IfLetCropImageView() }
+    )
     .task { await store.send(.view(.task)).finish() }
   }
 }
@@ -65,7 +63,6 @@ private extension FindTheCharacterView {
   func IfLetCropImageView() -> some View {
     Group {
       if let cropImageStore = self.store.scope(state: \.cropImage, action: \.scope.cropImage) {
-        WithPerceptionTracking {
           CropImageView(store: cropImageStore)
             .transparentBlurBackground()
             .addLoadingView(
@@ -73,7 +70,6 @@ private extension FindTheCharacterView {
               description: "Crop Image..."
             )
             .alertNetworkError(isPresented: $store.alert.networkError)
-        }
       } else {
         Text("No CropImage...")
       }

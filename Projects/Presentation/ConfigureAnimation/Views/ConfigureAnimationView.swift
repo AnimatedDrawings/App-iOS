@@ -24,26 +24,24 @@ public struct ConfigureAnimationView: View {
   }
   
   public var body: some View {
-    WithPerceptionTracking {
-      VStack(spacing: 0) {
-        Title()
-        
-        Spacer().frame(height: 50)
-        
-        MyAnimationView(gifData: store.currentAnimation?.data)
-        
-        Spacer().frame(height: 50)
-        
-        TabBar(store: store)
-        
-        Spacer().frame(height: 20)
-      }
-      .padding()
-      .addADBackground()
-      .trashDialogs(store: store)
-      .shareDialogs(store: store)
-      .animationListDialogs(store: store)
+    VStack(spacing: 0) {
+      Title()
+      
+      Spacer().frame(height: 50)
+      
+      MyAnimationView(gifData: store.currentAnimation?.data)
+      
+      Spacer().frame(height: 50)
+      
+      TabBar(store: store)
+      
+      Spacer().frame(height: 20)
     }
+    .padding()
+    .addADBackground()
+    .trashDialogs(store: store)
+    .shareDialogs(store: store)
+    .animationListDialogs(store: store)
   }
 }
 
@@ -154,26 +152,24 @@ fileprivate extension ConfigureAnimationView {
     @Bindable var store: StoreOf<ConfigureAnimationFeature>
     
     func body(content: Content) -> some View {
-      WithPerceptionTracking {
-        content
-          .alert(
-            "Reset Animated Drawing",
-            isPresented: $store.trash.alert,
-            actions: {
-              Button("Cancel", action: {})
-              Button(
-                action: store.action(.view(.trash(.trashAlertActions(.confirm)))),
-                label: {
-                  Text("Reset")
-                    .foregroundColor(.red)
-                }
-              )
-            },
-            message: {
-              Text("Are you sure to reset making animation all step?")
-            }
-          )
-      }
+      content
+        .alert(
+          "Reset Animated Drawing",
+          isPresented: $store.trash.alert,
+          actions: {
+            Button("Cancel", action: {})
+            Button(
+              action: store.action(.view(.trash(.trashAlertActions(.confirm)))),
+              label: {
+                Text("Reset")
+                  .foregroundColor(.red)
+              }
+            )
+          },
+          message: {
+            Text("Are you sure to reset making animation all step?")
+          }
+        )
     }
   }
 }
@@ -216,19 +212,17 @@ fileprivate extension ConfigureAnimationView {
     }
     
     func body(content: Content) -> some View {
-      WithPerceptionTracking {
-        content
-          .alert(
-            title,
-            isPresented: $store.share.saveResult.alert,
-            actions: {
-              Button("OK", action: {})
-            },
-            message: {
-              Text(description)
-            }
-          )
-      }
+      content
+        .alert(
+          title,
+          isPresented: $store.share.saveResult.alert,
+          actions: {
+            Button("OK", action: {})
+          },
+          message: {
+            Text(description)
+          }
+        )
     }
   }
 }
@@ -238,19 +232,17 @@ fileprivate extension ConfigureAnimationView {
     @Bindable var store: StoreOf<ConfigureAnimationFeature>
     
     func body(content: Content) -> some View {
-      WithPerceptionTracking {
-        content
-          .alert(
-            "No Animated Drawings File",
-            isPresented: $store.share.alertNoAnimation,
-            actions: {
-              Button("Cancel", action: {})
-            },
-            message: {
-              Text("The file does not exist. Make a Animation First")
-            }
-          )
-      }
+      content
+        .alert(
+          "No Animated Drawings File",
+          isPresented: $store.share.alertNoAnimation,
+          actions: {
+            Button("Cancel", action: {})
+          },
+          message: {
+            Text("The file does not exist. Make a Animation First")
+          }
+        )
     }
   }
 }
@@ -260,17 +252,15 @@ fileprivate extension ConfigureAnimationView {
     @Bindable var store: StoreOf<ConfigureAnimationFeature>
     
     func body(content: Content) -> some View {
-      WithPerceptionTracking {
-        content
-          .confirmationDialog("", isPresented: $store.share.sheetShare) {
-            Button("Save GIF In Photos") {
-              store.send(.view(.share(.shareSheetActions(.save))))
-            }
-            Button("Share GIF") {
-              store.send(.view(.share(.shareSheetActions(.share))))
-            }
+      content
+        .confirmationDialog("", isPresented: $store.share.sheetShare) {
+          Button("Save GIF In Photos") {
+            store.send(.view(.share(.shareSheetActions(.save))))
           }
-      }
+          Button("Share GIF") {
+            store.send(.view(.share(.shareSheetActions(.share))))
+          }
+        }
     }
   }
 }
@@ -280,16 +270,14 @@ fileprivate extension ConfigureAnimationView {
     @Bindable var store: StoreOf<ConfigureAnimationFeature>
     
     func body(content: Content) -> some View {
-      WithPerceptionTracking {
-        content
-          .sheet(isPresented: $store.share.sheetShareFile) {
-            if let currentAnimation = store.currentAnimation {
-              ShareView(gifURL: currentAnimation.url)
-            } else {
-              Text("No Animation File")
-            }
+      content
+        .sheet(isPresented: $store.share.sheetShareFile) {
+          if let currentAnimation = store.currentAnimation {
+            ShareView(gifURL: currentAnimation.url)
+          } else {
+            Text("No Animation File")
           }
-      }
+        }
     }
   }
 }
@@ -312,25 +300,23 @@ fileprivate extension ConfigureAnimationView {
     @Bindable var store: StoreOf<ConfigureAnimationFeature>
     
     func body(content: Content) -> some View {
-      WithPerceptionTracking {
-        content
-          .fullScreenCover(
-            isPresented: $store.configure.animationListView,
-            content: {
-              AnimationListView(
-                popViewState: $store.configure.animationListView,
-                selectAnimationItem: { selectedAnimation in
-                  store.send(.view(.configure(.selectAnimationItem(selectedAnimation))))
-                }
-              )
-              .addLoadingView(
-                isShow: store.configure.loadingView,
-                description: "Add Animation..."
-              )
-              .alertNetworkError(isPresented: $store.configure.networkError)
-            }
-          )
-      }
+      content
+        .fullScreenCover(
+          isPresented: $store.configure.animationListView,
+          content: {
+            AnimationListView(
+              popViewState: $store.configure.animationListView,
+              selectAnimationItem: { selectedAnimation in
+                store.send(.view(.configure(.selectAnimationItem(selectedAnimation))))
+              }
+            )
+            .addLoadingView(
+              isShow: store.configure.loadingView,
+              description: "Add Animation..."
+            )
+            .alertNetworkError(isPresented: $store.configure.networkError)
+          }
+        )
     }
   }
 }

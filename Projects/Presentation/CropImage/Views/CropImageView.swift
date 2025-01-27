@@ -20,32 +20,30 @@ public struct CropImageView: View {
   }
   
   public var body: some View {
-    WithPerceptionTracking {
-      VStack(spacing: 40) {
-        ToolNaviBar(
-          cancelAction: store.action(.view(.cancel)),
-          saveAction: store.action(.view(.save))
-        )
-        
+    VStack(spacing: 40) {
+      ToolNaviBar(
+        cancelAction: store.action(.view(.cancel)),
+        saveAction: store.action(.view(.save))
+      )
+      
+      Spacer()
+      
+      ViewFinder(
+        image: store.originalImage,
+        imageBoundingBox: store.imageBoundingBox,
+        viewBoundingBox: $store.viewBoundingBox,
+        imageScale: $store.imageScale
+      )
+      .reload(store.resetTrigger)
+      
+      Spacer()
+      
+      HStack {
         Spacer()
-        
-        ViewFinder(
-          image: store.originalImage,
-          imageBoundingBox: store.imageBoundingBox,
-          viewBoundingBox: $store.viewBoundingBox,
-          imageScale: $store.imageScale
-        )
-        .reload(store.resetTrigger)
-        
-        Spacer()
-        
-        HStack {
-          Spacer()
-          ResetButton(action: store.action(.view(.reset)))
-        }
+        ResetButton(action: store.action(.view(.reset)))
       }
-      .padding()
     }
+    .padding()
   }
 }
 
