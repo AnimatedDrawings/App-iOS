@@ -6,7 +6,7 @@
 //
 
 import ProjectDescription
-import ProjectEnvironment
+import ProjectDescriptionHelpers
 
 let project: Project = ADComposableArchitecture.makeProject(
   packages: [.ComposableArchitecture],

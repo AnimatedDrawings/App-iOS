@@ -6,7 +6,7 @@
 //
 
 import ProjectDescription
-import ProjectEnvironment
+import ProjectDescriptionHelpers
 
 let project: Project = NetworkProvider.makeProject(
   options: .enableCodeCoverage,

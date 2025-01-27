@@ -1,5 +1,5 @@
 import ProjectDescription
-import ProjectEnvironment
+import ProjectDescriptionHelpers
 
 let project: Project = App.makeProject(
   targets: [
