@@ -65,7 +65,7 @@ struct MockMaskParentFeatue {
 }
 
 struct MockMaskParentView: View {
-  @Perception.Bindable var store: StoreOf<MockMaskParentFeatue>
+  @Bindable var store: StoreOf<MockMaskParentFeatue>
   
   init() {
     self.store = Store(initialState: MockMaskParentFeatue.State(maskImage: .mock())) {
@@ -120,7 +120,7 @@ struct MockMaskResultView: View {
 // MARK: - MaskImageView
 
 struct MockMaskImageView: View {
-  @Perception.Bindable var store: StoreOf<MaskImageFeature>
+  @Bindable var store: StoreOf<MaskImageFeature>
   
   init(store: StoreOf<MaskImageFeature>) {
     self.store = store

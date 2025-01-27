@@ -13,7 +13,7 @@ import ADResources
 import SharedProvider
 
 struct MockSeparateCharacter: View {
-  @Perception.Bindable var store: StoreOf<SeparateCharacterFeature>
+  @Bindable var store: StoreOf<SeparateCharacterFeature>
   
   init() {
     let state: SeparateCharacterFeature.State = .init(maskImage: .mock())

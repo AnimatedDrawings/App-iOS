@@ -15,7 +15,7 @@ import ADResources
 import DomainModels
 
 public struct SeparateCharacterView: View {
-  @Perception.Bindable var store: StoreOf<SeparateCharacterFeature>
+  @Bindable var store: StoreOf<SeparateCharacterFeature>
   
   public init(
     store: StoreOf<SeparateCharacterFeature> = Store(
@@ -28,32 +28,30 @@ public struct SeparateCharacterView: View {
   }
   
   public var body: some View {
-    WithPerceptionTracking {
-      ADScrollView($store.step.isShowStepBar.sending(\.update.setIsShowStepBar)) {
-        VStack(alignment: .leading, spacing: 20) {
-          Title()
-          
-          CheckList(
-            myStep: MakeADStep.SeparateCharacter.rawValue,
-            completeStep: store.step.completeStep.rawValue
-          ) {
-            CheckListContent(store: store)
-          }
-          
-          MaskImageButton(state: store.maskImageButton) {
-            store.send(.view(.pushMaskImageView))
-          }
-          
-          Spacer().frame(height: 20)
+    ADScrollView($store.step.isShowStepBar.sending(\.update.setIsShowStepBar)) {
+      VStack(alignment: .leading, spacing: 20) {
+        Title()
+        
+        CheckList(
+          myStep: MakeADStep.SeparateCharacter.rawValue,
+          completeStep: store.step.completeStep.rawValue
+        ) {
+          CheckListContent(store: store)
         }
-        .padding()
+        
+        MaskImageButton(state: store.maskImageButton) {
+          store.send(.view(.pushMaskImageView))
+        }
+        
+        Spacer().frame(height: 20)
       }
-      .alertNoMaskImageError(isPresented: $store.alert.noMaskImage)
-      .fullScreenCover(
-        isPresented: $store.maskImageView,
-        content: { IfLetMaskImageView() }
-      )
+      .padding()
     }
+    .alertNoMaskImageError(isPresented: $store.alert.noMaskImage)
+    .fullScreenCover(
+      isPresented: $store.maskImageView,
+      content: { IfLetMaskImageView() }
+    )
     .task { await store.send(.view(.task)).finish() }
   }
 }
@@ -63,15 +61,13 @@ private extension SeparateCharacterView {
   func IfLetMaskImageView() -> some View {
     Group {
       if let maskImageStore = self.store.scope(state: \.maskImage, action: \.scope.maskImage) {
-        WithPerceptionTracking {
-          MaskImageView(store: maskImageStore)
-            .transparentBlurBackground()
-            .addLoadingView(
-              isShow: store.loadingView,
-              description: "Mask Image..."
-            )
-            .alertNetworkError(isPresented: $store.alert.networkError)
-        }
+        MaskImageView(store: maskImageStore)
+          .transparentBlurBackground()
+          .addLoadingView(
+            isShow: store.loadingView,
+            description: "Mask Image..."
+          )
+          .alertNetworkError(isPresented: $store.alert.networkError)
       } else {
         Text("No MaskImage...")
       }
@@ -98,33 +94,31 @@ private extension SeparateCharacterView {
 
 private extension SeparateCharacterView {
   struct CheckListContent: View {
-    @Perception.Bindable var store: StoreOf<SeparateCharacterFeature>
+    @Bindable var store: StoreOf<SeparateCharacterFeature>
     
     let description1 = "If the body parts of your character are not highlighted, use the pen and eraser tools to fix it."
     let description2 = "If the arms or legs are stuck together, use the eraser tool to separate them"
     let myStep: MakeADStep = .SeparateCharacter
     
     var body: some View {
-      WithPerceptionTracking {
-        VStack(alignment: .leading, spacing: 15) {
-          CheckListButton(
-            description: description1,
-            state: $store.check.list1.sending(\.view.check.list1)
-          )
-          
-          GIFImage(sample: ADResourcesAsset.Gifs.step3Gif1)
-            .frame(height: 250)
-            .frame(maxWidth: .infinity, alignment: .center)
-          
-          CheckListButton(
-            description: description2,
-            state: $store.check.list2.sending(\.view.check.list2)
-          )
-          
-          GIFImage(sample: ADResourcesAsset.Gifs.step3Gif2)
-            .frame(height: 250, alignment: .center)
-            .frame(maxWidth: .infinity, alignment: .center)
-        }
+      VStack(alignment: .leading, spacing: 15) {
+        CheckListButton(
+          description: description1,
+          state: $store.check.list1.sending(\.view.check.list1)
+        )
+        
+        GIFImage(sample: ADResourcesAsset.Gifs.step3Gif1)
+          .frame(height: 250)
+          .frame(maxWidth: .infinity, alignment: .center)
+        
+        CheckListButton(
+          description: description2,
+          state: $store.check.list2.sending(\.view.check.list2)
+        )
+        
+        GIFImage(sample: ADResourcesAsset.Gifs.step3Gif2)
+          .frame(height: 250, alignment: .center)
+          .frame(maxWidth: .infinity, alignment: .center)
       }
     }
   }

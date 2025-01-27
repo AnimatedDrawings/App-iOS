@@ -12,7 +12,7 @@ import FindCharacterJointsFeatures
 import SharedProvider
 
 struct MockFindCharacterJointsView: View {
-  @Perception.Bindable var store: StoreOf<FindCharacterJointsFeature>
+  @Bindable var store: StoreOf<FindCharacterJointsFeature>
   
   init() {
     let state: FindCharacterJointsFeature.State = .init(modifyJoints: .mock())

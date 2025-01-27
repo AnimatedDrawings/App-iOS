@@ -48,18 +48,18 @@ struct GridView: View {
     }
     .contentShape(Rectangle())
     .gesture(DragGridGesture())
-    .onChange(of: initalBoundingBox, perform: initBoundingBox)
-    .onChange(of: lastRect, perform: updateBoundingBoxAction)
+    .onChange(of: initalBoundingBox, initBoundingBox)
+    .onChange(of: lastRect, updateBoundingBoxAction)
   }
 }
 
 extension GridView {
-  func initBoundingBox(_: CGRect) {
+  func initBoundingBox() {
     self.curRect = initalBoundingBox
     self.lastRect = initalBoundingBox
   }
   
-  func updateBoundingBoxAction(_: CGRect) {
+  func updateBoundingBoxAction() {
     updateBoundingBox(lastRect)
   }
 }

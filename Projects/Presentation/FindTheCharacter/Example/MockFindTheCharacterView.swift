@@ -13,7 +13,7 @@ import ADResources
 import SharedProvider
 
 struct MockFindTheCharacterView: View {
-  @Perception.Bindable var store: StoreOf<FindTheCharacterFeature>
+  @Bindable var store: StoreOf<FindTheCharacterFeature>
 
   init() {
     let state: FindTheCharacterFeature.State = .init(

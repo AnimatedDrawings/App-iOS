@@ -15,7 +15,7 @@ import DomainModels
 import ModifyJoints
 
 public struct FindingCharacterJointsView: View {
-  @Perception.Bindable var store: StoreOf<FindCharacterJointsFeature>
+  @Bindable var store: StoreOf<FindCharacterJointsFeature>
   
   public init(
     store: StoreOf<FindCharacterJointsFeature> = Store(
@@ -28,33 +28,31 @@ public struct FindingCharacterJointsView: View {
   }
   
   public var body: some View {
-    WithPerceptionTracking {
-      ADScrollView($store.step.isShowStepBar.sending(\.update.setIsShowStepBar)) {
-        VStack(alignment: .leading, spacing: 20) {
-          Title()
-          
-          CheckList(
-            myStep: MakeADStep.FindCharacterJoints.rawValue,
-            completeStep: store.step.completeStep.rawValue
-          ) {
-            CheckListContent(checkState: $store.checkState)
-          }
-          
-          NextStepDescription()
-          
-          ShowMaskingImageViewButton(store.checkState) {
-            store.send(.view(.pushModifyJointsView))
-          }
-          
-          Spacer().frame(height: 20)
+    ADScrollView($store.step.isShowStepBar.sending(\.update.setIsShowStepBar)) {
+      VStack(alignment: .leading, spacing: 20) {
+        Title()
+        
+        CheckList(
+          myStep: MakeADStep.FindCharacterJoints.rawValue,
+          completeStep: store.step.completeStep.rawValue
+        ) {
+          CheckListContent(checkState: $store.checkState)
         }
-        .padding()
+        
+        NextStepDescription()
+        
+        ShowMaskingImageViewButton(store.checkState) {
+          store.send(.view(.pushModifyJointsView))
+        }
+        
+        Spacer().frame(height: 20)
       }
-      .fullScreenCover(
-        isPresented: $store.modifyJointsView,
-        content: { ifLetModifyJointsView() }
-      )
+      .padding()
     }
+    .fullScreenCover(
+      isPresented: $store.modifyJointsView,
+      content: { ifLetModifyJointsView() }
+    )
     .task { await store.send(.view(.task)).finish() }
   }
 }
@@ -151,15 +149,13 @@ private extension FindingCharacterJointsView {
   func ifLetModifyJointsView() -> some View {
     Group {
       if let modifyJointsStore = self.store.scope(state: \.modifyJoints, action: \.scope.modifyJoints) {
-        WithPerceptionTracking {
-          ModifyJointsView(store: modifyJointsStore)
-            .transparentBlurBackground()
-            .addLoadingView(
-              isShow: store.loadingView,
-              description: "Modify Character Joints ..."
-            )
-            .alertNetworkError(isPresented: $store.alert.networkError)
-        }
+        ModifyJointsView(store: modifyJointsStore)
+          .transparentBlurBackground()
+          .addLoadingView(
+            isShow: store.loadingView,
+            description: "Modify Character Joints ..."
+          )
+          .alertNetworkError(isPresented: $store.alert.networkError)
       } else {
         Text("No Joints Data...")
       }

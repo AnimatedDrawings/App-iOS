@@ -16,8 +16,8 @@ import DomainModels
 import SharedProvider
 
 public struct UploadDrawingView: View {
-  @Perception.Bindable var store: StoreOf<UploadDrawingFeature>
-
+  @Bindable var store: StoreOf<UploadDrawingFeature>
+  
   public init(
     store: StoreOf<UploadDrawingFeature> = Store(initialState: .init()) {
       UploadDrawingFeature()
@@ -27,45 +27,43 @@ public struct UploadDrawingView: View {
   }
   
   public var body: some View {
-    WithPerceptionTracking {
-      ADScrollView($store.step.isShowStepBar.sending(\.update.setIsShowStepBar)) {
-        VStack(alignment: .leading, spacing: 20) {
-          Title()
-          
-          CheckList(
-            myStep: MakeADStep.UploadDrawing.rawValue,
-            completeStep: store.step.completeStep.rawValue
-          ) {
-            CheckListContent(store: store)
-          }
-          
-          UploadButton(state: store.uploadButton) { imageData in
-            store.send(.view(.uploadDrawing(imageData)))
-          }
-          
-          SampleDrawings { imageData in
-            store.send(.view(.uploadDrawing(imageData)))
-          }
-          
-          Spacer()
+    ADScrollView($store.step.isShowStepBar.sending(\.update.setIsShowStepBar)) {
+      VStack(alignment: .leading, spacing: 20) {
+        Title()
+        
+        CheckList(
+          myStep: MakeADStep.UploadDrawing.rawValue,
+          completeStep: store.step.completeStep.rawValue
+        ) {
+          CheckListContent(store: store)
         }
-        .padding()
-      }
-      .alertNetworkError(isPresented: $store.alert.networkError)
-      .alertFindCharacterError(isPresented: $store.alert.findCharacterError)
-      .alertimageSizeError(isPresented: $store.alert.imageSizeError)
-      .fullScreenOverlay(presentationSpace: .named("UploadDrawingView")) {
-        if store.loadingView {
-          LoadingView(description: "Upload Drawing...")
-            .transparentBlurBackground(
-              effect: UIBlurEffect(style: .light),
-              intensity: 0.3
-            )
+        
+        UploadButton(state: store.uploadButton) { imageData in
+          store.send(.view(.uploadDrawing(imageData)))
         }
+        
+        SampleDrawings { imageData in
+          store.send(.view(.uploadDrawing(imageData)))
+        }
+        
+        Spacer()
       }
-      .task {
-        await store.send(.view(.task)).finish()
+      .padding()
+    }
+    .alertNetworkError(isPresented: $store.alert.networkError)
+    .alertFindCharacterError(isPresented: $store.alert.findCharacterError)
+    .alertimageSizeError(isPresented: $store.alert.imageSizeError)
+    .fullScreenOverlay(presentationSpace: .named("UploadDrawingView")) {
+      if store.loadingView {
+        LoadingView(description: "Upload Drawing...")
+          .transparentBlurBackground(
+            effect: UIBlurEffect(style: .light),
+            intensity: 0.3
+          )
       }
+    }
+    .task {
+      await store.send(.view(.task)).finish()
     }
   }
 }
@@ -124,7 +122,7 @@ private extension UploadDrawingView {
 
 private extension UploadDrawingView {
   struct CheckListContent: View {
-    @Perception.Bindable var store: StoreOf<UploadDrawingFeature>
+    @Bindable var store: StoreOf<UploadDrawingFeature>
     
     let description1 = "Make sure the character is drawn on a white piece of paper without lines, wrinkles, or tears"
     let description2 = "Make sure the drawing is well lit. To minimize shadows, hold the camera further away and zoom in on the drawing."
@@ -132,28 +130,26 @@ private extension UploadDrawingView {
     let description4 = "Please use file type of image and size 10MB or less"
     
     var body: some View {
-      WithPerceptionTracking {
-        VStack(alignment: .leading, spacing: 15) {
-          CheckListButton(
-            description: description1,
-            state: $store.check.list1.sending(\.view.check.list1)
-          )
-          
-          CheckListButton(
-            description: description2,
-            state: $store.check.list2.sending(\.view.check.list2)
-          )
-          
-          CheckListButton(
-            description: description3,
-            state: $store.check.list3.sending(\.view.check.list3)
-          )
-          
-          CheckListButton(
-            description: description4,
-            state: $store.check.list4.sending(\.view.check.list4)
-          )
-        }
+      VStack(alignment: .leading, spacing: 15) {
+        CheckListButton(
+          description: description1,
+          state: $store.check.list1.sending(\.view.check.list1)
+        )
+        
+        CheckListButton(
+          description: description2,
+          state: $store.check.list2.sending(\.view.check.list2)
+        )
+        
+        CheckListButton(
+          description: description3,
+          state: $store.check.list3.sending(\.view.check.list3)
+        )
+        
+        CheckListButton(
+          description: description4,
+          state: $store.check.list4.sending(\.view.check.list4)
+        )
       }
     }
   }
@@ -176,7 +172,7 @@ private extension UploadDrawingView {
     
     let photoFill = "photo.fill"
     let text = "Upload Photo"
-
+    
     var body: some View   {
       PhotosPicker(
         selection: $selectedItem,

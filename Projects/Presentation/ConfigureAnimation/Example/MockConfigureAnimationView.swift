@@ -12,7 +12,7 @@ import ConfigureAnimationFeatures
 import ADResources
 
 struct MockConfigureAnimationView: View {
-  @Perception.Bindable var store: StoreOf<ConfigureAnimationFeature>
+  @Bindable var store: StoreOf<ConfigureAnimationFeature>
   
   init() {
     let gifData = ADResourcesAsset.ADAnimation.dab.data.data

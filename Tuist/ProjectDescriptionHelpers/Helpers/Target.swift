@@ -23,7 +23,7 @@ public extension Target {
       destinations: .iOS,
       product: product,
       bundleId: bundleId,
-      deploymentTargets: .iOS("16.0"),
+      deploymentTargets: .iOS("18.0"),
       infoPlist: infoPlist,
       sources: sources,
       resources: resources,

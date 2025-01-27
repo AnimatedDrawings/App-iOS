@@ -64,29 +64,27 @@ import ADUIKit
 import MaskImageFeatures
 
 public struct MaskImageView: View {
-  @Perception.Bindable var store: StoreOf<MaskImageFeature>
+  @Bindable var store: StoreOf<MaskImageFeature>
   
   public init(store: StoreOf<MaskImageFeature>) {
     self.store = store
   }
   
   public var body: some View {
-    WithPerceptionTracking {
-      VStack(spacing: 20) {
-        ToolNaviBar(
-          cancelAction: store.action(.view(.cancel)),
-          saveAction: store.action(.view(.save))
-        )
-        .padding()
-        
-        Spacer()
-        
-        MaskableView(store: store)
-        
-        Spacer()
-        
-        MaskToolView(store: store)
-      }      
+    VStack(spacing: 20) {
+      ToolNaviBar(
+        cancelAction: store.action(.view(.cancel)),
+        saveAction: store.action(.view(.save))
+      )
+      .padding()
+      
+      Spacer()
+      
+      MaskableView(store: store)
+      
+      Spacer()
+      
+      MaskToolView(store: store)
     }
   }
 }

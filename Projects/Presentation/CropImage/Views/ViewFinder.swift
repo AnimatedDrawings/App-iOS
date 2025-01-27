@@ -23,7 +23,7 @@ struct ViewFinder: View {
       image: image,
       viewSize: $viewSize
     )
-    .onChange(of: viewSize, perform: updateFrameGridView)
+    .onChange(of: viewSize, updateFrameGridView)
     .overlay {
       GridView(
         initalBoundingBox: $initalBoundingBox,
@@ -60,7 +60,7 @@ extension ViewFinder {
 }
 
 extension ViewFinder {
-  func updateFrameGridView(_ viewSize: CGSize) {
+  func updateFrameGridView() {
     imageScale = calImageScale(viewSize: viewSize)
     
     let boundingOrigin = CGPoint(

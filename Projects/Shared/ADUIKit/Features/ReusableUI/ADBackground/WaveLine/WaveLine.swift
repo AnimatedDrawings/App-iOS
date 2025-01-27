@@ -44,7 +44,7 @@ struct WaveVerticalLine: View {
   var body: some View {
     WaveVerticalShape(phase: phase, strength: strength, frequency: frequency)
       .stroke(lineWidth: 5)
-      .onChange(of: waveTrigger) { _ in
+      .onChange(of: waveTrigger) {
         DispatchQueue.main.asyncAfter(deadline: .now() + duration / 2) {
           phase = minPhase
         }
@@ -99,7 +99,7 @@ struct WaveHorizontalLine: View {
   var body: some View {
     WaveHorizontalShape(phase: phase, strength: strength, frequency: frequency)
       .stroke(lineWidth: 5)
-      .onChange(of: waveTrigger) { _ in
+      .onChange(of: waveTrigger) {
         DispatchQueue.main.asyncAfter(deadline: .now() + duration / 2) {
           phase = minPhase
         }
