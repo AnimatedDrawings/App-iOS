@@ -13,7 +13,7 @@ import CropImageFeatures
 import ADComposableArchitecture
 
 public struct CropImageView: View {
-  @Perception.Bindable var store: StoreOf<CropImageFeature>
+  @Bindable var store: StoreOf<CropImageFeature>
   
   public init(store: StoreOf<CropImageFeature>) {
     self.store = store

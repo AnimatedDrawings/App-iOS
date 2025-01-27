@@ -16,7 +16,7 @@ import DomainModels
 import SharedProvider
 
 public struct UploadDrawingView: View {
-  @Perception.Bindable var store: StoreOf<UploadDrawingFeature>
+  @Bindable var store: StoreOf<UploadDrawingFeature>
 
   public init(
     store: StoreOf<UploadDrawingFeature> = Store(initialState: .init()) {
@@ -124,7 +124,7 @@ private extension UploadDrawingView {
 
 private extension UploadDrawingView {
   struct CheckListContent: View {
-    @Perception.Bindable var store: StoreOf<UploadDrawingFeature>
+    @Bindable var store: StoreOf<UploadDrawingFeature>
     
     let description1 = "Make sure the character is drawn on a white piece of paper without lines, wrinkles, or tears"
     let description2 = "Make sure the drawing is well lit. To minimize shadows, hold the camera further away and zoom in on the drawing."

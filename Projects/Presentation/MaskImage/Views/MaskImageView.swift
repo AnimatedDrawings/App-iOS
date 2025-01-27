@@ -64,7 +64,7 @@ import ADUIKit
 import MaskImageFeatures
 
 public struct MaskImageView: View {
-  @Perception.Bindable var store: StoreOf<MaskImageFeature>
+  @Bindable var store: StoreOf<MaskImageFeature>
   
   public init(store: StoreOf<MaskImageFeature>) {
     self.store = store

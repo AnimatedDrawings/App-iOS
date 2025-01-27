@@ -14,7 +14,7 @@ import MaskImageInterfaces
 struct MaskableUIViewRepresentable: UIViewRepresentable {
   typealias UIViewType = MaskableUIView
   
-  @Perception.Bindable var store: StoreOf<MaskImageFeature>
+  @Bindable var store: StoreOf<MaskImageFeature>
   @Binding var imageFrame: CGRect
   
   func makeUIView(context: Context) -> MaskableUIView {

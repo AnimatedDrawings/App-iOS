@@ -16,7 +16,7 @@ import ADComposableArchitecture
 import MakeADFeatures
 
 public struct MakeADView: View {
-  @Perception.Bindable var store: StoreOf<MakeADFeature>
+  @Bindable var store: StoreOf<MakeADFeature>
   
   public init(
     store: StoreOf<MakeADFeature> = Store(initialState: .init()) {
@@ -54,7 +54,7 @@ public struct MakeADView: View {
 
 private extension MakeADView {
   struct PageTabView: View {
-    @Perception.Bindable var store: StoreOf<MakeADFeature>
+    @Bindable var store: StoreOf<MakeADFeature>
     
     var body: some View {
       WithPerceptionTracking {

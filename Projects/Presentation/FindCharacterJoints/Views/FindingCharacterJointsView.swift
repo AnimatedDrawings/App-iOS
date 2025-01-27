@@ -15,7 +15,7 @@ import DomainModels
 import ModifyJoints
 
 public struct FindingCharacterJointsView: View {
-  @Perception.Bindable var store: StoreOf<FindCharacterJointsFeature>
+  @Bindable var store: StoreOf<FindCharacterJointsFeature>
   
   public init(
     store: StoreOf<FindCharacterJointsFeature> = Store(

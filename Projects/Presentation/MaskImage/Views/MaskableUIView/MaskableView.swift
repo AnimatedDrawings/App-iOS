@@ -12,7 +12,7 @@ import MaskImageFeatures
 import ADResources
 
 struct MaskableView: View {
-  @Perception.Bindable var store: StoreOf<MaskImageFeature>
+  @Bindable var store: StoreOf<MaskImageFeature>
   
   @State private var imageFrame: CGRect = .init()
   private let backgroundImage: UIImage = ADResourcesAsset.SampleDrawing.checkerboard.image

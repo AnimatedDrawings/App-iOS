@@ -11,7 +11,7 @@ import ADComposableArchitecture
 import MaskImageFeatures
 
 struct MaskToolView: View {
-  @Perception.Bindable var store: StoreOf<MaskImageFeature>
+  @Bindable var store: StoreOf<MaskImageFeature>
   
   @State private var toolSizerSize: CGFloat = 0
   @State private var toolSizerPadding: CGFloat = 0

@@ -15,7 +15,7 @@ import DomainModels
 import CropImage
 
 public struct FindTheCharacterView: View {
-  @Perception.Bindable var store: StoreOf<FindTheCharacterFeature>
+  @Bindable var store: StoreOf<FindTheCharacterFeature>
   
   public init(
     store: StoreOf<FindTheCharacterFeature> = Store(

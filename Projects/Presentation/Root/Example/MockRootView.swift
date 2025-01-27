@@ -12,7 +12,7 @@ import ADComposableArchitecture
 import SharedProvider
 
 struct MockRootView: View {
-  @Perception.Bindable var store: StoreOf<RootFeature>
+  @Bindable var store: StoreOf<RootFeature>
   
   init() {
     let state = RootFeature.State(

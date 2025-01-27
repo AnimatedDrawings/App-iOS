@@ -13,7 +13,7 @@ import ADUIKit
 import ADResources
 
 public struct ConfigureAnimationView: View {
-  @Perception.Bindable var store: StoreOf<ConfigureAnimationFeature>
+  @Bindable var store: StoreOf<ConfigureAnimationFeature>
   
   public init(
     store: StoreOf<ConfigureAnimationFeature> = Store(initialState: .init()) {
@@ -85,7 +85,7 @@ private extension ConfigureAnimationView {
 
 private extension ConfigureAnimationView {
   struct TabBar: View {
-    @Perception.Bindable var store: StoreOf<ConfigureAnimationFeature>
+    @Bindable var store: StoreOf<ConfigureAnimationFeature>
     
     let trash = "trash"
     let fix = "arrowshape.turn.up.backward"
@@ -151,7 +151,7 @@ fileprivate extension View {
 
 fileprivate extension ConfigureAnimationView {
   struct TrashAlertModifier: ViewModifier {
-    @Perception.Bindable var store: StoreOf<ConfigureAnimationFeature>
+    @Bindable var store: StoreOf<ConfigureAnimationFeature>
     
     func body(content: Content) -> some View {
       WithPerceptionTracking {
@@ -201,7 +201,7 @@ fileprivate extension View {
 
 fileprivate extension ConfigureAnimationView {
   struct SaveGifResultModifier: ViewModifier {
-    @Perception.Bindable var store: StoreOf<ConfigureAnimationFeature>
+    @Bindable var store: StoreOf<ConfigureAnimationFeature>
     
     var title: String {
       store.share.saveResult.isSuccess ?
@@ -235,7 +235,7 @@ fileprivate extension ConfigureAnimationView {
 
 fileprivate extension ConfigureAnimationView {
   struct NoAnimationFileModifier: ViewModifier {
-    @Perception.Bindable var store: StoreOf<ConfigureAnimationFeature>
+    @Bindable var store: StoreOf<ConfigureAnimationFeature>
     
     func body(content: Content) -> some View {
       WithPerceptionTracking {
@@ -257,7 +257,7 @@ fileprivate extension ConfigureAnimationView {
 
 fileprivate extension ConfigureAnimationView {
   struct ShareSheetModifier: ViewModifier {
-    @Perception.Bindable var store: StoreOf<ConfigureAnimationFeature>
+    @Bindable var store: StoreOf<ConfigureAnimationFeature>
     
     func body(content: Content) -> some View {
       WithPerceptionTracking {
@@ -277,7 +277,7 @@ fileprivate extension ConfigureAnimationView {
 
 fileprivate extension ConfigureAnimationView {
   struct ShareFileModifier: ViewModifier {
-    @Perception.Bindable var store: StoreOf<ConfigureAnimationFeature>
+    @Bindable var store: StoreOf<ConfigureAnimationFeature>
     
     func body(content: Content) -> some View {
       WithPerceptionTracking {
@@ -309,7 +309,7 @@ fileprivate extension View {
 
 fileprivate extension ConfigureAnimationView {
   struct AnimationListModifier: ViewModifier {
-    @Perception.Bindable var store: StoreOf<ConfigureAnimationFeature>
+    @Bindable var store: StoreOf<ConfigureAnimationFeature>
     
     func body(content: Content) -> some View {
       WithPerceptionTracking {

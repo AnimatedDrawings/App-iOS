@@ -15,7 +15,7 @@ import ADResources
 import DomainModels
 
 public struct SeparateCharacterView: View {
-  @Perception.Bindable var store: StoreOf<SeparateCharacterFeature>
+  @Bindable var store: StoreOf<SeparateCharacterFeature>
   
   public init(
     store: StoreOf<SeparateCharacterFeature> = Store(
@@ -98,7 +98,7 @@ private extension SeparateCharacterView {
 
 private extension SeparateCharacterView {
   struct CheckListContent: View {
-    @Perception.Bindable var store: StoreOf<SeparateCharacterFeature>
+    @Bindable var store: StoreOf<SeparateCharacterFeature>
     
     let description1 = "If the body parts of your character are not highlighted, use the pen and eraser tools to fix it."
     let description2 = "If the arms or legs are stuck together, use the eraser tool to separate them"

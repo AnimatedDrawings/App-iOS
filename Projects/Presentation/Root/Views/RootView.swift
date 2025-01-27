@@ -14,7 +14,7 @@ import MakeAD
 import ConfigureAnimation
 
 public struct RootView: View {
-  @Perception.Bindable var store: StoreOf<RootFeature>
+  @Bindable var store: StoreOf<RootFeature>
   
   public init(
     store: StoreOf<RootFeature> = Store(initialState: .init()) {

@@ -13,7 +13,7 @@ import ModifyJointsFeatures
 import DomainModels
 
 public struct ModifyJointsView: View {
-  @Perception.Bindable var store: StoreOf<ModifyJointsFeature>
+  @Bindable var store: StoreOf<ModifyJointsFeature>
   @State var currentJointName: String? = nil
   @State var skeletons: [String : Skeleton] = [:]
   let croppedImage: UIImage
