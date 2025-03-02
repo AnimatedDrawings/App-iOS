@@ -74,3 +74,6 @@ Env/
 
 ### Sweetpad autocomplete ###
 buildServer.json
+
+### Tuist ###
+Tuist/.build/

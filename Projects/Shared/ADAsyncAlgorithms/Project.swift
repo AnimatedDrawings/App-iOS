@@ -9,12 +9,13 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project: Project = ADAsyncAlgorithms.makeProject(
-  packages: [.AsyncAlgorithms],
   targets: [
     .makeTarget(
       name: ADAsyncAlgorithms.projectName,
       product: .staticLibrary,
-      dependencies: [.AsyncAlgorithms]
+      dependencies: [
+        .external(name: "AsyncAlgorithms")
+      ]
     )
   ]
 )
