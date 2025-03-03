@@ -9,7 +9,7 @@
 import PackageDescription
 
 let package = Package(
-  name: "AnimatedDrawing",
+  name: "AnimatedDrawingPKG",
   dependencies: [
     .package(
       url: "https://github.com/pointfreeco/swift-composable-architecture.git",
@@ -22,7 +22,7 @@ let package = Package(
   ],
   targets: [
     .target(
-      name: "AnimatedDrawing",
+      name: "AnimatedDrawingPKG",
       dependencies: [
         "ComposableArchitecture",
         "AsyncAlgorithms",
