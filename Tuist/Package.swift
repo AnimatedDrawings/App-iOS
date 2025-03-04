@@ -16,8 +16,12 @@ let package = Package(
       exact: "1.18.0"
     ),
     .package(
-      url: "https://github.com/apple/swift-async-algorithms",
+      url: "https://github.com/apple/swift-async-algorithms.git",
       exact: "1.0.0"
+    ),
+    .package(
+      url: "https://github.com/Alamofire/Alamofire.git",
+      exact: "5.10.2"
     ),
   ],
   targets: [
@@ -26,6 +30,7 @@ let package = Package(
       dependencies: [
         "ComposableArchitecture",
         "AsyncAlgorithms",
+        "Alamofire"
       ]
     )
   ]

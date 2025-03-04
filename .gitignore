@@ -77,3 +77,6 @@ buildServer.json
 
 ### Tuist ###
 Tuist/.build/
+
+.windsurfrules
+.vscode/

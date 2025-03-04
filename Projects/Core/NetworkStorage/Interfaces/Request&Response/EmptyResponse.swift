@@ -1,5 +1,5 @@
 import Foundation
 
-public struct EmptyResponse: Decodable, Equatable {
+public struct ADEmptyResponse: Decodable, Equatable {
   public init() {}
 }

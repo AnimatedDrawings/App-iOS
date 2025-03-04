@@ -16,7 +16,8 @@ let project: Project = Shared.makeProject(
       dependencies: [
         ADUIKit.projectDepedency,
         ADComposableArchitecture.projectDepedency,
-        ADAsyncAlgorithms.projectDepedency
+        ADAsyncAlgorithms.projectDepedency,
+        ADAlamofire.projectDepedency
       ]
     )
   ]

@@ -15,9 +15,7 @@ public extension ConfigureAnimationFeature {
   enum AsyncActions: Equatable {
     case saveGifInPhotos(URL)
     case selectAnimation(ADAnimation)
-    case selectAnimationResponse(TaskEmptyResult)
-    case downloadVideo
-    case downloadVideoResponse(TaskResult<DownloadAnimationResponse>)
+    case selectAnimationResponse(TaskResult<MakeAnimationResponse>)
   }
   
   func AsyncReducer() -> some ReducerOf<Self> {
@@ -52,8 +50,8 @@ public extension ConfigureAnimationFeature {
             
             await send(.inner(.setLoadingView(true)))
             await send(.async(.selectAnimationResponse(
-              TaskResult.empty {
-                try await configureAnimationProvider.add(
+              TaskResult {
+                try await configureAnimationProvider.makeAnimation(
                   ad_id: ad_id,
                   animation: animation
                 )
@@ -61,35 +59,7 @@ public extension ConfigureAnimationFeature {
             )))
           }
           
-        case .selectAnimationResponse(.success):
-          return .send(.async(.downloadVideo))
-          
-        case .selectAnimationResponse(.failure(let error)):
-          print(error)
-          return .send(.inner(.setViewNeworkFail))
-          
-        case .downloadVideo:
-          guard let selectedAnimation = state.configure.selectedAnimation else {
-            return .send(.inner(.setViewNeworkFail))
-          }
-          
-          return .run { send in
-            guard let ad_id = await adInfo.id.get() else {
-              await send(.inner(.setViewNeworkFail))
-              return
-            }
-            
-            await send(.async(.downloadVideoResponse(
-              TaskResult {
-                try await configureAnimationProvider.download(
-                  ad_id: ad_id,
-                  animation: selectedAnimation
-                )
-              }
-            )))
-          }
-          
-        case .downloadVideoResponse(.success(let response)):
+        case .selectAnimationResponse(.success(let response)):
           guard let selectedAnimation = state.configure.selectedAnimation,
                 let saveLocalFileResponse = try? localFileProvider.save(
                   data: response.animation,
@@ -111,9 +81,10 @@ public extension ConfigureAnimationFeature {
             await send(.inner(.popAnimationListView))
           }
           
-        case .downloadVideoResponse(.failure(let error)):
+        case .selectAnimationResponse(.failure(let error)):
           print(error)
           return .send(.inner(.setViewNeworkFail))
+          
         }
         
       default:

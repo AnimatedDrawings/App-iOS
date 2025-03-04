@@ -15,7 +15,7 @@ import ImageTools
 public struct UploadDrawingFeature: Reducer {
   public init() {}
   
-  @Dependency(MakeADProvider.self) var makeADProvider
+  @Dependency(ADNetworkProvider.self) var makeADProvider
   @Dependency(ImageCompressor.self) var imageCompressor
   @Dependency(StepProvider.self) var step
   @Dependency(ADInfoProvider.self) var adInfo

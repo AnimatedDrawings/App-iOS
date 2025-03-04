@@ -61,7 +61,7 @@ public extension UploadDrawingFeature {
           return .run { send in
             await send(.inner(.setLoadingView(false)))
             if let error = error as? NetworkStorageError,
-               error == .server
+               error == .server(statusCode: 501)
             {
               await send(.inner(.showFindCharacterErrorAlert))
             } else {
