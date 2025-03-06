@@ -14,11 +14,6 @@ public protocol TargetType {
   var path: String { get }
   var method: HTTPMethod { get }
   var headers: HTTPHeaders? { get }
-  var queryParameters: [String: String]? { get }
-}
-
-extension TargetType {
-  public var fullURL: URL? {
-    return URL(string: baseURL)?.appendingPathComponent(path)
-  }
+  var queryParameters: Parameters? { get throws }
+  var bodyParameters: Parameters? { get throws }
 }

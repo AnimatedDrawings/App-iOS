@@ -1,7 +1,7 @@
 import CoreModels
 import Foundation
 
-public struct ConfigureCharacterJointsRequest {
+public struct ConfigureCharacterJointsRequest: Encodable {
   public let ad_id: String
   public let jointsDTO: JointsDTO
 

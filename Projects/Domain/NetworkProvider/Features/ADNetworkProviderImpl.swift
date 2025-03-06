@@ -80,7 +80,14 @@ final public class ADNetworkProviderImpl: ADNetworkProviderProtocol {
     joints: Joints
   ) async throws {
     let request = ConfigureCharacterJointsRequest(ad_id: ad_id, jointsDTO: joints.toDTO())
-    let _ = await storage.configureCharacterJoints(request: request)
+    let result = await storage.configureCharacterJoints(request: request)
+    
+    switch result {
+    case .success:
+      return
+    case .failure(let error):
+      throw error
+    }
   }
   
   public func makeAnimation(

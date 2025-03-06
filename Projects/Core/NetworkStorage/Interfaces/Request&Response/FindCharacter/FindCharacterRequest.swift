@@ -1,7 +1,7 @@
 import CoreModels
 import Foundation
 
-public struct FindCharacterRequest {
+public struct FindCharacterRequest: Encodable {
   public let ad_id: String
   public let boundingBoxDTO: BoundingBoxDTO
 

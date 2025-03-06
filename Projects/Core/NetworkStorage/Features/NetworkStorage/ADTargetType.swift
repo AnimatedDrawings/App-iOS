@@ -35,7 +35,12 @@ extension ADTargetType {
   }
 
   var headers: HTTPHeaders? {
-    return nil
+    switch self {
+    case .uploadDrawing, .cutoutCharacter:
+      return ["Content-Type": "multipart/form-data"]
+    default:
+      return nil
+    }
   }
 
   var method: HTTPMethod {
@@ -49,21 +54,37 @@ extension ADTargetType {
     }
   }
 
-  var queryParameters: [String: String]? {
-    switch self {
-    case .uploadDrawing:
-      return nil
-    case .findCharacter(let request):
-      return ["ad_id": request.ad_id]
-    case .cutoutCharacter(let request):
-      return ["ad_id": request.ad_id]
-    case .configureCharacterJoints(let request):
-      return ["ad_id": request.ad_id]
-    case .makeAnimation(let request):
-      return [
-        "ad_id": request.ad_id,
-        "ad_animation": request.adAnimation,
-      ]
+  var queryParameters: Parameters? {
+    get throws {
+      switch self {
+      case .uploadDrawing:
+        return nil
+      case .findCharacter(let request):
+        return ["ad_id": request.ad_id]
+      case .cutoutCharacter(let request):
+        return ["ad_id": request.ad_id]
+      case .configureCharacterJoints(let request):
+        return ["ad_id": request.ad_id]
+      case .makeAnimation(let request):
+        return try request.toDict()
+      }
+    }
+  }
+
+  var bodyParameters: Parameters? {
+    get throws {
+      switch self {
+      case .uploadDrawing:
+        return nil
+      case .findCharacter(let request):
+        return try request.boundingBoxDTO.toDict()
+      case .cutoutCharacter:
+        return nil
+      case .configureCharacterJoints(let request):
+        return try request.jointsDTO.toDict()
+      case .makeAnimation:
+        return nil
+      }
     }
   }
 }

@@ -1,6 +1,6 @@
 import Foundation
 
-public struct MakeAnimationRequest {
+public struct MakeAnimationRequest: Encodable {
   public let ad_id: String
   public let adAnimation: String
 
