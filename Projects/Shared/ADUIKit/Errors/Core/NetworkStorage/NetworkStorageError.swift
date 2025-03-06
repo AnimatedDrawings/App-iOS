@@ -8,8 +8,8 @@
 
 import Foundation
 
-public enum NetworkStorageError: Error {
-  case jsonDecode
-  case server
-  case emptyResponse
-}
+// public enum NetworkStorageError: Error {
+//   case jsonDecode
+//   case server
+//   case emptyResponse
+// }

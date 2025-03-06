@@ -1,88 +1,105 @@
-//
-//  Extension+TargetType.swift
-//  NetworkStorage
-//
-//  Created by chminii on 3/11/24.
-//  Copyright © 2024 chminipark. All rights reserved.
-//
+// //
+// //  Extension+TargetType.swift
+// //  NetworkStorage
+// //
+// //  Created by chminii on 3/11/24.
+// //  Copyright 2024 chminipark. All rights reserved.
+// //
 
 import Foundation
 import NetworkStorageInterfaces
-import ADErrors
 
 extension TargetType {
   var baseURL: String {
     return Env.baseUrl
   }
-  
-  public func getUrlRequest(uniqString: String = UUID().uuidString) throws -> URLRequest {
-    let url = try url()
-    var urlRequest = URLRequest(url: url)
-    
-    var httpBody: Data?
-    switch task {
-    case .requestPlain:
-      httpBody = nil
-    case .requestJSONEncodable(let jsonObject):
-      guard let body = try? JSONEncoder().encode(jsonObject) else {
-        throw TargetTypeError.requestJSONEncodable
-      }
-      httpBody = body
-    case .uploadMultipart(let imageData):
-      httpBody = imageData.convertUploadMultiPartData(uniqString: uniqString)
-    }
-    
-    if let httpBody = httpBody {
-      urlRequest.httpBody = httpBody
-    }
-
-    urlRequest.httpMethod = method.rawValue
-    
-    switch task {
-    case .requestJSONEncodable:
-      urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-    case .uploadMultipart:
-      urlRequest.setValue("multipart/form-data; boundary=\(uniqString)", forHTTPHeaderField: "Content-Type")
-    default:
-      break
-    }
-    
-    return urlRequest
-  }
-  
-  public func url() throws -> URL {
-    let urlComponenets = try makeURLComponents()
-    guard let url = urlComponenets.url else {
-      throw TargetTypeError.makeURL
-    }
-    return url
-  }
-  
-  func makeURLComponents() throws -> URLComponents {
-    let fullPath = "\(baseURL)\(path)"
-    guard var urlComponents = URLComponents(string: fullPath) else { throw TargetTypeError.makeUrlComponent }
-    
-    var urlQueryItems = [URLQueryItem]()
-    if let queryParameters = queryParameters {
-      queryParameters.forEach { key, value in
-        urlQueryItems.append(URLQueryItem(name: key, value: value))
-      }
-    }
-    urlComponents.queryItems = !urlQueryItems.isEmpty ? urlQueryItems : nil
-    
-    return urlComponents
-  }
 }
 
-extension Data {
-  func convertUploadMultiPartData(uniqString: String) -> Data {
-    var body = Data()
-    body.append("--\(uniqString)\r\n".data(using: .utf8)!)
-    body.append("Content-Disposition: form-data; name=\"file\"; filename=\"file\"\r\n".data(using: .utf8)!)
-    body.append("Content-Type: image/png\r\n\r\n".data(using: .utf8)!)
-    body.append(self)
-    body.append("\r\n".data(using: .utf8)!)
-    body.append("--\(uniqString)--\r\n".data(using: .utf8)!)
-    return body
+extension TargetType {
+  public var fullURL: URL {
+    get throws {
+      guard let url = URL(string: baseURL)?.appendingPathComponent(path)
+      else {
+        throw NetworkStorageError.makeFullURL
+      }
+      return url
+    }
+  }
+
+  public func setHTTPMethod(
+    urlRequest: URLRequest
+  ) -> URLRequest {
+    var tmpRequest = urlRequest
+
+    tmpRequest.httpMethod = method.rawValue
+
+    return tmpRequest
+  }
+
+  public func setBodyParameter(
+    urlRequest: URLRequest
+  ) throws -> URLRequest {
+    var tmpRequest = urlRequest
+
+    if let body = try bodyParameters {
+      tmpRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+      tmpRequest.httpBody = try JSONSerialization.data(withJSONObject: body)
+    }
+
+    return tmpRequest
+  }
+
+  public func setQueryParmeter(url: URL) throws -> URL {
+    if let queryParameters = try queryParameters,
+      !queryParameters.isEmpty
+    {
+      guard
+        var components = URLComponents(
+          url: url,
+          resolvingAgainstBaseURL: false
+        )
+      else {
+        throw NetworkStorageError.queryParameter
+      }
+
+      let stringValueQueryParams = queryParameters.toStringValue()
+      components.queryItems = stringValueQueryParams.map {
+        URLQueryItem(name: $0.key, value: $0.value)
+      }
+
+      guard let urlWithQuery = components.url else {
+        throw NetworkStorageError.queryParameter
+      }
+      return urlWithQuery
+    } else {
+      return url
+    }
+  }
+
+  public func setHeaderParameter(
+    urlRequest: URLRequest
+  ) -> URLRequest {
+    var tmpRequest = urlRequest
+    if let headers = headers {
+      headers.forEach {
+        tmpRequest.setValue($0.value, forHTTPHeaderField: $0.name)
+      }
+    }
+    return tmpRequest
+  }
+
+  public var urlRequest: URLRequest {
+    get throws {
+      var url = try fullURL
+
+      let queryParameters = try queryParameters
+      try url = setQueryParmeter(url: url)
+
+      var urlRequest = URLRequest(url: url)
+      urlRequest = try setBodyParameter(urlRequest: urlRequest)
+      urlRequest = setHTTPMethod(urlRequest: urlRequest)
+
+      return urlRequest
+    }
   }
 }

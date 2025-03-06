@@ -15,7 +15,7 @@ public extension SeparateCharacterFeature {
   @CasePathable
   enum AsyncActions: Equatable {
     case separateCharacter(MaskImageResult)
-    case separateCharacterResponse(TaskResult<SeparateCharacterResponse>)
+    case separateCharacterResponse(TaskResult<CutoutCharacterResponse>)
   }
   
   func AsyncReducer() -> some ReducerOf<Self> {
@@ -34,7 +34,7 @@ public extension SeparateCharacterFeature {
             await send(.inner(.setLoadingView(true)))
             await send(.async(.separateCharacterResponse(
               TaskResult {
-                try await makeADProvider.separateCharacter(
+                try await makeADProvider.cutoutCharacter(
                   ad_id: ad_id,
                   maskedImage: maskedImageData
                 )

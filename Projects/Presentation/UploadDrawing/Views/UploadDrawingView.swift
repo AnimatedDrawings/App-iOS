@@ -6,18 +6,18 @@
 //  Copyright © 2023 chminipark. All rights reserved.
 //
 
-import SwiftUI
-import ADUIKit
-import ADResources
 import ADComposableArchitecture
-import UploadDrawingFeatures
-import PhotosUI
+import ADResources
+import ADUIKit
 import DomainModels
+import PhotosUI
 import SharedProvider
+import SwiftUI
+import UploadDrawingFeatures
 
 public struct UploadDrawingView: View {
   @Bindable var store: StoreOf<UploadDrawingFeature>
-  
+
   public init(
     store: StoreOf<UploadDrawingFeature> = Store(initialState: .init()) {
       UploadDrawingFeature()
@@ -25,27 +25,27 @@ public struct UploadDrawingView: View {
   ) {
     self.store = store
   }
-  
+
   public var body: some View {
     ADScrollView($store.step.isShowStepBar.sending(\.update.setIsShowStepBar)) {
       VStack(alignment: .leading, spacing: 20) {
         Title()
-        
+
         CheckList(
           myStep: MakeADStep.UploadDrawing.rawValue,
           completeStep: store.step.completeStep.rawValue
         ) {
           CheckListContent(store: store)
         }
-        
+
         UploadButton(state: store.uploadButton) { imageData in
           store.send(.view(.uploadDrawing(imageData)))
         }
-        
+
         SampleDrawings { imageData in
           store.send(.view(.uploadDrawing(imageData)))
         }
-        
+
         Spacer()
       }
       .padding()
@@ -72,7 +72,7 @@ extension View {
   func alertFindCharacterError(
     isPresented: Binding<Bool>
   ) -> some View {
-    self.alert(
+    alert(
       "Cannot Find Character",
       isPresented: isPresented,
       actions: {
@@ -83,11 +83,11 @@ extension View {
       }
     )
   }
-  
+
   func alertimageSizeError(
     isPresented: Binding<Bool>
   ) -> some View {
-    self.alert(
+    alert(
       "The image size is too big",
       isPresented: isPresented,
       actions: {
@@ -107,13 +107,13 @@ private extension UploadDrawingView {
     let one = " ONE "
     let right = "character, where the arms and legs don’t overlap the body (see examples below)."
     let color = ADResourcesAsset.Color.blue2.swiftUIColor
-    
+
     var body: some View {
       VStack(alignment: .leading, spacing: 20) {
         Text(title)
           .font(.system(.title, weight: .semibold))
           .foregroundColor(color)
-        
+
         Text(left) + Text(one).fontWeight(.bold) + Text(right)
       }
     }
@@ -123,29 +123,29 @@ private extension UploadDrawingView {
 private extension UploadDrawingView {
   struct CheckListContent: View {
     @Bindable var store: StoreOf<UploadDrawingFeature>
-    
+
     let description1 = "Make sure the character is drawn on a white piece of paper without lines, wrinkles, or tears"
     let description2 = "Make sure the drawing is well lit. To minimize shadows, hold the camera further away and zoom in on the drawing."
     let description3 = "Don’t include any identifiable information, offensive content (see our community standards), or drawings that infringe on the copyrights of others."
     let description4 = "Please use file type of image and size 10MB or less"
-    
+
     var body: some View {
       VStack(alignment: .leading, spacing: 15) {
         CheckListButton(
           description: description1,
           state: $store.check.list1.sending(\.view.check.list1)
         )
-        
+
         CheckListButton(
           description: description2,
           state: $store.check.list2.sending(\.view.check.list2)
         )
-        
+
         CheckListButton(
           description: description3,
           state: $store.check.list3.sending(\.view.check.list3)
         )
-        
+
         CheckListButton(
           description: description4,
           state: $store.check.list4.sending(\.view.check.list4)
@@ -159,21 +159,21 @@ private extension UploadDrawingView {
   struct UploadButton: View {
     let state: Bool
     let uploadImageAction: (Data?) -> Void
-    
+
     @State var selectedItem: PhotosPickerItem? = nil
-    
+
     init(
       state: Bool,
-      uploadImageAction: @escaping (Data?) -> ()
+      uploadImageAction: @escaping (Data?) -> Void
     ) {
       self.state = state
       self.uploadImageAction = uploadImageAction
     }
-    
+
     let photoFill = "photo.fill"
     let text = "Upload Photo"
-    
-    var body: some View   {
+
+    var body: some View {
       PhotosPicker(
         selection: $selectedItem,
         matching: .images,
@@ -191,7 +191,7 @@ private extension UploadDrawingView {
         await setImage(from: selectedItem)
       }
     }
-    
+
     @MainActor
     private func setImage(from selectedItem: PhotosPickerItem?) async {
       if let selectedItem = selectedItem {
@@ -205,20 +205,20 @@ private extension UploadDrawingView {
 
 private extension UploadDrawingView {
   struct SampleDrawings: View {
-    let tapCardAction: (Data?) -> ()
-    
+    let tapCardAction: (Data?) -> Void
+
     var body: some View {
       VStack {
         Description()
         Samples(tapCardAction: tapCardAction)
       }
     }
-    
+
     struct Description: View {
       let leftTitle = "S A M P L E"
       let rightTitle = "D R A W I N G S"
       let description = "Feel free to try the demo by clicking on one of the following example images."
-      
+
       var body: some View {
         VStack(alignment: .leading, spacing: 15) {
           HStack(spacing: 15) {
@@ -231,16 +231,16 @@ private extension UploadDrawingView {
         }
       }
     }
-    
+
     struct Samples: View {
-      let tapCardAction: (Data?) -> ()
-      
+      let tapCardAction: (Data?) -> Void
+
       typealias sample = ADResourcesAsset.SampleDrawing
       let example1: ADResourcesImages = sample.step1Example1
       let example2: ADResourcesImages = sample.step1Example2
       let example3: ADResourcesImages = sample.step1Example3
       let example4: ADResourcesImages = sample.step1Example4
-      
+
       var body: some View {
         VStack(spacing: 20) {
           HStack(spacing: 20) {
@@ -254,7 +254,7 @@ private extension UploadDrawingView {
         }
         .frame(height: 450)
       }
-      
+
       @ViewBuilder
       func ImageCardButton(image sample: ADResourcesImages) -> some View {
         Button {

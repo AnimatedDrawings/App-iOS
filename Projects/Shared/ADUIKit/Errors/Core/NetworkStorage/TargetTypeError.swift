@@ -8,8 +8,8 @@
 
 import Foundation
 
-public enum TargetTypeError: Error {
-  case makeUrlComponent
-  case makeURL
-  case requestJSONEncodable
-}
+// public enum TargetTypeError: Error {
+//   case makeUrlComponent
+//   case makeURL
+//   case requestJSONEncodable
+// }

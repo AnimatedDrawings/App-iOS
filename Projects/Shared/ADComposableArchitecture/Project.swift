@@ -9,12 +9,13 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project: Project = ADComposableArchitecture.makeProject(
-  packages: [.ComposableArchitecture],
   targets: [
     .makeTarget(
       name: ADComposableArchitecture.projectName,
       product: .staticLibrary,
-      dependencies: [.ComposableArchitecture]
+      dependencies: [
+        .external(name: "ComposableArchitecture")
+      ]
     )
   ]
 )

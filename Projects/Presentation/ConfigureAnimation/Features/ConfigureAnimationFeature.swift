@@ -18,7 +18,7 @@ public struct ConfigureAnimationFeature {
   @Dependency(StepProvider.self) var step
   @Dependency(ADViewStateProvider.self) var adViewState
   @Dependency(ADInfoProvider.self) var adInfo
-  @Dependency(ConfigureAnimationProvider.self) var configureAnimationProvider
+  @Dependency(ADNetworkProvider.self) var configureAnimationProvider
   @Dependency(LocalFileProvider.self) var localFileProvider
   
   public init() {}

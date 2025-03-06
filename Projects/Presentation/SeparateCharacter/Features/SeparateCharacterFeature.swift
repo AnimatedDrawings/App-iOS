@@ -15,7 +15,7 @@ import MaskImageFeatures
 public struct SeparateCharacterFeature {
   public init() {}
   
-  @Dependency(MakeADProvider.self) var makeADProvider
+  @Dependency(ADNetworkProvider.self) var makeADProvider
   @Dependency(ADInfoProvider.self) var adInfo
   @Dependency(StepProvider.self) var step
   

@@ -26,7 +26,10 @@ public extension FindCharacterJointsFeature {
             await send(.inner(.setLoadingView(true)))
             await send(.async(.findCharacterJointsResponse(
               TaskResult.empty {
-                try await makeADProvider.findCharacterJoints(ad_id: ad_id, joints: joints)
+                try await makeADProvider.configureCharacterJoints(
+                  ad_id: ad_id,
+                  joints: joints
+                )
               }
             )))
           }

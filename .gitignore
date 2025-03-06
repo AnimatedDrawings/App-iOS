@@ -71,3 +71,12 @@ Tuist/Dependencies
 
 ### Environment file
 Env/
+
+### Sweetpad autocomplete ###
+buildServer.json
+
+### Tuist ###
+Tuist/.build/
+
+.windsurfrules
+.vscode/
