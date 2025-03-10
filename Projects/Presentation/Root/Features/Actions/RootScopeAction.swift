@@ -30,12 +30,15 @@ public extension RootFeature {
         switch configureAnimationDelegateActions {
         case .resetMakeAD:
           state.makeAD = .init()
-          return .run { _ in
-            await step.completeStep.set(.None)
-            await step.currentStep.set(.UploadDrawing)
-            await step.isShowStepBar.set(true)
-            await adview.adViewState.set(.MakeAD)
-          }
+          state.configureAnimation = .init()
+          state.adViewState = .MakeAD
+//          return .run { _ in
+//            await step.completeStep.set(.None)
+//            await step.currentStep.set(.UploadDrawing)
+//            await step.isShowStepBar.set(true)
+//            await adview.adViewState.set(.MakeAD)
+//          }
+          return .none
         }
         
       default:
