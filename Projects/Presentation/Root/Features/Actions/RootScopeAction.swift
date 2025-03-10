@@ -32,12 +32,12 @@ public extension RootFeature {
           state.makeAD = .init()
           state.configureAnimation = .init()
           state.adViewState = .MakeAD
-//          return .run { _ in
-//            await step.completeStep.set(.None)
-//            await step.currentStep.set(.UploadDrawing)
-//            await step.isShowStepBar.set(true)
-//            await adview.adViewState.set(.MakeAD)
-//          }
+          return .run { _ in
+            await step.completeStep.set(.None)
+            await step.currentStep.set(.UploadDrawing)
+            await step.isShowStepBar.set(true)
+            await adview.adViewState.set(.MakeAD)
+          }
           return .none
         }
         
