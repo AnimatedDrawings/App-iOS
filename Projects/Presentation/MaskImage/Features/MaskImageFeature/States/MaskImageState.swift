@@ -52,8 +52,8 @@ public extension MaskImageFeature {
 
 public extension MaskImageFeature.State {
   static func mock() -> Self {
-    let croppedImage: UIImage = ADResourcesAsset.TestImages.croppedImage.image
-    let maskedImage: UIImage = ADResourcesAsset.TestImages.maskedImage.image
+    let croppedImage: UIImage = ADResourcesAsset.GarlicTestImages.croppedImage.image
+    let maskedImage: UIImage = ADResourcesAsset.GarlicTestImages.maskedImage.image
     return .init(croppedImage: croppedImage, maskedImage: maskedImage)
   }
 }

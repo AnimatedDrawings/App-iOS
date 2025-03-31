@@ -7,10 +7,10 @@
 //
 
 import ADComposableArchitecture
+import NetworkProvider
 import RootFeatures
 import SharedProvider
 import SwiftUI
-import NetworkProvider
 
 struct MockRootView: View {
   @Bindable var store: StoreOf<RootFeature>
@@ -23,10 +23,10 @@ struct MockRootView: View {
         )))
     store = Store(initialState: state) {
       RootFeature()
-        .dependency(
-          ADViewStateProvider(currentView: .ConfigureAnimation)
-        )
-        .dependency(\.adNetworkProvider, ADNetworkProvider.testValue)
+      //        .dependency(
+      //          ADViewStateProvider(currentView: .ConfigureAnimation)
+      //        )
+       .dependency(\.adNetworkProvider, ADNetworkProvider.testValue)
     }
   }
 

@@ -19,7 +19,7 @@ public struct MaskImageResult: Equatable {
 
 public extension MaskImageResult {
   static func mock() -> Self {
-    let image: UIImage = ADResourcesAsset.TestImages.maskedImage.image
+    let image: UIImage = ADResourcesAsset.GarlicTestImages.maskedImage.image
     return Self(image: image)
   }
 }

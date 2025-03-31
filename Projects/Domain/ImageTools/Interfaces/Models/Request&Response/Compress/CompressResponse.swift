@@ -33,7 +33,7 @@ public extension CompressResponse {
     
 //    return Self(data: mockData, image: mockImage, original: mockImage)
     
-    let image = ADResourcesAsset.TestImages.originalImage.image
+    let image = ADResourcesAsset.GarlicTestImages.originalImage.image
     let data = image.pngData() ?? Data()
     return Self(data: data, image: image)
   }

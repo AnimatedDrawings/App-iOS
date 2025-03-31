@@ -8,30 +8,30 @@
 
 import ADComposableArchitecture
 import ADErrors
+import Foundation
 import NetworkProviderInterfaces
 import UploadDrawingInterfaces
-import Foundation
 
-public extension UploadDrawingFeature {
-  enum AsyncActions: Equatable {
+extension UploadDrawingFeature {
+  public enum AsyncActions: Equatable {
     case uploadDrawing(Data?)
     case uploadDrawingResponse(TaskResult<UploadDrawingResponse>)
   }
-  
-  func AsyncReducer() -> some Reducer<State, Action> {
+
+  public func AsyncReducer() -> some Reducer<State, Action> {
     Reduce { state, action in
       switch action {
       case .async(let asyncActions):
         switch asyncActions {
         case .uploadDrawing(let imageData):
           guard let data = imageData,
-                let compressedInfo = try? imageCompressor.compress(with: data)
+            let compressedInfo = try? imageCompressor.compress(with: data)
           else {
             return .none
           }
-          
+
           state.originalImage = compressedInfo.image
-          
+
           return .run { send in
             await send(.inner(.setLoadingView(true)))
             await send(
@@ -44,24 +44,25 @@ public extension UploadDrawingFeature {
               )
             )
           }
+
         case .uploadDrawingResponse(.success(let response)):
           let result = UploadDrawingResult(
             originalImage: state.originalImage,
             boundingBox: response.boundingBox
           )
-          
+
           return .run { send in
             await adInfo.id.set(response.ad_id)
             await send(.inner(.setLoadingView(false)))
             await send(.delegate(.moveToFindTheCharacter(result)))
           }
-          
+
         case .uploadDrawingResponse(.failure(let error)):
           print(error)
           return .run { send in
             await send(.inner(.setLoadingView(false)))
             if let error = error as? NetworkStorageError,
-               error == .server(statusCode: 501)
+              error == .server(statusCode: 501)
             {
               await send(.inner(.showFindCharacterErrorAlert))
             } else {
@@ -69,7 +70,7 @@ public extension UploadDrawingFeature {
             }
           }
         }
-        
+
       default:
         return .none
       }

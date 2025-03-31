@@ -19,7 +19,7 @@ public struct MakeAnimationResponse: Equatable {
 
 public extension MakeAnimationResponse {
   static func mock() -> Self {
-    let data: Data = ADResourcesAsset.TestImages.maskedImage.image.pngData()!
+    let data: Data = ADResourcesAsset.GarlicTestImages.maskedImage.image.pngData()!
     return .init(animation: data)
   }
 }
