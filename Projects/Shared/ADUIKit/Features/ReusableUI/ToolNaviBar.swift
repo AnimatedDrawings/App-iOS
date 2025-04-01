@@ -6,16 +6,16 @@
 //  Copyright © 2023 chminipark. All rights reserved.
 //
 
-import SwiftUI
 import ADResources
+import SwiftUI
 
 public struct ToolNaviBar: View {
-  let cancelAction: () -> ()
-  let saveAction: () -> ()
-  
+  let cancelAction: () -> Void
+  let saveAction: () -> Void
+
   let strokeColor: Color = ADResourcesAsset.Color.blue1.swiftUIColor
   let height: CGFloat = 40
-  
+
   public init(
     cancelAction: @escaping () -> Void,
     saveAction: @escaping () -> Void
@@ -23,7 +23,7 @@ public struct ToolNaviBar: View {
     self.cancelAction = cancelAction
     self.saveAction = saveAction
   }
-  
+
   public var body: some View {
     HStack {
       Cancel()
@@ -38,14 +38,14 @@ extension ToolNaviBar {
   @ViewBuilder
   func Save() -> some View {
     let imageName = "square.and.arrow.down"
-    
+
     ToolBarItem(imageName, action: saveAction)
   }
-  
+
   @ViewBuilder
   func Cancel() -> some View {
     let imageName = "x.circle"
-    
+
     ToolBarItem(imageName, action: cancelAction)
   }
 }
@@ -54,7 +54,7 @@ extension ToolNaviBar {
   @ViewBuilder
   func ToolBarItem(
     _ imageName: String,
-    action: @escaping () -> ()
+    action: @escaping () -> Void
   ) -> some View {
     Button(action: action) {
       Image(systemName: imageName)

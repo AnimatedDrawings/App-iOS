@@ -16,17 +16,13 @@ struct MockRootView: View {
   @Bindable var store: StoreOf<RootFeature>
 
   init() {
-    let state = RootFeature.State(
-      makeAD: .init(
-        uploadDrawing: .init(
-          check: .init(list1: true, list2: true, list3: false, list4: true)
-        )))
+    let state = RootFeature.State()
     store = Store(initialState: state) {
       RootFeature()
-      //        .dependency(
-      //          ADViewStateProvider(currentView: .ConfigureAnimation)
-      //        )
-       .dependency(\.adNetworkProvider, ADNetworkProvider.testValue)
+        .dependency(
+          ADViewStateProvider(currentView: .ConfigureAnimation)
+        )
+        .dependency(\.adNetworkProvider, ADNetworkProvider.testValue)
     }
   }
 

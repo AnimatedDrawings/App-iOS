@@ -6,18 +6,18 @@
 //  Copyright © 2023 chminipark. All rights reserved.
 //
 
-import SwiftUI
-import DomainModels
-import UploadDrawing
-import FindTheCharacter
-import SeparateCharacter
-import FindCharacterJoints
 import ADComposableArchitecture
+import DomainModels
+import FindCharacterJoints
+import FindTheCharacter
 import MakeADFeatures
+import SeparateCharacter
+import SwiftUI
+import UploadDrawing
 
 public struct MakeADView: View {
   @Bindable var store: StoreOf<MakeADFeature>
-  
+
   public init(
     store: StoreOf<MakeADFeature> = Store(initialState: .init()) {
       MakeADFeature()
@@ -25,7 +25,7 @@ public struct MakeADView: View {
   ) {
     self.store = store
   }
-  
+
   public var body: some View {
     GeometryReader { geo in
       List {
@@ -36,7 +36,7 @@ public struct MakeADView: View {
             completeStep: store.step.completeStep
           )
         }
-        
+
         PageTabView(store: store)
           .frame(height: geo.size.height + geo.safeAreaInsets.bottom)
       }
@@ -50,10 +50,10 @@ public struct MakeADView: View {
   }
 }
 
-private extension MakeADView {
-  struct PageTabView: View {
+extension MakeADView {
+  fileprivate struct PageTabView: View {
     @Bindable var store: StoreOf<MakeADFeature>
-    
+
     var body: some View {
       TabView(selection: $store.step.currentStep.sending(\.update.setCurrentStep)) {
         UploadDrawingView(
@@ -63,7 +63,7 @@ private extension MakeADView {
           )
         )
         .tag(MakeADStep.UploadDrawing)
-        
+
         FindTheCharacterView(
           store: store.scope(
             state: \.findTheCharacter,
@@ -71,7 +71,7 @@ private extension MakeADView {
           )
         )
         .tag(MakeADStep.FindTheCharacter)
-        
+
         SeparateCharacterView(
           store: store.scope(
             state: \.separateCharacter,
@@ -79,7 +79,7 @@ private extension MakeADView {
           )
         )
         .tag(MakeADStep.SeparateCharacter)
-        
+
         FindingCharacterJointsView(
           store: store.scope(
             state: \.findCharacterJoints,
