@@ -6,19 +6,19 @@
 //  Copyright © 2024 chminipark. All rights reserved.
 //
 
-import Foundation
-import UIKit
 import ADComposableArchitecture
 import ADResources
+import Foundation
+import UIKit
 
-public extension MaskImageFeature {
+extension MaskImageFeature {
   @ObservableState
-  struct State: Equatable {
+  public struct State: Equatable {
     public let croppedImage: UIImage
     public let maskedImage: UIImage
     public var toolCircleSize: CGFloat
     public var triggerState: TriggerState
-    
+
     public init(
       croppedImage: UIImage,
       maskedImage: UIImage,
@@ -31,13 +31,13 @@ public extension MaskImageFeature {
       self.triggerState = triggerState
     }
   }
-  
+
   @ObservableState
-  struct TriggerState: Equatable {
+  public struct TriggerState: Equatable {
     public var drawingTool: DrawingTool
     public var maskCache: MaskCache
     public var save: Bool
-    
+
     public init(
       drawingTool: DrawingTool = .erase,
       maskCache: MaskCache = .init(),
@@ -50,14 +50,13 @@ public extension MaskImageFeature {
   }
 }
 
-public extension MaskImageFeature.State {
-  static func mock() -> Self {
-    let croppedImage: UIImage = ADResourcesAsset.TestImages.croppedImage.image
-    let maskedImage: UIImage = ADResourcesAsset.TestImages.maskedImage.image
+extension MaskImageFeature.State {
+  public static func mock() -> Self {
+    let croppedImage: UIImage = ADResourcesAsset.GarlicTestImages.croppedImage.image
+    let maskedImage: UIImage = ADResourcesAsset.GarlicTestImages.maskedImage.image
     return .init(croppedImage: croppedImage, maskedImage: maskedImage)
   }
 }
-
 
 public enum DrawingTool: Equatable {
   case draw
@@ -67,7 +66,7 @@ public enum DrawingTool: Equatable {
 public struct MaskCache: Equatable {
   public var undo: Bool
   public var reset: Bool
-  
+
   public init(
     undo: Bool = false,
     reset: Bool = false

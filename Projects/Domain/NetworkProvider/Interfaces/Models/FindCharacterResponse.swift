@@ -6,20 +6,25 @@
 //  Copyright © 2024 chminipark. All rights reserved.
 //
 
-import UIKit
 import ADResources
+import UIKit
 
 public struct FindCharacterResponse: Equatable {
   public let image: UIImage
-  
+
   public init(image: UIImage) {
     self.image = image
   }
 }
 
-public extension FindCharacterResponse {
-  static func mock() -> Self {
-    let image: UIImage = ADResourcesAsset.TestImages.maskedImage.image
+extension FindCharacterResponse {
+  public static func mock() -> Self {
+    let image: UIImage = ADResourcesAsset.GarlicTestImages.maskedImage.image
+    return .init(image: image)
+  }
+
+  public static func example1() -> Self {
+    let image: UIImage = ADResourcesAsset.Example1TestImages.cutoutCharacterImage.image
     return .init(image: image)
   }
 }

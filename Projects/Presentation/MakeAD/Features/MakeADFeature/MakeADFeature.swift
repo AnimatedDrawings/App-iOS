@@ -7,19 +7,19 @@
 //
 
 import ADComposableArchitecture
-import UploadDrawingFeatures
+import FindCharacterJointsFeatures
 import FindTheCharacterFeatures
 import SeparateCharacterFeatures
-import FindCharacterJointsFeatures
 import SharedProvider
+import UploadDrawingFeatures
 
 @Reducer
 public struct MakeADFeature {
   @Dependency(StepProvider.self) var step
   @Dependency(ADViewStateProvider.self) var adViewState
-  
+
   public init() {}
-  
+
   public var body: some ReducerOf<Self> {
     Scope(state: \.uploadDrawing, action: \.scope.uploadDrawing) {
       UploadDrawingFeature()
@@ -41,16 +41,16 @@ public struct MakeADFeature {
   }
 }
 
-public extension MakeADFeature {
+extension MakeADFeature {
   @CasePathable
-  enum Action: Equatable, BindableAction, ScopeAction, UpdateAction, ViewAction {
+  public enum Action: Equatable, BindableAction, ScopeAction, UpdateAction, ViewAction {
     case binding(BindingAction<State>)
     case scope(ScopeActions)
     case update(UpdateActions)
     case view(ViewActions)
   }
-  
-  func MainReducer() -> some ReducerOf<Self> {
+
+  public func MainReducer() -> some ReducerOf<Self> {
     Reduce { state, action in
       switch action {
       case .binding:

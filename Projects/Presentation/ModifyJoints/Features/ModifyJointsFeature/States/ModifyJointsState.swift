@@ -28,7 +28,7 @@ public extension ModifyJointsFeature.State {
   static func mock() -> Self {
     return Self(
       originJoints: .mock(),
-      croppedImage: ADResourcesAsset.TestImages.croppedImage.image
+      croppedImage: ADResourcesAsset.GarlicTestImages.croppedImage.image
     )
   }
 }

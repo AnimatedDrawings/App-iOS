@@ -7,28 +7,28 @@
 //
 
 import ADComposableArchitecture
-import MaskImageInterfaces
 import Foundation
+import MaskImageInterfaces
 
-public extension MaskImageFeature {
-  enum ViewActions: Equatable {
+extension MaskImageFeature {
+  public enum ViewActions: Equatable {
     case save
     case cancel
     case maskToolAction(MaskToolActions)
   }
-  
-  enum MaskToolActions: Equatable {
+
+  public enum MaskToolActions: Equatable {
     case setDrawingTool(DrawingTool)
     case setMaskCache(MaskCacheActions)
     case changeToolCircleSize(CGFloat)
   }
-  
-  enum MaskCacheActions: Equatable {
+
+  public enum MaskCacheActions: Equatable {
     case undo
     case reset
   }
-  
-  func ViewReducer() -> some ReducerOf<Self> {
+
+  public func ViewReducer() -> some ReducerOf<Self> {
     Reduce { state, action in
       switch action {
       case .view(let viewActions):
@@ -38,7 +38,7 @@ public extension MaskImageFeature {
           return .none
         case .cancel:
           return .send(.delegate(.cancel))
-          
+
         case .maskToolAction(let maskToolActions):
           switch maskToolActions {
           case .setDrawingTool(let drawingTool):
@@ -48,10 +48,11 @@ public extension MaskImageFeature {
             switch maskCaches {
             case .undo:
               state.triggerState.maskCache.undo.toggle()
+              return .none
             case .reset:
               state.triggerState.maskCache.reset.toggle()
+              return .none
             }
-            return .none
           case .changeToolCircleSize(let toolCircleSize):
             state.toolCircleSize = toolCircleSize
             return .none

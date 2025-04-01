@@ -11,7 +11,7 @@ import DomainModels
 public struct UploadDrawingResponse: Equatable {
   public let ad_id: String
   public let boundingBox: BoundingBox
-  
+
   public init(
     ad_id: String,
     boundingBox: BoundingBox
@@ -21,11 +21,18 @@ public struct UploadDrawingResponse: Equatable {
   }
 }
 
-public extension UploadDrawingResponse {
-  static func mock() -> Self {
+extension UploadDrawingResponse {
+  public static func mock() -> Self {
     return Self(
       ad_id: String(describing: Self.self),
       boundingBox: BoundingBox.mock()
+    )
+  }
+
+  public static func example1() -> Self {
+    return Self(
+      ad_id: "example1",
+      boundingBox: BoundingBox.example1()
     )
   }
 }

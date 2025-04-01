@@ -7,37 +7,41 @@
 //
 
 import ADComposableArchitecture
-import MakeADFeatures
 import ConfigureAnimationFeatures
+import MakeADFeatures
 
-public extension RootFeature {
+extension RootFeature {
   @CasePathable
-  enum ScopeActions: Equatable {
+  public enum ScopeActions: Equatable {
     case makeAD(MakeADFeature.Action)
     case configureAnimation(ConfigureAnimationFeature.Action)
   }
-  
-  func ScopeReducer() -> some ReducerOf<Self> {
+
+  public func ScopeReducer() -> some ReducerOf<Self> {
     CombineReducers {
       ConfigureAnimationReducer()
     }
   }
-  
-  func ConfigureAnimationReducer() -> some ReducerOf<Self> {
+
+  public func ConfigureAnimationReducer() -> some ReducerOf<Self> {
     Reduce { state, action in
       switch action {
       case .scope(.configureAnimation(.delegate(let configureAnimationDelegateActions))):
         switch configureAnimationDelegateActions {
         case .resetMakeAD:
           state.makeAD = .init()
-          return .run { _ in
+          state.configureAnimation = .init()
+
+          return .run { send in
             await step.completeStep.set(.None)
             await step.currentStep.set(.UploadDrawing)
             await step.isShowStepBar.set(true)
             await adview.adViewState.set(.MakeAD)
           }
+
+          return .none
         }
-        
+
       default:
         return .none
       }

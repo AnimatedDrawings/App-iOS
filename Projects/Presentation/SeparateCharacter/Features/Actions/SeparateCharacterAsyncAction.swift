@@ -11,14 +11,14 @@ import MaskImageInterfaces
 import NetworkProviderInterfaces
 import SeparateCharacterInterfaces
 
-public extension SeparateCharacterFeature {
+extension SeparateCharacterFeature {
   @CasePathable
-  enum AsyncActions: Equatable {
+  public enum AsyncActions: Equatable {
     case separateCharacter(MaskImageResult)
     case separateCharacterResponse(TaskResult<CutoutCharacterResponse>)
   }
-  
-  func AsyncReducer() -> some ReducerOf<Self> {
+
+  public func AsyncReducer() -> some ReducerOf<Self> {
     Reduce { state, action in
       switch action {
       case .async(let asyncActions):
@@ -28,36 +28,42 @@ public extension SeparateCharacterFeature {
             return .none
           }
           state.maskedImage = maskImageResult.image
-          
+
           return .run { send in
             guard let ad_id = await adInfo.id.get() else { return }
             await send(.inner(.setLoadingView(true)))
-            await send(.async(.separateCharacterResponse(
-              TaskResult {
-                try await makeADProvider.cutoutCharacter(
-                  ad_id: ad_id,
-                  maskedImage: maskedImageData
-                )
-              }
-            )))
+            await send(
+              .async(
+                .separateCharacterResponse(
+                  TaskResult {
+                    try await makeADProvider.cutoutCharacter(
+                      ad_id: ad_id,
+                      maskedImage: maskedImageData
+                    )
+                  }
+                )))
           }
-          
-        case .separateCharacterResponse(.success(let response)):
+
+        case .separateCharacterResponse(
+          .success(
+            let response
+          )
+        ):
           guard let maskedImage = state.maskedImage else {
             return .none
           }
-          
+
           let separateChracterResult = SeparateCharacterResult(
             maskedImage: maskedImage,
             joints: response.joints
           )
-          
+
           return .run { send in
             await send(.inner(.setLoadingView(false)))
             await send(.inner(.popMaskImageView))
             await send(.delegate(.moveToFindCharacterJoints(separateChracterResult)))
           }
-          
+
         case .separateCharacterResponse(.failure(let error)):
           print(error)
           return .run { send in
@@ -65,7 +71,7 @@ public extension SeparateCharacterFeature {
             await send(.inner(.networkErrorAlert))
           }
         }
-        
+
       default:
         return .none
       }

@@ -6,25 +6,26 @@
 //  Copyright © 2025 chminipark. All rights reserved.
 //
 
-import DomainModels
-import NetworkStorage
-import NetworkProviderInterfaces
-import CoreModels
 import ADErrors
+import CoreModels
+import DomainModels
+import NetworkProviderInterfaces
+import NetworkStorage
 import UIKit
 
 final public class ADNetworkProviderImpl: ADNetworkProviderProtocol {
-  
+
   let storage: ADNetworkStorageProtocol
-  
+
   public init(storage: ADNetworkStorageProtocol = ADNetworkStorage()) {
     self.storage = storage
   }
-  
+
   public func uploadDrawing(
     image: Data
   )
-  async throws -> UploadDrawingResponse {
+    async throws -> UploadDrawingResponse
+  {
     let request = UploadDrawingRequest(convertedPNG: image)
     let result = await storage.uploadDrawing(request: request)
     switch result {
@@ -36,7 +37,7 @@ final public class ADNetworkProviderImpl: ADNetworkProviderProtocol {
       throw error
     }
   }
-  
+
   public func findCharacter(
     ad_id: String,
     boundingBox: BoundingBox
@@ -46,26 +47,26 @@ final public class ADNetworkProviderImpl: ADNetworkProviderProtocol {
       boundingBoxDTO: boundingBox.toDTO()
     )
     let result = await storage.findCharacter(request: request)
-    
+
     switch result {
     case .success(let response):
       guard let image = UIImage(data: response.image) else {
         throw MakeADProviderError.maskDataToImage
       }
       return FindCharacterResponse(image: image)
-      
+
     case .failure(let error):
       throw error
     }
   }
-  
+
   public func cutoutCharacter(
     ad_id: String,
     maskedImage: Data
   ) async throws -> CutoutCharacterResponse {
     let request = CutoutCharacterRequest(ad_id: ad_id, cutoutImageData: maskedImage)
     let result = await storage.cutoutCharacter(request: request)
-    
+
     switch result {
     case .success(let response):
       let joints = Joints(dto: response.jointsDTO)
@@ -74,14 +75,14 @@ final public class ADNetworkProviderImpl: ADNetworkProviderProtocol {
       throw error
     }
   }
-  
+
   public func configureCharacterJoints(
     ad_id: String,
     joints: Joints
   ) async throws {
     let request = ConfigureCharacterJointsRequest(ad_id: ad_id, jointsDTO: joints.toDTO())
     let result = await storage.configureCharacterJoints(request: request)
-    
+
     switch result {
     case .success:
       return
@@ -89,7 +90,7 @@ final public class ADNetworkProviderImpl: ADNetworkProviderProtocol {
       throw error
     }
   }
-  
+
   public func makeAnimation(
     ad_id: String,
     animation: ADAnimation
@@ -99,7 +100,7 @@ final public class ADNetworkProviderImpl: ADNetworkProviderProtocol {
       adAnimation: animation.rawValue
     )
     let result = await storage.makeAnimation(request: request)
-    
+
     switch result {
     case .success(let response):
       return MakeAnimationResponse(animation: response.animation)
@@ -115,7 +116,7 @@ extension BoundingBox {
     let bottom = top + Int(cgRect.height)
     let left = Int(cgRect.origin.x)
     let right = left + Int(cgRect.width)
-    
+
     return BoundingBoxDTO(top: top, bottom: bottom, left: left, right: right)
   }
 }
@@ -127,15 +128,14 @@ extension Joints {
     let skeletonDTO = self.skeletons.map { _, skeleton in
       let locationX = Int(skeleton.ratioPoint.x * self.imageWidth)
       let locationY = Int(skeleton.ratioPoint.y * self.imageHeight)
-      
+
       return SkeletonDTO(
         name: skeleton.name,
         location: [locationX, locationY],
         parent: skeleton.parent
       )
     }
-    
+
     return JointsDTO(width: width, height: height, skeletonDTO: skeletonDTO)
   }
 }
-
