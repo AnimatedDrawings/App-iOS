@@ -28,11 +28,11 @@ extension MakeADFeature.State {
         completeStep: .FindCharacterJoints
       ),
       makeADInfo: .init(
-        originalImage: example1.originImage.image,
+        originalImage: example1.e1OriginImage.image,
         boundingBox: BoundingBox.example1().cgRect,
-        initMaskImage: example1.mask.image,
-        croppedImage: example1.texture.image,
-        maskedImage: example1.cutoutCharacterImage.image,
+        initMaskImage: example1.e1Mask.image,
+        croppedImage: example1.e1Texture.image,
+        maskedImage: example1.e1CutoutCharacterImage.image,
         joints: Joints.example1()
       ),
       uploadDrawing: .init(),
@@ -54,9 +54,8 @@ struct MockRootView: View {
     )
     store = Store(initialState: state) {
       RootFeature()
-        .dependency(
-          ADViewStateProvider(currentView: .ConfigureAnimation)
-        )
+        .dependency(ADViewStateProvider(currentView: .ConfigureAnimation))
+        .dependency(ADInfoProvider(id: "example1"))
         .dependency(\.adNetworkProvider, ADNetworkProvider.testValue)
     }
   }

@@ -57,7 +57,8 @@ public class TestADNetworkProviderImpl: ADNetworkProviderProtocol {
   }
 
   public func configureCharacterJoints(
-    ad_id: String, joints: Joints
+    ad_id: String,
+    joints: Joints
   ) async throws {
     try await Task.sleep(seconds: 0.5)
 
@@ -69,7 +70,8 @@ public class TestADNetworkProviderImpl: ADNetworkProviderProtocol {
   }
 
   public func makeAnimation(
-    ad_id: String, animation: ADAnimation
+    ad_id: String,
+    animation: ADAnimation
   ) async throws -> MakeAnimationResponse {
     try await Task.sleep(seconds: 0.5)
 
@@ -77,6 +79,6 @@ public class TestADNetworkProviderImpl: ADNetworkProviderProtocol {
     print("TEST: makeAnimation")
     print("--------------------------------")
 
-    return .mock()
+    return .example1Dab()
   }
 }

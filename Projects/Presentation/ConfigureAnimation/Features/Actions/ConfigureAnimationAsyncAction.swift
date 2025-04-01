@@ -7,18 +7,18 @@
 //
 
 import ADComposableArchitecture
-import Photos
 import DomainModels
 import NetworkProviderInterfaces
+import Photos
 
-public extension ConfigureAnimationFeature {
-  enum AsyncActions: Equatable {
+extension ConfigureAnimationFeature {
+  public enum AsyncActions: Equatable {
     case saveGifInPhotos(URL)
     case selectAnimation(ADAnimation)
     case selectAnimationResponse(TaskResult<MakeAnimationResponse>)
   }
-  
-  func AsyncReducer() -> some ReducerOf<Self> {
+
+  public func AsyncReducer() -> some ReducerOf<Self> {
     Reduce { state, action in
       switch action {
       case .async(let asyncActions):
@@ -33,7 +33,7 @@ public extension ConfigureAnimationFeature {
               await send(.inner(.alertSaveGifResult(false)))
             }
           )
-          
+
         case .selectAnimation(let animation):
           if let animationFile = state.cache[animation]?.unsafelyUnwrapped {
             state.currentAnimation = animationFile
@@ -41,52 +41,54 @@ public extension ConfigureAnimationFeature {
             return .none
           }
           state.configure.selectedAnimation = animation
-          
+
           return .run { send in
             guard let ad_id = await adInfo.id.get() else {
               await send(.inner(.setViewNeworkFail))
               return
             }
-            
+
             await send(.inner(.setLoadingView(true)))
-            await send(.async(.selectAnimationResponse(
-              TaskResult {
-                try await configureAnimationProvider.makeAnimation(
-                  ad_id: ad_id,
-                  animation: animation
-                )
-              }
-            )))
+            await send(
+              .async(
+                .selectAnimationResponse(
+                  TaskResult {
+                    try await configureAnimationProvider.makeAnimation(
+                      ad_id: ad_id,
+                      animation: animation
+                    )
+                  }
+                )))
           }
-          
+
         case .selectAnimationResponse(.success(let response)):
           guard let selectedAnimation = state.configure.selectedAnimation,
-                let saveLocalFileResponse = try? localFileProvider.save(
-                  data: response.animation,
-                  fileExtension: .gif
-                )
+            let saveLocalFileResponse = try? localFileProvider.save(
+              data: response.animation,
+              fileExtension: .gif
+            )
           else {
             return .send(.inner(.setViewNeworkFail))
           }
-          
+
           let animationFile = ADAnimationFile(
             data: response.animation,
             url: saveLocalFileResponse.fileURL
           )
           state.currentAnimation = animationFile
           state.cache[selectedAnimation] = animationFile
-          
+
           return .run { send in
             await send(.inner(.setLoadingView(false)))
             await send(.inner(.popAnimationListView))
           }
-          
+
         case .selectAnimationResponse(.failure(let error)):
           print(error)
           return .send(.inner(.setViewNeworkFail))
-          
+
         }
-        
+
       default:
         return .none
       }

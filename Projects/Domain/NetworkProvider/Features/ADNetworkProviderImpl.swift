@@ -95,6 +95,10 @@ final public class ADNetworkProviderImpl: ADNetworkProviderProtocol {
     ad_id: String,
     animation: ADAnimation
   ) async throws -> MakeAnimationResponse {
+    print("--------------------------------")
+    print("ADNetworkProviderImpl: makeAnimation")
+    print("--------------------------------")
+
     let request = MakeAnimationRequest(
       ad_id: ad_id,
       adAnimation: animation.rawValue

@@ -22,4 +22,9 @@ public extension MakeAnimationResponse {
     let data: Data = ADResourcesAsset.GarlicTestImages.maskedImage.image.pngData()!
     return .init(animation: data)
   }
+  
+  static func example1Dab() -> Self {
+    let data: Data = ADResourcesAsset.Example1TestImages.e1Dab.data.data
+    return .init(animation: data)
+  }
 }
