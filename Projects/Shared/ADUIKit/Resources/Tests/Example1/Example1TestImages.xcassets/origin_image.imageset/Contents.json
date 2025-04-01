@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "cutout_character_image.png",
+      "filename" : "origin_image.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
