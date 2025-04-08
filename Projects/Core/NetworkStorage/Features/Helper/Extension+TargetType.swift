@@ -91,8 +91,6 @@ extension TargetType {
   public var urlRequest: URLRequest {
     get throws {
       var url = try fullURL
-
-      let queryParameters = try queryParameters
       try url = setQueryParmeter(url: url)
 
       var urlRequest = URLRequest(url: url)
@@ -100,6 +98,31 @@ extension TargetType {
       urlRequest = setHTTPMethod(urlRequest: urlRequest)
 
       return urlRequest
+    }
+  }
+  
+  public var webSocketURL: URL {
+    get throws {
+      guard let originalURL = try urlRequest.url else {
+        throw NetworkStorageError.makeFullURL
+      }
+      
+      var components = URLComponents(
+        url: originalURL,
+        resolvingAgainstBaseURL: false
+      )
+      
+      if components?.scheme == "http" {
+        components?.scheme = "ws"
+      } else if components?.scheme == "https" {
+        components?.scheme = "wss"
+      }
+      
+      if let newURL = components?.url {
+        return newURL
+      } else {
+        throw NetworkStorageError.makeFullURL
+      }
     }
   }
 }

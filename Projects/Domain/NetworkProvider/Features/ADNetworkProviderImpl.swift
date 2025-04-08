@@ -14,10 +14,11 @@ import NetworkStorage
 import UIKit
 
 final public class ADNetworkProviderImpl: ADNetworkProviderProtocol {
-
   let storage: ADNetworkStorageProtocol
 
-  public init(storage: ADNetworkStorageProtocol = ADNetworkStorage()) {
+  public init(
+    storage: ADNetworkStorageProtocol = ADNetworkStorage(),
+  ) {
     self.storage = storage
   }
 
@@ -91,23 +92,63 @@ final public class ADNetworkProviderImpl: ADNetworkProviderProtocol {
     }
   }
 
-  public func makeAnimation(
+  public func getWebSocketMakeAnimation(
     ad_id: String,
     animation: ADAnimation
-  ) async throws -> MakeAnimationResponse {
-    print("--------------------------------")
-    print("ADNetworkProviderImpl: makeAnimation")
-    print("--------------------------------")
-
+  ) async throws -> WebSocketManagerProtocol {
     let request = MakeAnimationRequest(
       ad_id: ad_id,
       adAnimation: animation.rawValue
     )
+
     let result = await storage.makeAnimation(request: request)
 
     switch result {
+    case .success(let websocket):
+      return websocket
+
+    case .failure(let error):
+      print(error.localizedDescription)
+      throw error
+    }
+  }
+
+  public func messagesMakeAnimation(
+    webSocket: WebSocketManagerProtocol
+  )
+    async -> AsyncStream<MakeAnimationResponse>
+
+  {
+    let messages: AsyncStream<WebSocketMessage<RenderingType>> = webSocket.messages()
+
+    return AsyncStream<MakeAnimationResponse> { continuation in
+      Task {
+        for await message in messages {
+          let response = MakeAnimationResponse(
+            type: message.type,
+            message: message.message ?? ""
+          )
+          continuation.yield(response)
+        }
+        continuation.finish()
+      }
+    }
+  }
+
+  public func downloadAnimation(
+    ad_id: String,
+    animation: ADAnimation
+  ) async throws -> DownloadAnimationResponse {
+    let request = DownloadAnimationRequest(
+      ad_id: ad_id,
+      adAnimation: animation.rawValue
+    )
+    
+    let result = await storage.downloadAnimation(request: request)
+    
+    switch result {
     case .success(let response):
-      return MakeAnimationResponse(animation: response.animation)
+      return .init(animation: response.animation)
     case .failure(let error):
       throw error
     }

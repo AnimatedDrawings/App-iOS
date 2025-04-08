@@ -68,15 +68,46 @@ public class TestADNetworkProviderImpl: ADNetworkProviderProtocol {
 
     return
   }
-
-  public func makeAnimation(
+  
+  public func getWebSocketMakeAnimation(
     ad_id: String,
     animation: ADAnimation
-  ) async throws -> MakeAnimationResponse {
+  ) async throws -> WebSocketManagerProtocol
+  {
+    print("--------------------------------")
+    print("TEST: getWebSocketMakeAnimation")
+    print("--------------------------------")
+    return MockWebSocketManager()
+  }
+  
+  public func messagesMakeAnimation(
+    webSocket: WebSocketManagerProtocol
+  )
+  async -> AsyncStream<MakeAnimationResponse>
+  {
+    print("--------------------------------")
+    print("TEST: messagesMakeAnimation")
+    print("--------------------------------")
+    return AsyncStream<MakeAnimationResponse> { continuation in
+      Task {
+        for _ in 0..<3 {
+          continuation.yield(MakeAnimationResponse.running())
+          try await Task.sleep(seconds: 1)
+        }
+        continuation.yield(MakeAnimationResponse.complete())
+        continuation.finish()
+      }
+    }
+  }
+
+  public func downloadAnimation(
+    ad_id: String,
+    animation: ADAnimation
+  ) async throws -> DownloadAnimationResponse {
     try await Task.sleep(seconds: 0.5)
 
     print("--------------------------------")
-    print("TEST: makeAnimation")
+    print("TEST: downloadAnimation")
     print("--------------------------------")
 
     return .example1Dab()

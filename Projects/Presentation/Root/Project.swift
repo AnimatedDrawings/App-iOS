@@ -7,7 +7,7 @@ let project: Project = Root.makeProject(
     dependencies: [
       OnBoarding.projectDepedency,
       MakeAD.projectDepedency,
-      ConfigureAnimation.projectDepedency
+      ConfigureAnimation.projectDepedency,
     ]
   )
 )

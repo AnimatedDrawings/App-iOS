@@ -12,30 +12,30 @@ import NetworkStorageInterfaces
 
 public class NetworkStorage<T: TargetType> {
   public func request<R: Decodable>(_ target: T)
-  async -> Result<R, NetworkStorageError>
+    async -> Result<R, NetworkStorageError>
   {
     do {
       let urlRequest = try target.urlRequest
-      
+
       let decoded = try await AF.request(urlRequest)
         .validate()
         .serializingDecodable(R.self)
         .value
-      
+
       return .success(decoded)
     } catch {
       let networkStorageError = getNetworkStorageError(error: error)
       return .failure(networkStorageError)
     }
   }
-  
+
   public func uploadImage<R: Decodable>(
     with data: Data,
     target: T
   ) async -> Result<R, NetworkStorageError> {
     do {
       let urlRequest = try target.urlRequest
-      
+
       let decoded = try await AF.upload(
         multipartFormData: { multipartFormData in
           multipartFormData.append(
@@ -47,29 +47,29 @@ public class NetworkStorage<T: TargetType> {
         },
         with: urlRequest
       )
-        .validate()
-        .serializingDecodable(R.self)
-        .value
-      
+      .validate()
+      .serializingDecodable(R.self)
+      .value
+
       return .success(decoded)
-      
+
     } catch {
       let networkStorageError = getNetworkStorageError(error: error)
       return .failure(networkStorageError)
     }
   }
-  
+
   public func download(
     _ target: T
   ) async -> Result<Data, NetworkStorageError> {
     do {
       let urlRequest = try target.urlRequest
-      
+
       let data = try await AF.request(urlRequest)
         .validate()
         .serializingData()
         .value
-      
+
       return .success(data)
     } catch {
       let networkStorageError = getNetworkStorageError(error: error)

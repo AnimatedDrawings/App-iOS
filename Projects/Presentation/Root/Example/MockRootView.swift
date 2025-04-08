@@ -56,7 +56,7 @@ struct MockRootView: View {
       RootFeature()
         .dependency(ADViewStateProvider(currentView: .ConfigureAnimation))
         .dependency(ADInfoProvider(id: "example1"))
-        .dependency(\.adNetworkProvider, ADNetworkProvider.testValue)
+//        .dependency(\.adNetworkProvider, ADNetworkProvider.testValue)
     }
   }
 

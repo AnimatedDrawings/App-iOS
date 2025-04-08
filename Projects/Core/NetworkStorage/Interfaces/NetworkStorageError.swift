@@ -7,7 +7,6 @@ public enum NetworkStorageError: Error, Equatable {
   case toDictionary
   case queryParameter
   case bodyParameter
-//  case urlRequest
   case jsonDecode
   case unknown
 }
