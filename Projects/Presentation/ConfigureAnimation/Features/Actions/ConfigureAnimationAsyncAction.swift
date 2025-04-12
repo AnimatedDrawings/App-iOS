@@ -39,42 +39,44 @@ extension ConfigureAnimationFeature {
 
         case .selectAnimation(let animation):
           state.configure.selectedAnimation = animation
-          
+
           if let animationFile = state.cache[animation]?.unsafelyUnwrapped {
             state.currentAnimation = animationFile
             state.configure.animationListView.toggle()
             return .none
           }
-          
+
           return .run { send in
             guard let ad_id = await adInfo.id.get() else {
               await send(.inner(.setViewNeworkFail))
               return
             }
-            
+
             await send(.inner(.setLoadingView(true)))
+            //            await send(.async(.downloadAnimation(ad_id, animation)))
             await send(.async(.renderWebSocket(ad_id, animation)))
-            await send(.async(.downloadAnimation(ad_id, animation)))
-            await send(.inner(.setLoadingView(false)))
           }
-          
+
         case .renderWebSocket(let ad_id, let animation):
           return .run { send in
-            guard let webSocket = try? await configureAnimationProvider.getWebSocketMakeAnimation(
-              ad_id: ad_id,
-              animation: animation
-            ) else {
+            guard
+              let webSocket = try? await configureAnimationProvider.getWebSocketMakeAnimation(
+                ad_id: ad_id,
+                animation: animation
+              )
+            else {
+              await send(.inner(.setViewNeworkFail))
               return
             }
-            
+
             webSocket.connect()
-            defer { webSocket.disconnect() }
-            
+
             let messages = await configureAnimationProvider.messagesMakeAnimation(
               webSocket: webSocket
             )
-            
+            var curRederingType: RenderingType = .error
             for await message in messages {
+              curRederingType = message.type
               switch message.type {
               case .ping:
                 print("ping : \(message.message)")
@@ -91,41 +93,53 @@ extension ConfigureAnimationFeature {
                 break
               }
             }
+
+            webSocket.disconnect()
+            print("CurRederingType : \(curRederingType)")
+            switch curRederingType {
+            case .complete:
+              await send(.async(.downloadAnimation(ad_id, animation)))
+            default:
+              await send(.inner(.setViewNeworkFail))
+            }
           }
 
         case .downloadAnimation(let ad_id, let animation):
           return .run { send in
-            await send(.async(.downloadAnimationResponse(
-              TaskResult {
-                try await configureAnimationProvider.downloadAnimation(
-                  ad_id: ad_id,
-                  animation: animation
-                )
-              }
-            )))
+            await send(
+              .async(
+                .downloadAnimationResponse(
+                  TaskResult {
+                    try await configureAnimationProvider.downloadAnimation(
+                      ad_id: ad_id,
+                      animation: animation
+                    )
+                  }
+                )))
           }
-          
+
         case .downloadAnimationResponse(.success(let response)):
           guard let selectedAnimation = state.configure.selectedAnimation,
-                let saveLocalFileResponse = try? localFileProvider.save(
-                  data: response.animation,
-                  fileExtension: .gif
-                )
+            let saveLocalFileResponse = try? localFileProvider.save(
+              data: response.animation,
+              fileExtension: .gif
+            )
           else {
             return .send(.inner(.setViewNeworkFail))
           }
-          
+
           let animationFile = ADAnimationFile(
             data: response.animation,
             url: saveLocalFileResponse.fileURL
           )
           state.currentAnimation = animationFile
           state.cache[selectedAnimation] = animationFile
-          
+
           return .run { send in
+            await send(.inner(.setLoadingView(false)))
             await send(.inner(.popAnimationListView))
           }
-          
+
         case .downloadAnimationResponse(.failure(let error)):
           print(error)
           return .send(.inner(.setViewNeworkFail))

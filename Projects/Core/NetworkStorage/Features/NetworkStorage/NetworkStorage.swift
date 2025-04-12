@@ -12,30 +12,30 @@ import NetworkStorageInterfaces
 
 public class NetworkStorage<T: TargetType> {
   public func request<R: Decodable>(_ target: T)
-    async -> Result<R, NetworkStorageError>
+  async -> Result<R, NetworkStorageError>
   {
     do {
       let urlRequest = try target.urlRequest
-
+      
       let decoded = try await AF.request(urlRequest)
         .validate()
         .serializingDecodable(R.self)
         .value
-
+      
       return .success(decoded)
     } catch {
       let networkStorageError = getNetworkStorageError(error: error)
       return .failure(networkStorageError)
     }
   }
-
+  
   public func uploadImage<R: Decodable>(
     with data: Data,
     target: T
   ) async -> Result<R, NetworkStorageError> {
     do {
       let urlRequest = try target.urlRequest
-
+      
       let decoded = try await AF.upload(
         multipartFormData: { multipartFormData in
           multipartFormData.append(
@@ -47,29 +47,33 @@ public class NetworkStorage<T: TargetType> {
         },
         with: urlRequest
       )
-      .validate()
-      .serializingDecodable(R.self)
-      .value
-
+        .validate()
+        .serializingDecodable(R.self)
+        .value
+      
       return .success(decoded)
-
+      
     } catch {
       let networkStorageError = getNetworkStorageError(error: error)
       return .failure(networkStorageError)
     }
   }
-
+  
   public func download(
     _ target: T
   ) async -> Result<Data, NetworkStorageError> {
     do {
       let urlRequest = try target.urlRequest
-
-      let data = try await AF.request(urlRequest)
+      
+      let downloadRequest = AF.request(urlRequest)
+      downloadRequest.downloadProgress { progress in
+        print("다운로드 진행률: \(progress.fractionCompleted * 100)%")
+      }
+      let data = try await downloadRequest
         .validate()
         .serializingData()
         .value
-
+      
       return .success(data)
     } catch {
       let networkStorageError = getNetworkStorageError(error: error)
@@ -78,13 +82,16 @@ public class NetworkStorage<T: TargetType> {
   }
 }
 
+
 extension NetworkStorage {
   private func getNetworkStorageError(error: any Error) -> NetworkStorageError {
     if let error = error as? NetworkStorageError {
+      printError("NetworkStorageError : \(error)")
       return error
     }
     // Alamofire 호출 중 발생한 에러 확인
     if let afError = error as? AFError {
+      printError("AFError : \(afError)")
       let networkStorageError = checkStatusCode(afError: afError)
       return networkStorageError
     }
@@ -94,29 +101,28 @@ extension NetworkStorage {
       printError(decodeMessage)
       return .jsonDecode
     }
+    // Unknown 에러 확인
     let unknownMessage = error.localizedDescription
-    printError(unknownMessage)
+    printError("Unknown : \(unknownMessage)")
     return .unknown
   }
-
+  
   private func checkStatusCode(afError: AFError) -> NetworkStorageError {
-    let message = afError.localizedDescription
-
     if let statusCode = afError.responseCode {
       if (400...499).contains(statusCode) {
-        printError("client error : \(message)")
+        printError("client error, statusCode : \(statusCode)")
         return .client(statusCode: statusCode)
       }
       if (500...599).contains(statusCode) {
-        printError("server error : \(message)")
+        printError("server error, statusCode : \(statusCode)")
         return .server(statusCode: statusCode)
       }
     }
-
-    printError("unknown error : \(message)")
+    
+    printError("unknown status code ...")
     return .unknown
   }
-
+  
   private func printError(_ message: String) {
     print("😈😈😈😈😈😈😈😈😈😈😈😈😈")
     print(message)
