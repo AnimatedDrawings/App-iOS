@@ -11,7 +11,7 @@ import NetworkStorageInterfaces
 
 extension TargetType {
   var baseURL: String {
-    return Env.baseUrl
+    return NetworkStorageEnv.baseUrl
   }
 }
 

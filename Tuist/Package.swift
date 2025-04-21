@@ -23,6 +23,10 @@ let package = Package(
       url: "https://github.com/Alamofire/Alamofire.git",
       exact: "5.10.2"
     ),
+    .package(
+      url: "https://github.com/googleads/swift-package-manager-google-mobile-ads.git",
+      exact: "12.2.0"
+    ),
   ],
   targets: [
     .target(
@@ -30,7 +34,8 @@ let package = Package(
       dependencies: [
         "ComposableArchitecture",
         "AsyncAlgorithms",
-        "Alamofire"
+        "Alamofire",
+        "GoogleMobileAds"
       ]
     )
   ]

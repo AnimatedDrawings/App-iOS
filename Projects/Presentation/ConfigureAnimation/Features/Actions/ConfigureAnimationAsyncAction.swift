@@ -38,6 +38,7 @@ extension ConfigureAnimationFeature {
           )
 
         case .selectAnimation(let animation):
+          state.configure.loadingDescription = "Make Animation ..."
           state.configure.selectedAnimation = animation
 
           if let animationFile = state.cache[animation]?.unsafelyUnwrapped {
@@ -53,7 +54,6 @@ extension ConfigureAnimationFeature {
             }
 
             await send(.inner(.setLoadingView(true)))
-            //            await send(.async(.downloadAnimation(ad_id, animation)))
             await send(.async(.renderWebSocket(ad_id, animation)))
           }
 
@@ -74,22 +74,26 @@ extension ConfigureAnimationFeature {
             let messages = await configureAnimationProvider.messagesMakeAnimation(
               webSocket: webSocket
             )
+
             var curRederingType: RenderingType = .error
             for await message in messages {
-              curRederingType = message.type
-              switch message.type {
+              let type = message.type
+              let description = message.message
+              curRederingType = type
+              switch type {
               case .ping:
-                print("ping : \(message.message)")
+                print("ping : \(description)")
               case .running:
-                print("running : \(message.message)")
+                print("running : \(description)")
+                await send(.inner(.updateLoadingDescription(description)))
               case .complete:
-                print("complete : \(message.message)")
+                print("complete : \(description)")
                 break
               case .fullJob:
-                print("fullJob : \(message.message)")
+                print("fullJob : \(description)")
                 break
               case .error:
-                print("error : \(message.message)")
+                print("error : \(description)")
                 break
               }
             }
@@ -99,6 +103,8 @@ extension ConfigureAnimationFeature {
             switch curRederingType {
             case .complete:
               await send(.async(.downloadAnimation(ad_id, animation)))
+            case .fullJob:
+              await send(.inner(.setFullJob))
             default:
               await send(.inner(.setViewNeworkFail))
             }
@@ -106,6 +112,7 @@ extension ConfigureAnimationFeature {
 
         case .downloadAnimation(let ad_id, let animation):
           return .run { send in
+            await send(.inner(.updateLoadingDescription("Download Animation ...")))
             await send(
               .async(
                 .downloadAnimationResponse(

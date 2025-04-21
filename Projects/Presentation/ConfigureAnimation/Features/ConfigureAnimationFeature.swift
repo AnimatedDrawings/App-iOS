@@ -13,6 +13,8 @@ import Foundation
 import NetworkProvider
 import LocalFileProvider
 
+public let rederingADUnitID = ConfigureAnimationENV.adUnitId
+
 @Reducer
 public struct ConfigureAnimationFeature {
   @Dependency(StepProvider.self) var step
