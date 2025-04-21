@@ -24,7 +24,7 @@ extension FindCharacterResponse {
   }
 
   public static func example1() -> Self {
-    let image: UIImage = ADResourcesAsset.Example1TestImages.cutoutCharacterImage.image
+    let image: UIImage = ADResourcesAsset.Example1TestImages.e1CutoutCharacterImage.image
     return .init(image: image)
   }
 }

@@ -16,6 +16,7 @@ enum ADTargetType: TargetType {
   case cutoutCharacter(CutoutCharacterRequest)
   case configureCharacterJoints(ConfigureCharacterJointsRequest)
   case makeAnimation(MakeAnimationRequest)
+  case downloadAnimation(DownloadAnimationRequest)
 }
 
 extension ADTargetType {
@@ -31,6 +32,8 @@ extension ADTargetType {
       return "configure_character_joints"
     case .makeAnimation:
       return "make_animation"
+    case .downloadAnimation:
+      return "download_animation"
     }
   }
 
@@ -45,6 +48,8 @@ extension ADTargetType {
 
   var method: HTTPMethod {
     switch self {
+    case .downloadAnimation:
+      return .get
     case .uploadDrawing,
       .findCharacter,
       .cutoutCharacter,
@@ -67,6 +72,8 @@ extension ADTargetType {
         return ["ad_id": request.ad_id]
       case .makeAnimation(let request):
         return try request.toDict()
+      case .downloadAnimation(let request):
+        return try request.toDict()
       }
     }
   }
@@ -83,6 +90,8 @@ extension ADTargetType {
       case .configureCharacterJoints(let request):
         return try request.jointsDTO.toDict()
       case .makeAnimation:
+        return nil
+      case .downloadAnimation:
         return nil
       }
     }

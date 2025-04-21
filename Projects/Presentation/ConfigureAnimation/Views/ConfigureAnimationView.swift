@@ -6,15 +6,15 @@
 //  Copyright © 2023 chminipark. All rights reserved.
 //
 
-import SwiftUI
 import ADComposableArchitecture
-import ConfigureAnimationFeatures
-import ADUIKit
 import ADResources
+import ADUIKit
+import ConfigureAnimationFeatures
+import SwiftUI
 
 public struct ConfigureAnimationView: View {
   @Bindable var store: StoreOf<ConfigureAnimationFeature>
-  
+
   public init(
     store: StoreOf<ConfigureAnimationFeature> = Store(initialState: .init()) {
       ConfigureAnimationFeature()
@@ -22,19 +22,19 @@ public struct ConfigureAnimationView: View {
   ) {
     self.store = store
   }
-  
+
   public var body: some View {
     VStack(spacing: 0) {
       Title()
-      
+
       Spacer().frame(height: 50)
-      
+
       MyAnimationView(gifData: store.currentAnimation?.data)
-      
+
       Spacer().frame(height: 50)
-      
+
       TabBar(store: store)
-      
+
       Spacer().frame(height: 20)
     }
     .padding()
@@ -46,28 +46,30 @@ public struct ConfigureAnimationView: View {
 }
 
 // MARK: - Component
-private extension ConfigureAnimationView {
-  struct Title: View {
+extension ConfigureAnimationView {
+  fileprivate struct Title: View {
     let title = "ADD ANIMATION"
-    let description = "Choose one of the motions by tapping human button to see your character perform it!"
-    
+    let description =
+      "Choose one of the motions by tapping human button to see your character perform it!"
+
     var body: some View {
       VStack(alignment: .leading, spacing: 20) {
         Text(title)
           .font(.system(.title, weight: .semibold))
           .foregroundColor(ADResourcesAsset.Color.blue2.swiftUIColor)
-        
+
         Text(description)
-          .frame(maxWidth: .infinity)
+          .frame(maxWidth: .infinity, alignment: .leading)
       }
+      .padding(.horizontal, 10)
     }
   }
 }
 
-private extension ConfigureAnimationView {
-  struct MyAnimationView: View {
+extension ConfigureAnimationView {
+  fileprivate struct MyAnimationView: View {
     let gifData: Data?
-    
+
     var body: some View {
       RoundedRectangle(cornerRadius: 15)
         .foregroundColor(.white)
@@ -80,17 +82,16 @@ private extension ConfigureAnimationView {
     }
   }
 }
-
-private extension ConfigureAnimationView {
-  struct TabBar: View {
+extension ConfigureAnimationView {
+  fileprivate struct TabBar: View {
     @Bindable var store: StoreOf<ConfigureAnimationFeature>
-    
+
     let trash = "trash"
     let fix = "arrowshape.turn.up.backward"
     let share = "square.and.arrow.up"
     let animation = "figure.dance"
     let strokeColor: Color = ADResourcesAsset.Color.blue2.swiftUIColor
-    
+
     var body: some View {
       RoundedRectangle(cornerRadius: 35)
         .frame(height: 70)
@@ -118,11 +119,11 @@ private extension ConfigureAnimationView {
           }
         }
     }
-    
+
     @ViewBuilder
     func TabBarButton(
       imageName: String,
-      action: @escaping () -> ()
+      action: @escaping () -> Void
     ) -> some View {
       Button(action: action) {
         Image(systemName: imageName)
@@ -137,8 +138,8 @@ private extension ConfigureAnimationView {
 }
 
 // MARK: - Trash Dialogs
-fileprivate extension View {
-  func trashDialogs(
+extension View {
+  fileprivate func trashDialogs(
     store: StoreOf<ConfigureAnimationFeature>
   ) -> some View {
     self.modifier(
@@ -147,10 +148,10 @@ fileprivate extension View {
   }
 }
 
-fileprivate extension ConfigureAnimationView {
-  struct TrashAlertModifier: ViewModifier {
+extension ConfigureAnimationView {
+  fileprivate struct TrashAlertModifier: ViewModifier {
     @Bindable var store: StoreOf<ConfigureAnimationFeature>
-    
+
     func body(content: Content) -> some View {
       content
         .alert(
@@ -175,8 +176,8 @@ fileprivate extension ConfigureAnimationView {
 }
 
 // MARK: - Share Dialogs
-fileprivate extension View {
-  func shareDialogs(
+extension View {
+  fileprivate func shareDialogs(
     store: StoreOf<ConfigureAnimationFeature>
   ) -> some View {
     self
@@ -195,22 +196,18 @@ fileprivate extension View {
   }
 }
 
-fileprivate extension ConfigureAnimationView {
-  struct SaveGifResultModifier: ViewModifier {
+extension ConfigureAnimationView {
+  fileprivate struct SaveGifResultModifier: ViewModifier {
     @Bindable var store: StoreOf<ConfigureAnimationFeature>
-    
+
     var title: String {
-      store.share.saveResult.isSuccess ?
-      "Save Success!" :
-      "Save GIF Error"
+      store.share.saveResult.isSuccess ? "Save Success!" : "Save GIF Error"
     }
-    
+
     var description: String {
-      store.share.saveResult.isSuccess ?
-      "" :
-      "Cannot Save GIF.. Try again"
+      store.share.saveResult.isSuccess ? "" : "Cannot Save GIF.. Try again"
     }
-    
+
     func body(content: Content) -> some View {
       content
         .alert(
@@ -227,10 +224,10 @@ fileprivate extension ConfigureAnimationView {
   }
 }
 
-fileprivate extension ConfigureAnimationView {
-  struct NoAnimationFileModifier: ViewModifier {
+extension ConfigureAnimationView {
+  fileprivate struct NoAnimationFileModifier: ViewModifier {
     @Bindable var store: StoreOf<ConfigureAnimationFeature>
-    
+
     func body(content: Content) -> some View {
       content
         .alert(
@@ -247,10 +244,10 @@ fileprivate extension ConfigureAnimationView {
   }
 }
 
-fileprivate extension ConfigureAnimationView {
-  struct ShareSheetModifier: ViewModifier {
+extension ConfigureAnimationView {
+  fileprivate struct ShareSheetModifier: ViewModifier {
     @Bindable var store: StoreOf<ConfigureAnimationFeature>
-    
+
     func body(content: Content) -> some View {
       content
         .confirmationDialog("", isPresented: $store.share.sheetShare) {
@@ -265,10 +262,10 @@ fileprivate extension ConfigureAnimationView {
   }
 }
 
-fileprivate extension ConfigureAnimationView {
-  struct ShareFileModifier: ViewModifier {
+extension ConfigureAnimationView {
+  fileprivate struct ShareFileModifier: ViewModifier {
     @Bindable var store: StoreOf<ConfigureAnimationFeature>
-    
+
     func body(content: Content) -> some View {
       content
         .sheet(isPresented: $store.share.sheetShareFile) {
@@ -283,8 +280,8 @@ fileprivate extension ConfigureAnimationView {
 }
 
 // MARK: - AnimationList Dialogs
-fileprivate extension View {
-  func animationListDialogs(
+extension View {
+  fileprivate func animationListDialogs(
     store: StoreOf<ConfigureAnimationFeature>
   ) -> some View {
     self
@@ -294,11 +291,10 @@ fileprivate extension View {
   }
 }
 
-
-fileprivate extension ConfigureAnimationView {
-  struct AnimationListModifier: ViewModifier {
+extension ConfigureAnimationView {
+  fileprivate struct AnimationListModifier: ViewModifier {
     @Bindable var store: StoreOf<ConfigureAnimationFeature>
-    
+
     func body(content: Content) -> some View {
       content
         .fullScreenCover(
@@ -312,11 +308,31 @@ fileprivate extension ConfigureAnimationView {
             )
             .addLoadingView(
               isShow: store.configure.loadingView,
-              description: "Add Animation..."
+              description: store.configure.loadingDescription
             )
             .alertNetworkError(isPresented: $store.configure.networkError)
+            .alertFullJob(isPresented: $store.configure.fullJob)
           }
         )
     }
+  }
+}
+
+// MARK: - Alert
+extension View {
+  fileprivate func alertFullJob(
+    isPresented: Binding<Bool>,
+    OkAction: @escaping () -> Void = {}
+  ) -> some View {
+    self.alert(
+      "The current workload is high.",
+      isPresented: isPresented,
+      actions: {
+        Button("OK", action: OkAction)
+      },
+      message: {
+        Text("Too many concurrent users. Please try again later.")
+      }
+    )
   }
 }

@@ -10,5 +10,7 @@ public protocol ADNetworkStorageProtocol {
   func configureCharacterJoints(request: ConfigureCharacterJointsRequest)
     async -> Result<ADEmptyResponse, NetworkStorageError>
   func makeAnimation(request: MakeAnimationRequest)
-    async -> Result<MakeAnimationResponseDTO, NetworkStorageError>
+    async -> Result<any WebSocketManagerProtocol, WebSocketError>
+  func downloadAnimation(request: DownloadAnimationRequest)
+    async -> Result<DownloadAnimationResponseDTO, NetworkStorageError>
 }

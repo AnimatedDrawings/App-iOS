@@ -6,20 +6,56 @@
 //  Copyright © 2025 chminipark. All rights reserved.
 //
 
-import UIKit
 import ADResources
+import UIKit
+
+public enum RenderingType: String {
+  case ping = "PING"
+  case error = "ERROR"
+  case running = "RUNNING"
+  case fullJob = "FULL_JOB"
+  case complete = "COMPLETE"
+}
 
 public struct MakeAnimationResponse: Equatable {
-  public let animation: Data
+  public let type: RenderingType
+  public let message: String
 
-  public init(animation: Data) {
-    self.animation = animation
+  public init(
+    type: RenderingType,
+    message: String
+  ) {
+    self.type = type
+    self.message = message
   }
 }
 
-public extension MakeAnimationResponse {
-  static func mock() -> Self {
-    let data: Data = ADResourcesAsset.GarlicTestImages.maskedImage.image.pngData()!
-    return .init(animation: data)
+extension MakeAnimationResponse {
+  public static func error() -> MakeAnimationResponse {
+    return MakeAnimationResponse(
+      type: .error,
+      message: "render error"
+    )
+  }
+
+  public static func running() -> MakeAnimationResponse {
+    return MakeAnimationResponse(
+      type: .running,
+      message: "render running"
+    )
+  }
+
+  public static func fullJob() -> MakeAnimationResponse {
+    return MakeAnimationResponse(
+      type: .fullJob,
+      message: "render full job"
+    )
+  }
+
+  public static func complete() -> MakeAnimationResponse {
+    return MakeAnimationResponse(
+      type: .complete,
+      message: "render complete"
+    )
   }
 }

@@ -8,19 +8,22 @@
 
 import ADComposableArchitecture
 
-public extension ConfigureAnimationFeature {
-  enum InnerActions: Equatable {
+extension ConfigureAnimationFeature {
+  public enum InnerActions: Equatable {
     case alertNoAnimationFile
     case alertSaveGifResult(Bool)
     case alertNetworkError
+    case alertFullJob
     case sheetShareFile
     case setLoadingView(Bool)
     case popAnimationListView
-    
+    case updateLoadingDescription(String)
+
     case setViewNeworkFail
+    case setFullJob
   }
-  
-  func InnerReducer() -> some ReducerOf<Self> {
+
+  public func InnerReducer() -> some ReducerOf<Self> {
     Reduce { state, action in
       switch action {
       case .inner(let innerActions):
@@ -28,36 +31,51 @@ public extension ConfigureAnimationFeature {
         case .alertNoAnimationFile:
           state.share.alertNoAnimation.toggle()
           return .none
-          
+
         case .alertSaveGifResult(let isSuccess):
           state.share.saveResult.isSuccess = isSuccess
           state.share.saveResult.alert.toggle()
           return .none
-          
+
         case .alertNetworkError:
           state.configure.networkError.toggle()
           return .none
-          
+
+        case .alertFullJob:
+          state.configure.fullJob.toggle()
+          return .none
+
         case .sheetShareFile:
           state.share.sheetShareFile.toggle()
           return .none
-          
+
         case .setLoadingView(let isShow):
           state.configure.loadingView = isShow
           return .none
-          
+
         case .popAnimationListView:
           state.configure.animationListView.toggle()
           return .none
-          
+
+        case .updateLoadingDescription(let description):
+          state.configure.loadingDescription = description
+          return .none
+
         case .setViewNeworkFail:
           state.configure.selectedAnimation = nil
           return .run { send in
             await send(.inner(.setLoadingView(false)))
             await send(.inner(.alertNetworkError))
           }
+
+        case .setFullJob:
+          state.configure.selectedAnimation = nil
+          return .run { send in
+            await send(.inner(.alertFullJob))
+            await send(.inner(.setLoadingView(false)))
+          }
         }
-        
+
       default:
         return .none
       }

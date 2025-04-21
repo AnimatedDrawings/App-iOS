@@ -9,23 +9,29 @@
 import ADComposableArchitecture
 import DomainModels
 
-public extension ConfigureAnimationFeature {
+extension ConfigureAnimationFeature {
   @ObservableState
-  struct Configure: Equatable {
-    public var animationListView: Bool
+  public struct Configure: Equatable {
+    public var loadingDescription: String
     public var loadingView: Bool
+    public var animationListView: Bool
     public var networkError: Bool
+    public var fullJob: Bool
     public var selectedAnimation: ADAnimation?
-    
+
     public init(
-      animationListView: Bool = false,
+      loadingDescription: String = "Make Animation ...",
       loadingView: Bool = false,
+      animationListView: Bool = false,
       networkError: Bool = false,
+      fullJob: Bool = false,
       selectedAnimation: ADAnimation? = nil
     ) {
-      self.animationListView = animationListView
+      self.loadingDescription = loadingDescription
       self.loadingView = loadingView
+      self.animationListView = animationListView
       self.networkError = networkError
+      self.fullJob = fullJob
       self.selectedAnimation = selectedAnimation
     }
   }

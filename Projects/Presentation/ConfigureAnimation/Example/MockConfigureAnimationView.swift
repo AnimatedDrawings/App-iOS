@@ -15,7 +15,8 @@ struct MockConfigureAnimationView: View {
   @Bindable var store: StoreOf<ConfigureAnimationFeature>
   
   init() {
-    let gifData = ADResourcesAsset.ADAnimation.dab.data.data
+//    let gifData = ADResourcesAsset.ADAnimation.dab.data.data
+    let gifData = ADResourcesAsset.Example1TestImages.e1Dab.data.data
     let state: ConfigureAnimationFeature.State = .init(
       currentAnimation: .init(data: gifData, url: .init(filePath: ""))
     )
