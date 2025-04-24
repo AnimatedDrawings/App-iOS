@@ -41,15 +41,18 @@ public extension UploadDrawingFeature {
   struct Alert: Equatable {
     public var networkError: Bool
     public var findCharacterError: Bool
+    public var workLoadHighError: Bool
     public var imageSizeError: Bool
     
     public init(
       networkError: Bool = false,
       findCharacterError: Bool = false,
+      workLoadHighError: Bool = false,
       imageSizeError: Bool = false
     ) {
       self.networkError = networkError
       self.findCharacterError = findCharacterError
+      self.workLoadHighError = workLoadHighError
       self.imageSizeError = imageSizeError
     }
   }

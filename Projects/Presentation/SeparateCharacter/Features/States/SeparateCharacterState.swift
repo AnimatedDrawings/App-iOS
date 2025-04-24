@@ -51,13 +51,16 @@ public extension SeparateCharacterFeature {
   struct Alert: Equatable {
     public var noMaskImage: Bool
     public var networkError: Bool
+    public var workLoadHighError: Bool
     
     public init(
       noMaskImage: Bool = false,
-      networkError: Bool = false
+      networkError: Bool = false,
+      workLoadHighError: Bool = false
     ) {
       self.noMaskImage = noMaskImage
       self.networkError = networkError
+      self.workLoadHighError = workLoadHighError
     }
   }
   

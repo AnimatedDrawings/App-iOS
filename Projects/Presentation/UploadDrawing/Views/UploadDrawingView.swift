@@ -53,6 +53,7 @@ public struct UploadDrawingView: View {
     .alertNetworkError(isPresented: $store.alert.networkError)
     .alertFindCharacterError(isPresented: $store.alert.findCharacterError)
     .alertimageSizeError(isPresented: $store.alert.imageSizeError)
+    .alertWorkLoadHighError(isPresented: $store.alert.workLoadHighError)
     .fullScreenOverlay(presentationSpace: .named("UploadDrawingView")) {
       if store.loadingView {
         LoadingView(description: "Upload Drawing...")

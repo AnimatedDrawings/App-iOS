@@ -311,28 +311,9 @@ extension ConfigureAnimationView {
               description: store.configure.loadingDescription
             )
             .alertNetworkError(isPresented: $store.configure.networkError)
-            .alertFullJob(isPresented: $store.configure.fullJob)
+            .alertWorkLoadHighError(isPresented: $store.configure.fullJob)
           }
         )
     }
-  }
-}
-
-// MARK: - Alert
-extension View {
-  fileprivate func alertFullJob(
-    isPresented: Binding<Bool>,
-    OkAction: @escaping () -> Void = {}
-  ) -> some View {
-    self.alert(
-      "The current workload is high.",
-      isPresented: isPresented,
-      actions: {
-        Button("OK", action: OkAction)
-      },
-      message: {
-        Text("Too many concurrent users. Please try again later.")
-      }
-    )
   }
 }

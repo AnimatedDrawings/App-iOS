@@ -13,6 +13,7 @@ public extension UploadDrawingFeature {
     case setLoadingView(Bool)
     case showNetworkErrorAlert
     case showFindCharacterErrorAlert
+    case showWorkLoadHighErrorAlert
     case showImageSizeErrorAlert
   }
   
@@ -31,6 +32,10 @@ public extension UploadDrawingFeature {
           
         case .showFindCharacterErrorAlert:
           state.alert.findCharacterError.toggle()
+          return .none
+          
+        case .showWorkLoadHighErrorAlert:
+          state.alert.workLoadHighError.toggle()
           return .none
           
         case .showImageSizeErrorAlert:
