@@ -49,6 +49,7 @@ public struct SeparateCharacterView: View {
     }
     .task { await store.send(.view(.task)).finish() }
     .alertNoMaskImageError(isPresented: $store.alert.noMaskImage)
+    
     .fullScreenCover(
       isPresented: $store.maskImageView,
       content: { IfLetMaskImageView() }
@@ -71,6 +72,7 @@ extension SeparateCharacterView {
             description: "Mask Image..."
           )
           .alertNetworkError(isPresented: $store.alert.networkError)
+          .alertWorkLoadHighError(isPresented: $store.alert.workLoadHighError)
       } else {
         Text("No MaskImage...")
       }

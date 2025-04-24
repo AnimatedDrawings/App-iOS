@@ -68,6 +68,17 @@ extension SeparateCharacterFeature {
           print(error)
           return .run { send in
             await send(.inner(.setLoadingView(false)))
+            
+            if let error = error as? NetworkStorageError {
+              switch error {
+              case .server(statusCode: 503):
+                await send(.inner(.workLoadHighErrorAlert))
+                return
+              default:
+                break
+              }
+            }
+            
             await send(.inner(.networkErrorAlert))
           }
         }

@@ -15,6 +15,7 @@ public extension SeparateCharacterFeature {
     
     case noMaskImageErrorAlert
     case networkErrorAlert
+    case workLoadHighErrorAlert
     case popMaskImageView
   }
   
@@ -33,6 +34,10 @@ public extension SeparateCharacterFeature {
           
         case .networkErrorAlert:
           state.alert.networkError.toggle()
+          return .none
+          
+        case .workLoadHighErrorAlert:
+          state.alert.workLoadHighError.toggle()
           return .none
           
         case .popMaskImageView:
