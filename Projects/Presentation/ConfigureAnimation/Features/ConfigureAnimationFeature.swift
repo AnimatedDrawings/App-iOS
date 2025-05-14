@@ -13,7 +13,7 @@ import Foundation
 import NetworkProvider
 import LocalFileProvider
 
-public let rederingADUnitID = ConfigureAnimationENV.adUnitId
+public let rederingADUnitID = ""
 
 @Reducer
 public struct ConfigureAnimationFeature {
