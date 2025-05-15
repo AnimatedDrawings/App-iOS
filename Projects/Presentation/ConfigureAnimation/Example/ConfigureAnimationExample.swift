@@ -8,23 +8,15 @@
 import GoogleMobileAds
 import SwiftUI
 
-
-class AppDelegate: UIResponder, UIApplicationDelegate {
-  func application(_ application: UIApplication,
-      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-
-    MobileAds.shared.start(completionHandler: nil)
-    return true
-  }
-}
-
 @main
 struct ConfigureAnimationExample: App {
-  @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+  init() {
+    MobileAds.shared.start(completionHandler: nil)
+  }
 
   var body: some Scene {
     WindowGroup {
-//      RewardAdView()
+      // RewardAdView()
       MockConfigureAnimationView()
     }
   }

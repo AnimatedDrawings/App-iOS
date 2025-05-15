@@ -123,7 +123,7 @@ final class ConfigureAnimationAsyncActionTests: XCTestCase {
     
     store.exhaustivity = .off
     await store.receive(.inner(.setLoadingView(false)))
-    await store.receive(.inner(.popAnimationListView))
+    await store.receive(.inner(.toggleAnimationListView))
   }
   
   func testDownloadVideoResponseFail() async {

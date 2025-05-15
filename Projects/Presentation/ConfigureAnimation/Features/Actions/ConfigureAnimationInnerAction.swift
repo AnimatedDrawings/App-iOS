@@ -16,7 +16,7 @@ extension ConfigureAnimationFeature {
     case alertFullJob
     case sheetShareFile
     case setLoadingView(Bool)
-    case popAnimationListView
+    case toggleAnimationListView
     case updateLoadingDescription(String)
 
     case setViewNeworkFail
@@ -53,7 +53,7 @@ extension ConfigureAnimationFeature {
           state.configure.loadingView = isShow
           return .none
 
-        case .popAnimationListView:
+        case .toggleAnimationListView:
           state.configure.animationListView.toggle()
           return .none
 

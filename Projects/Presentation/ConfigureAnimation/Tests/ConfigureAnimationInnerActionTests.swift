@@ -55,7 +55,7 @@ final class ConfigureAnimationInnerActionTests: XCTestCase {
   }
   
   func testPopAnimationListView() async {
-    await store.send(.inner(.popAnimationListView)) {
+    await store.send(.inner(.toggleAnimationListView)) {
       $0.configure.animationListView = !$0.configure.animationListView
     }
   }

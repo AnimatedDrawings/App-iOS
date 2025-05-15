@@ -144,7 +144,7 @@ extension ConfigureAnimationFeature {
 
           return .run { send in
             await send(.inner(.setLoadingView(false)))
-            await send(.inner(.popAnimationListView))
+            await send(.inner(.toggleAnimationListView))
           }
 
         case .downloadAnimationResponse(.failure(let error)):
