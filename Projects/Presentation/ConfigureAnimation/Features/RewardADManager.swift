@@ -60,9 +60,7 @@ final class TestRewardADManager: NSObject, RewardADManagerProtocol {
         continuation.resume(returning: .failPrepare)
         return
       }
-
       self.showADContinuation = continuation
-      ad.fullScreenContentDelegate = self  // 굳이?
 
       ad.present(from: rootVC) { [weak self] in
         guard let self = self else {
@@ -72,7 +70,9 @@ final class TestRewardADManager: NSObject, RewardADManagerProtocol {
 
         let reward = ad.adReward
         print("User rewarded: \(reward.amount) \(reward.type)")
+        self.rewardedAd = nil
         self.showADContinuation?.resume(returning: .finishWatch)
+        self.showADContinuation = nil
       }
     }
   }
@@ -87,7 +87,7 @@ extension TestRewardADManager: FullScreenContentDelegate {
   ) {
     self.rewardedAd = nil
     self.showADContinuation?.resume(returning: .failPresent)
-    //    self.showADContinuation = nil
+    self.showADContinuation = nil
     print("Presentation error: \(error)")
   }
 
@@ -96,7 +96,7 @@ extension TestRewardADManager: FullScreenContentDelegate {
   func fullScreenContentDidDismiss(_ ad: FullScreenPresentingAd) {
     self.rewardedAd = nil
     self.showADContinuation?.resume(returning: .dismissWhileAD)
-    //    self.showADContinuation = nil
+    self.showADContinuation = nil
     print("dismiss Reward AD View")
   }
 }

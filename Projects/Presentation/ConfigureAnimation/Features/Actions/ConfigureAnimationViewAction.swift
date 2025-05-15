@@ -135,6 +135,8 @@ extension ConfigureAnimationFeature {
   public enum ConfigureActions: Equatable {
     case pushAnimationListView
     case selectAnimationItem(ADAnimation)
+    case cancelButtonAction
+    case onDismissAnimationListView
   }
 
   public func ConfigureReducer() -> some ReducerOf<Self> {
@@ -146,25 +148,29 @@ extension ConfigureAnimationFeature {
           return .send(.inner(.toggleAnimationListView))
 
         case .selectAnimationItem(let animation):
-          return .run { send in
-            let loadADResult = await rewardADManager.loadAD()
-
-            switch loadADResult {
-            case .success:
-              await send(.inner(.toggleAnimationListView))
-              try? await Task.sleep(seconds: 3.0)
-              
-              let showADResult: ShowADResult = await rewardADManager.showAD()
-              
-              print("showADResult: \(showADResult)")
-              
-              return
-
-            case .failure:
-              await send(.inner(.alertNetworkError))
-              return
+          state.configure.selectedAnimation = animation
+          return .send(.inner(.toggleAnimationListView))
+          
+        case .cancelButtonAction:
+          state.configure.selectedAnimation = nil
+          return .send(.inner(.toggleAnimationListView))
+          
+        case .onDismissAnimationListView:
+          if let selectedAnimation = state.configure.selectedAnimation {
+            return .run { send in
+              let loadADResult = await rewardADManager.loadAD()
+              switch loadADResult {
+              case .success:
+                let showRes = await rewardADManager.showAD()
+                print("AD 결과: \(showRes)")
+                return
+              case .failure:
+                await send(.inner(.alertNetworkError))
+                return
+              }
             }
           }
+          return .none
         }
 
       default:

@@ -6,35 +6,33 @@
 //  Copyright © 2023 chminipark. All rights reserved.
 //
 
-import SwiftUI
-import ADUIKit
 import ADResources
+import ADUIKit
 import DomainModels
+import SwiftUI
 
 struct AnimationListView: View {
-  @Binding var popViewState: Bool
-  let selectAnimationItem: (ADAnimation) -> ()
-  
+  let cancelButtonAction: () -> Void
+  let selectAnimationItem: (ADAnimation) -> Void
+
   init(
-    popViewState: Binding<Bool>,
+    cancelButtonAction: @escaping () -> Void,
     selectAnimationItem: @escaping (ADAnimation) -> Void
   ) {
-    self._popViewState = popViewState
+    self.cancelButtonAction = cancelButtonAction
     self.selectAnimationItem = selectAnimationItem
   }
-  
+
   @State var selectedCategory: AnimationCategory = .ALL
-  
+
   var body: some View {
     VStack(spacing: 0) {
       HStack {
         Spacer()
-        CancelButton {
-          self.popViewState.toggle()
-        }
+        CancelButton(action: cancelButtonAction)
       }
       .padding(.horizontal)
-      
+
       ScrollView {
         Title()
           .padding(.horizontal)
@@ -55,13 +53,13 @@ struct AnimationListView: View {
   }
 }
 
-private extension AnimationListView {
-  struct CancelButton: View {
+extension AnimationListView {
+  fileprivate struct CancelButton: View {
     let imageName = "x.circle"
     let strokeColor: Color = ADResourcesAsset.Color.blue1.swiftUIColor
-    
-    let action: () -> ()
-    
+
+    let action: () -> Void
+
     var body: some View {
       Button(action: action) {
         Image(systemName: imageName)
@@ -75,18 +73,19 @@ private extension AnimationListView {
   }
 }
 
-private extension AnimationListView {
-  struct Title: View {
+extension AnimationListView {
+  fileprivate struct Title: View {
     let title = "ADD ANIMATION"
-    let description = "Choose one of the motions by tapping human button to see your character perform it!"
+    let description =
+      "Choose one of the motions by tapping human button to see your character perform it!"
     let strokeColor: Color = ADResourcesAsset.Color.blue1.swiftUIColor
-    
+
     var body: some View {
       VStack(alignment: .leading, spacing: 20) {
         Text(title)
           .font(.system(.largeTitle, weight: .semibold))
           .foregroundColor(strokeColor)
-        
+
         Text(description)
           .frame(maxWidth: .infinity)
       }
@@ -94,10 +93,10 @@ private extension AnimationListView {
   }
 }
 
-private extension AnimationListView {
-  struct SegmentView: View {
+extension AnimationListView {
+  fileprivate struct SegmentView: View {
     @Binding var selectedCategory: AnimationCategory
-    
+
     var body: some View {
       HStack {
         ForEach(AnimationCategory.allCases, id: \.rawValue) { item in
@@ -110,14 +109,14 @@ private extension AnimationListView {
       }
     }
   }
-  
-  struct Category: View {
+
+  fileprivate struct Category: View {
     let myCategory: AnimationCategory
     @Binding var selectedCategory: AnimationCategory
-    
+
     @State var myWidth: CGFloat = 0
     let strokeColor: Color = ADResourcesAsset.Color.blue1.swiftUIColor
-    
+
     var body: some View {
       Button {
         self.selectedCategory = myCategory
@@ -130,7 +129,7 @@ private extension AnimationListView {
                 .foregroundColor(self.selectedCategory == myCategory ? strokeColor : .white)
             )
             .frame(width: self.myWidth, height: 40)
-          
+
           Text(myCategory.rawValue)
             .font(.title3)
             .foregroundColor(self.selectedCategory == myCategory ? .white : strokeColor)
@@ -148,15 +147,15 @@ private extension AnimationListView {
   }
 }
 
-private extension AnimationListView {
-  struct AnimationGridView: View {
+extension AnimationListView {
+  fileprivate struct AnimationGridView: View {
     let strokeColor: Color = ADResourcesAsset.Color.blue1.swiftUIColor
     let columns: [GridItem] = .init(repeating: .init(.flexible()), count: 3)
     @State var gridItemSize: CGFloat = 1
-    
+
     @Binding var selectedCategory: AnimationCategory
-    let tapAnimationItemAction: (ADAnimation) -> ()
-    
+    let tapAnimationItemAction: (ADAnimation) -> Void
+
     var firstAnimationItem: ADAnimation? {
       self.selectedCategory.animations.first
     }
@@ -166,7 +165,7 @@ private extension AnimationListView {
     var gifViewSize: CGFloat {
       max(0, self.gridItemSize - 10)
     }
-    
+
     @ViewBuilder
     func AnimationGridItem(_ adAnimation: ADAnimation) -> some View {
       Button {
@@ -182,7 +181,7 @@ private extension AnimationListView {
           }
       }
     }
-    
+
     var body: some View {
       LazyVGrid(columns: columns) {
         if let firstAnimationItem = firstAnimationItem {
@@ -196,7 +195,7 @@ private extension AnimationListView {
               }
             )
         }
-        
+
         ForEach(restAnimationItem, id: \.rawValue) { item in
           AnimationGridItem(item)
         }
@@ -209,7 +208,7 @@ enum AnimationCategory: String, CaseIterable {
   case ALL
   case DANCE
   case FUNNY
-  
+
   var animations: [ADAnimation] {
     switch self {
     case .ALL:
@@ -222,10 +221,10 @@ enum AnimationCategory: String, CaseIterable {
   }
 }
 
-private extension ADAnimation {
-  var sample: ADResourcesData {
+extension ADAnimation {
+  fileprivate var sample: ADResourcesData {
     let adAnimation = ADResourcesAsset.ADAnimation.self
-    
+
     switch self {
     case .dab:
       return adAnimation.dab

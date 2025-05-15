@@ -299,9 +299,14 @@ extension ConfigureAnimationView {
       content
         .fullScreenCover(
           isPresented: $store.configure.animationListView,
+          onDismiss: {
+            store.send(.view(.configure(.onDismissAnimationListView)))
+          },
           content: {
             AnimationListView(
-              popViewState: $store.configure.animationListView,
+              cancelButtonAction: {
+                store.send(.view(.configure(.cancelButtonAction)))
+              },
               selectAnimationItem: { selectedAnimation in
                 store.send(.view(.configure(.selectAnimationItem(selectedAnimation))))
               }
@@ -312,7 +317,7 @@ extension ConfigureAnimationView {
             )
             .alertNetworkError(isPresented: $store.configure.networkError)
             .alertWorkLoadHighError(isPresented: $store.configure.fullJob)
-          }
+          },
         )
     }
   }
