@@ -57,7 +57,7 @@ final class ConfigureAnimationAsyncActionTests: XCTestCase {
       ConfigureAnimationFeature()
     }
     
-    await store.send(.async(.selectAnimation(animation))) {
+    await store.send(.async(.startRendering(animation))) {
       $0.currentAnimation = animationFile
       $0.configure.animationListView = !$0.configure.animationListView
     }
@@ -65,7 +65,7 @@ final class ConfigureAnimationAsyncActionTests: XCTestCase {
   
   func testSelectAnimationNotInCache() async {
     let animation: ADAnimation = .zombie
-    await store.send(.async(.selectAnimation(animation))) {
+    await store.send(.async(.startRendering(animation))) {
       $0.configure.selectedAnimation = animation
     }
     

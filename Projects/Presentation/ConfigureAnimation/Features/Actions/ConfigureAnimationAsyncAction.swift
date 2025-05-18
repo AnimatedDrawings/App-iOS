@@ -12,10 +12,13 @@ import Foundation
 import NetworkProviderInterfaces
 import Photos
 
+private enum CancelID { case render }
+
 extension ConfigureAnimationFeature {
   public enum AsyncActions: Equatable {
     case saveGifInPhotos(URL)
-    case selectAnimation(ADAnimation)
+    case startRendering(ADAnimation)
+    case cancelRendering
     case renderWebSocket(String, ADAnimation)
     case downloadAnimation(String, ADAnimation)
     case downloadAnimationResponse(TaskResult<DownloadAnimationResponse>)
@@ -37,25 +40,32 @@ extension ConfigureAnimationFeature {
             }
           )
 
-        case .selectAnimation(let animation):
+        case .cancelRendering:
+          return .cancel(id: CancelID.render)
+
+        case .startRendering(let animation):
           state.configure.loadingDescription = "Make Animation ..."
           state.configure.selectedAnimation = animation
 
-          if let animationFile = state.cache[animation]?.unsafelyUnwrapped {
-            state.currentAnimation = animationFile
-            state.configure.animationListView.toggle()
-            return .none
-          }
-
-          return .run { send in
-            guard let ad_id = await adInfo.id.get() else {
-              await send(.inner(.setViewNeworkFail))
-              return
+          return .merge(
+            .run { send in
+              guard let ad_id = await adInfo.id.get() else {
+                await send(.inner(.setViewNeworkFail))
+                return
+              }
+              await send(.inner(.setLoadingView(true)))
+              await send(.async(.renderWebSocket(ad_id, animation)))
             }
+            .cancellable(id: CancelID.render),
 
-            await send(.inner(.setLoadingView(true)))
-            await send(.async(.renderWebSocket(ad_id, animation)))
-          }
+            .run { send in
+              let result = await admobManager.getRewardADResult()
+              if case .failure = result {
+                await send(.async(.cancelRendering))
+                await send(.inner(.setViewNeworkFail))
+              }
+            }
+          )
 
         case .renderWebSocket(let ad_id, let animation):
           return .run { send in
@@ -77,6 +87,11 @@ extension ConfigureAnimationFeature {
 
             var curRederingType: RenderingType = .error
             for await message in messages {
+              guard !Task.isCancelled else {
+                webSocket.disconnect()
+                return
+              }
+
               let type = message.type
               let description = message.message
               curRederingType = type
@@ -109,6 +124,7 @@ extension ConfigureAnimationFeature {
               await send(.inner(.setViewNeworkFail))
             }
           }
+          .cancellable(id: CancelID.render)
 
         case .downloadAnimation(let ad_id, let animation):
           return .run { send in
@@ -144,7 +160,6 @@ extension ConfigureAnimationFeature {
 
           return .run { send in
             await send(.inner(.setLoadingView(false)))
-            await send(.inner(.toggleAnimationListView))
           }
 
         case .downloadAnimationResponse(.failure(let error)):

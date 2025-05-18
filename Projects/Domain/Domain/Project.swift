@@ -17,7 +17,8 @@ let project: Project = Domain.makeProject(
         LocalFileProvider.projectDepedency,
         SharedProvider.projectDepedency,
         NetworkProvider.projectDepedency,
-        ImageTools.projectDepedency
+        ImageTools.projectDepedency,
+        AdmobManager.projectDepedency,
       ]
     )
   ]

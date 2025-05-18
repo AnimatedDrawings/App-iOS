@@ -17,7 +17,8 @@ struct ConfigureAnimationExample: App {
   var body: some Scene {
     WindowGroup {
       // RewardAdView()
-      MockConfigureAnimationView()
+//      MockConfigureAnimationView()
+      TestADMobView()
     }
   }
 }

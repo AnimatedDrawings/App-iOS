@@ -12,6 +12,7 @@ import Foundation
 import LocalFileProvider
 import NetworkProvider
 import SharedProvider
+import AdmobManager
 
 @Reducer
 public struct ConfigureAnimationFeature {
@@ -21,7 +22,7 @@ public struct ConfigureAnimationFeature {
   @Dependency(ADNetworkProvider.self) var configureAnimationProvider
   @Dependency(LocalFileProvider.self) var localFileProvider
 
-  let rewardADManager: RewardADManagerProtocol = TestRewardADManager()
+  let admobManager = AdmobManagerImpl()
 
   public init() {}
 

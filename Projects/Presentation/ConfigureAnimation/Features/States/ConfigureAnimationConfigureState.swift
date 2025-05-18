@@ -17,6 +17,7 @@ extension ConfigureAnimationFeature {
     public var animationListView: Bool
     public var networkError: Bool
     public var fullJob: Bool
+    public var alertStartRendering: Bool
     public var selectedAnimation: ADAnimation?
 
     public init(
@@ -25,6 +26,7 @@ extension ConfigureAnimationFeature {
       animationListView: Bool = false,
       networkError: Bool = false,
       fullJob: Bool = false,
+      alertStartRendering: Bool = false,
       selectedAnimation: ADAnimation? = nil
     ) {
       self.loadingDescription = loadingDescription
@@ -32,6 +34,7 @@ extension ConfigureAnimationFeature {
       self.animationListView = animationListView
       self.networkError = networkError
       self.fullJob = fullJob
+      self.alertStartRendering = alertStartRendering
       self.selectedAnimation = selectedAnimation
     }
   }

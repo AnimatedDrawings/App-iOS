@@ -135,7 +135,8 @@ extension ConfigureAnimationFeature {
   public enum ConfigureActions: Equatable {
     case pushAnimationListView
     case selectAnimationItem(ADAnimation)
-    case cancelButtonAction
+    case okActionInAlertStartRendering
+    case cancelButtonInAnimationList
     case onDismissAnimationListView
   }
 
@@ -146,46 +147,38 @@ extension ConfigureAnimationFeature {
         switch configureActions {
         case .pushAnimationListView:
           return .send(.inner(.toggleAnimationListView))
-
+          
         case .selectAnimationItem(let animation):
           state.configure.selectedAnimation = animation
           return .send(.inner(.toggleAnimationListView))
           
-        case .cancelButtonAction:
+        case .cancelButtonInAnimationList:
           state.configure.selectedAnimation = nil
           return .send(.inner(.toggleAnimationListView))
           
-        case .onDismissAnimationListView:
+        case .okActionInAlertStartRendering:
           if let selectedAnimation = state.configure.selectedAnimation {
-            return .run { send in
-              let loadADResult = await rewardADManager.loadAD()
-              switch loadADResult {
-              case .success:
-                let showRes = await rewardADManager.showAD()
-                print("AD 결과: \(showRes)")
-                return
-              case .failure:
-                await send(.inner(.alertNetworkError))
-                return
-              }
-            }
+            return .send(.async(.startRendering(selectedAnimation)))
           }
           return .none
+          
+        case .onDismissAnimationListView:
+          guard let selectedAnimation = state.configure.selectedAnimation else {
+            return .none
+          }
+          
+          if let animationFile = state.cache[selectedAnimation]?.unsafelyUnwrapped {
+            state.currentAnimation = animationFile
+            state.configure.selectedAnimation = nil
+            return .none
+          }
+          
+          return .send(.inner(.alertStartRendering))
         }
 
       default:
         return .none
       }
     }
-  }
-}
-
-extension UIApplication {
-  var rootViewController: UIViewController? {
-    connectedScenes
-      .compactMap { $0 as? UIWindowScene }
-      .flatMap { $0.windows }
-      .first { $0.isKeyWindow }?
-      .rootViewController
   }
 }
