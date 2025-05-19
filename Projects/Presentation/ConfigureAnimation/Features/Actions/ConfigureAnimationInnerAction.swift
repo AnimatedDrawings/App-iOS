@@ -14,9 +14,10 @@ extension ConfigureAnimationFeature {
     case alertSaveGifResult(Bool)
     case alertNetworkError
     case alertFullJob
+    case alertStartRendering
     case sheetShareFile
     case setLoadingView(Bool)
-    case popAnimationListView
+    case toggleAnimationListView
     case updateLoadingDescription(String)
 
     case setViewNeworkFail
@@ -40,6 +41,10 @@ extension ConfigureAnimationFeature {
         case .alertNetworkError:
           state.configure.networkError.toggle()
           return .none
+          
+        case .alertStartRendering:
+          state.configure.alertStartRendering.toggle()
+          return .none
 
         case .alertFullJob:
           state.configure.fullJob.toggle()
@@ -53,7 +58,7 @@ extension ConfigureAnimationFeature {
           state.configure.loadingView = isShow
           return .none
 
-        case .popAnimationListView:
+        case .toggleAnimationListView:
           state.configure.animationListView.toggle()
           return .none
 

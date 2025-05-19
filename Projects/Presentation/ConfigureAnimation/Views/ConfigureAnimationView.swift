@@ -42,6 +42,19 @@ public struct ConfigureAnimationView: View {
     .trashDialogs(store: store)
     .shareDialogs(store: store)
     .animationListDialogs(store: store)
+    .addLoadingView(
+      isShow: store.configure.loadingView,
+      description: store.configure.loadingDescription
+    )
+    .alertNetworkError(isPresented: $store.configure.networkError)
+    .alertWorkLoadHighError(isPresented: $store.configure.fullJob)
+    .alertStartRendering(
+      isPresented: $store.configure.alertStartRendering,
+      okAction: {
+        store.send(.view(.configure(.okActionInAlertStartRendering)))
+      },
+      cancelAction: {}
+    )
   }
 }
 
@@ -299,21 +312,40 @@ extension ConfigureAnimationView {
       content
         .fullScreenCover(
           isPresented: $store.configure.animationListView,
+          onDismiss: {
+            store.send(.view(.configure(.onDismissAnimationListView)))
+          },
           content: {
             AnimationListView(
-              popViewState: $store.configure.animationListView,
+              cancelButtonAction: {
+                store.send(.view(.configure(.cancelButtonInAnimationList)))
+              },
               selectAnimationItem: { selectedAnimation in
                 store.send(.view(.configure(.selectAnimationItem(selectedAnimation))))
               }
             )
-            .addLoadingView(
-              isShow: store.configure.loadingView,
-              description: store.configure.loadingDescription
-            )
-            .alertNetworkError(isPresented: $store.configure.networkError)
-            .alertWorkLoadHighError(isPresented: $store.configure.fullJob)
-          }
+          },
         )
     }
+  }
+}
+
+private extension View {
+  func alertStartRendering(
+    isPresented: Binding<Bool>,
+    okAction: @escaping () -> (),
+    cancelAction: @escaping () -> ()
+  ) -> some View {
+    self.alert(
+      "Animation Rendering Start",
+      isPresented: isPresented,
+      actions: {
+        Button("Start", action: okAction)
+        Button("Cancel", action: cancelAction)
+      },
+      message: {
+        Text("Rendering can take up to 2 minutes. While rendering is in progress, you can support us by watching an advertisement, and once the ad ends, your animation will be complete.")
+      }
+    )
   }
 }

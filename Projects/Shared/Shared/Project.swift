@@ -15,6 +15,7 @@ let project: Project = Shared.makeProject(
       product: .staticLibrary,
       dependencies: [
         ADUIKit.projectDepedency,
+        ADEnv.projectDepedency,
         ADComposableArchitecture.projectDepedency,
         ADAsyncAlgorithms.projectDepedency,
         ADAlamofire.projectDepedency,

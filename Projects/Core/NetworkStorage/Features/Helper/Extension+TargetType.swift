@@ -8,10 +8,11 @@
 
 import Foundation
 import NetworkStorageInterfaces
+import ADEnv
 
 extension TargetType {
   var baseURL: String {
-    return NetworkStorageEnv.baseUrl
+    return AdEnv.serverBaseUrl
   }
 }
 

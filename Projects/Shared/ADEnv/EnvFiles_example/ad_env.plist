@@ -4,7 +4,7 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>AD_UNIT_ID</key>
-	<string>input_your_admob_unit_id</string>
+	<key>ENV_KEY</key>
+	<string>ENV_VALUE</string>
 </dict>
 </plist>

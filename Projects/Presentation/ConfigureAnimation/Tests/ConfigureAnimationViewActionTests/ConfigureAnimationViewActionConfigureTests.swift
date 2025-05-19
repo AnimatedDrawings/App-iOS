@@ -31,6 +31,6 @@ final class ConfigureAnimationViewActionConfigureTests: XCTestCase {
     await store.send(.view(.configure(.selectAnimationItem(animation))))
     
     store.exhaustivity = .off
-    await store.receive(.async(.selectAnimation(animation)))
+    await store.receive(.async(.startRendering(animation)))
   }
 }

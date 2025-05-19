@@ -8,16 +8,17 @@
 
 import ADComposableArchitecture
 import DomainModels
+import GoogleMobileAds
 
-public extension ConfigureAnimationFeature {
-  enum ViewActions: Equatable {
+extension ConfigureAnimationFeature {
+  public enum ViewActions: Equatable {
     case fix
     case trash(TrashActions)
     case share(ShareActions)
     case configure(ConfigureActions)
   }
-  
-  func ViewReducer() -> some ReducerOf<Self> {
+
+  public func ViewReducer() -> some ReducerOf<Self> {
     CombineReducers {
       FixReducer()
       TrashReducer()
@@ -29,8 +30,8 @@ public extension ConfigureAnimationFeature {
 
 // MARK: - Fix Actions
 
-public extension ConfigureAnimationFeature {
-  func FixReducer() -> some ReducerOf<Self> {
+extension ConfigureAnimationFeature {
+  public func FixReducer() -> some ReducerOf<Self> {
     Reduce { state, action in
       switch action {
       case .view(let viewActions):
@@ -40,11 +41,11 @@ public extension ConfigureAnimationFeature {
             await step.isShowStepBar.set(true)
             await adViewState.adViewState.set(.MakeAD)
           }
-          
+
         default:
           return .none
         }
-        
+
       default:
         return .none
       }
@@ -54,17 +55,17 @@ public extension ConfigureAnimationFeature {
 
 // MARK: - Trash Actions
 
-public extension ConfigureAnimationFeature {
-  enum TrashActions: Equatable {
+extension ConfigureAnimationFeature {
+  public enum TrashActions: Equatable {
     case showAlert
     case trashAlertActions(TrashAlertActions)
   }
-  
-  enum TrashAlertActions: Equatable {
+
+  public enum TrashAlertActions: Equatable {
     case confirm
   }
-  
-  func TrashReducer() -> some ReducerOf<Self> {
+
+  public func TrashReducer() -> some ReducerOf<Self> {
     Reduce { state, action in
       switch action {
       case .view(.trash(let trashActions)):
@@ -75,7 +76,7 @@ public extension ConfigureAnimationFeature {
         case .trashAlertActions(.confirm):
           return .send(.delegate(.resetMakeAD))
         }
-        
+
       default:
         return .none
       }
@@ -85,18 +86,18 @@ public extension ConfigureAnimationFeature {
 
 // MARK: - Trash Actions
 
-public extension ConfigureAnimationFeature {
-  enum ShareActions: Equatable {
+extension ConfigureAnimationFeature {
+  public enum ShareActions: Equatable {
     case showShareSheet
     case shareSheetActions(ShareSheetActions)
   }
-  
-  enum ShareSheetActions: Equatable {
+
+  public enum ShareSheetActions: Equatable {
     case save
     case share
   }
-  
-  func ShareReducer() -> some ReducerOf<Self> {
+
+  public func ShareReducer() -> some ReducerOf<Self> {
     Reduce { state, action in
       switch action {
       case .view(.share(let shareActions)):
@@ -107,12 +108,12 @@ public extension ConfigureAnimationFeature {
           }
           state.share.sheetShare.toggle()
           return .none
-          
+
         case .shareSheetActions(let shareSheetActions):
           guard let currentAnimation = state.currentAnimation else {
             return .none
           }
-          
+
           switch shareSheetActions {
           case .save:
             return .send(.async(.saveGifInPhotos(currentAnimation.url)))
@@ -120,7 +121,7 @@ public extension ConfigureAnimationFeature {
             return .send(.inner(.sheetShareFile))
           }
         }
-        
+
       default:
         return .none
       }
@@ -130,25 +131,51 @@ public extension ConfigureAnimationFeature {
 
 // MARK: - Configure Actions
 
-public extension ConfigureAnimationFeature {
-  enum ConfigureActions: Equatable {
+extension ConfigureAnimationFeature {
+  public enum ConfigureActions: Equatable {
     case pushAnimationListView
     case selectAnimationItem(ADAnimation)
+    case okActionInAlertStartRendering
+    case cancelButtonInAnimationList
+    case onDismissAnimationListView
   }
-  
-  func ConfigureReducer() -> some ReducerOf<Self> {
+
+  public func ConfigureReducer() -> some ReducerOf<Self> {
     Reduce { state, action in
       switch action {
       case .view(.configure(let configureActions)):
         switch configureActions {
         case .pushAnimationListView:
-          state.configure.animationListView.toggle()
-          return .none
+          return .send(.inner(.toggleAnimationListView))
           
         case .selectAnimationItem(let animation):
-          return .send(.async(.selectAnimation(animation)))
+          state.configure.selectedAnimation = animation
+          return .send(.inner(.toggleAnimationListView))
+          
+        case .cancelButtonInAnimationList:
+          state.configure.selectedAnimation = nil
+          return .send(.inner(.toggleAnimationListView))
+          
+        case .okActionInAlertStartRendering:
+          if let selectedAnimation = state.configure.selectedAnimation {
+            return .send(.async(.startRendering(selectedAnimation)))
+          }
+          return .none
+          
+        case .onDismissAnimationListView:
+          guard let selectedAnimation = state.configure.selectedAnimation else {
+            return .none
+          }
+          
+          if let animationFile = state.cache[selectedAnimation]?.unsafelyUnwrapped {
+            state.currentAnimation = animationFile
+            state.configure.selectedAnimation = nil
+            return .none
+          }
+          
+          return .send(.inner(.alertStartRendering))
         }
-        
+
       default:
         return .none
       }

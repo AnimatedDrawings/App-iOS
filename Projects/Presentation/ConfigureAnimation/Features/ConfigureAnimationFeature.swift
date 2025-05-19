@@ -7,13 +7,12 @@
 //
 
 import ADComposableArchitecture
-import SharedProvider
 import DomainModels
 import Foundation
-import NetworkProvider
 import LocalFileProvider
-
-public let rederingADUnitID = ConfigureAnimationENV.adUnitId
+import NetworkProvider
+import SharedProvider
+import AdmobManager
 
 @Reducer
 public struct ConfigureAnimationFeature {
@@ -22,17 +21,21 @@ public struct ConfigureAnimationFeature {
   @Dependency(ADInfoProvider.self) var adInfo
   @Dependency(ADNetworkProvider.self) var configureAnimationProvider
   @Dependency(LocalFileProvider.self) var localFileProvider
-  
+
+  let admobManager = TestAdmobManagerImpl()
+
   public init() {}
-  
-  public enum Action: Equatable, BindableAction, ViewAction, InnerAction, DelegateAction, AsyncAction {
+
+  public enum Action: Equatable, BindableAction, ViewAction, InnerAction, DelegateAction,
+    AsyncAction
+  {
     case binding(BindingAction<State>)
     case view(ViewActions)
     case inner(InnerActions)
     case delegate(DelegateActions)
     case async(AsyncActions)
   }
-  
+
   public var body: some ReducerOf<Self> {
     BindingReducer()
     MainReducer()
@@ -49,7 +52,7 @@ extension ConfigureAnimationFeature {
       switch action {
       case .binding:
         return .none
-        
+
       default:
         return .none
       }
