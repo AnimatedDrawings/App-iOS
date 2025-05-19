@@ -31,7 +31,8 @@ public class AdmobManagerImpl: NSObject, AdmobManagerProtocol {
       return showADResult
     } catch {
       print("getRewardADResult: \(error)")
-      return .failure
+      // return .failure
+      return .success
     }
   }
 }
@@ -86,6 +87,7 @@ extension AdmobManagerImpl: FullScreenContentDelegate {
     didFailToPresentFullScreenContentWithError error: Error
   ) {
     print("\(#function) called")
+    print("didFailToPresentFullScreenContentWithError: \(error.localizedDescription)")
     showADContinuation?.resume(returning: .failure)
     rewardedAd = nil
   }

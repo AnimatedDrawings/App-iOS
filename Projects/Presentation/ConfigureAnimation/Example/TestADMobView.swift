@@ -5,15 +5,21 @@
 //  Created by minii on 2025/05/18.
 //
 
-import ConfigureAnimationFeatures
-import SwiftUI
 import AdmobManager
+import ConfigureAnimationFeatures
+import GoogleMobileAds
+import SwiftUI
 
 struct TestADMobView: View {
   @State private var isShowingAlert = false
   @State private var alertMessage = ""
- private let admobManager = TestAdmobManagerImpl()
-  // private let admobManager = AdmobManagerImpl()
+  // private let admobManager = TestAdmobManagerImpl()
+  private let admobManager = AdmobManagerImpl()
+
+  init() {
+    MobileAds.shared.start(completionHandler: nil)
+    // MobileAds.shared.requestConfiguration.testDeviceIdentifiers = ["여기에_테스트_기기_ID_입력"]
+  }
 
   var body: some View {
     VStack {
@@ -31,9 +37,16 @@ struct TestADMobView: View {
       }
       .padding()
       .buttonStyle(.borderedProminent)
-      .alert(alertMessage, isPresented: $isShowingAlert) {
-        Button("확인", role: .cancel) {}
+
+      Button("광고 인스펙터 보기") {
+        let rootVC = UIApplication.shared.rootViewController
+        MobileAds.shared.presentAdInspector(from: rootVC) { error in
+          print("광고 인스펙터 보기 오류: \(error)")
+        }
       }
+    }
+    .alert(alertMessage, isPresented: $isShowingAlert) {
+      Button("확인", role: .cancel) {}
     }
   }
 }
