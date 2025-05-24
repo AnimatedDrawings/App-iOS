@@ -13,13 +13,8 @@ import SwiftUI
 struct TestADMobView: View {
   @State private var isShowingAlert = false
   @State private var alertMessage = ""
-  // private let admobManager = TestAdmobManagerImpl()
+//  private let admobManager = TestAdmobManagerImpl()
   private let admobManager = AdmobManagerImpl()
-
-  init() {
-    MobileAds.shared.start(completionHandler: nil)
-    // MobileAds.shared.requestConfiguration.testDeviceIdentifiers = ["여기에_테스트_기기_ID_입력"]
-  }
 
   var body: some View {
     VStack {

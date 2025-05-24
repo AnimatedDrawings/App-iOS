@@ -39,6 +39,7 @@ extension ProjectDescription.InfoPlist {
       "NSPhotoLibraryAddUsageDescription": "This app requires access to the photo library.",
       "UIUserInterfaceStyle": "Light",
       "UISupportedInterfaceOrientations": ["UIInterfaceOrientationPortrait"],
+      "GADEnableNetworkTracing": .boolean(true),
       "GADApplicationIdentifier": .string(admobAppId),
       "SKAdNetworkItems": [
         ["SKAdNetworkIdentifier": .string("cstr6suwn9.skadnetwork")],

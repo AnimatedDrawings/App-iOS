@@ -22,7 +22,7 @@ public struct ConfigureAnimationFeature {
   @Dependency(ADNetworkProvider.self) var configureAnimationProvider
   @Dependency(LocalFileProvider.self) var localFileProvider
 
-  let admobManager = TestAdmobManagerImpl()
+  let admobManager = AdmobManagerImpl()
 
   public init() {}
 

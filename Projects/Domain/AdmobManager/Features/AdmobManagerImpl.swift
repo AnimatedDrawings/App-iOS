@@ -31,8 +31,7 @@ public class AdmobManagerImpl: NSObject, AdmobManagerProtocol {
       return showADResult
     } catch {
       print("getRewardADResult: \(error)")
-      // return .failure
-      return .success
+      return .failure
     }
   }
 }
@@ -46,7 +45,10 @@ extension AdmobManagerImpl {
       )
       rewardedAd?.fullScreenContentDelegate = self
     } catch {
-      print("Failed to load : \(error.localizedDescription)")
+      let nsError = error as NSError
+      print(
+        "Failed to load AD: \(nsError.localizedDescription) "
+          + "(Domain: \(nsError.domain), Code: \(nsError.code), UserInfo: \(nsError.userInfo))")
       throw AdmobError.loadFailed
     }
   }
