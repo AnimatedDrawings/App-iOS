@@ -27,6 +27,10 @@ let package = Package(
       url: "https://github.com/googleads/swift-package-manager-google-mobile-ads.git",
       from: "12.4.0"
     ),
+    .package(
+      url: "https://github.com/jpsim/Yams.git",
+      exact: "5.1.3"
+    ),
   ],
   targets: [
     .target(
@@ -36,6 +40,7 @@ let package = Package(
         "AsyncAlgorithms",
         "Alamofire",
         "GoogleMobileAds",
+        "Yams",
       ]
     )
   ]

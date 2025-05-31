@@ -14,7 +14,8 @@ let project: Project = Core.makeProject(
       name: Core.featureName,
       product: .staticLibrary,
       dependencies: [
-        NetworkStorage.projectDepedency
+        NetworkStorage.projectDepedency,
+        AnimationRender.projectDepedency,
       ]
     )
   ]
