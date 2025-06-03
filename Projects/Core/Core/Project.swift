@@ -14,7 +14,11 @@ let project: Project = Core.makeProject(
       name: Core.featureName,
       product: .staticLibrary,
       dependencies: [
-        NetworkStorage.projectDepedency
+        NetworkRepository.projectDepedency,
+        LocalRepository.projectDepedency,
+        AdmobManager.projectDepedency,
+        AnimationRender.projectDepedency,
+        ImageTools.projectDepedency,
       ]
     )
   ]

@@ -8,7 +8,7 @@
 
 import DomainModels
 import Foundation
-import NetworkStorageInterfaces
+import NetworkRepositoryInterfaces
 
 public protocol ADNetworkProviderProtocol {
   func uploadDrawing(

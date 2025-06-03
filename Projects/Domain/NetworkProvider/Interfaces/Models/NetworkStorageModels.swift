@@ -6,4 +6,4 @@
 //  Copyright © 2024 chminipark. All rights reserved.
 //
 
-@_exported import NetworkStorageInterfaces
+@_exported import NetworkRepositoryInterfaces

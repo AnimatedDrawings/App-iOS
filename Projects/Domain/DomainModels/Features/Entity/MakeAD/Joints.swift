@@ -5,7 +5,7 @@
 //  Created by minii on 2023/07/18.
 //
 
-import CoreModels
+import NetworkRepositoryInterfaces
 import Foundation
 
 public struct Joints: Equatable, Decodable {

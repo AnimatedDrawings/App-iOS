@@ -14,11 +14,8 @@ let project: Project = Domain.makeProject(
       name: Domain.featureName,
       product: .staticLibrary,
       dependencies: [
-        LocalFileProvider.projectDepedency,
         SharedProvider.projectDepedency,
         NetworkProvider.projectDepedency,
-        ImageTools.projectDepedency,
-        AdmobManager.projectDepedency,
       ]
     )
   ]

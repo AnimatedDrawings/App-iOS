@@ -16,10 +16,7 @@ let project: Project = Shared.makeProject(
       dependencies: [
         ADUIKit.projectDepedency,
         ADEnv.projectDepedency,
-        ADComposableArchitecture.projectDepedency,
-        ADAsyncAlgorithms.projectDepedency,
-        ADAlamofire.projectDepedency,
-        .external(name: "GoogleMobileAds")
+        ExternalLibrary.projectDepedency,
       ]
     )
   ]
