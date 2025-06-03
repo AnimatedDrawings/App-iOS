@@ -1,5 +1,5 @@
 //
-//  NetworkStorageError.swift
+//  NetworkRepositoryError.swift
 //  ADErrors
 //
 //  Created by chminii on 3/13/24.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-// public enum NetworkStorageError: Error {
+// public enum NetworkRepositoryError: Error {
 //   case jsonDecode
 //   case server
 //   case emptyResponse

@@ -9,7 +9,7 @@
 import ADComposableArchitecture
 import DomainModels
 import Foundation
-import LocalFileProvider
+import LocalRepository
 import NetworkProvider
 import SharedProvider
 import AdmobManager
@@ -20,7 +20,7 @@ public struct ConfigureAnimationFeature {
   @Dependency(ADViewStateProvider.self) var adViewState
   @Dependency(ADInfoProvider.self) var adInfo
   @Dependency(ADNetworkProvider.self) var configureAnimationProvider
-  @Dependency(LocalFileProvider.self) var localFileProvider
+  @Dependency(LocalRepository.self) var localFileProvider
 
   let admobManager = AdmobManagerImpl()
 

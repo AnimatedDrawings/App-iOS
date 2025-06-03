@@ -8,11 +8,11 @@
 
 import ADErrors
 import ADUIKit
-import CoreModels
+import NetworkRepositoryInterfaces
 import DomainModels
 import Foundation
 import NetworkProviderInterfaces
-import NetworkStorage
+import NetworkRepository
 import UIKit
 
 public class TestADNetworkProviderImpl: ADNetworkProviderProtocol {

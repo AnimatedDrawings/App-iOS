@@ -6,8 +6,8 @@
 //  Copyright © 2024 chminipark. All rights reserved.
 //
 
-import CoreModels
 import Foundation
+import NetworkRepositoryInterfaces
 
 public struct BoundingBox: Equatable {
   public let cgRect: CGRect

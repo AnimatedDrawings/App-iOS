@@ -14,18 +14,20 @@ public struct ADUIKit: uFeatureModule {
   public static let errors: String = "ADErrors"
 }
 
-public extension ADUIKit {
-  static func resourceTarget() -> Target {
+extension ADUIKit {
+  public static func resourceTarget() -> Target {
     return .makeTarget(
       name: Self.resources,
       product: .staticLibrary,
-      sources: nil,
+      sources: .sourceFilesList(globs: ["Resources/**"]),
       resources: .resource,
-      dependencies: []
+      dependencies: [
+        .external(name: "Yams")
+      ]
     )
   }
-  
-  static func errorsTarget() -> Target {
+
+  public static func errorsTarget() -> Target {
     return .makeTarget(
       name: Self.errors,
       product: .staticLibrary,

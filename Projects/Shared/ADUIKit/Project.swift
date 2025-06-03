@@ -17,10 +17,11 @@ let project: Project = ADUIKit.makeProject(
     ADUIKit.features(
       dependencies: [
         .target(name: ADUIKit.resources),
-        .target(name: ADUIKit.errors)
+        .target(name: ADUIKit.errors),
       ]
     ),
     ADUIKit.resourceTarget(),
-    ADUIKit.errorsTarget()
+    ADUIKit.errorsTarget(),
+    ADUIKit.tests(dependencies: [.features]),
   ]
 )

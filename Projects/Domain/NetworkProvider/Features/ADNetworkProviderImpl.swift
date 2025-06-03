@@ -7,17 +7,17 @@
 //
 
 import ADErrors
-import CoreModels
+import NetworkRepositoryInterfaces
 import DomainModels
 import NetworkProviderInterfaces
-import NetworkStorage
+import NetworkRepository
 import UIKit
 
 final public class ADNetworkProviderImpl: ADNetworkProviderProtocol {
-  let storage: ADNetworkStorageProtocol
+  let storage: ADNetworkRepositoryProtocol
 
   public init(
-    storage: ADNetworkStorageProtocol = ADNetworkStorage(),
+    storage: ADNetworkRepositoryProtocol = ADNetworkRepository(),
   ) {
     self.storage = storage
   }

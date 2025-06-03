@@ -8,6 +8,6 @@ let project: Project = AnimationRender.makeProject(
     AnimationRender.featuresTarget(),
     AnimationRender.tests(),
     AnimationRender.testings(),
-    AnimationRender.interfaces(dependencies: [CoreModels.projectDepedency]),
+    AnimationRender.interfaces(dependencies: [Shared.projectDepedency]),
   ]
 )
